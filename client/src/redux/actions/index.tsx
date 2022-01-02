@@ -14,3 +14,5 @@
  * export type Action = 
  *   | ReturnType<typeof getUserInfo>;
  */
+
+export {}
