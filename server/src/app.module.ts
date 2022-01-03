@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+import { RoutesModule } from './routes/routes.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { Users } from './users/entities/user.entity';
@@ -24,6 +25,7 @@ import { Users } from './users/entities/user.entity';
       synchronize: false,
     }),
     UsersModule,
+    RoutesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -2,6 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
+import { swaggerUi, swaggerSpec } from './swaggerDoc';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -18,6 +19,8 @@ async function bootstrap() {
     credentials: true,
   });
   app.use(cookieParser());
-  await app.listen(3000);
+  //스웨거 적용을 위한 전역 미들웨어
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  await app.listen(80);
 }
 bootstrap();
