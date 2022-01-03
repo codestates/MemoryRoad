@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { PostRouteDto } from './dto/postRoute.dto';
+import { PinEntity } from './entities/pin.entity';
 import { RouteEntity } from './entities/route.entity';
 
 @Injectable()
@@ -9,6 +11,8 @@ export class RoutesService {
   constructor(
     @InjectRepository(RouteEntity)
     private routesRepository: Repository<RouteEntity>,
+    @InjectRepository(PinEntity)
+    private pinsRepository: Repository<PinEntity>,
   ) {}
 
   async getUserRoutes(page: number): Promise<object> {
@@ -60,5 +64,30 @@ export class RoutesService {
       route['thumbnail'] = fileName;
     });
     return response;
+  }
+
+  async createRoute(routePins: PostRouteDto): Promise<object> {
+    //public은 예약어이다
+    const { routeName, description, color, time } = routePins;
+    let { pins } = routePins;
+    const newRoute = await this.routesRepository.save({
+      userId: 1,
+      routeName: routeName,
+      description: description,
+      public: routePins.public,
+      color: color,
+      time: time,
+    });
+
+    //TODO tooClose계산, 추가하기
+    //pin각각에 routeId를 추가해 준다.
+    pins = pins.map((pin) => {
+      return Object.assign({ routesId: newRoute.id }, pin);
+    });
+    console.log(pins);
+    //bulk insert
+    await this.pinsRepository.save(pins);
+
+    return newRoute;
   }
 }

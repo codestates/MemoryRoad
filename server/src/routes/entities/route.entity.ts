@@ -3,7 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   OneToMany,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   Timestamp,
   UpdateDateColumn,
 } from 'typeorm';
@@ -11,7 +11,7 @@ import { PinEntity } from './pin.entity';
 
 @Entity('Routes')
 export class RouteEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
@@ -24,10 +24,10 @@ export class RouteEntity {
   description: string;
 
   @CreateDateColumn()
-  createdAt: Timestamp;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt: Timestamp;
+  updatedAt: Date;
 
   @Column()
   public: boolean;
