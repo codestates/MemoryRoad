@@ -20,10 +20,10 @@ export class Users {
   @Column({ length: 10 })
   oauthLogin: string;
 
-  @Column({ type: 'text' })
+  @Column({ length: 45 })
   saltedPassword: string;
 
-  @Column()
+  @Column({ length: 30 })
   salt: string;
 
   @Column()

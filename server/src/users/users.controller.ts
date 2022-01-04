@@ -22,9 +22,6 @@ export class UsersController {
   //회원가입
   @Post()
   async create(@Body() createUserDto: CreateUserDto, @Res() res): Promise<any> {
-    // // 솔트값이랑 비번 얻었다.
-    // createUserDto.salt = salt;
-    // createUserDto.saltedPassword = saltedpassword;
     const createUser = await this.usersService.create(createUserDto);
     res.status(200).send({ createUser, message: '회원 가입 성공' });
   }
@@ -55,19 +52,25 @@ export class UsersController {
 
   //중복된 이메일 여부 확인
   @Post('/auth/local/email')
-  checkEmail() {
-    return this.usersService.checkEmail();
+  async checkEmail(@Body('email') email: string, @Res() res) {
+    const check = await this.usersService.checkEmail(email);
+    res.status(200).send({ check, message: '사용 가능한 이메일입니다' });
   }
 
-  //중복된 비밀번호 확인
+  //일치하는 비밀번호 확인
   @Post('/auth/local/password')
-  checkPassword() {
-    return this.usersService.checkPassword();
+  async checkPassword(
+    @Body('salt') salt: string,
+    @Body('password') password: string,
+    @Res() res,
+  ) {
+    const check = await this.usersService.checkPassword(password, salt);
+    res.status(200).send({ check, message: '비밀번호가 일치합니다' });
   }
 
   @Patch('/:id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+    this.usersService.update(+id, updateUserDto);
   }
 
   @Delete('/:id')

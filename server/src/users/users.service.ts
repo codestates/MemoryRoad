@@ -21,8 +21,8 @@ export class UsersService {
     const isExistNick: Users = await this.usersRepository.findOne({
       nickName: createUserDto.nickName,
     });
-    // console.log(isExistNick);
-    // console.log(isExistemail);
+    console.log(isExistNick);
+    console.log(isExistemail);
     if (isExistemail) {
       throw new NotFoundException(`사용중인 이메일입니다.`);
     }
@@ -49,7 +49,7 @@ export class UsersService {
       await queryRunner.commitTransaction();
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      throw new NotFoundException(`Failed SignUp ${error}`);
+      throw new NotFoundException(`회원가입에 실패하였습니다.\n ${error}`);
     }
   }
 
@@ -75,10 +75,24 @@ export class UsersService {
   logOut() {
     return;
   }
-  async checkPassword() {
-    return;
+
+  async checkPassword(password: string, salt: string) {
+    const saltedPassword = await bcrypt.hash(password, salt);
+    const isExistPassword: Users = await this.usersRepository.findOne({
+      saltedPassword: saltedPassword,
+    });
+    if (!isExistPassword) {
+      throw new NotFoundException(`비밀번호가 일치하지 않습니다`);
+    }
   }
-  async checkEmail() {
-    return;
+
+  async checkEmail(email: string) {
+    const isExistEmail: Users = await this.usersRepository.findOne({
+      email: email,
+    });
+
+    if (isExistEmail) {
+      throw new NotFoundException('사용중인 이메일입니다');
+    }
   }
 }
