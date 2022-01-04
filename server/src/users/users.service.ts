@@ -49,7 +49,7 @@ export class UsersService {
       await queryRunner.commitTransaction();
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      throw new NotFoundException(`Failed SignUp ${error}`);
+      throw new NotFoundException(`회원가입에 실패하였습니다.\n ${error}`);
     }
   }
 
