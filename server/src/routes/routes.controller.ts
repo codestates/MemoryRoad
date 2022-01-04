@@ -1,5 +1,5 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { query } from 'express';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { PostRouteDto } from './dto/postRoute.dto';
 import { RouteEntity } from './entities/route.entity';
 import { RoutesService } from './routes.service';
 
@@ -21,5 +21,10 @@ export class RoutesController {
   ): Promise<object> {
     //nest의 표준 응답. 자바스크립트 객체 또는 배열을 반환하면 자동으로 JSON으로 직렬화된다.
     return this.routesService.getUserRoutes(query.page);
+  }
+
+  @Post()
+  createRoute(@Body() routePins: PostRouteDto) {
+    return this.routesService.createRoute(routePins);
   }
 }

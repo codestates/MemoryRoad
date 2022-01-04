@@ -1,14 +1,23 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { PinEntity } from './pin.entity';
 
 @Entity('Pictures')
 export class PictureEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => PinEntity, (Pins) => Pins.id)
   @JoinColumn({ name: 'pinId' })
   Pins: PinEntity;
+
+  @Column()
+  pinId: number;
 
   @Column()
   ranking: number;

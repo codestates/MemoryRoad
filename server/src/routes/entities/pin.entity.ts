@@ -4,18 +4,22 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { RouteEntity } from './route.entity';
 import { PictureEntity } from './picture.entity';
 
 @Entity('Pins')
 export class PinEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => RouteEntity, (Routes) => Routes.id)
+  @JoinColumn({ name: 'routesId' })
   Routes: RouteEntity;
+
+  @Column()
+  routesId: number;
 
   @Column()
   ranking: number;
