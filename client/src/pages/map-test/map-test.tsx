@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./map-test.css";
-import createPinModal from "../../modals/createPinModal"; // 핀 생성 모달창
+import createPinModal from "../../modals/createPinModal/createPinModal"; // 핀 생성 모달창
 
 const { kakao }: any = window;
 

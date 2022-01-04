@@ -2,7 +2,7 @@ import React from "react";
 import "./Signup.css";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../redux/reducer/index";
+import { RootState } from "../../redux/reducer/index";
 interface Props {
   SetLoginModal: Function;
   SetSignupModal: Function;

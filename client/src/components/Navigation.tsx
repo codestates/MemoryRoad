@@ -2,10 +2,9 @@ import React from "react";
 import "./Navigation.css";
 import { useState } from "react";
 import OpenedMenu from "./openedmenu";
-import Login from "./Login";
-import SignUp from "./Signup";
+import Login from "./../modals/login/Login";
+import SignUp from "./../modals/signup/Signup";
 import { useNavigate } from "react-router-dom";
-const Logo = require("../Resources/MeMoryRoadLogo.png");
 
 interface Props {
   LoginModal: boolean;
@@ -36,7 +35,7 @@ function Nav({
             className="item"
             id={LoginModal || SignupModal ? "logomist" : undefined}
           >
-            <img className="logo" src={Logo} onClick={() => navigate("/")} />
+            <img className="logo" src="http://127.0.0.1:5500/client/public/img/MeMoryRoadLogo.png" onClick={() => navigate("/")} />
           </div>
           <div></div>
 
