@@ -14,6 +14,7 @@ export class PinEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  //참조하는 루트가 삭제되면 같이 삭제된다.
   @ManyToOne(() => RouteEntity, (Routes) => Routes.id)
   @JoinColumn({ name: 'routesId' })
   Routes: RouteEntity;
