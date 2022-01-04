@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./../../../src/modals/createPinModal.css">
+  <script type="application/javascript">
+    let imageList = [];
+
+    function loadFile(input) {
+
+      const fileList = input.files;
+      const container = document.getElementById('createPinModal-pictures-container');
+      for(let i=0; i<fileList.length; i++){
+        if(imageList.indexOf(fileList[i].name) === -1){
+          imageList.push(fileList[i].name);
+
+          const box = document.createElement('div');
+          box.setAttribute('class', 'createPinModal-picture-box');
+          box.setAttribute('id', `${fileList[i].name}`);
+          container.appendChild(box);
+          const btn = document.createElement('button');
+          btn.setAttribute('type', 'button');
+          btn.setAttribute('id', 'createPinModal-delete-picture');
+          btn.setAttribute('onclick', `deleteFile(event)`);
+          const closeBtn = document.createElement('img');
+          closeBtn.setAttribute('class', 'createPinModal-close-btn');
+          closeBtn.setAttribute('src', 'http://127.0.0.1:5500/client/public/img/close_icon.png');
+          closeBtn.setAttribute('name', `${fileList[i].name}`);
+          btn.appendChild(closeBtn);
+          box.appendChild(btn);
+          const newImg = document.createElement('img');
+          newImg.setAttribute('class', 'createPinModal-picture')
+          newImg.setAttribute('src', URL.createObjectURL(fileList[i]));
+          box.appendChild(newImg);
+        }
+      }
+    }
+    function deleteFile(event) { 
+      const fileName = event.target.name;
+      const idx = imageList.indexOf(fileName);
+      const deleteTag = document.getElementById(fileName);
+      imageList.splice(idx, 1);
+      deleteTag.remove();
+      console.log(imageList);
+    }
+  </script>
+</head>
+<body>
+  <div id="createPinModal-background">
+    <div id="createPinModal-container">
+      <div class="createPinModal-title">
+        제목 <b class="text-highlight">*</b>
+      </div>
+      <input class="createPinModal-input" type="text" placeholder="장소의 제목을 입력해주세요" maxlength="10">
+      <div class="createPinModal-title">
+        사진 첨부
+      </div>
+      <form name="chooseImgFilesForm" method="post" enctype="multipart/form-data">
+        <div class="createPinModal-input addImgFilesBtn">
+          <label for="file-upload" id="file-upload-image">
+            <img src="http://127.0.0.1:5500/client/public/img/addPhoto_icon.png" width="40">
+          </label>
+        </div>
+        <input class="display-none" id="file-upload" type="file" accept="image/*" onchange="loadFile(this)" multiple/>
+      </form>
+      <div id="createPinModal-pictures-background">
+        <div id="createPinModal-pictures-container">
+          <!--이미지 태그들 생성될 자리-->
+        </div>
+      </div>
+      <button class="createPinModal-save-btn">장소 저장</button>
+      <button class="createPinModal-not-save-btn" onclick="closeModal()">창 닫기</button>
+    </div>
+  </div>
+</body>
+</html>
