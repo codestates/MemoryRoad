@@ -1,0 +1,32 @@
+.gridContainer2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+#X {
+  margin-right: 80%;
+  color: white;
+  font-size: 100%;
+}
+.Menutext {
+  text-align: center;
+  font-size: 50%;
+  color: black;
+  display: grid;
+  grid-template-rows: 2fr 1fr;
+}
+#background {
+  background-color: #b8e9d2;
+  opacity: 0.8;
+  position: fixed;
+  right: 0px;
+  top: 0px;
+  width: 70%;
+  height: 100%;
+  border-radius: 20px 0px 0px 20px;
+}
+@media (min-width: 500px) {
+  /* 500px 이상 */
+  #background {
+    width: 40%;
+  }
+}
