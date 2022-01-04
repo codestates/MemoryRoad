@@ -1,0 +1,102 @@
+.barmist {
+  background-color: gray;
+
+  opacity: 0.7;
+}
+#logomist {
+  filter: brightness(0.5);
+}
+.gridContainer {
+  box-shadow: 2px 3px 5px #d6e0e5;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 3fr 1fr 0.5fr 1fr 0.5fr;
+}
+.item {
+  cursor: pointer;
+  /* border: 2px solid black; */
+}
+.Mypagefont {
+  /* border: 2px solid black; */
+  line-height: 600%;
+  cursor: pointer;
+  font-size: 16px;
+  padding-left: 50%;
+}
+
+.loginfont {
+  /* border: 2px solid black; */
+  width: 100px;
+  line-height: 600%;
+  cursor: pointer;
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.mobile {
+  color: #b1bcb7;
+  cursor: pointer;
+}
+/* 노트북, 데스크탑*/
+@media (min-width: 800px) {
+  .mobile {
+    display: none;
+  }
+}
+/* 800px이하 */
+/* 모바일 */
+@media (max-width: 800px) {
+  .loginfont {
+    display: none;
+  }
+  .logo {
+    width: 180px;
+  }
+  .gridContainer {
+    box-shadow: 2px 3px 5px #d6e0e5;
+    text-align: center;
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+  }
+  .mobile {
+    margin-top: 10%;
+    font-size: 30px;
+  }
+}
+/* 500px 이상 800px이하 */
+/* @media (max-width: 800px) {
+  .logo {
+    margin-top: 10%;
+    width: 150px;
+  }
+  .mobile {
+    font-size: 30px;
+  }
+  .loginfont {
+    display: none;
+  }
+} */
+/* 모바일 */
+/* 500px 이하 */
+/* @media (max-width: 500px) {
+  .mobile {
+    margin-top: 60%;
+    margin-left: 200%;
+    font-size: 150%;
+  }
+  .logo {
+    width: 100%;
+  }
+  .loginfont {
+    display: none;
+  }
+} */
+/* 태블릿 */
+/* @media (min-width: 500px) {
+  /* 500px 이상 */
+
+/* .mobile {
+    margin-top: 2%;
+    margin-left: 500px;
+  } */
+/* }  */

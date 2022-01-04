@@ -1,8 +1,10 @@
 import { combineReducers } from "redux";
+
 // import reducer1 from 'reducer';
 
 const rootReducer = combineReducers({
-    /* reducer1, */
+  /* reducer1, */
+  // SignUpReducer,
 });
 
 export default rootReducer;
