@@ -12,6 +12,7 @@ export class PictureEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
+  //참조하는 핀이 삭제되면 같이 삭제된다.
   @ManyToOne(() => PinEntity, (Pins) => Pins.id)
   @JoinColumn({ name: 'pinId' })
   Pins: PinEntity;

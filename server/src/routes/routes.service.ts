@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
+import { PatchRouteDto } from './dto/patchRoute.dto';
 import { PostRouteDto } from './dto/postRoute.dto';
 import { PinEntity } from './entities/pin.entity';
 import { RouteEntity } from './entities/route.entity';
@@ -41,7 +42,7 @@ export class RoutesService {
       .orderBy('Routes.createdAt')
       .addOrderBy('Pins.ranking')
       .addOrderBy('Pictures.id')
-      .getMany(); //여래 개의 결과를 가져온다. entity를 반환한다. getRawMany등으로 raw data를 가져올 수 있다.
+      .getMany(); //여러 개의 결과를 가져온다. entity를 반환한다. getRawMany등으로 raw data를 가져올 수 있다.
 
     //count는 총 루트의 개수
     //페이지네이션을 위해 8개씩 나누어 보낸다
@@ -67,7 +68,7 @@ export class RoutesService {
     return response;
   }
 
-  async createRoute(routePins: PostRouteDto): Promise<object> {
+  async createRoute(routePins: PostRouteDto): Promise<RouteEntity> {
     //public은 예약어이다
     const { routeName, description, color, time } = routePins;
     let { pins } = routePins;
@@ -111,5 +112,31 @@ export class RoutesService {
     await this.pinsRepository.save(pins);
 
     return newRoute;
+  }
+
+  async updateRoute(
+    routeId: number,
+    route: PatchRouteDto,
+  ): Promise<UpdateResult> {
+    //루트 아이디와 일치하는 요소 업데이트
+    const result = await this.routesRepository
+      .createQueryBuilder()
+      .update('Routes')
+      .set(route)
+      .where('id = :id', { id: routeId })
+      .execute();
+
+    return result;
+  }
+
+  async deleteRoute(routeId: number) {
+    const result = await this.routesRepository
+      .createQueryBuilder()
+      .delete()
+      .from('Routes')
+      .where('id = :id', { id: routeId })
+      .execute();
+
+    return result;
   }
 }
