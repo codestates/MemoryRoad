@@ -10,8 +10,6 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { CheckEmailDto } from './dto/check-email.dto';
-import { CheckPasswordDto } from './dto/check-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 import { InjectRepository } from '@nestjs/typeorm';
@@ -54,21 +52,25 @@ export class UsersController {
 
   //중복된 이메일 여부 확인
   @Post('/auth/local/email')
-  async checkEmail(@Body() checkEmailDto: CheckEmailDto, @Res() res) {
-    const check = await this.usersService.checkEmail(checkEmailDto);
+  async checkEmail(@Body('email') email: string, @Res() res) {
+    const check = await this.usersService.checkEmail(email);
     res.status(200).send({ check, message: '사용 가능한 이메일입니다' });
   }
 
   //일치하는 비밀번호 확인
   @Post('/auth/local/password')
-  async checkPassword(@Body() checkPasswordDto: CheckPasswordDto, @Res() res) {
-    const check = await this.usersService.checkPassword(checkPasswordDto);
+  async checkPassword(
+    @Body('salt') salt: string,
+    @Body('password') password: string,
+    @Res() res,
+  ) {
+    const check = await this.usersService.checkPassword(password, salt);
     res.status(200).send({ check, message: '비밀번호가 일치합니다' });
   }
 
   @Patch('/:id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+    this.usersService.update(+id, updateUserDto);
   }
 
   @Delete('/:id')

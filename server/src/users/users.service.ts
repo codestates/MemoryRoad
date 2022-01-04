@@ -2,8 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getConnection } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { CheckEmailDto } from './dto/check-email.dto';
-import { CheckPasswordDto } from './dto/check-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Users } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
@@ -77,11 +75,9 @@ export class UsersService {
   logOut() {
     return;
   }
-  async checkPassword(checkPasswordDto: CheckPasswordDto) {
-    const saltedPassword = await bcrypt.hash(
-      checkPasswordDto.password,
-      checkPasswordDto.salt,
-    );
+
+  async checkPassword(password: string, salt: string) {
+    const saltedPassword = await bcrypt.hash(password, salt);
     const isExistPassword: Users = await this.usersRepository.findOne({
       saltedPassword: saltedPassword,
     });
@@ -89,9 +85,10 @@ export class UsersService {
       throw new NotFoundException(`비밀번호가 일치하지 않습니다`);
     }
   }
-  async checkEmail(checkEmailDto: CheckEmailDto) {
+
+  async checkEmail(email: string) {
     const isExistEmail: Users = await this.usersRepository.findOne({
-      email: checkEmailDto.email,
+      email: email,
     });
 
     if (isExistEmail) {
