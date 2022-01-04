@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getConnection } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
+import { CheckEmailDto } from './dto/check-email.dto';
+import { CheckPasswordDto } from './dto/check-password.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Users } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
@@ -21,8 +23,8 @@ export class UsersService {
     const isExistNick: Users = await this.usersRepository.findOne({
       nickName: createUserDto.nickName,
     });
-    // console.log(isExistNick);
-    // console.log(isExistemail);
+    console.log(isExistNick);
+    console.log(isExistemail);
     if (isExistemail) {
       throw new NotFoundException(`사용중인 이메일입니다.`);
     }
@@ -75,10 +77,25 @@ export class UsersService {
   logOut() {
     return;
   }
-  async checkPassword() {
-    return;
+  async checkPassword(checkPasswordDto: CheckPasswordDto) {
+    const saltedPassword = await bcrypt.hash(
+      checkPasswordDto.password,
+      checkPasswordDto.salt,
+    );
+    const isExistPassword: Users = await this.usersRepository.findOne({
+      saltedPassword: saltedPassword,
+    });
+    if (!isExistPassword) {
+      throw new NotFoundException(`비밀번호가 일치하지 않습니다`);
+    }
   }
-  async checkEmail() {
-    return;
+  async checkEmail(checkEmailDto: CheckEmailDto) {
+    const isExistEmail: Users = await this.usersRepository.findOne({
+      email: checkEmailDto.email,
+    });
+
+    if (isExistEmail) {
+      throw new NotFoundException('사용중인 이메일입니다');
+    }
   }
 }
