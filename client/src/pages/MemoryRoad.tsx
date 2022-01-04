@@ -3,8 +3,8 @@ import Nav from "../components/Navigation";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { useState } from "react";
 import Mypage from "./Mypage";
-import Login from "../components/Login";
-import SignUp from "../components/Signup";
+import Login from "../modals/login/Login";
+import SignUp from "../modals/signup/Signup";
 import "./MemoryRoad.css";
 // Home 화면입니다
 const MemoryRoad = () => {

@@ -2,9 +2,6 @@ import React from "react";
 import "./Login.css";
 import { useState } from "react";
 import axios from "axios";
-const googleButton = require("../Resources/btn_google_signin_dark_pressed_web.png");
-const NaverButton = require("../Resources/btnG_official.png");
-const kakaoButton = require("../Resources/kakao_login_medium_narrow.png");
 
 interface Props {
   SetLoginModal: Function;
@@ -52,9 +49,9 @@ function Login({ SetLoginModal, SetSignupModal }: Props) {
           <hr className="linebottom"></hr>
         </div>
         <div className="OauthButton">
-          <img className="GoogleButton pointer" src={googleButton} />
-          <img className="NaverButton pointer" src={NaverButton} />
-          <img className="kakaoButton pointer" src={kakaoButton} />
+          <img className="GoogleButton pointer" src="http://127.0.0.1:5500/client/public/img/google_btn.png" />
+          <img className="NaverButton pointer" src="http://127.0.0.1:5500/client/public/img/naver_btn.png" />
+          <img className="kakaoButton pointer" src="http://127.0.0.1:5500/client/public/img/kakao_btn.png" />
         </div>
         <div className="center TotheSignup">
           혹시 회원이 아니신가요?{" "}

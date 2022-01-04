@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-, "public/customOverlay/createPinModal/createPinModal.js", "public/customOverlay/createPinModal/createPinModal.js", "public/customOverlay"  ]
+  ]
 }
