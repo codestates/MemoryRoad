@@ -73,6 +73,7 @@ export class RoutesService {
     return response;
   }
 
+  // 핀을 추가하기 위해서는 새로 생성된 루트의 아이디가 필요하므로, 루트를 생성하고, 루트 아이디를 이용해 핀들을 생성한다.
   async createRoute(routePins: PostRouteDto): Promise<RouteEntity> {
     //public은 예약어이다
     const { routeName, description, color, time } = routePins;
@@ -205,6 +206,14 @@ export class RoutesService {
         id: pinId,
       })
       .execute();
+
+    //tooClose 칼럼 갱신. updatePin메소드와 동일하다
+    const dbPins = await this.pinsRepository
+      .createQueryBuilder('Pins')
+      .select(['Pins.id', 'Pins.latitude', 'Pins.longitude', 'Pins.tooClose'])
+      .getMany();
+    const updatePinInfoId = redefineTooClose(dbPins);
+    await this.pinsRepository.save(updatePinInfoId);
 
     return result;
   }
