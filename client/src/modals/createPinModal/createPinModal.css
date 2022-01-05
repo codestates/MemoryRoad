@@ -1,11 +1,8 @@
 /*학민님 모달창 양 옆 사이드는 300px*/
-body {
-  background-color: gray;
-}
 /*모달창 전체 컨테이너*/
 #createPinModal-background {
   width: 250px;
-  height: 380px;
+  height: 370px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -130,7 +127,7 @@ body {
   height: 20px;
 }
 /*핀 저장 버튼 디자인*/
-.createPinModal-save-btn {
+#createPinModal-save-btn {
   line-height: 28px;
   font-size: 0.9em;
   font-weight: 600;
@@ -139,7 +136,7 @@ body {
   border-radius: 5px;
   background-color: #91BA9F;
 }
-.createPinModal-not-save-btn {
+#createPinModal-not-save-btn {
   margin-top: 7px;
   line-height: 28px;
   font-size: 0.9em;

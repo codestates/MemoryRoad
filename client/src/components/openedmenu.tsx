@@ -1,6 +1,6 @@
-import React from "react";
-import "./openedmenu.css";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import './openedmenu.css';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   SetOpen: Function;
@@ -33,7 +33,7 @@ function OpenedMenu({ SetOpen, LoginModal, SetLoginModal }: Props) {
           </div>
           <div
             onClick={() => {
-              navigate("/Mypage");
+              navigate('/Mypage');
               SetOpen(false);
             }}
           >

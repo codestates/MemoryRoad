@@ -1,0 +1,43 @@
+/*검색창 위치 고정*/
+#searchPin-static-location {
+  display: flex;
+  justify-content: center;
+}
+/*검색창 전체 컨테이너*/
+#searchPin-background {
+  position: fixed;
+  z-index: 995;
+  width: 240px;
+  height: 40px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+/*검색창 요소들을 담은 내부 컨테이너*/
+#searchPin-container {
+  width: inherit;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+/*검색 input창 디자인*/
+.searchPin-input {
+  border: 2px solid rgb(158, 158, 158, 0.7);
+  border-radius: 5px;
+  outline: none;
+  height: 25px;
+}
+/*검색 btn 디자인*/
+.searchPin-search-btn {
+  width: 50px;
+  padding: 3px  0;
+  line-height: 25px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  color: rgba(26, 26, 26, 0.7);
+  background-color: #91BA9F;
+}
+
