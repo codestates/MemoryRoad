@@ -62,7 +62,7 @@ export class UsersService {
     }
   }
 
-  //회원 정보 업데이트
+  //회원 정보 업데이트 닉네임. 비밀번호, 프로필이미지
   async update(id: number, updateUserDto: UpdateUserDto) {
     return `This action updates a #${id} user`;
   }
@@ -261,8 +261,9 @@ export class UsersService {
     );
     return accessToken;
   }
-  //로컬 로그인
-  async local() {
+  //로컬 로그인 이메일, 비밀번호
+  async local(body) {
+
     return;
   }
   //로그아웃

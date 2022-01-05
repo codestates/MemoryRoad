@@ -68,8 +68,15 @@ export class UsersController {
 
   //로컬 로그인
   @Post('/auth/local')
-  async localLogin() {
-    return this.usersService.local();
+  async localLogin(@Req() req: Request, @Res() res: Response) {
+    const accessToken = await this.usersService.local(req.body);
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      maxAge: 5 * 60 * 60 * 1000,
+      sameSite: 'none',
+      secure: true,
+    });
+    res.status(200).send({ message: '구글 로그인 했습니다.' });
   }
 
   //중복된 이메일 여부 확인
