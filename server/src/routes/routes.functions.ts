@@ -43,3 +43,36 @@ export function isClosewithDB(
 
   return dbPinId;
 }
+
+//db의 핀들을 받아, 핀들 간의 관계를 대조, tooClose 칼럼을 갱신하기 위한 배열을 생성한다.
+export function redefineTooClose(
+  dbPins: PinEntity[],
+): { id: number; tooClose: boolean }[] {
+  //업데이트 정보가 담긴 배열
+  const updatePinInfo: { id: number; tooClose: boolean }[] = [];
+  //dbPins정보를 토대로 초기 배열 설정
+  for (let i = 0; i < dbPins.length; i++) {
+    updatePinInfo.push({ id: dbPins[i].id, tooClose: false });
+  }
+
+  //i 요소의 tooClose를 결정하기 위한 flag
+  let iFlag = false;
+  for (let i = 0; i < dbPins.length; i++) {
+    if (updatePinInfo[i].tooClose) {
+      iFlag = true;
+    }
+    for (let j = i + 1; j < dbPins.length; j++) {
+      const iLoc = { lat: dbPins[i].latitude, lng: dbPins[i].longitude };
+      const jLoc = { lat: dbPins[j].latitude, lng: dbPins[j].longitude };
+      if (haversine(iLoc, jLoc) <= 100) {
+        iFlag = true;
+        updatePinInfo[j].tooClose = true;
+      }
+    }
+
+    updatePinInfo[i].tooClose = iFlag;
+    iFlag = false;
+  }
+
+  return updatePinInfo;
+}
