@@ -23,9 +23,6 @@ export class Users {
   @Column({ length: 45 })
   saltedPassword: string;
 
-  @Column({ length: 30 })
-  salt: string;
-
   @Column()
   oauthCI: string;
 }
