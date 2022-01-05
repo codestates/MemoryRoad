@@ -117,7 +117,10 @@ export class RoutesController {
   async getPins(@Param('routeId') routeId: number, @Res() res: Response) {
     try {
       const pins = await this.routesService.getPins(routeId);
-      return res.status(200).json(pins);
+      return res.status(200).json({
+        code: 200,
+        pins,
+      });
     } catch (err) {
       console.log(err);
       return res.status(500).json({
