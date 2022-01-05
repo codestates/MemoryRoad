@@ -196,7 +196,7 @@ export class UsersService {
         throw new BadRequestException('이미 사용중인 이메일입니다');
       }
       await this.usersRepository.save({
-        nickName: result.name,
+        nickName: result.email,
         email: result.email,
         oauthLogin: 'naver',
         saltedPassword: null,
