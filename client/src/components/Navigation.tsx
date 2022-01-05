@@ -1,10 +1,10 @@
-import React from "react";
-import "./Navigation.css";
-import { useState } from "react";
-import OpenedMenu from "./openedmenu";
-import Login from "./../modals/login/Login";
-import SignUp from "./../modals/signup/Signup";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import './Navigation.css';
+import { useState } from 'react';
+import OpenedMenu from './openedmenu';
+import Login from './../modals/login/Login';
+import SignUp from './../modals/signup/Signup';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   LoginModal: boolean;
@@ -27,19 +27,23 @@ function Nav({
         <div
           className={
             LoginModal || SignupModal
-              ? " barmist gridContainer"
-              : "gridContainer"
+              ? ' barmist gridContainer'
+              : 'gridContainer'
           }
         >
           <div
             className="item"
-            id={LoginModal || SignupModal ? "logomist" : undefined}
+            id={LoginModal || SignupModal ? 'logomist' : undefined}
           >
-            <img className="logo" src="http://127.0.0.1:5500/client/public/img/MeMoryRoadLogo.png" onClick={() => navigate("/")} />
+            <img
+              className="logo"
+              onClick={() => navigate('/')}
+              src="http://127.0.0.1:5500/client/public/img/MeMoryRoadLogo.png"
+            />
           </div>
           <div></div>
 
-          <div className="loginfont" onClick={() => navigate("/Mypage")}>
+          <div className="loginfont" onClick={() => navigate('/Mypage')}>
             마이페이지
           </div>
 
@@ -49,12 +53,12 @@ function Nav({
           {/* 메뉴창 */}
           <div className="mobile">
             <div>
-              {" "}
+              {' '}
               {isOpen ? (
                 <OpenedMenu
-                  SetOpen={SetOpen}
                   LoginModal={LoginModal}
                   SetLoginModal={SetLoginModal}
+                  SetOpen={SetOpen}
                 />
               ) : null}
             </div>

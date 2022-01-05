@@ -1,0 +1,18 @@
+#map-whole-container {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+}
+#map-navigator-top {
+  position: fixed;
+  z-index: 999;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-flow: column wrap;
+}
+#map {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+}

@@ -1,8 +1,8 @@
-import React from "react";
-import "./Signup.css";
-import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../redux/reducer/index";
+import React from 'react';
+import './Signup.css';
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../redux/reducer/index';
 interface Props {
   SetLoginModal: Function;
   SetSignupModal: Function;
@@ -28,38 +28,38 @@ function SignUp({ SetLoginModal, SetSignupModal }: Props) {
         <div className="center titleLogin">회원가입</div>
         <div className="textOninput">이메일</div>
         <input
+          className="input2"
           name="Email"
           onChange={InputEmail}
-          className="input2"
-          type="text"
           placeholder="이메일을 입력해주세요."
+          type="text"
         ></input>
         <button className="Emailcheck">이메일 중복확인</button>
-        <div className="ErrorMessage2" style={{ marginBottom: "30px" }}>
+        <div className="ErrorMessage2" style={{ marginBottom: '30px' }}>
           에러 메시지
         </div>
         <div className="textOninput">닉네임</div>
         <input
           className="input2"
-          type="text"
           placeholder="닉네임을 입력해주세요."
+          type="text"
         ></input>
-        <div className="ErrorMessage2" style={{ marginBottom: "30px" }}>
+        <div className="ErrorMessage2" style={{ marginBottom: '30px' }}>
           에러 메시지
         </div>
         <div className="textOninput">비밀번호</div>
         <input
           className="input2"
-          type="password"
           placeholder="비밀번호를 입력해주세요."
+          type="password"
         ></input>
         <div className="ErrorMessage2">에러 메시지</div>
         <input
           className="input2"
-          type="password"
           placeholder="비밀번호을 다시 한번 입력해주세요."
+          type="password"
         ></input>
-        <div className="ErrorMessage2" style={{ marginBottom: "15px" }}>
+        <div className="ErrorMessage2" style={{ marginBottom: '15px' }}>
           에러 메시지
         </div>
 
@@ -67,7 +67,7 @@ function SignUp({ SetLoginModal, SetSignupModal }: Props) {
           <button className="SignUpButton pointer">회원가입</button>
         </div>
         <div className="center ToLogin">
-          혹시 회원이신가요?{" "}
+          혹시 회원이신가요?{' '}
           <b
             className="pointer"
             onClick={() => {
