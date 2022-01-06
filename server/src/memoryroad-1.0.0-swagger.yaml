@@ -111,10 +111,6 @@ components:
           type: string
           description: 핀의 주소
           example: 서울특별시 성북구
-        descreption:
-          type: string
-          description: 핀의 설명
-          example: 오늘은 친구들이랑 놀았다.
         tooClose:
           type: boolean
           description: 해당 핀이 DB에 저장한 핀과 인접한 핀인지 판별
@@ -748,7 +744,67 @@ paths:
               schema:
                 type: object
                 $ref: '#/components/schemas/ServerErr'
-  
+    requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                routeName:
+                  description: 루트 제목
+                  type: string
+                  example: 루트 제목
+                description:
+                  description: 루트 설명
+                  type: string
+                  example: 루트 설명
+                public:
+                  description: 루트 공개 여부
+                  type: boolean
+                  example: false
+                color:
+                  description: 루트 색깔
+                  type: string
+                  example: red
+                time:
+                  description: 루트 시간
+                  type: number
+                  example: 5
+                pins:
+                  description: 루트에 포함된 핀들
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      ranking:
+                        type: integer
+                        description: 핀의 순서
+                        example: 0
+                      locationName:
+                        type: string
+                        description: 핀의 이름
+                        example: 경치 좋은 곳
+                      latitude:
+                        type: number
+                        description: 위도
+                        example: 33.0000000000
+                      longitude:
+                        type: number
+                        description: 경도
+                        example: 126.0000000000
+                      address:
+                        type: string
+                        description: 핀의 주소
+                        example: 서울특별시 성북구
+                      startTime:
+                        type: string
+                        description: 핀의 시작 시간
+                        example: '12'
+                      endTime: 
+                        type: string
+                        description: 핀의 종료 시간
+                        example: '13'
  '/routes/{routeId}':
   patch:
     tags:
@@ -774,14 +830,41 @@ paths:
                   example: 201
                 message:
                   type: string
-                  example: modified
+                  example: updated
       '500':
         description: 서버 오류
         content: 
             application/json:
               schema:
                 type: object
-                $ref: '#/components/schemas/ServerErr'            
+                $ref: '#/components/schemas/ServerErr'   
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              routeName:
+                description: 루트 제목
+                type: string
+                example: 루트 제목
+              description:
+                description: 루트 설명
+                type: string
+                example: 루트 설명
+              public:
+                description: 루트 공개 여부
+                type: boolean
+                example: false
+              color:
+                description: 루트 색깔
+                type: string
+                example: red
+              time:
+                description: 루트 시간
+                type: number
+                example: 5         
   delete:
     tags:
     - routes
@@ -848,12 +931,80 @@ paths:
               schema:
                 type: object
                 $ref: '#/components/schemas/ServerErr'
+  post:
+    tags:
+    - routes
+    summary: 해당 루트에 핀을 새로 생성한다.
+    description: 해당 루트에 핀을 새로 생성한다.
+    parameters:
+        - name: routeId
+          in: path
+          description: 루트의 아이디
+          required: true
+          schema:
+            type: integer
+    responses:
+      '201':
+       description: 생성 성공
+       content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+                example: 201
+              message:
+                type: string
+                example: created
+      '500':
+        description: 서버 오류
+        content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ServerErr'  
+    requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ranking:
+                  type: integer
+                  description: 핀의 순서
+                  example: 0
+                locationName:
+                  type: string
+                  description: 핀의 이름
+                  example: 경치 좋은 곳
+                latitude:
+                  type: number
+                  description: 위도
+                  example: 33.0000000000
+                longitude:
+                  type: number
+                  description: 경도
+                  example: 126.0000000000
+                address:
+                  type: string
+                  description: 핀의 주소
+                  example: 서울특별시 성북구
+                startTime:
+                  type: string
+                  description: 핀의 시작 시간
+                  example: '12'
+                endTime: 
+                  type: string
+                  description: 핀의 종료 시간
+                  example: '13'
+                
  '/routes/{routeId}/pins/{pinId}':
   patch:
     tags:
     - routes
-    summary: 핀 카드 수정. 없는 pinId인 경우 핀을 새로 생성
-    description: 핀 카드 수정. 없는 pinId인 경우 핀을 새로 생성
+    summary: 핀 카드 수정
+    description: 핀 카드 수정
     parameters:
         - name: routeId
           in: path
@@ -879,19 +1030,61 @@ paths:
                   example: 200
                 message:
                   type: string
-                  example: modified
-      '201':
-       description: 생성 성공
-       content:
+                  example: updated
+      '404':
+        description: 없는 핀, 또는 다른 유저가 작성한 핀을 업데이트 하려는 경우
+        content:
             application/json:
               schema:
                properties:
                 code:
                   type: integer
-                  example: 201
+                  example: 404
                 message:
                   type: string
-                  example: created
+                  example: 'not found'
+      '500':
+        description: 서버 오류
+        content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ServerErr'
+    requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ranking:
+                  type: integer
+                  description: 핀의 순서
+                  example: 0
+                locationName:
+                  type: string
+                  description: 핀의 이름
+                  example: 경치 좋은 곳
+                latitude:
+                  type: number
+                  description: 위도
+                  example: 33.0000000000
+                longitude:
+                  type: number
+                  description: 경도
+                  example: 126.0000000000
+                address:
+                  type: string
+                  description: 핀의 주소
+                  example: 서울특별시 성북구
+                startTime:
+                  type: string
+                  description: 핀의 시작 시간
+                  example: '12'
+                endTime: 
+                  type: string
+                  description: 핀의 종료 시간
+                  example: '13'    
   delete:
     tags:
     - routes
@@ -923,6 +1116,25 @@ paths:
                 message:
                   type: string
                   example: deleted
+      '404':
+        description: 없는 핀, 또는 다른 유저가 작성한 핀을 삭제 하려는 경우
+        content:
+            application/json:
+              schema:
+               properties:
+                code:
+                  type: integer
+                  example: 404
+                message:
+                  type: string
+                  example: 'not found'
+      '500':
+        description: 서버 오류
+        content: 
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/ServerErr'
  /wards:
   get:
     tags:

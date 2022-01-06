@@ -37,9 +37,6 @@ export class PinEntity {
   @Column({ length: 45 })
   address: string;
 
-  @Column({ length: 255 })
-  description: string;
-
   @Column()
   tooClose: boolean;
 
