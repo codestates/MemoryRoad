@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 // import MapTest from './pages/map-test/map-test';
+import MemoryRoad from './pages/MemoryRoad';
 // import SearchPinBar from './components/searchPinBar/searchPinBar';
 import CreatePinMap from './pages/createPinMap/createPinMap';
 // import MemoryRoad from "./pages/MemoryRoad";
@@ -12,7 +13,7 @@ import store from './redux/store/index';
 
 ReactDOM.render(
   <Provider store={store}>
-    <CreatePinMap />
+    <MemoryRoad />
   </Provider>,
   document.getElementById('root'),
 );

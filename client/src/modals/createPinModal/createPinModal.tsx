@@ -23,8 +23,13 @@ const createPinModal: string =
   '          <!--이미지 태그들 생성될 자리-->' +
   '        </div>' +
   '      </div>' +
+<<<<<<< HEAD
+  "      <button class='createPinModal-save-btn'>장소 저장</button>" +
+  "      <button class='createPinModal-not-save-btn' onclick='closeModal()'>창 닫기</button>" +
+=======
   "      <button id='createPinModal-save-btn'>장소 저장</button>" +
   "      <button id='createPinModal-not-save-btn' onclick='closeModal()'>창 닫기</button>" +
+>>>>>>> 8c71f2f92bbcb12e066742ce0dd767585773fb60
   '    </div>' +
   '  </div>';
 
