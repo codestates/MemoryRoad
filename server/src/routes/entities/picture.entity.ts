@@ -20,9 +20,6 @@ export class PictureEntity {
   @Column()
   pinId: number;
 
-  @Column()
-  ranking: number;
-
   @Column({ length: 45 })
   fileName: string;
 }

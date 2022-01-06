@@ -10,6 +10,7 @@ import {
   Res,
 } from '@nestjs/common';
 import { Response } from 'express';
+import { PatchPinDto } from './dto/patchPin.dto';
 import { PatchRouteDto } from './dto/patchRoute.dto';
 import { PostRouteDto } from './dto/postRoute.dto';
 import { RoutesService } from './routes.service';
@@ -101,6 +102,112 @@ export class RoutesController {
       return res.status(200).json({
         code: 200,
         message: 'deleted',
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        code: 500,
+        message: 'server error',
+      });
+    }
+  }
+
+  //TODO: 해당 사용자가 작성한 루트의 핀들만 조회할 수 있어야 한다.
+  //해당 루트의 핀들 조회
+  @Get('/:routeId/pins')
+  async getPins(@Param('routeId') routeId: number, @Res() res: Response) {
+    try {
+      const pins = await this.routesService.getPins(routeId);
+      return res.status(200).json({
+        code: 200,
+        pins,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        code: 500,
+        message: 'server error',
+      });
+    }
+  }
+
+  //TODO: 해당 사용자가 작성한 루트의 핀들만 업데이트 할 수 있어야 한다.
+  //루트의 핀 업데이트
+  @Patch('/:routeId/pins/:pinId')
+  async updatePin(
+    @Param('routeId') routeId: number,
+    @Param('pinId') pinId: number,
+    @Body() pin: PatchPinDto,
+    @Res() res: Response,
+  ) {
+    try {
+      const result = await this.routesService.updatePin(routeId, pinId, pin);
+
+      if (!result.affected) {
+        //없는 핀, 또는 다른 유저가 작성한 핀을 업데이트 하려는 경우
+        return res.status(404).json({
+          code: 404,
+          message: 'not found',
+        });
+      }
+
+      return res.status(200).json({
+        code: 200,
+        message: 'updated',
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        code: 500,
+        message: 'server error',
+      });
+    }
+  }
+
+  //TODO: 해당 사용자가 작성한 핀만 삭제할 수 있어야 한다.(유저의 루트 소유여부를 확인, service에서 에러를 throw한다)
+  //핀과 핀을 참조하는 사진들을 삭제한다.
+  @Delete('/:routeId/pins/:pinId')
+  async deletePin(
+    @Param('routeId') routeId: number,
+    @Param('pinId') pinId: number,
+    @Res() res: Response,
+  ) {
+    try {
+      const deleteResult = await this.routesService.deletePin(routeId, pinId);
+      if (!deleteResult.affected) {
+        //없는 핀, 또는 다른 유저가 작성한 핀을 삭제 하려는 경우
+        return res.status(404).json({
+          code: 404,
+          message: 'not found',
+        });
+      }
+
+      return res.status(200).json({
+        code: 200,
+        message: 'deleted',
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        code: 500,
+        message: 'server error',
+      });
+    }
+  }
+
+  //TODO: 해당 사용자가 작성한 루트의 핀만 생성할 수 있다. 사진도 같이 추가하기
+  //해당 루트에 핀을 새로 생성한다.
+  @Post('/:routeId/pins')
+  async createPin(
+    @Param('routeId') routeId: number,
+    @Body() pin: PatchPinDto,
+    @Res() res: Response,
+  ) {
+    try {
+      await this.routesService.createPin(routeId, pin);
+      return res.status(201).json({
+        code: 201,
+        message: 'created',
       });
     } catch (err) {
       console.log(err);

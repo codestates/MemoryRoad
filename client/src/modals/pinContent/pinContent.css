@@ -1,0 +1,23 @@
+.windowInfo-content-container {
+  display: block;
+  z-index: 1;
+  padding:20px;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  border-radius: 8px;
+  border: solid 2px rgba(135, 135, 135, 0.4);
+  background-color: rgb(232, 232, 232);
+}
+.windowInfo-content-section {
+  display: flex;
+}
+.windowInfo-content-title {
+  width: 100px;
+  font-weight:600;
+  font-size: 13px;
+}
+.windowInfo-content-property {
+  width: 180px;
+  font-size: 12px;
+}
