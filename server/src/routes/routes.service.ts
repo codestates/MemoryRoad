@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm';
 import { PatchPinDto } from './dto/patchPin.dto';
 import { PatchRouteDto } from './dto/patchRoute.dto';
 import { PostRouteDto } from './dto/postRoute.dto';
+import { PictureEntity } from './entities/picture.entity';
 import { PinEntity } from './entities/pin.entity';
 import { RouteEntity } from './entities/route.entity';
 import {
@@ -20,6 +25,8 @@ export class RoutesService {
     private routesRepository: Repository<RouteEntity>,
     @InjectRepository(PinEntity)
     private pinsRepository: Repository<PinEntity>,
+    @InjectRepository(PictureEntity)
+    private picturesRepository: Repository<PictureEntity>,
   ) {}
 
   async getUserRoutes(page: number): Promise<object> {
@@ -218,23 +225,36 @@ export class RoutesService {
     return result;
   }
 
-  async createPin(routeId: number, pin: PatchPinDto) {
-    const newPin = { ...pin, routesId: routeId };
-
-    const dbPins = await this.pinsRepository
-      .createQueryBuilder('Pins')
-      .select(['Pins.id', 'Pins.latitude', 'Pins.longitude', 'Pins.tooClose'])
-      .getMany();
-
-    //추가하려는 점과 인점한 DB의 핀들. 이 핀들의 tooClose를 true로 업데이트 한다.
-    let dbPinId: { id: number; tooClose: boolean }[] = [];
-
-    //isClosewithDB 함수는 newPin의 속성을 변경할 수 있다.(순수함수가 아니다.)
-    dbPinId = Object.assign(dbPinId, isClosewithDB(dbPins, newPin));
-
-    //DB핀들 업데이트 dbPinId가 빈 배열일 경우 실행되지 않는다.
-    await this.pinsRepository.save(dbPinId);
-
-    return await this.pinsRepository.save(newPin);
+  async createPin(
+    routeId: number,
+    pin: PatchPinDto,
+    files: Array<Express.Multer.File>,
+  ) {
+    try {
+      const newPin = { ...pin, routesId: routeId };
+      const dbPins = await this.pinsRepository
+        .createQueryBuilder('Pins')
+        .select(['Pins.id', 'Pins.latitude', 'Pins.longitude', 'Pins.tooClose'])
+        .getMany();
+      //추가하려는 점과 인점한 DB의 핀들. 이 핀들의 tooClose를 true로 업데이트 한다.
+      let dbPinId: { id: number; tooClose: boolean }[] = [];
+      //isClosewithDB 함수는 newPin의 속성을 변경할 수 있다.(순수함수가 아니다.)
+      dbPinId = Object.assign(dbPinId, isClosewithDB(dbPins, newPin));
+      //DB핀들 업데이트 dbPinId가 빈 배열일 경우 실행되지 않는다.
+      await this.pinsRepository.save(dbPinId);
+      //생성한 핀을 이용해 사진의 정보를 저장한다.
+      const createPinResult = await this.pinsRepository.save(newPin);
+      const newPictures = [];
+      files.forEach((file) => {
+        newPictures.push({
+          pinId: createPinResult.id,
+          fileName: file.path,
+        });
+      });
+      //DB에 사진 정보 저장
+      await this.picturesRepository.save(newPictures);
+    } catch (err) {
+      throw new InternalServerErrorException();
+    }
   }
 }

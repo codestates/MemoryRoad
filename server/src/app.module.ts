@@ -6,8 +6,6 @@ import { UsersModule } from './users/users.module';
 import { RoutesModule } from './routes/routes.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Users } from './users/entities/user.entity';
-
 @Module({
   imports: [
     ConfigModule.forRoot(),
