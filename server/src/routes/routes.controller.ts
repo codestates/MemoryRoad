@@ -110,4 +110,23 @@ export class RoutesController {
       });
     }
   }
+
+  //TODO: 해당 사용자가 작성한 루트의 핀들만 조회할 수 있어야 한다.
+  //해당 루트의 핀들 조회
+  @Get('/:routeId/pins')
+  async getPins(@Param('routeId') routeId: number, @Res() res: Response) {
+    try {
+      const pins = await this.routesService.getPins(routeId);
+      return res.status(200).json({
+        code: 200,
+        pins,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        code: 500,
+        message: 'server error',
+      });
+    }
+  }
 }

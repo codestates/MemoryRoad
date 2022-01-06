@@ -139,4 +139,18 @@ export class RoutesService {
 
     return result;
   }
+
+  async getPins(routeId: number): Promise<PinEntity[]> {
+    //TODO루트가 해당 사용자 소유인지 확인하기
+
+    const pins = await this.pinsRepository
+      .createQueryBuilder('Pins') //alias -> SELECT Routes as Routes
+      .leftJoinAndSelect('Pins.Pictures', 'Pictures')
+      .where('Pins.routesId = :id', { id: routeId })
+      .orderBy('Pins.ranking')
+      .addOrderBy('Pictures.id')
+      .getMany(); //여러 개의 결과를 가져온다. entity를 반환한다. getRawMany등으로 raw data를 가져올 수 있다.
+
+    return pins;
+  }
 }
