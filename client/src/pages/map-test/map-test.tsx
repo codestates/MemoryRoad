@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
-import "./map-test.css";
-import createPinModal from "../../modals/createPinModal/createPinModal"; // 핀 생성 모달창
+import React, { useState, useEffect } from 'react';
+import './map-test.css';
+import createPinModal from '../../modals/createPinModal/createPinModal'; // 핀 생성 모달창
 
 const { kakao }: any = window;
 
@@ -25,20 +25,20 @@ function MapTest() {
   // center (가공된)위도 경도 얻는 함수
   const sliceLatLng = (num: number): number => {
     const str = String(num);
-    const [head, tail] = str.split(".");
+    const [head, tail] = str.split('.');
     let slicedTail;
     if (head.length === 2) {
       slicedTail = tail.substring(0, 6);
     } else {
       slicedTail = tail.substring(0, 7);
     }
-    const combineHeadTail = head + "." + slicedTail;
+    const combineHeadTail = head + '.' + slicedTail;
     return Number(combineHeadTail);
   };
 
   useEffect(() => {
     // 모달창 닫았을 때
-    const modalState = document.getElementById("createPinModal-background");
+    const modalState = document.getElementById('createPinModal-background');
     if (modalState === null) {
       setIsModalOpen(false);
     }
@@ -46,7 +46,7 @@ function MapTest() {
 
   useEffect(() => {
     // 지도를 표시할 div
-    const mapContainer = document.getElementById("map");
+    const mapContainer = document.getElementById('map');
     // 지도의 option들
     const [lat, lng] = currMarkerLocation;
     const mapOptions = {
@@ -64,7 +64,7 @@ function MapTest() {
     const mapTypeControl = new kakao.maps.MapTypeControl();
     map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
     // 지도의 중심 좌표가 변경될 때 실행되는 이벤트 핸들러 (스무스한 움직임)
-    kakao.maps.event.addListener(map, "idle", function () {
+    kakao.maps.event.addListener(map, 'idle', function () {
       const level = map.getLevel(); // 현재 지도의 레벨을 얻어오는 메서드 getLevel();
       const center = map.getCenter(); // 현재 중심 좌표를 얻어오는 메서드 getCenter();
       const lat = center.getLat(); // 현재 중심 좌표의 위도
@@ -76,13 +76,13 @@ function MapTest() {
     });
 
     // 마커 이미지 생성
-    const imageSrc = "http://127.0.0.1:5500/client/public/img/blue_marker.png";
+    const imageSrc = 'http://127.0.0.1:5500/client/public/img/blue_marker.png';
     const imageSize = new kakao.maps.Size(33, 54);
     const imageOption = { offset: new kakao.maps.Point(16, 55) };
     const markerImage = new kakao.maps.MarkerImage(
       imageSrc,
       imageSize,
-      imageOption
+      imageOption,
     );
 
     // 핀 생성 모달창 html 문자열 코드
@@ -94,7 +94,7 @@ function MapTest() {
       // 위쪽 수직 정렬 : lat + ratioVertical[currLevel], lng - 0.0003
       position: new kakao.maps.LatLng(
         lat + 0.00008,
-        lng - ratioHorizontal[currLevel]
+        lng - ratioHorizontal[currLevel],
       ),
       content: content,
       clickable: true, // 핀 저장 모달창을 편집하고 있을 때지도의 클릭 이벤트가 발생하지 않도록 설정
@@ -118,7 +118,7 @@ function MapTest() {
 
     // 모달창이 열려있을 때는 지도 클릭 이벤트가 실행되지 않는다.
     if (!isModalOpen) {
-      kakao.maps.event.addListener(map, "click", function (mouseEvent: any) {
+      kakao.maps.event.addListener(map, 'click', function (mouseEvent: any) {
         searchDetailAddrFromCoords(
           mouseEvent.latLng,
           function (result: any, status: any): void {
@@ -141,14 +141,14 @@ function MapTest() {
                 `도로명 주소: ${
                   !!result[0].road_address
                     ? result[0].road_address.address_name
-                    : ""
-                }`
+                    : ''
+                }`,
               );
               console.log(`지번 주소: ${result[0].address.address_name}`);
               console.log(`구: ${result[0].address.region_2depth_name}`);
-              console.log("------------------------------------------");
+              console.log('------------------------------------------');
             }
-          }
+          },
         );
       });
     }
@@ -156,7 +156,7 @@ function MapTest() {
       geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
     }
     // 마커를 클릭했을 때 핀 생성 모달창 등장
-    kakao.maps.event.addListener(marker, "click", function () {
+    kakao.maps.event.addListener(marker, 'click', function () {
       // console.log('marker clicked!');
       customOverlay.setMap(map);
       map.setZoomable(false); // 사진 스크롤바를 위해 지도 줌 스크롤 금지

@@ -1,15 +1,14 @@
-import React from "react";
-import "./openedmenu.css";
-import { useNavigate } from "react-router-dom";
-
+import React from 'react';
+import './openedmenu.css';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 interface Props {
-  SetOpen: Function;
-  LoginModal: boolean;
-  SetLoginModal: Function;
+  SetOpen: any;
 }
 
-function OpenedMenu({ SetOpen, LoginModal, SetLoginModal }: Props) {
+function OpenedMenu({ SetOpen }: Props) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   return (
     <div className="gridContainer2">
       <div className="item2"></div>
@@ -19,23 +18,39 @@ function OpenedMenu({ SetOpen, LoginModal, SetLoginModal }: Props) {
           onClick={() => {
             SetOpen(false);
           }}
+          onKeyDown={() => {
+            SetOpen(false);
+          }}
+          role="menu"
+          tabIndex={0}
         >
           &times;
         </span>
         <div className="Menutext">
           <div
             onClick={() => {
-              SetLoginModal(!LoginModal);
+              dispatch({ type: 'openLoginModal' });
               SetOpen(false);
             }}
+            onKeyDown={() => {
+              SetOpen(false);
+            }}
+            role="menu"
+            tabIndex={0}
           >
             로그인
           </div>
           <div
             onClick={() => {
-              navigate("/Mypage");
+              navigate('/Mypage');
               SetOpen(false);
             }}
+            onKeyDown={() => {
+              navigate('/Mypage');
+              SetOpen(false);
+            }}
+            role="menu"
+            tabIndex={0}
           >
             마이 페이지
           </div>

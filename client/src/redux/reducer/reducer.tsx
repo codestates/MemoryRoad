@@ -7,8 +7,8 @@
  *      default:
  *       return state;
  *   }
- * } 
+ * }
  *
  */
 
-export {}
+export {};

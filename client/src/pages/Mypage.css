@@ -1,7 +1,7 @@
 .gridMypage {
   display: grid;
   grid-template-columns: 0.9fr 2fr 2fr 0.9fr;
-  grid-template-rows: 100px 300px 400px;
+  grid-template-rows: 100px 180px 800px;
 }
 
 /* .checking {
@@ -12,13 +12,17 @@
   grid-row: 3/4;
 }
 .Profile {
-  font-size: 250px;
+  font-size: 130px;
   color: gray;
   opacity: 0.8;
 }
 .greeting {
   text-align: right;
-  margin-top: 20px;
+  margin-top: 30px;
+  margin-right: 20px;
+}
+.greetingTouser {
+  font-size: 30px;
 }
 .changeUserInfo {
   margin-top: 20px;
@@ -38,20 +42,48 @@
   }
 }
 
-/* 노트북,데스크탑 */
-@media (min-width: 800px) {
+/* 테블릿 */
+@media (max-width: 930px) {
+  .Profile {
+    font-size: 150px;
+    color: gray;
+    opacity: 0.8;
+  }
+  .greeting {
+    text-align: right;
+    margin-top: 10px;
+  }
+  .greetingTouser {
+    font-size: 20px;
+  }
 }
 
 /* 모바일 */
-@media (max-width: 800px) {
+@media (max-width: 760px) {
   .gridMypage {
     display: grid;
     grid-template-columns: 1fr 6fr 10fr 0.2fr;
     grid-template-rows: 50px 120px 400px;
   }
   .Profile {
-    font-size: 100px;
+    font-size: 80px;
     color: gray;
     opacity: 0.8;
+  }
+  .greeting {
+    text-align: right;
+    margin-top: 10px;
+  }
+  .greetingTouser {
+    font-size: 15px;
+  }
+  .changeUserInfo {
+    margin-top: 8px;
+    padding: 5px;
+    background-color: #e1e7e3;
+    border: 2px solid white;
+    border-radius: 5px;
+    opacity: 0.7;
+    cursor: pointer;
   }
 }
