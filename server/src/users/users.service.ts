@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getConnection } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { LoginUserDto } from './dto/login-userDto';
 import { Users } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 // import { HttpService } from '@nestjs/axios';
@@ -34,13 +35,12 @@ export class UsersService {
     const isExistNick: Users = await this.usersRepository.findOne({
       nickName: createUserDto.nickName,
     });
-    console.log(isExistNick);
-    console.log(isExistemail);
+    console.log('이게 콘솔임', isExistemail);
     if (isExistemail) {
-      throw new NotFoundException(`사용중인 이메일입니다.`);
+      throw new BadRequestException(`사용중인 이메일입니다.`);
     }
     if (isExistNick) {
-      throw new NotFoundException(`사용중인 닉네임입니다.`);
+      throw new BadRequestException(`사용중인 닉네임입니다.`);
     }
 
     //bcrypt를 통한 단방향 암호화
@@ -60,15 +60,6 @@ export class UsersService {
       await queryRunner.rollbackTransaction();
       throw new NotFoundException(`회원가입에 실패하였습니다.\n ${error}`);
     }
-  }
-
-  //회원 정보 업데이트 닉네임. 비밀번호, 프로필이미지
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-  //회원 탈퇴
-  async remove(id: number) {
-    return `This action removes a #${id} user`;
   }
   async kakao(body: any) {
     const options = {
@@ -262,20 +253,62 @@ export class UsersService {
     return accessToken;
   }
   //로컬 로그인 이메일, 비밀번호
-  async local(body) {
-
-    return;
+  async local(loginUserDto: LoginUserDto) {
+    const isExistUser: Users = await this.usersRepository.findOne({
+      email: loginUserDto.email,
+    });
+    if (!isExistUser) {
+      throw new NotFoundException(`유효하지 않은 이메일입니다`);
+    }
+    if (!bcrypt.compare(loginUserDto.password, isExistUser.saltedPassword)) {
+      throw new NotFoundException(`비밀번호가 일치하지 않습니다`);
+    }
+    const accessToken = jwt.sign(
+      { ...isExistUser },
+      this.configService.get<string>('ACCESS_SECRET'),
+      { expiresIn: '6h' },
+    );
+    return accessToken;
   }
   //로그아웃
-  async logOut() {
-    return;
+  async logOut(accessToken: string) {
+    const decoded = this.verifyAccessToken(accessToken);
+    return decoded;
   }
 
-  async checkPassword(password: string, salt: string) {
-    const saltedPassword = await bcrypt.hash(password, salt);
-    const isExistPassword: Users = await this.usersRepository.findOne({
-      saltedPassword: saltedPassword,
-    });
+  //회원 정보 업데이트 닉네임. 비밀번호, 프로필이미지
+  async update(accessToken: string, updateUserDto: UpdateUserDto) {
+    const decoded = this.verifyAccessToken(accessToken);
+    console.log(decoded);
+    if (updateUserDto.nickName) {
+      decoded.nickName = updateUserDto.nickName;
+    }
+    if (updateUserDto.password) {
+      const salt = await bcrypt.genSalt();
+      decoded.saltedPassword = await bcrypt.hash(updateUserDto.password, salt);
+    }
+    if (updateUserDto.profileImage) {
+      decoded.profileImage = updateUserDto.profileImage;
+    }
+    // 닉네임, 비번, 프로필 이미지 중에 하나만 와도 바꿔줘야 한다.
+    await this.usersRepository.save(decoded);
+    console.log(decoded);
+    return decoded;
+  }
+
+  //회원 탈퇴
+  async remove(accessToken: string) {
+    const decoded = this.verifyAccessToken(accessToken);
+    await this.usersRepository.delete({ id: decoded.id });
+  }
+
+  //이것도 쿠키받아서 쿠키로 처리해줘야 하네.
+  async checkPassword(accessToken: string, password: string) {
+    const decoded = this.verifyAccessToken(accessToken);
+    const isExistPassword = await bcrypt.compare(
+      password,
+      decoded.saltedPassword,
+    );
     if (!isExistPassword) {
       throw new BadRequestException(`비밀번호가 일치하지 않습니다`);
     }
@@ -285,9 +318,21 @@ export class UsersService {
     const isExistEmail: Users = await this.usersRepository.findOne({
       email: email,
     });
-
     if (isExistEmail) {
       throw new BadRequestException('사용중인 이메일입니다');
     }
+  }
+
+  // 쿠키 검증
+  verifyAccessToken(accessToken: string) {
+    const decoded = jwt.verify(
+      accessToken,
+      this.configService.get<string>('ACCESS_SECRET'),
+      (err, decoded) => {
+        if (err) throw new BadRequestException(`${err}`);
+        return decoded;
+      },
+    );
+    return decoded;
   }
 }
