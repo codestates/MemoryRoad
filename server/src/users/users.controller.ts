@@ -7,11 +7,12 @@ import {
   Param,
   Delete,
   Res,
+  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-
+import { Request, Response } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getConnection, Repository } from 'typeorm';
 
@@ -21,33 +22,61 @@ export class UsersController {
 
   //회원가입
   @Post()
-  async create(@Body() createUserDto: CreateUserDto, @Res() res): Promise<any> {
+  async create(@Body() createUserDto: CreateUserDto, @Res() res) {
     const createUser = await this.usersService.create(createUserDto);
     res.status(200).send({ createUser, message: '회원 가입 성공' });
   }
 
   //oauth 카카오
   @Post('/auth/oauth/kakao')
-  kakaoLogin() {
-    return this.usersService.kakao();
+  async kakaoLogin(@Req() req: Request, @Res() res: Response) {
+    const accessToken = await this.usersService.kakao(req.body);
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      maxAge: 5 * 60 * 60 * 1000,
+      sameSite: 'none',
+      secure: true,
+    });
+    res.status(200).send({ message: '카카오 로그인 했습니다.' });
   }
 
   //oauth 네이버
   @Post('/auth/oauth/naver')
-  naverLogin() {
-    return this.usersService.naver();
+  async naverLogin(@Req() req: Request, @Res() res: Response) {
+    const accessToken = await this.usersService.naver(req.body);
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      maxAge: 5 * 60 * 60 * 1000,
+      sameSite: 'none',
+      secure: true,
+    });
+    res.status(200).send({ message: '네이버 로그인 했습니다.' });
   }
 
   //oauth 구글
   @Post('/auth/oauth/google')
-  googleLogin() {
-    return this.usersService.google();
+  async googleLogin(@Req() req: Request, @Res() res: Response) {
+    const accessToken = await this.usersService.google(req.body);
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      maxAge: 5 * 60 * 60 * 1000,
+      sameSite: 'none',
+      secure: true,
+    });
+    res.status(200).send({ message: '구글 로그인 했습니다.' });
   }
 
   //로컬 로그인
   @Post('/auth/local')
-  localLogin() {
-    return this.usersService.local();
+  async localLogin(@Req() req: Request, @Res() res: Response) {
+    const accessToken = await this.usersService.local(req.body);
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      maxAge: 5 * 60 * 60 * 1000,
+      sameSite: 'none',
+      secure: true,
+    });
+    res.status(200).send({ message: '구글 로그인 했습니다.' });
   }
 
   //중복된 이메일 여부 확인
@@ -69,17 +98,17 @@ export class UsersController {
   }
 
   @Patch('/:id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     this.usersService.update(+id, updateUserDto);
   }
 
   @Delete('/:id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
 
   @Get('/auth')
-  logOut() {
+  async logOut() {
     return this.usersService.logOut();
   }
 }
