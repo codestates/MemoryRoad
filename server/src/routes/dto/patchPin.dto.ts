@@ -22,27 +22,21 @@ export class PatchPinDto implements Pin {
   @IsString()
   readonly ward: string;
 
-  @Transform(({ value }) => {
-    return Number(value);
-  })
   @IsNumber()
   readonly latitude: number;
 
-  @Transform(({ value }) => {
-    return Number(value);
-  })
   @IsNumber()
   readonly longitude: number;
 
-  // @Transform(({ value }) => {
-  //   return Number(value);
-  // })
+  @Transform(({ value }) => {
+    return value.toString();
+  })
   @IsString()
   readonly startTime: string;
 
-  // @Transform(({ value }) => {
-  //   return Number(value);
-  // })
+  @Transform(({ value }) => {
+    return value.toString();
+  })
   @IsString()
   readonly endTime: string;
 }

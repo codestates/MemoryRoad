@@ -107,10 +107,18 @@ components:
           type: number
           description: 경도
           example: 126.0000000000
-        address:
+        lotAddress:
           type: string
-          description: 핀의 주소
-          example: 서울특별시 성북구
+          description: 핀의 지번 주소
+          example: 서울특별시 성북구 하월곡동
+        roadAddress:
+          type: string
+          description: 핀의 도로명 주소
+          example: 서울특별시 성북구 종암로 14길
+        ward:
+          type: string
+          description: 핀이 속한 구
+          example: 성북구
         tooClose:
           type: boolean
           description: 해당 핀이 DB에 저장한 핀과 인접한 핀인지 판별
@@ -722,7 +730,7 @@ paths:
   post:
     tags:
     - routes
-    summary: 루트 최초 생성. 루트와 dots의 정보를 body로 전달 받는다.
+    summary: 루트 최초 생성. 루트와 핀, 사진들의 정보를 전달 받는다.
     description: 루트 생성
     responses:
       '201':
@@ -737,6 +745,18 @@ paths:
                 message:
                   type: string
                   example: created
+      '400':
+       description: 잘못된 형식의 요청을 받은 경우
+       content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+                example: 400
+              message:
+                type: string
+                example: bad img type | Bad Request
       '500':
         description: 서버 오류
         content: 
@@ -747,64 +767,20 @@ paths:
     requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
-                routeName:
-                  description: 루트 제목
+                route:
                   type: string
-                  example: 루트 제목
-                description:
-                  description: 루트 설명
-                  type: string
-                  example: 루트 설명
-                public:
-                  description: 루트 공개 여부
-                  type: boolean
-                  example: false
-                color:
-                  description: 루트 색깔
-                  type: string
-                  example: red
-                time:
-                  description: 루트 시간
-                  type: number
-                  example: 5
-                pins:
-                  description: 루트에 포함된 핀들
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      ranking:
-                        type: integer
-                        description: 핀의 순서
-                        example: 0
-                      locationName:
-                        type: string
-                        description: 핀의 이름
-                        example: 경치 좋은 곳
-                      latitude:
-                        type: number
-                        description: 위도
-                        example: 33.0000000000
-                      longitude:
-                        type: number
-                        description: 경도
-                        example: 126.0000000000
-                      address:
-                        type: string
-                        description: 핀의 주소
-                        example: 서울특별시 성북구
-                      startTime:
-                        type: string
-                        description: 핀의 시작 시간
-                        example: '12'
-                      endTime: 
-                        type: string
-                        description: 핀의 종료 시간
-                        example: '13'
+                  description: 루트, 핀들의 정보
+                  example: {"routeName":"루트 제목","description":"루트 설명","public":false,"color":"red","time":5,"pins":[{"ranking":0,"locationName":"경치 좋은 곳","latitude":33,"longitude":126,"lotAddress":"서울특별시 성북구","roadAddress":"서울특별시 성북구 종암로","ward":"성북구","startTime":12,"endTime":13},{"ranking":1,"locationName":"경치 좋은 곳","latitude":33,"longitude":126.123,"lotAddress":"서울특별시 구로구","roadAddress":"서울특별시 구로구","ward":"구로구","startTime":22,"endTime":23}]}
+                0:
+                  type: file
+                  description: ranking이 0인 핀의 사진들
+                1:
+                  type: file
+                  description: rankingdl 1인 핀의 사진들
  '/routes/{routeId}':
   patch:
     tags:

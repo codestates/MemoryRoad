@@ -1,4 +1,5 @@
 export interface Pin {
+  routesId?: number;
   ranking: number;
   locationName: string;
   latitude: number;

@@ -16,7 +16,10 @@ import {
   UseFilters,
   UseInterceptors,
 } from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import {
+  AnyFilesInterceptor,
+  FilesInterceptor,
+} from '@nestjs/platform-express';
 import { Response, Express } from 'express';
 import { PatchPinDto } from './dto/patchPin.dto';
 import { PatchRouteDto } from './dto/patchRoute.dto';
@@ -47,18 +50,17 @@ export class RoutesController {
     return this.routesService.getUserRoutes(query.page);
   }
 
-  //{ passthrough: true }옵션: nest의 방식과 express의 response객체를 동시에 사용
-  //응답코드가 고정되어 있지 않아 @Res 데코레이터를 사용하고, 응답 객체를 controller에서 만들었다.
+  //@Res의 { passthrough: true }옵션: nest의 방식과 express의 response객체를 동시에 사용
+  //files에는 multer가 처리한 파일의 정보, req에는 JSON형식 문자열이 들어있다. JSON의 유효성 검사는 service에서 처리한다.
   @Post()
-  createRoute(@Body() routePins: PostRouteDto, @Res() res: Response) {
-    try {
-      this.routesService.createRoute(routePins);
-    } catch (err) {
-      return res.status(500).json({
-        code: 500,
-        message: 'server error',
-      });
-    }
+  @UseFilters(ExceptionFilter)
+  @UseInterceptors(AnyFilesInterceptor(multerOptions))
+  async createRoute(
+    @Body() req: { route: string },
+    @Res() res: Response,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    await this.routesService.createRoute(req.route, files);
 
     return res.status(201).json({
       code: 201,
