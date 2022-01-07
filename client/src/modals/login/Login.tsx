@@ -2,30 +2,34 @@ import React from 'react';
 import './Login.css';
 import { useState } from 'react';
 import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../redux/reducer';
+import Mist from '../../components/mist';
 
 interface Props {
-  SetLoginModal: Function;
-  SetSignupModal: Function;
+  loginHandler: any;
 }
 
-function Login({ SetLoginModal, SetSignupModal }: Props) {
-  const [Email, SetEmail] = useState('');
-  const [Password, SetPassword] = useState('');
+function Login({ loginHandler }: Props) {
+  const dispatch = useDispatch();
+
+  // 로그인할 때 Email 입력값
+  const [Email, setEmail] = useState('');
   const InputEmail = (e: any) => {
-    SetEmail(e.target.value);
+    setEmail(e.target.value);
     console.log(Email);
   };
+  // 로그인할 때 Password 입력값
+  const [Password, setPassword] = useState('');
   const InputPassword = (e: any) => {
-    SetPassword(e.target.value);
+    setPassword(e.target.value);
     console.log(Password);
-  };
-  // Login API
-  const Login = () => {
-    // 로그인 성공시 마이페이지로 간다
-    axios.post(`url/users/auth/local`, { email: Email, password: Password });
   };
   return (
     <div>
+      <div>
+        <Mist />
+      </div>
       <div className="LoginBorder">
         <div className="center titleLogin">로그인</div>
         <input
@@ -41,7 +45,11 @@ function Login({ SetLoginModal, SetSignupModal }: Props) {
           placeholder="비밀번호"
           type="password"
         ></input>
-        <div className="ErrorMessage">에러 메시지</div>
+        <div className="ErrorMessage">
+          {Email === '' || Password === ''
+            ? '이메일과 비밀번호를 입력해주세요'
+            : null}
+        </div>
         <div className="center">
           <button className="LoginButton pointer">로그인</button>
         </div>
@@ -50,14 +58,17 @@ function Login({ SetLoginModal, SetSignupModal }: Props) {
         </div>
         <div className="OauthButton">
           <img
+            alt="googleLoginButton"
             className="GoogleButton pointer"
             src="http://127.0.0.1:5500/client/public/img/google_btn.png"
           />
           <img
+            alt="naverLoginButton"
             className="NaverButton pointer"
             src="http://127.0.0.1:5500/client/public/img/naver_btn.png"
           />
           <img
+            alt="kakoLoginButton"
             className="kakaoButton pointer"
             src="http://127.0.0.1:5500/client/public/img/kakao_btn.png"
           />
@@ -67,9 +78,15 @@ function Login({ SetLoginModal, SetSignupModal }: Props) {
           <b
             className="pointer"
             onClick={() => {
-              SetLoginModal(false);
-              SetSignupModal(true);
+              dispatch({ type: 'closeLoginModal' });
+              dispatch({ type: 'openSignupModal' });
             }}
+            onKeyDown={() => {
+              dispatch({ type: 'closeLoginModal' });
+              dispatch({ type: 'openSignupModal' });
+            }}
+            role="menu"
+            tabIndex={0}
           >
             회원가입
           </b>

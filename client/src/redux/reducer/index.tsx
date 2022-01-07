@@ -1,10 +1,20 @@
-import { combineReducers } from "redux";
-
+import { combineReducers } from 'redux';
+import {
+  loginModalReducer,
+  signupModalReducer,
+  checkingPasswordModalReducer,
+  editUserInfoModalReducer,
+  withdrawalModalReducer,
+} from './modalReducer/ModalReducer';
 // import reducer1 from 'reducer';
 
 const rootReducer = combineReducers({
   /* reducer1, */
-  // SignUpReducer,
+  loginModalReducer,
+  signupModalReducer,
+  checkingPasswordModalReducer,
+  editUserInfoModalReducer,
+  withdrawalModalReducer,
 });
 
 export default rootReducer;

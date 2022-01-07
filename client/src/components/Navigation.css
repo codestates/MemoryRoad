@@ -1,16 +1,12 @@
-.barmist {
-  background-color: gray;
-
-  opacity: 0.7;
-}
-#logomist {
-  filter: brightness(0.5);
-}
 .gridContainer {
   box-shadow: 2px 3px 5px #d6e0e5;
   text-align: center;
   display: grid;
-  grid-template-columns: 3fr 1fr 0.5fr 1fr 0.5fr;
+  grid-template-columns: 2fr 1fr 0.5fr 1fr;
+  grid-template-rows: 60px;
+}
+.logo {
+  height: 60px;
 }
 .item {
   cursor: pointer;
@@ -27,7 +23,7 @@
 .loginfont {
   /* border: 2px solid black; */
   width: 100px;
-  line-height: 600%;
+  line-height: 400%;
   cursor: pointer;
   font-size: 16px;
   text-decoration: none;
@@ -63,40 +59,3 @@
     font-size: 30px;
   }
 }
-/* 500px 이상 800px이하 */
-/* @media (max-width: 800px) {
-  .logo {
-    margin-top: 10%;
-    width: 150px;
-  }
-  .mobile {
-    font-size: 30px;
-  }
-  .loginfont {
-    display: none;
-  }
-} */
-/* 모바일 */
-/* 500px 이하 */
-/* @media (max-width: 500px) {
-  .mobile {
-    margin-top: 60%;
-    margin-left: 200%;
-    font-size: 150%;
-  }
-  .logo {
-    width: 100%;
-  }
-  .loginfont {
-    display: none;
-  }
-} */
-/* 태블릿 */
-/* @media (min-width: 500px) {
-  /* 500px 이상 */
-
-/* .mobile {
-    margin-top: 2%;
-    margin-left: 500px;
-  } */
-/* }  */

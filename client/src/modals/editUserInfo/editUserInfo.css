@@ -1,0 +1,80 @@
+.gridProfile {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.EditBorder {
+  position: fixed;
+  top: 7em;
+  background-color: white;
+  /* border: 2px solid white; */
+  border-radius: 10px;
+  width: 300px;
+  height: 550px;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  z-index: 999;
+}
+.EditBorder2 {
+  width: 300px;
+  height: 320px;
+  padding-bottom: 0px;
+}
+
+.EditProfile {
+  font-size: 50px;
+  margin: 30px;
+  margin-top: 15px;
+  color: gray;
+  opacity: 0.7;
+}
+.EditProfileButton {
+  margin-left: 24px;
+  padding: 5px;
+  font-size: 11px;
+  cursor: pointer;
+  width: 90px;
+  border: 2px solid white;
+  border-radius: 5px;
+}
+.CreateScrollBar {
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+.EditButtonColor {
+  background-color: gray;
+  color: black;
+  opacity: 0.6;
+  font-weight: bold;
+}
+.EditProfileButton {
+  margin: 10px;
+  padding: 6px;
+  padding-left: 14px;
+  padding-right: 14px;
+  font-size: 11px;
+  cursor: pointer;
+  border: 2px solid white;
+  border-radius: 5px;
+}
+.EditNickname {
+  margin: 10px;
+  padding: 5px;
+  font-size: 11px;
+  cursor: pointer;
+  width: 90px;
+  border: 2px solid white;
+  border-radius: 5px;
+}
+#EditProfileButtonRight {
+  text-align: right;
+  margin-right: 20px;
+}
+.withdrawalButton {
+  color: white;
+  background-color: #da4747;
+  font-weight: bold;
+  margin-top: 10px;
+}
