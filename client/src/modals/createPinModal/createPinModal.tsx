@@ -6,17 +6,17 @@ const createPinModal: string =
   "      <div class='createPinModal-title'>" +
   "        제목 <b class='text-highlight'>*</b>" +
   '      </div>' +
-  "      <input class='createPinModal-input' type='text' placeholder='장소의 제목을 입력해주세요' maxlength='10'>" +
+  "      <input class='createPinModal-input' id='createPinModal-place-title' type='text' placeholder='장소의 제목을 입력해주세요' maxlength='10'>" +
   "      <div class='createPinModal-title'>" +
   '        사진 첨부' +
   '      </div>' +
-  "      <form name='chooseImgFilesForm' method='post' enctype='multipart/form-data'>" +
+  "      <form name='chooseImgFilesForm' id='file-upload-form' method='post' enctype='multipart/form-data'>" +
   "        <div class='createPinModal-input addImgFilesBtn'>" +
   "          <label for='file-upload' id='file-upload-image'>" +
   "            <img src='http://127.0.0.1:5500/client/public/img/addPhoto_icon.png' width='40'>" +
   '          </label>' +
   '        </div>' +
-  "        <input class='display-none' id='file-upload' type='file' accept='image/*' onchange='loadFile(this)' multiple/>" +
+  "        <input class='display-none' id='file-upload' type='file' accept='image/*' multiple/>" +
   '      </form>' +
   "      <div id='createPinModal-pictures-background'>" +
   "        <div id='createPinModal-pictures-container'>" +
@@ -24,7 +24,7 @@ const createPinModal: string =
   '        </div>' +
   '      </div>' +
   "      <button id='createPinModal-save-btn'>장소 저장</button>" +
-  "      <button id='createPinModal-not-save-btn' onclick='closeModal()'>창 닫기</button>" +
+  "      <button id='createPinModal-not-save-btn'>창 닫기</button>" +
   '    </div>' +
   '  </div>';
 
