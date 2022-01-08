@@ -20,6 +20,8 @@ import {
 } from './routes.functions';
 import fs from 'fs';
 import { join } from 'path';
+import { plainToClass } from 'class-transformer';
+import { validate } from 'class-validator';
 
 @Injectable()
 export class RoutesService {
@@ -85,50 +87,111 @@ export class RoutesService {
   }
 
   // 핀을 추가하기 위해서는 새로 생성된 루트의 아이디가 필요하므로, 루트를 생성하고, 루트 아이디를 이용해 핀들을 생성한다.
-  async createRoute(routePins: PostRouteDto): Promise<RouteEntity> {
-    //public은 예약어이다
-    const { routeName, description, color, time } = routePins;
-    let { pins } = routePins;
-    const newRoute = await this.routesRepository.save({
-      userId: 1,
-      routeName: routeName,
-      description: description,
-      public: routePins.public,
-      color: color,
-      time: time,
-    });
+  async createRoute(routeStr: string, files: Array<Express.Multer.File>) {
+    try {
+      //문자열 JSON을 parse한 뒤, PatchPinDto타입의 객체를 생성한다.
+      const routePins = plainToClass(PostRouteDto, JSON.parse(routeStr));
 
-    //주어진 핀들간의 거리를 계산해 tooClose프로퍼티를 추가한다.
-    //tooClose프로퍼티가 추가되지 않는 경우, 디폴트 값인 '0'이 추가된다.
-    isClosewithOther(pins);
+      //새로 생성한 객체의 유효성 검증
+      //유효하지 않은 키가 있으면 routeValError 배열에 추가된다.
+      const routeValError = await validate(routePins, {
+        forbidUnknownValues: true,
+      });
+      if (routeValError.length > 0) {
+        const fstVal =
+          routeValError[0].constraints[
+            Object.keys(routeValError[0].constraints)[0]
+          ];
+        throw new BadRequestException(null, fstVal);
+      }
 
-    //db에 저장된 핀들과 저장하려는 핀들을 비교하기 위해 핀들의 위도, 경도를 불러온다. 개선 필요
-    const dbPins = await this.pinsRepository
-      .createQueryBuilder('Pins')
-      .select(['Pins.id', 'Pins.latitude', 'Pins.longitude', 'Pins.tooClose'])
-      .getMany();
+      //PostRouteDto안 PatchPinDto 배열의 유효성 검증.
+      //@Transfrom 데코레이터 안에서 타입 변환과 유효성 검증을 하려고 했지만 에러 catch를 하지 못해 여기서 에러 처리
+      for (let i = 0; i < routePins.pins.length; i++) {
+        const pinValError = await validate(routePins.pins[i], {
+          forbidUnknownValues: true,
+        });
+        if (pinValError.length > 0) {
+          const fstVal =
+            pinValError[0].constraints[
+              Object.keys(pinValError[0].constraints)[0]
+            ];
+          throw new BadRequestException(null, fstVal);
+        }
+      }
 
-    //인접한 점이 생긴 경우 DB에도 업데이트 해줘야 한다
-    //추가하려는 점과 인점한 DB의 핀들. 이 핀들의 tooClose를 true로 업데이트 한다.
-    let dbPinId: { id: number; tooClose: boolean }[] = [];
+      //TODO 유저 아이디 바꾸기
+      //public은 예약어이다
+      const { routeName, description, color, time } = routePins;
+      const { pins } = routePins;
+      const newRoute = await this.routesRepository.save({
+        userId: 1,
+        routeName: routeName,
+        description: description,
+        public: routePins.public,
+        color: color,
+        time: time,
+      });
 
-    pins.forEach((pin) => {
-      dbPinId = Object.assign(dbPinId, isClosewithDB(dbPins, pin));
-    });
+      //주어진 핀들간의 거리를 계산해 tooClose프로퍼티를 추가한다.
+      //tooClose프로퍼티가 추가되지 않는 경우, 디폴트 값인 '0'이 추가된다.
+      isClosewithOther(pins);
 
-    //DB핀들 업데이트 dbPinId가 빈 배열일 경우 실행되지 않는다.
-    await this.pinsRepository.save(dbPinId);
+      //db에 저장된 핀들과 저장하려는 핀들을 비교하기 위해 핀들의 위도, 경도를 불러온다. 개선 필요
+      const dbPins = await this.pinsRepository
+        .createQueryBuilder('Pins')
+        .select(['Pins.id', 'Pins.latitude', 'Pins.longitude', 'Pins.tooClose'])
+        .getMany();
 
-    //pin각각에 routeId를 추가해 준다.
-    pins = pins.map((pin) => {
-      return Object.assign({ routesId: newRoute.id }, pin);
-    });
+      //인접한 점이 생긴 경우 DB에도 업데이트 해줘야 한다
+      //추가하려는 점과 인점한 DB의 핀들. 이 핀들의 tooClose를 true로 업데이트 한다.
+      let dbPinId: { id: number; tooClose: boolean }[] = [];
 
-    //새 핀들 생성
-    //bulk insert
-    await this.pinsRepository.save(pins);
+      pins.forEach((pin) => {
+        dbPinId = Object.assign(dbPinId, isClosewithDB(dbPins, pin));
+      });
 
-    return newRoute;
+      //DB핀들 업데이트 dbPinId가 빈 배열일 경우 실행되지 않는다.
+      await this.pinsRepository.save(dbPinId);
+
+      //pin각각에 routeId를 추가해 준다.
+      pins.forEach((pin) => {
+        pin['routesId'] = newRoute.id;
+      });
+      // console.log(pins);
+
+      //새 핀들 생성
+      //bulk insert
+      const insertPinsResult = await this.pinsRepository.save(pins);
+
+      //핀을 생성한 뒤, 핀의 아이디와 핀의 랭킹을 매칭하기 위한 객체
+      const mapPinIdRanking = {};
+      insertPinsResult.forEach((pin) => {
+        mapPinIdRanking[pin.ranking] = pin.id;
+      });
+
+      //사진들을 핀 별로 분리하기 위한 배열
+      const eachPicture = [];
+      files.forEach((file) => {
+        if (!mapPinIdRanking[file.fieldname])
+          throw new BadRequestException(null, 'Bad fieldname');
+        eachPicture.push({
+          pinId: mapPinIdRanking[file.fieldname],
+          fileName: file.path,
+        });
+      });
+
+      //사진 정보들 추가
+      await this.picturesRepository.save(eachPicture);
+    } catch (err) {
+      if (err.status === 404) {
+        throw new NotFoundException();
+      } else if (err.status === 400 || err instanceof SyntaxError) {
+        throw new BadRequestException(null, err.message);
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   async updateRoute(
