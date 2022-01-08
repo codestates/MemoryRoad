@@ -957,7 +957,7 @@ paths:
                 type: string
                 example: created
       '400':
-       description: 잘못된 형식의 요청
+       description: 잘못된 형식의 요청을 받은 경우
        content:
         application/json:
           schema:
@@ -985,7 +985,7 @@ paths:
                 pin:
                   type: string
                   description: 핀의 정보들
-                  example: {"ranking": "2", "locationName": "핀이름", "address": "주소", "latitude": "12.123", "longitude": "123.123", "startTime": "1", "endTime": "2"}
+                  example: {"ranking": "2", "locationName": "핀이름", "lotAddress": "지번 주소", "roadAddress": "도로명 주소", "ward": "구", "latitude": "12.123", "longitude": "123.123", "startTime": "1", "endTime": "2"}
                 files:
                   type: file
                   description: 핀의 사진들
@@ -1023,6 +1023,18 @@ paths:
                 message:
                   type: string
                   example: updated
+      '400':
+       description: 잘못된 형식의 요청을 받은 경우
+       content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+                example: 400
+              message:
+                type: string
+                example: bad img type | Bad Request
       '404':
         description: 없는 핀, 또는 다른 유저가 작성한 핀을 업데이트 하려는 경우
         content:
@@ -1045,38 +1057,17 @@ paths:
     requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
-                ranking:
-                  type: integer
-                  description: 핀의 순서
-                  example: 0
-                locationName:
+                pin:
                   type: string
-                  description: 핀의 이름
-                  example: 경치 좋은 곳
-                latitude:
-                  type: number
-                  description: 위도
-                  example: 33.0000000000
-                longitude:
-                  type: number
-                  description: 경도
-                  example: 126.0000000000
-                address:
-                  type: string
-                  description: 핀의 주소
-                  example: 서울특별시 성북구
-                startTime:
-                  type: string
-                  description: 핀의 시작 시간
-                  example: '12'
-                endTime: 
-                  type: string
-                  description: 핀의 종료 시간
-                  example: '13'    
+                  description: 핀의 정보들
+                  example: {"ranking": "1", "locationName": "새로운 핀이름", "lotAddress": "새로운 지번 주소", "roadAddress": "새로운 도로명 주소", "ward": "새로운 구", "latitude": "12.123", "longitude": "123.123", "startTime": "1", "endTime": "2"}
+                files:
+                  type: file
+                  description: 핀의 사진들
   delete:
     tags:
     - routes

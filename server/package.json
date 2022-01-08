@@ -39,6 +39,7 @@
     "dotenv": "^10.0.0",
     "haversine-distance": "^1.2.1",
     "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^3.1.2",
     "mysql2": "^2.3.3",
     "reflect-metadata": "^0.1.13",
     "request-promise": "^4.2.6",
