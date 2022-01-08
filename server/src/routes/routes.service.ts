@@ -193,31 +193,77 @@ export class RoutesService {
       }
     }
   }
+  //TODO: 해당 사용자가 작성한 루트만 수정할 수 있어야 한다.
+  async updateRoute(routeId: number, route: PatchRouteDto) {
+    try {
+      //루트 아이디와 일치하는 요소 업데이트
+      const result = await this.routesRepository
+        .createQueryBuilder()
+        .update('Routes')
+        .set(route)
+        .where('id = :id', { id: routeId })
+        .execute();
 
-  async updateRoute(
-    routeId: number,
-    route: PatchRouteDto,
-  ): Promise<UpdateResult> {
-    //루트 아이디와 일치하는 요소 업데이트
-    const result = await this.routesRepository
-      .createQueryBuilder()
-      .update('Routes')
-      .set(route)
-      .where('id = :id', { id: routeId })
-      .execute();
-
-    return result;
+      if (!result.affected) {
+        //없는 루트, 또는 다른 유저가 작성한 루트를 업데이트 하려는 경우
+        throw new NotFoundException();
+      }
+    } catch (err) {
+      if (err.status === 404) {
+        throw new NotFoundException();
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   async deleteRoute(routeId: number) {
-    const result = await this.routesRepository
-      .createQueryBuilder()
-      .delete()
-      .from('Routes')
-      .where('id = :id', { id: routeId })
-      .execute();
+    try {
+      //루트를 지우기 전, 루트에 속한 사진들의 정보를 가져온다.
+      const picturesInfo = await this.picturesRepository
+        .createQueryBuilder('Pictures')
+        .leftJoinAndSelect('Pictures.Pins', 'Pins')
+        .leftJoinAndSelect('Pins.Routes', 'Routes')
+        .select(['Pictures.fileName'])
+        .where('Routes.id = :routeId', { routeId: routeId })
+        .getMany();
 
-    return result;
+      //루트 삭제. 테이블의 ondelete cascade제약으로 루트를 참조하는 핀, 사진들도 같이 삭제된다.
+      const result = await this.routesRepository
+        .createQueryBuilder()
+        .delete()
+        .from('Routes')
+        .where('id = :id', { id: routeId })
+        .execute();
+
+      if (!result.affected) {
+        //없는 루트, 또는 다른 유저가 작성한 루트를 삭제 하려는 경우
+        throw new NotFoundException();
+      }
+
+      //사진 파일 삭제
+      for (let i = 0; i < picturesInfo.length; i++) {
+        //동기적으로 파일 삭제
+        fs.unlinkSync(
+          `${join(__dirname, '..', '..')}/${picturesInfo[i].fileName}`,
+        );
+      }
+
+      //tooClose 칼럼 갱신
+      const dbPins = await this.pinsRepository
+        .createQueryBuilder('Pins')
+        .select(['Pins.id', 'Pins.latitude', 'Pins.longitude', 'Pins.tooClose'])
+        .getMany();
+      const updatePinInfoId = redefineTooClose(dbPins);
+      await this.pinsRepository.save(updatePinInfoId);
+    } catch (err) {
+      if (err.status === 404) {
+        throw new NotFoundException();
+      } else {
+        //테이블의 정보는 삭제 되더라도 실제 파일이 없는 경우 이 에러가 발생한다. (테이블에서는 삭제 처리된다.)
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   async getPins(routeId: number): Promise<PinEntity[]> {
@@ -333,7 +379,6 @@ export class RoutesService {
 
       return result;
     } catch (err) {
-      console.log(err);
       if (err.status === 404) {
         throw new NotFoundException();
       } else {

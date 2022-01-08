@@ -70,60 +70,30 @@ export class RoutesController {
 
   //path 파라미터를 받는다.
   @Patch('/:routeId')
+  @UseFilters(ExceptionFilter)
   async updateRoute(
     @Param('routeId') routeId: number,
     @Body() route: PatchRouteDto,
     @Res() res: Response,
   ) {
-    //TODO: 해당 사용자가 작성한 루트만 수정할 수 있어야 한다.
-    try {
-      const updateResult = await this.routesService.updateRoute(routeId, route);
-      if (!updateResult.affected) {
-        //없는 루트, 또는 다른 유저가 작성한 루트를 업데이트 하려는 경우
-        return res.status(404).json({
-          code: 404,
-          message: 'not found',
-        });
-      }
+    await this.routesService.updateRoute(routeId, route);
 
-      return res.status(200).json({
-        code: 200,
-        message: 'updated',
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        code: 500,
-        message: 'server error',
-      });
-    }
+    return res.status(200).json({
+      code: 200,
+      message: 'updated',
+    });
   }
 
   //TODO: 해당 사용자가 작성한 루트만 삭제할 수 있어야 한다.
   // 루트를 삭제하면 루트를 참조하는 핀, 핀을 참조하는 사진들이 전부 삭제된다.(외래키에 on delete : cascade 속성이 있다.)
   @Delete('/:routeId')
   async deleteRoute(@Param('routeId') routeId: number, @Res() res: Response) {
-    try {
-      const deleteResult = await this.routesService.deleteRoute(routeId);
-      if (!deleteResult.affected) {
-        //없는 루트, 또는 다른 유저가 작성한 루트를 삭제 하려는 경우
-        return res.status(404).json({
-          code: 404,
-          message: 'not found',
-        });
-      }
+    await this.routesService.deleteRoute(routeId);
 
-      return res.status(200).json({
-        code: 200,
-        message: 'deleted',
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        code: 500,
-        message: 'server error',
-      });
-    }
+    return res.status(200).json({
+      code: 200,
+      message: 'deleted',
+    });
   }
 
   //TODO: 해당 사용자가 작성한 루트의 핀들만 조회할 수 있어야 한다.
@@ -189,6 +159,7 @@ export class RoutesController {
 
   //TODO: 해당 사용자가 작성한 핀만 삭제할 수 있어야 한다.(유저의 루트 소유여부를 확인, service에서 에러를 throw한다)
   //핀과 핀을 참조하는 사진들을 삭제한다.
+  @UseFilters(ExceptionFilter)
   @Delete('/:routeId/pins/:pinId')
   async deletePin(
     @Param('routeId') routeId: number,

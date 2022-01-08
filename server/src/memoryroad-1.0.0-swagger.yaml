@@ -807,6 +807,18 @@ paths:
                 message:
                   type: string
                   example: updated
+      '404':
+        description: 없는 루트, 또는 다른 유저가 작성한 루트를 업데이트 하려는 경우
+        content:
+            application/json:
+              schema:
+               properties:
+                code:
+                  type: integer
+                  example: 404
+                message:
+                  type: string
+                  example: 'not found'
       '500':
         description: 서버 오류
         content: 
@@ -866,6 +878,18 @@ paths:
                 message:
                   type: string
                   example: deleted
+      '404':
+        description: 없는 루트, 또는 다른 유저가 작성한 루트를 삭제 하려는 경우
+        content:
+            application/json:
+              schema:
+               properties:
+                code:
+                  type: integer
+                  example: 404
+                message:
+                  type: string
+                  example: 'not found'
       '500':
         description: 서버 오류
         content: 
