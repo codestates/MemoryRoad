@@ -202,6 +202,7 @@ export class UsersService {
       this.configService.get<string>('ACCESS_SECRET'),
       { expiresIn: '6h' },
     );
+    console.log(acceptToken.data);
     return accessToken;
   }
   async google(body: any) {
