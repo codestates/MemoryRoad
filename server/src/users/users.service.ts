@@ -26,7 +26,7 @@ export class UsersService {
     // private httpService: HttpService,
     private configService: ConfigService,
   ) {}
-
+/*
   async create(createUserDto: CreateUserDto) {
     // 이메일과 닉네임을 확인해서 있는지 없는지 확인
     const isExistemail: Users = await this.usersRepository.findOne({
@@ -322,7 +322,7 @@ export class UsersService {
       throw new BadRequestException('사용중인 이메일입니다');
     }
   }
-
+  */
   // 쿠키 검증
   verifyAccessToken(accessToken: string) {
     const decoded = jwt.verify(
@@ -335,4 +335,5 @@ export class UsersService {
     );
     return decoded;
   }
+  
 }
