@@ -25,4 +25,7 @@ export class Users {
 
   @Column()
   oauthCI: string;
+
+  @Column()
+  profileImage: string;
 }

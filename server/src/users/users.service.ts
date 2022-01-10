@@ -295,7 +295,16 @@ export class UsersService {
       decoded['profileImage'] = updateUserDto.profileImage;
     }
     // 닉네임, 비번, 프로필 이미지 중에 하나만 와도 바꿔줘야 한다.
-    await this.usersRepository.save(decoded);
+    const user: Users = {
+      id: decoded['id'],
+      email: decoded['email'],
+      oauthLogin: decoded['oauthLogin'],
+      oauthCI: decoded['oauthCI'],
+      nickName: decoded['nickName'],
+      saltedPassword: decoded['saltedPassword'],
+      profileImage: decoded['profileImage'],
+    };
+    await this.usersRepository.save(user);
     console.log(decoded);
     return decoded;
   }
