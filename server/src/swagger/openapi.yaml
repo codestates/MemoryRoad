@@ -1,0 +1,187 @@
+openapi: '3.0.0'
+info:
+  version: 1.0.0
+  title: Memory-Road API docs
+  description: Memory-Road의 API 문서입니다
+  license:
+    name: MIT
+servers:
+  - url: http://localhost:80/
+paths:
+  /users:
+    $ref: './user.yaml#/~1users'
+  /users/auth:
+    $ref: './user.yaml#/~1users~1auth'
+  /users/auth/oauth/kakao:
+    $ref: './user.yaml#/~1users~1auth~1oauth~1kakao'
+  /users/auth/oauth/google:
+    $ref: './user.yaml#/~1users~1auth~1oauth~1google'
+  /users/auth/oauth/naver:
+    $ref: './user.yaml#/~1users~1auth~1oauth~1naver'
+  /users/auth/local:
+    $ref: './user.yaml#/~1users~1auth~1local'
+  /users/auth/local/email:
+    $ref: './user.yaml#/~1users~1auth~1local~1email'
+  /users/auth/local/password:
+    $ref: './user.yaml#/~1users~1auth~1local~1password'
+
+  /routes:
+    $ref: './route.yaml#/~1routes'
+  /routes/{routesId}:
+    $ref: './route.yaml#/~1routes~1{routesId}'
+  /routes/{routesId}/pins:
+    $ref: './route.yaml#/~1routes~1{routesId}~1pins'
+  /routes/{routesId}/pins/{pinId}:
+    $ref: './route.yaml#/~1routes~1{routesId}~1pins~1{pinId}'
+
+  /wards:
+    $ref: './ward.yaml#/~1wards'
+
+components:
+  schemas:
+    Route:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 루트의 아이디
+          example: 1
+        userId:
+          type: integer
+          description: 루트를 생성한 유저의 아이디
+          example: 2
+        routeName:
+          type: string
+          description: 루트의 이름
+          example: 강원도 여행 기록
+        description:
+          type: string
+          description: 루트 설명
+          example: 오늘은 친구들이랑 놀았다.
+        createdAt:
+          type: string
+          format: date-time
+          description: 생성일자
+          example: 2021-12-16 13:28:26
+        updatedAt:
+          type: string
+          format: date-time
+          description: 갱신일자
+          example: 2021-12-16 13:28:26
+        public:
+          type: integer
+          description: 루트의 공개 여부
+          example: 0
+        color:
+          type: string
+          description: 루트의 색깔
+          example: red
+        time:
+          type: integer
+          description: 루트의 분 단위 시간
+          example: 120
+        Pins:
+          type: array
+          description: 핀의 간략한 정보
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: 핀의 아이디
+                example: 1
+              ranking:
+                type: integer
+                description: 루트의 순서
+                example: 1
+              locationName: 
+                type: string
+                description: 핀의 이름
+                example: 경치 좋은 곳
+              Pictures:
+                type: array
+                description: 핀의 사진 정보들
+                items:
+                  type: object
+                  properties:
+                    fileName:
+                      type: string
+                      description: 사진 파일명
+                      example: pictureName.gif
+        thumbnail:
+          type: string
+          description: 루트의 대표 사진파일 제목. 핀중 가장 앞 사진을 가져오며, 사진이 없을 경우 null값이 할당되어 있다.
+          example: pictureName.gif  
+    Pin:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 핀의 아이디
+          example: 1
+        routesId:
+          type: integer
+          description: 핀이 속한 루트의 아이디
+          example: 2
+        ranking:
+          type: integer
+          description: 핀의 순서
+          example: 0
+        locationName:
+          type: string
+          description: 핀의 이름
+          example: 경치 좋은 곳
+        latitude:
+          type: number
+          description: 위도
+          example: 33.0000000000
+        longitude:
+          type: number
+          description: 경도
+          example: 126.0000000000
+        address:
+          type: string
+          description: 핀의 주소
+          example: 서울특별시 성북구
+        tooClose:
+          type: boolean
+          description: 해당 핀이 DB에 저장한 핀과 인접한 핀인지 판별
+          example: true
+        startTime:
+          type: string
+          description: 핀의 시작 시간
+          example: '12'
+        endTime: 
+          type: string
+          description: 핀의 종료 시간
+          example: '13'
+        Pictures:
+          type: array
+          description: 핀의 사진 정보들
+          items:
+            type: object
+            properties:
+              id: 
+                type: number
+                description: 사진 파일의 id
+                example: 1
+              pinId:
+                type: number
+                description: 사진이 속한 핀의 id
+                example: 1
+              fileName:
+                type: string
+                description: 사진 파일명
+                example: pictureName.gif
+  responses:
+    ServerErr:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: http status code
+          example: 500
+        error:
+          type: string
+          description: server error description
+          example: server error
