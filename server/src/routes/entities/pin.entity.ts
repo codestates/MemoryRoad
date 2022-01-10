@@ -34,8 +34,14 @@ export class PinEntity {
   @Column()
   longitude: number;
 
-  @Column({ length: 45 })
-  address: string;
+  @Column({ length: 100 })
+  lotAddress: string;
+
+  @Column({ length: 100 })
+  roadAddress: string;
+
+  @Column({ length: 10 })
+  ward: string;
 
   @Column()
   tooClose: boolean;

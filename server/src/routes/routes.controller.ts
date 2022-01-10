@@ -5,6 +5,8 @@ import {
   Delete,
   Get,
   HttpException,
+  InternalServerErrorException,
+  NotFoundException,
   Param,
   Patch,
   Post,
@@ -14,19 +16,19 @@ import {
   UseFilters,
   UseInterceptors,
 } from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import {
+  AnyFilesInterceptor,
+  FilesInterceptor,
+} from '@nestjs/platform-express';
 import { Response, Express } from 'express';
 import { PatchPinDto } from './dto/patchPin.dto';
 import { PatchRouteDto } from './dto/patchRoute.dto';
 import { PostRouteDto } from './dto/postRoute.dto';
 import { RoutesService } from './routes.service';
-import { diskStorage } from 'multer';
-import path from 'path';
-import { v4 as uuidv4 } from 'uuid';
-import fs from 'fs';
 import { ExceptionFilter } from 'src/exception.filter';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
+import { multerOptions } from './routes.multerOpt';
 
 @Controller('routes')
 export class RoutesController {
@@ -48,18 +50,17 @@ export class RoutesController {
     return this.routesService.getUserRoutes(query.page);
   }
 
-  //{ passthrough: true }옵션: nest의 방식과 express의 response객체를 동시에 사용
-  //응답코드가 고정되어 있지 않아 @Res 데코레이터를 사용하고, 응답 객체를 controller에서 만들었다.
+  //@Res의 { passthrough: true }옵션: nest의 방식과 express의 response객체를 동시에 사용
+  //files에는 multer가 처리한 파일의 정보, req에는 JSON형식 문자열이 들어있다. JSON의 유효성 검사는 service에서 처리한다.
   @Post()
-  createRoute(@Body() routePins: PostRouteDto, @Res() res: Response) {
-    try {
-      this.routesService.createRoute(routePins);
-    } catch (err) {
-      return res.status(500).json({
-        code: 500,
-        message: 'server error',
-      });
-    }
+  @UseFilters(ExceptionFilter)
+  @UseInterceptors(AnyFilesInterceptor(multerOptions))
+  async createRoute(
+    @Body() req: { route: string },
+    @Res() res: Response,
+    @UploadedFiles() files: Array<Express.Multer.File>,
+  ) {
+    await this.routesService.createRoute(req.route, files);
 
     return res.status(201).json({
       code: 201,
@@ -69,60 +70,30 @@ export class RoutesController {
 
   //path 파라미터를 받는다.
   @Patch('/:routeId')
+  @UseFilters(ExceptionFilter)
   async updateRoute(
     @Param('routeId') routeId: number,
     @Body() route: PatchRouteDto,
     @Res() res: Response,
   ) {
-    //TODO: 해당 사용자가 작성한 루트만 수정할 수 있어야 한다.
-    try {
-      const updateResult = await this.routesService.updateRoute(routeId, route);
-      if (!updateResult.affected) {
-        //없는 루트, 또는 다른 유저가 작성한 루트를 업데이트 하려는 경우
-        return res.status(404).json({
-          code: 404,
-          message: 'not found',
-        });
-      }
+    await this.routesService.updateRoute(routeId, route);
 
-      return res.status(200).json({
-        code: 200,
-        message: 'updated',
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        code: 500,
-        message: 'server error',
-      });
-    }
+    return res.status(200).json({
+      code: 200,
+      message: 'updated',
+    });
   }
 
   //TODO: 해당 사용자가 작성한 루트만 삭제할 수 있어야 한다.
   // 루트를 삭제하면 루트를 참조하는 핀, 핀을 참조하는 사진들이 전부 삭제된다.(외래키에 on delete : cascade 속성이 있다.)
   @Delete('/:routeId')
   async deleteRoute(@Param('routeId') routeId: number, @Res() res: Response) {
-    try {
-      const deleteResult = await this.routesService.deleteRoute(routeId);
-      if (!deleteResult.affected) {
-        //없는 루트, 또는 다른 유저가 작성한 루트를 삭제 하려는 경우
-        return res.status(404).json({
-          code: 404,
-          message: 'not found',
-        });
-      }
+    await this.routesService.deleteRoute(routeId);
 
-      return res.status(200).json({
-        code: 200,
-        message: 'deleted',
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        code: 500,
-        message: 'server error',
-      });
-    }
+    return res.status(200).json({
+      code: 200,
+      message: 'deleted',
+    });
   }
 
   //TODO: 해당 사용자가 작성한 루트의 핀들만 조회할 수 있어야 한다.
@@ -145,67 +116,62 @@ export class RoutesController {
   }
 
   //TODO: 해당 사용자가 작성한 루트의 핀들만 업데이트 할 수 있어야 한다.
-  //루트의 핀 업데이트
+  //루트의 핀 업데이트. 사진은 추가만 가능하다.
+  @UseFilters(ExceptionFilter)
   @Patch('/:routeId/pins/:pinId')
+  @UseInterceptors(FilesInterceptor('files', 10, multerOptions))
   async updatePin(
     @Param('routeId') routeId: number,
     @Param('pinId') pinId: number,
-    @Body() pin: PatchPinDto,
+    @Body() req: { pin: string },
     @Res() res: Response,
+    @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
+    //JSON.parse, 유효성 검증 에러를 처리하기 위해 try-catch문을 컨트롤러에서도 사용했다. 서비스 부분에 JSON문자열을 넘겨줘 처리하는 것 생각해 보기
     try {
-      const result = await this.routesService.updatePin(routeId, pinId, pin);
+      //문자열 JSON을 parse한 뒤, PatchPinDto타입의 객체를 생성한다.
+      const pin = plainToClass(PatchPinDto, JSON.parse(req.pin));
 
-      if (!result.affected) {
-        //없는 핀, 또는 다른 유저가 작성한 핀을 업데이트 하려는 경우
-        return res.status(404).json({
-          code: 404,
-          message: 'not found',
-        });
+      //새로 생성한 객체의 유효성 검증
+      const error = await validate(pin, { forbidUnknownValues: true });
+      if (error.length > 0) {
+        const fstVal =
+          error[0].constraints[Object.keys(error[0].constraints)[0]];
+        throw new BadRequestException(null, fstVal);
       }
+      await this.routesService.updatePin(routeId, pinId, pin, files);
 
       return res.status(200).json({
         code: 200,
         message: 'updated',
       });
     } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        code: 500,
-        message: 'server error',
-      });
+      if (err.status === 404) {
+        throw new NotFoundException();
+      } else if (err.status === 400 || err instanceof SyntaxError) {
+        //잘못된 JSON 형식을 받을 경우
+        throw new BadRequestException(null, err.message);
+      } else {
+        throw new InternalServerErrorException();
+      }
     }
   }
 
   //TODO: 해당 사용자가 작성한 핀만 삭제할 수 있어야 한다.(유저의 루트 소유여부를 확인, service에서 에러를 throw한다)
   //핀과 핀을 참조하는 사진들을 삭제한다.
+  @UseFilters(ExceptionFilter)
   @Delete('/:routeId/pins/:pinId')
   async deletePin(
     @Param('routeId') routeId: number,
     @Param('pinId') pinId: number,
     @Res() res: Response,
   ) {
-    try {
-      const deleteResult = await this.routesService.deletePin(routeId, pinId);
-      if (!deleteResult.affected) {
-        //없는 핀, 또는 다른 유저가 작성한 핀을 삭제 하려는 경우
-        return res.status(404).json({
-          code: 404,
-          message: 'not found',
-        });
-      }
+    await this.routesService.deletePin(routeId, pinId);
 
-      return res.status(200).json({
-        code: 200,
-        message: 'deleted',
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        code: 500,
-        message: 'server error',
-      });
-    }
+    return res.status(200).json({
+      code: 200,
+      message: 'deleted',
+    });
   }
 
   //TODO: 해당 사용자가 작성한 루트의 핀만 생성할 수 있다. 사진도 같이 추가하기
@@ -218,33 +184,14 @@ export class RoutesController {
   //이미지의 유효성 검사는 multer의 filter옵션에서 처리하고, 다른 key, value의 유효성 검사는 class-validator에서 처리한다.
   @UseFilters(ExceptionFilter)
   @Post('/:routeId/pins')
-  @UseInterceptors(
-    FilesInterceptor('files', 10, {
-      fileFilter: (req, file, cb) => {
-        //파일 확장자 검사
-        if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
-          cb(null, true);
-        } else {
-          cb(new TypeError('bad img type'), false);
-        }
-      },
-      storage: diskStorage({
-        destination: function (req, file, cb) {
-          cb(null, './upload');
-        },
-        filename: function (req, file, cb) {
-          //랜덤한 이름(범용 고유식별자 v4. 총 36문자)에 확장자를 추가해서 파일 이름을 짓는다.
-          cb(null, `${uuidv4()}${path.extname(file.originalname)}`);
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(FilesInterceptor('files', 10, multerOptions))
   async createPin(
     @Param('routeId') routeId: number,
     @Body() req: { pin: string },
     @Res() res: Response,
     @UploadedFiles() files: Array<Express.Multer.File>,
   ) {
+    //JSON.parse의 에러를 처리하기 위해 try-catch문을 컨트롤러에서도 사용했다. 서비스 부분에 JSON문자열을 넘겨줘 처리하는 것 생각해 보기
     try {
       //문자열 JSON을 parse한 뒤, PatchPinDto타입의 객체를 생성한다.
       const pin = plainToClass(PatchPinDto, JSON.parse(req.pin));
@@ -263,8 +210,12 @@ export class RoutesController {
         message: 'created',
       });
     } catch (err) {
-      //잘못된 JSON 형식을 받을 경우
-      throw new BadRequestException(null, err.message);
+      if (err.status === 400 || err instanceof SyntaxError) {
+        //잘못된 JSON 형식을 받을 경우
+        throw new BadRequestException(null, err.message);
+      } else {
+        throw new InternalServerErrorException(null, err.message);
+      }
     }
   }
 }
