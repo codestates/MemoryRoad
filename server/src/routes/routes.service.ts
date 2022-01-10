@@ -213,7 +213,7 @@ export class RoutesService {
       }
     }
   }
-  //TODO: 해당 사용자가 작성한 루트만 수정할 수 있어야 한다.
+
   async updateRoute(
     routeId: number,
     route: PatchRouteDto,
@@ -337,11 +337,28 @@ export class RoutesService {
   async updatePin(
     routeId: number,
     pinId: number,
-    pin: PatchPinDto,
+    pinStr: string,
     files: Array<Express.Multer.File>,
     accessToken: string | undefined,
   ) {
     try {
+      //문자열 JSON을 parse한 뒤, PatchPinDto타입의 객체를 생성한다.
+      const pin = plainToClass(PatchPinDto, JSON.parse(pinStr));
+
+      //새로 생성한 객체의 유효성 검증
+      //유효하지 않은 키가 있으면 pinValError 배열에 추가된다.
+      const pinValError = await validate(pin, {
+        forbidUnknownValues: true,
+      });
+      if (pinValError.length > 0) {
+        const fstVal =
+          pinValError[0].constraints[
+            Object.keys(pinValError[0].constraints)[0]
+          ];
+        throw new BadRequestException(null, fstVal);
+      }
+
+      //토큰의 유효성 검사
       const decode = jwt.verify(
         accessToken,
         this.configService.get<string>('ACCESS_SECRET'),
@@ -396,14 +413,26 @@ export class RoutesService {
     } catch (err) {
       if (err.status === 401) {
         throw err;
+      } else if (err.status === 400 || err instanceof SyntaxError) {
+        //잘못된 JSON 형식을 받을 경우
+        throw new BadRequestException(null, err.message);
       } else {
         throw new InternalServerErrorException();
       }
     }
   }
 
-  async deletePin(routeId: number, pinId: number) {
+  async deletePin(
+    routeId: number,
+    pinId: number,
+    accessToken: string | undefined,
+  ) {
     try {
+      const decode = jwt.verify(
+        accessToken,
+        this.configService.get<string>('ACCESS_SECRET'),
+      );
+
       //핀을 지우기 전, 핀에 속한 사진들의 정보를 가져온다.
       const picturesInfo = await this.picturesRepository
         .createQueryBuilder('Pictures')
@@ -411,18 +440,26 @@ export class RoutesService {
         .where('pinId = :pinId', { pinId: pinId })
         .getMany();
 
+      //삭제된 핀의 정보
       const result = await this.pinsRepository
-        .createQueryBuilder()
-        .delete()
-        .from('Pins')
-        .where('routesId = :routesId AND id = :id', {
-          routesId: routeId,
-          id: pinId,
-        })
-        .execute();
+        .createQueryBuilder('Pins')
+        .innerJoin('Pins.Routes', 'Routes')
+        .where(
+          'Pins.routesId = :routesId AND Pins.id = :id AND Routes.userId = :userId',
+          {
+            routesId: routeId,
+            id: pinId,
+            userId: decode['id'],
+          },
+        )
+        .getMany()
+        .then((Pins) => {
+          return this.pinsRepository.remove(Pins);
+        });
+
       //없는 핀, 또는 다른 유저가 작성한 핀을 삭제 하려는 경우
-      if (!result.affected) {
-        throw new NotFoundException();
+      if (!result.length) {
+        throw new UnauthorizedException();
       }
 
       //사진 파일 삭제
@@ -443,8 +480,10 @@ export class RoutesService {
 
       return result;
     } catch (err) {
-      if (err.status === 404) {
-        throw new NotFoundException();
+      if (err.status === 401) {
+        throw err;
+      } else if (err instanceof JsonWebTokenError) {
+        throw err;
       } else {
         //테이블의 정보는 삭제 되더라도 실제 파일이 없는 경우 이 에러가 발생한다. (테이블에서는 삭제 처리된다.)
         throw new InternalServerErrorException();
@@ -454,11 +493,45 @@ export class RoutesService {
 
   async createPin(
     routeId: number,
-    pin: PatchPinDto,
+    pinStr: string,
     files: Array<Express.Multer.File>,
+    accessToken: string | undefined,
   ) {
     try {
+      //문자열 JSON을 parse한 뒤, PatchPinDto타입의 객체를 생성한다.
+      const pin = plainToClass(PatchPinDto, JSON.parse(pinStr));
+
+      //새로 생성한 객체의 유효성 검증
+      //유효하지 않은 키가 있으면 pinValError 배열에 추가된다.
+      const pinValError = await validate(pin, {
+        forbidUnknownValues: true,
+      });
+      if (pinValError.length > 0) {
+        const fstVal =
+          pinValError[0].constraints[
+            Object.keys(pinValError[0].constraints)[0]
+          ];
+        throw new BadRequestException(null, fstVal);
+      }
+
+      const decode = jwt.verify(
+        accessToken,
+        this.configService.get<string>('ACCESS_SECRET'),
+      );
+
+      //핀을 추가하려는 루트가 해당 사용자 소유인지 확인한다.
+      const selectRouteResult = await this.routesRepository.findOne({
+        userId: decode['id'],
+        id: routeId,
+      });
+      if (!selectRouteResult) {
+        throw new UnauthorizedException();
+      }
+
+      //핀을 생성한다.
       const newPin = { ...pin, routesId: routeId };
+      const createPinResult = await this.pinsRepository.save(newPin);
+
       const dbPins = await this.pinsRepository
         .createQueryBuilder('Pins')
         .select(['Pins.id', 'Pins.latitude', 'Pins.longitude', 'Pins.tooClose'])
@@ -472,7 +545,6 @@ export class RoutesService {
       await this.pinsRepository.save(dbPinId);
 
       //생성한 핀을 이용해 사진의 정보를 저장한다.
-      const createPinResult = await this.pinsRepository.save(newPin);
       const newPictures = [];
       files.forEach((file) => {
         newPictures.push({
@@ -486,8 +558,14 @@ export class RoutesService {
       //잘못된 칼럼 정보를 추가하려는 경우
       if (err instanceof QueryFailedError) {
         throw new BadRequestException();
+      } else if (err.status === 400 || err instanceof SyntaxError) {
+        //잘못된 JSON 형식을 받을 경우
+        throw new BadRequestException(null, err.message);
+      } else if (err.status === 401) {
+        throw err;
+      } else {
+        throw new InternalServerErrorException();
       }
-      throw new InternalServerErrorException();
     }
   }
 }

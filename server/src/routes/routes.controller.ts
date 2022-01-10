@@ -148,50 +148,34 @@ export class RoutesController {
     @Req() request: Request,
   ) {
     //JSON.parse, 유효성 검증 에러를 처리하기 위해 try-catch문을 컨트롤러에서도 사용했다. 서비스 부분에 JSON문자열을 넘겨줘 처리하는 것 생각해 보기
-    try {
-      //문자열 JSON을 parse한 뒤, PatchPinDto타입의 객체를 생성한다.
-      const pin = plainToClass(PatchPinDto, JSON.parse(req.pin));
 
-      //새로 생성한 객체의 유효성 검증
-      const error = await validate(pin, { forbidUnknownValues: true });
-      if (error.length > 0) {
-        const fstVal =
-          error[0].constraints[Object.keys(error[0].constraints)[0]];
-        throw new BadRequestException(null, fstVal);
-      }
-      await this.routesService.updatePin(
-        routeId,
-        pinId,
-        pin,
-        files,
-        request.cookies['accessToken'],
-      );
+    await this.routesService.updatePin(
+      routeId,
+      pinId,
+      req.pin,
+      files,
+      request.cookies['accessToken'],
+    );
 
-      return res.status(200).json({
-        code: 200,
-        message: 'updated',
-      });
-    } catch (err) {
-      if (err.status === 404) {
-        throw new NotFoundException();
-      } else if (err.status === 400 || err instanceof SyntaxError) {
-        //잘못된 JSON 형식을 받을 경우
-        throw new BadRequestException(null, err.message);
-      } else {
-        throw new InternalServerErrorException();
-      }
-    }
+    return res.status(200).json({
+      code: 200,
+      message: 'updated',
+    });
   }
 
-  //TODO: 해당 사용자가 작성한 핀만 삭제할 수 있어야 한다.(유저의 루트 소유여부를 확인, service에서 에러를 throw한다)
   //핀과 핀을 참조하는 사진들을 삭제한다.
   @Delete('/:routeId/pins/:pinId')
   async deletePin(
     @Param('routeId') routeId: number,
     @Param('pinId') pinId: number,
     @Res() res: Response,
+    @Req() request: Request,
   ) {
-    await this.routesService.deletePin(routeId, pinId);
+    await this.routesService.deletePin(
+      routeId,
+      pinId,
+      request.cookies['accessToken'],
+    );
 
     return res.status(200).json({
       code: 200,
@@ -214,32 +198,17 @@ export class RoutesController {
     @Body() req: { pin: string },
     @Res() res: Response,
     @UploadedFiles() files: Array<Express.Multer.File>,
+    @Req() request: Request,
   ) {
-    //JSON.parse의 에러를 처리하기 위해 try-catch문을 컨트롤러에서도 사용했다. 서비스 부분에 JSON문자열을 넘겨줘 처리하는 것 생각해 보기
-    try {
-      //문자열 JSON을 parse한 뒤, PatchPinDto타입의 객체를 생성한다.
-      const pin = plainToClass(PatchPinDto, JSON.parse(req.pin));
-
-      //새로 생성한 객체의 유효성 검증
-      const error = await validate(pin, { forbidUnknownValues: true });
-      if (error.length > 0) {
-        const fstVal =
-          error[0].constraints[Object.keys(error[0].constraints)[0]];
-        throw new BadRequestException(null, fstVal);
-      }
-
-      await this.routesService.createPin(routeId, pin, files);
-      return res.status(201).json({
-        code: 201,
-        message: 'created',
-      });
-    } catch (err) {
-      if (err.status === 400 || err instanceof SyntaxError) {
-        //잘못된 JSON 형식을 받을 경우
-        throw new BadRequestException(null, err.message);
-      } else {
-        throw new InternalServerErrorException(null, err.message);
-      }
-    }
+    await this.routesService.createPin(
+      routeId,
+      req.pin,
+      files,
+      request.cookies['accessToken'],
+    );
+    return res.status(201).json({
+      code: 201,
+      message: 'created',
+    });
   }
 }

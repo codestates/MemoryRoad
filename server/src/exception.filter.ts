@@ -20,6 +20,8 @@ export class ExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     console.log(exception);
+
+    //nest의 예외인 경우
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
       if (exception instanceof InternalServerErrorException) {
