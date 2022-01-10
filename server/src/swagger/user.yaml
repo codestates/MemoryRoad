@@ -1,0 +1,498 @@
+/users:
+  post:
+    tags:
+    - users
+    summary: 회원 가입
+    responses:
+      '201':
+        description: 회원 가입 성공
+        content: 
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 201
+      '409':
+        description: 이미 있는 유저
+        content: 
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 409
+                  error:
+                    type: string
+                    example: user info already exists
+      '500':
+        description: 서버 오류
+        content: 
+            application/json:
+              schema:
+                type: object
+                $ref: './openapi.yaml#/components/responses/ServerErr'
+    requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  description: 이메일
+                  type: string
+                  example: abc@naver.com
+                password:
+                  description: 비밀 번호
+                  type: string
+                  example: password
+                nickName:
+                  description: 닉네임
+                  type: string
+                  example: 김사과
+                  
+  patch:
+    tags:
+    - users
+    summary: 회원 정보 업데이트
+    responses:
+      '201':
+        description: 회원 정보 수정 성공
+        content:
+            application/json:
+              schema:
+                properties:
+                code:
+                  type: integer
+                  example: 201
+                message:
+                  type: string
+                  example: 'modified'
+      '401':
+        description: 토큰 유효 시간 경과
+        content:
+            application/json:
+              schema:
+                properties:
+                code:
+                  type: integer
+                  example: 401
+                message:
+                  type: string
+                  example: 'expired token'
+      '404':
+        description: 토큰의 정보로 사용자 정보를 찾지 못함
+        content:
+            application/json:
+              schema:
+                properties:
+                code:
+                  type: integer
+                  example: 404
+                message:
+                  type: string
+                  example: 'user not found'
+      '500':
+        description: 서버 오류
+        content: 
+            application/json:
+              schema:
+                type: object
+                $ref: './openapi.yaml#/components/responses/ServerErr'
+    requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newNickName:
+                  description: 새로운 닉네임
+                  type: string
+                  example: 새닉네임
+                newEmail:
+                  description: 새로운 이메일
+                  type: string
+                  example: newemail@naver.com
+                newPassword:
+                  description: 새로운 비밀 번호
+                  type: string
+                  example: newpassword  
+  delete:
+    tags:
+    - users
+    summary: 회원 탈퇴
+    responses:
+      '200':
+        description: 회원 탈퇴 성공
+        content:
+            application/json:
+              schema:
+                properties:
+                code:
+                  type: integer
+                  example: 200
+                message:
+                  type: string
+                  example: 회원 탈퇴 되셨습니다.
+      '401':
+        description: 토큰 유효 시간 경과
+        content:
+            application/json:
+              schema:
+                properties:
+                code:
+                  type: integer
+                  example: 401
+                message:
+                  type: string
+                  example: 'expired token'
+      '404':
+        description: 토큰의 정보로 사용자 정보를 찾지 못함
+        content:
+            application/json:
+              schema:
+                properties:
+                code:
+                  type: integer
+                  example: 404
+                message:
+                  type: string
+                  example: 'user not found'
+      '500':
+        description: 서버 오류
+        content: 
+            application/json:
+              schema:
+                type: object
+                $ref: './openapi.yaml#/components/responses/ServerErr'
+/users/auth/oauth/kakao:
+  post:
+    tags:
+    - users
+    summary: 카카오 로그인
+    description: 카카오 Oauth 로그인
+    responses:
+      '200':
+        description: 카카오 Oauth 로그인 성공
+        content:
+            application/json:
+              schema:
+                properties:
+                code:
+                  type: integer
+                  example: 200
+                userName:
+                  type: string
+                  example: 용가리
+                role:
+                  type: string
+                  example: general
+                email:
+                  type: string
+                  example: terrabattle@naver.com
+                profile:
+                  type: string
+                  example: http://k.kakaocdn.net/dn/crXJwu/btqUsRhQUx0/cH6CxkKCcteXkkcuRUulx1/img_110x110.jpg
+      '500':
+        description: 서버 오류
+        content: 
+            application/json:
+              schema:
+                type: object
+                $ref: './openapi.yaml#/components/responses/ServerErr'
+    requestBody:
+        required: true  
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                authorizationCode:
+                  description: URL로 받은 인증 코드
+                  type: string
+                
+/users/auth/oauth/google:
+  post:
+    tags:
+    - users
+    summary: 구글 로그인
+    description: 구글 Oauth 로그인
+    responses:
+      '200':
+        description: 구글 Oauth 로그인 성공
+        content:
+            application/json:
+              schema:
+                properties:
+                code:
+                  type: integer
+                  example: 200
+                userName:
+                  type: string
+                  example: 화염용
+                role:
+                  type: string
+                  example: general
+                email:
+                  type: string
+                  example: gqwrgadsf@gmail.com
+                profile:
+                  type: string
+                  example: https://lh3.googleusercontent.com/a/AATXAJwhegjEnASqnjidlgyYC7xzyu4U5jdCPpfV30MT=s96-c
+      '500':
+        description: 서버 오류
+        content: 
+            application/json:
+              schema:
+                type: object
+                $ref: './openapi.yaml#/components/responses/ServerErr'
+    requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                authorizationCode:
+                  description: URL로 받은 인증 코드
+                  type: string
+/users/auth/oauth/naver:
+  post:
+    tags:
+    - users
+    summary: 네이버 로그인
+    description: 네이버 Oauth 로그인
+    responses:
+      '200':
+        description: 네이버 Oauth 로그인 성공
+        content:
+            application/json:
+              schema:
+                properties:
+                code:
+                  type: integer
+                  example: 200
+                userName:
+                  type: string
+                  example: 도롱뇽
+                role:
+                  type: string
+                  example: general
+                email:
+                  type: string
+                  example: yayww@naver.com
+                profile:
+                  type: string
+                  example: http://k.kakaocdn.net/dn/crXJwu/btqUsRhQUx0/cH6CxkKCcteXkkcuRUulx1/img_110x110.jpg
+      '500':
+        description: 서버 오류
+        content: 
+            application/json:
+              schema:
+                type: object
+                $ref: './openapi.yaml#/components/responses/ServerErr'
+    requestBody:
+        required: true  
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                authorizationCode:
+                  description: URL로 받은 인증 코드
+                  type: string
+                  
+/users/auth/local:
+  post:
+    tags:
+    - users
+    summary: 로컬 로그인
+    description: 로컬 로그인
+    responses:
+      '200':
+        description: 로컬 로그인 성공
+        content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  nickName:
+                    type: string
+                    example: 귤
+                  email:
+                    type: string
+                    example: abc@naver.com
+                  oauthLogin:
+                    type: integer
+                    example: google
+      '401':
+        description: 잘못된 비밀번호를 입력받은 경우
+        content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 401
+                  error:
+                    type: string
+                    example: unauthorized
+      '500':
+        description: 서버 오류
+        content: 
+            application/json:
+              schema:
+                type: object
+                $ref: './openapi.yaml#/components/responses/ServerErr'
+    requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  description: 이메일
+                  type: string
+                  example: abc11@naver.com
+                password:
+                  description: 비밀 번호
+                  type: string
+                  example: '12345'
+/users/auth/local/email:
+  post:
+    tags:
+    - users
+    summary: 중복된 이메일 여부를 확인 
+    description: 중복된 이메일 여부를 확인
+    responses:
+      '200':
+        description: 사용 가능한 이메일
+        content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: ok
+                  
+      '409':
+        description: 이미 있는 유저
+        content: 
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 409
+                  error:
+                    type: string
+                    example: user info already exists
+      '500':
+        description: 서버 오류
+        content: 
+            application/json:
+              schema:
+                type: object
+                $ref: './openapi.yaml#/components/responses/ServerErr'
+    requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  description: 이메일
+                  type: string
+                  example: abc11@naver.com
+/users/auth/local/password:
+  post:
+    tags:
+    - users
+    summary: 로그인한 유저의 비밀번호 일치여부 확인
+    description: 로그인한 유저의 비밀번호 일치여부 확인
+    responses:
+      '200':
+        description: 비밀번호 일치
+        content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: ok
+      '401':
+        description: 잘못된 비밀번호를 입력받거나 유효하지 않은 토큰을 받은 경우
+        content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 401
+                  error:
+                    type: string
+                    example: unauthorized
+      '500':
+        description: 서버 오류
+        content: 
+            application/json:
+              schema:
+                type: object
+                $ref: './openapi.yaml#/components/responses/ServerErr'
+    requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  description: 비밀 번호
+                  type: string
+                  example: '12345'
+/users/auth:
+  get:
+    tags:
+    - users
+    summary: 로그 아웃
+    description: 로그 아웃
+    responses:
+      '200':
+        description: 로그아웃 성공
+        content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+      '401':
+        description: 쿠키가 없거나 쿠키에 토큰이 없는 경우
+        content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 401
+                  error:
+                    type: string
+                    example: unauthorized
+      '500':
+        description: 서버 오류
+        content: 
+            application/json:
+              schema:
+                type: object
+                $ref: './openapi.yaml#/components/responses/ServerErr'
