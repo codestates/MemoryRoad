@@ -18,7 +18,6 @@ import { Request, Response } from 'express';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
   //회원가입
   @Post()
   async create(@Body() createUserDto: CreateUserDto, @Res() res) {
