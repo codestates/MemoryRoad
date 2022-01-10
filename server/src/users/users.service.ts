@@ -202,6 +202,7 @@ export class UsersService {
       this.configService.get<string>('ACCESS_SECRET'),
       { expiresIn: '6h' },
     );
+    console.log(acceptToken.data);
     return accessToken;
   }
   async google(body: any) {
@@ -281,17 +282,29 @@ export class UsersService {
     const decoded = this.verifyAccessToken(accessToken);
     console.log(decoded);
     if (updateUserDto.nickName) {
-      decoded.nickName = updateUserDto.nickName;
+      decoded['nickName'] = updateUserDto.nickName;
     }
     if (updateUserDto.password) {
       const salt = await bcrypt.genSalt();
-      decoded.saltedPassword = await bcrypt.hash(updateUserDto.password, salt);
+      decoded['saltedPassword'] = await bcrypt.hash(
+        updateUserDto.password,
+        salt,
+      );
     }
     if (updateUserDto.profileImage) {
-      decoded.profileImage = updateUserDto.profileImage;
+      decoded['profileImage'] = updateUserDto.profileImage;
     }
     // 닉네임, 비번, 프로필 이미지 중에 하나만 와도 바꿔줘야 한다.
-    await this.usersRepository.save(decoded);
+    const user: Users = {
+      id: decoded['id'],
+      email: decoded['email'],
+      oauthLogin: decoded['oauthLogin'],
+      oauthCI: decoded['oauthCI'],
+      nickName: decoded['nickName'],
+      saltedPassword: decoded['saltedPassword'],
+      profileImage: decoded['profileImage'],
+    };
+    await this.usersRepository.save(user);
     console.log(decoded);
     return decoded;
   }
@@ -299,7 +312,7 @@ export class UsersService {
   //회원 탈퇴
   async remove(accessToken: string) {
     const decoded = this.verifyAccessToken(accessToken);
-    await this.usersRepository.delete({ id: decoded.id });
+    await this.usersRepository.delete({ id: decoded['id'] });
   }
 
   //이것도 쿠키받아서 쿠키로 처리해줘야 하네.
@@ -307,7 +320,7 @@ export class UsersService {
     const decoded = this.verifyAccessToken(accessToken);
     const isExistPassword = await bcrypt.compare(
       password,
-      decoded.saltedPassword,
+      decoded['saltedPassword'],
     );
     if (!isExistPassword) {
       throw new BadRequestException(`비밀번호가 일치하지 않습니다`);
@@ -328,10 +341,6 @@ export class UsersService {
     const decoded = jwt.verify(
       accessToken,
       this.configService.get<string>('ACCESS_SECRET'),
-      (err, decoded) => {
-        if (err) throw new BadRequestException(`${err}`);
-        return decoded;
-      },
     );
     return decoded;
   }
