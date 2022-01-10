@@ -25,4 +25,10 @@ export class Users {
 
   @Column()
   oauthCI: string;
+
+  @Column()
+  profileImage: string;
+
+  @OneToMany(() => RouteEntity, (Routes) => Routes.userId)
+  Routes: RouteEntity[];
 }
