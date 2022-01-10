@@ -1,4 +1,4 @@
-import { IsBooleanString, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsString } from 'class-validator';
 
 export class PatchRouteDto {
   @IsString()
@@ -7,7 +7,7 @@ export class PatchRouteDto {
   @IsString()
   readonly description: string;
 
-  @IsBooleanString()
+  @IsBoolean()
   readonly public: boolean;
 
   @IsString()
