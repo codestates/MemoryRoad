@@ -46,11 +46,12 @@ export class UsersService {
     const queryRunner = await getConnection().createQueryRunner();
     await queryRunner.startTransaction();
 
-    createUserDto.salt = await bcrypt.genSalt();
+    const salt = await bcrypt.genSalt();
     createUserDto.saltedPassword = await bcrypt.hash(
       createUserDto.password,
-      createUserDto.salt,
+      salt,
     );
+    console.log(createUserDto.saltedPassword);
     try {
       const user: Users = await this.usersRepository.create(createUserDto);
       await this.usersRepository.save(user);
@@ -260,7 +261,13 @@ export class UsersService {
     if (!isExistUser) {
       throw new NotFoundException(`유효하지 않은 이메일입니다`);
     }
-    if (!bcrypt.compare(loginUserDto.password, isExistUser.saltedPassword)) {
+    const isCorrectPassword = await bcrypt.compare(
+      loginUserDto.password,
+      isExistUser.saltedPassword,
+    );
+    console.log(isExistUser.saltedPassword);
+    console.log(isCorrectPassword);
+    if (!isCorrectPassword) {
       throw new NotFoundException(`비밀번호가 일치하지 않습니다`);
     }
     const accessToken = jwt.sign(

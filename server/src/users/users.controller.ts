@@ -18,6 +18,7 @@ import { Request, Response } from 'express';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
   //회원가입
   @Post()
   async create(@Body() createUserDto: CreateUserDto, @Res() res) {
@@ -142,6 +143,12 @@ export class UsersController {
       // const accessToken =
       //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTEsIm5pY2tOYW1lIjoieWF5d3dAbmF2ZXIuY29tIiwiZW1haWwiOiJ5YXl3d0BuYXZlci5jb20iLCJvYXV0aExvZ2luIjoibmF2ZXIiLCJzYWx0ZWRQYXNzd29yZCI6bnVsbCwib2F1dGhDSSI6ImtCYTNOekRnelhSbmlJbnRQOTVFemZMLUpPalRDdnMwMFVvcjZvbTBpV3MiLCJpYXQiOjE2NDE0NDQ4MzUsImV4cCI6MTY0MTQ2NjQzNX0.OcMyOMOZiLO-0V0w_ClBkVHK9-AmmbAzbndqcIV1k8s';
       await this.usersService.remove(accessToken);
+      res.cookie('accessToken', 'success', {
+        httpOnly: true,
+        maxAge: 5 * 60 * 60 * 1000,
+        sameSite: 'none',
+        secure: true,
+      });
       res.status(200).send({ message: '회원에서 탈퇴하셨습니다' });
     } catch (err) {
       return err;

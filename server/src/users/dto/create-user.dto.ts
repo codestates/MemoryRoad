@@ -7,10 +7,6 @@ export class CreateUserDto {
   email: string;
   @IsString()
   password: string;
-  @IsString()
-  salt?: string;
-  @IsString()
   saltedPassword?: string;
-  @IsString()
   profileImage?: string;
 }
