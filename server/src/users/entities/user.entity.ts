@@ -17,7 +17,7 @@ export class Users {
   @Column({ length: 100, unique: true })
   email: string;
 
-  @Column({ length: 10 })
+  @Column({ length: 100 })
   oauthLogin: string;
 
   @Column({ length: 100 })
