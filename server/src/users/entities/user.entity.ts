@@ -14,18 +14,18 @@ export class Users {
   @Column({ length: 45 })
   nickName: string;
 
-  @Column({ length: 45, unique: true })
+  @Column({ length: 100, unique: true })
   email: string;
 
-  @Column({ length: 10 })
+  @Column({ length: 100 })
   oauthLogin: string;
 
-  @Column({ length: 45 })
+  @Column({ length: 100 })
   saltedPassword: string;
 
-  @Column()
+  @Column({ length: 255 })
   oauthCI: string;
 
-  @Column()
+  @Column({ length: 255 })
   profileImage: string;
 }

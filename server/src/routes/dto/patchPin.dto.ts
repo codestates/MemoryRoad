@@ -28,15 +28,9 @@ export class PatchPinDto implements Pin {
   @IsNumber()
   readonly longitude: number;
 
-  @Transform(({ value }) => {
-    return value.toString();
-  })
-  @IsString()
-  readonly startTime: string;
+  @IsNumber()
+  readonly startTime: number;
 
-  @Transform(({ value }) => {
-    return value.toString();
-  })
-  @IsString()
-  readonly endTime: string;
+  @IsNumber()
+  readonly endTime: number;
 }
