@@ -26,6 +26,7 @@ import { validate } from 'class-validator';
 import { UsersService } from 'src/users/users.service';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
+import { PlaceKeywordEntity } from './entities/placeKeyword.entity';
 
 @Injectable()
 export class RoutesService {
@@ -39,6 +40,8 @@ export class RoutesService {
     private picturesRepository: Repository<PictureEntity>,
     private readonly usersService: UsersService,
     private configService: ConfigService,
+    @InjectRepository(PlaceKeywordEntity)
+    private placeKeywords: Repository<PlaceKeywordEntity>,
   ) {}
 
   async getUserRoutes(page: number, accessToken: string | undefined) {
@@ -477,8 +480,6 @@ export class RoutesService {
         .getMany();
       const updatePinInfoId = redefineTooClose(dbPins);
       await this.pinsRepository.save(updatePinInfoId);
-
-      return result;
     } catch (err) {
       if (err.status === 401) {
         throw err;
@@ -567,5 +568,9 @@ export class RoutesService {
         throw new InternalServerErrorException();
       }
     }
+  }
+
+  async testKeyword() {
+    console.log(await this.placeKeywords.find());
   }
 }

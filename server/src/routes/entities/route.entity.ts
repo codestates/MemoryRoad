@@ -37,6 +37,8 @@ export class RouteEntity {
   @Column()
   time: number;
 
-  @OneToMany(() => PinEntity, (Pins) => Pins.Routes)
+  @OneToMany(() => PinEntity, (Pins) => Pins.routesId, {
+    cascade: true,
+  })
   Pins: PinEntity[];
 }

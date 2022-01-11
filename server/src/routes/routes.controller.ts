@@ -211,4 +211,9 @@ export class RoutesController {
       message: 'created',
     });
   }
+
+  @Get('key')
+  async testKey() {
+    return this.routesService.testKeyword();
+  }
 }
