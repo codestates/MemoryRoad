@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Users } from 'src/users/entities/user.entity';
+import { UserEntity } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { PictureEntity } from './entities/picture.entity';
 import { PinEntity } from './entities/pin.entity';
@@ -16,7 +16,7 @@ import { RoutesService } from './routes.service';
       RouteEntity,
       PinEntity,
       PictureEntity,
-      Users,
+      UserEntity,
       PlaceKeywordEntity,
     ]),
   ],
