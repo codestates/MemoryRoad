@@ -5,8 +5,11 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { PinEntity } from './pin.entity';
+import { WardEntity } from '../../wards/entities/ward.entity';
 
 @Entity('Routes')
 export class RouteEntity {
@@ -41,4 +44,19 @@ export class RouteEntity {
     cascade: true,
   })
   Pins: PinEntity[];
+
+  //M:N 조인테이블 설정.
+  @ManyToMany(() => WardEntity, (wards) => wards.id, { cascade: true })
+  @JoinTable({
+    name: 'RoutesWards',
+    joinColumn: {
+      name: 'routeId',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'wardId',
+      referencedColumnName: 'id',
+    },
+  })
+  wards: WardEntity[];
 }

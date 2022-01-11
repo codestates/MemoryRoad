@@ -9,7 +9,7 @@ import { Repository, getConnection } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-userDto';
-import { Users } from './entities/user.entity';
+import { UserEntity } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 // import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
@@ -21,17 +21,17 @@ import requestPromise from 'request-promise';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
+    @InjectRepository(UserEntity)
+    private usersRepository: Repository<UserEntity>,
     // private httpService: HttpService,
     private configService: ConfigService,
   ) {}
   async create(createUserDto: CreateUserDto) {
     // 이메일과 닉네임을 확인해서 있는지 없는지 확인
-    const isExistemail: Users = await this.usersRepository.findOne({
+    const isExistemail: UserEntity = await this.usersRepository.findOne({
       email: createUserDto.email,
     });
-    const isExistNick: Users = await this.usersRepository.findOne({
+    const isExistNick: UserEntity = await this.usersRepository.findOne({
       nickName: createUserDto.nickName,
     });
     console.log('이게 콘솔임', isExistemail);
@@ -52,7 +52,7 @@ export class UsersService {
       createUserDto.salt,
     );
     try {
-      const user: Users = await this.usersRepository.create(createUserDto);
+      const user: UserEntity = await this.usersRepository.create(createUserDto);
       await this.usersRepository.save(user);
       await queryRunner.commitTransaction();
     } catch (error) {
@@ -112,12 +112,12 @@ export class UsersService {
     //     email: 'terrabattle@naver.com'
     //   }
     // }
-    let userInfo: Users = await this.usersRepository.findOne({
+    let userInfo: UserEntity = await this.usersRepository.findOne({
       email: result.kakao_account.email,
       oauthLogin: 'kakao',
     });
     if (!userInfo) {
-      const sameEmail: Users = await this.usersRepository.findOne({
+      const sameEmail: UserEntity = await this.usersRepository.findOne({
         email: result.kakao_account.email,
       });
       if (sameEmail) {
@@ -174,12 +174,12 @@ export class UsersService {
     const profile = result.profile_image; //프로필 사진은 전달 안 해주고 있음
     console.log(result);
     // 여기까지가 데이터 가져오는 코드
-    let userInfo: Users = await this.usersRepository.findOne({
+    let userInfo: UserEntity = await this.usersRepository.findOne({
       email: result.email,
       oauthLogin: 'naver',
     });
     if (!userInfo) {
-      const sameEmail: Users = await this.usersRepository.findOne({
+      const sameEmail: UserEntity = await this.usersRepository.findOne({
         email: result.email,
       });
       if (sameEmail) {
@@ -222,13 +222,13 @@ export class UsersService {
         console.log(err);
         return err;
       });
-    const { email, name, picture } = decode; // picture 아직 전달 안 해줬음.
-    let userInfo: Users = await this.usersRepository.findOne({
+    const { email, name, picture } = decode; // picture 아직 전달 안 해줬다.
+    let userInfo: UserEntity = await this.usersRepository.findOne({
       email: email,
       oauthLogin: 'google',
     });
     if (!userInfo) {
-      const sameEmail: Users = await this.usersRepository.findOne({
+      const sameEmail: UserEntity = await this.usersRepository.findOne({
         email: email,
       });
       if (sameEmail) {
@@ -254,7 +254,7 @@ export class UsersService {
   }
   //로컬 로그인 이메일, 비밀번호
   async local(loginUserDto: LoginUserDto) {
-    const isExistUser: Users = await this.usersRepository.findOne({
+    const isExistUser: UserEntity = await this.usersRepository.findOne({
       email: loginUserDto.email,
     });
     if (!isExistUser) {
@@ -294,7 +294,7 @@ export class UsersService {
       decoded['profileImage'] = updateUserDto.profileImage;
     }
     // 닉네임, 비번, 프로필 이미지 중에 하나만 와도 바꿔줘야 한다.
-    const user: Users = {
+    const user: UserEntity = {
       id: decoded['id'],
       email: decoded['email'],
       oauthLogin: decoded['oauthLogin'],
@@ -327,7 +327,7 @@ export class UsersService {
   }
 
   async checkEmail(email: string) {
-    const isExistEmail: Users = await this.usersRepository.findOne({
+    const isExistEmail: UserEntity = await this.usersRepository.findOne({
       email: email,
     });
     if (isExistEmail) {
