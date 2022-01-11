@@ -15,4 +15,30 @@
  *   | ReturnType<typeof getUserInfo>;
  */
 
-export {}
+export const SAVE_PIN_INFO = 'SAVE_PIN_INFO' as const;
+
+export const savePinInfo = (
+  pinID: string,
+  ranking: string,
+  locationName: string,
+  addresses: any,
+) => {
+  const { latitude, longitude, lotAddress, roadAddress, ward } = addresses;
+  return {
+    type: SAVE_PIN_INFO,
+    payload: {
+      pinID,
+      ranking,
+      locationName,
+      latitude,
+      longitude,
+      lotAddress,
+      roadAddress,
+      ward,
+      startTime: null,
+      endTime: null,
+    },
+  };
+};
+
+export type Action = ReturnType<typeof savePinInfo>;

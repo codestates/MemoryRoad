@@ -4,6 +4,7 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { PictureEntity } from './entities/picture.entity';
 import { PinEntity } from './entities/pin.entity';
+import { PlaceKeywordEntity } from './entities/placeKeyword.entity';
 import { RouteEntity } from './entities/route.entity';
 import { RoutesController } from './routes.controller';
 import { RoutesService } from './routes.service';
@@ -16,6 +17,7 @@ import { RoutesService } from './routes.service';
       PinEntity,
       PictureEntity,
       UserEntity,
+      PlaceKeywordEntity,
     ]),
   ],
   controllers: [RoutesController],
