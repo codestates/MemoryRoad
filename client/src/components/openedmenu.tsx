@@ -2,6 +2,7 @@ import React from 'react';
 import './openedmenu.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { loginModal } from '../redux/actions/index';
 interface Props {
   SetOpen: any;
 }
@@ -29,7 +30,7 @@ function OpenedMenu({ SetOpen }: Props) {
         <div className="Menutext">
           <div
             onClick={() => {
-              dispatch({ type: 'openLoginModal' });
+              dispatch(loginModal(true));
               SetOpen(false);
             }}
             onKeyDown={() => {

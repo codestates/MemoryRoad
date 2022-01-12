@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 
 @Entity('Users')
-export class Users {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -19,21 +19,23 @@ export class Users {
   @Column({ length: 100, unique: true })
   email: string;
 
-  @Column({ length: 100 })
-  oauthLogin: string;
+  @Column({ length: 10, nullable: true })
+  oauthLogin: string | null;
 
-  @Column({ length: 100 })
-  saltedPassword: string;
 
-  @Column({ length: 255 })
-  oauthCI: string;
+  @Column({ length: 100, nullable: true })
+  saltedPassword: string | null;
 
-  @Column({ length: 255 })
-  profileImage: string;
+  @Column({ length: 255, nullable: true })
+  oauthCI: string | null;
 
   @OneToMany(() => RouteEntity, (Routes) => Routes.userId, {
     cascade: true,
   })
   @JoinColumn()
   Routes?: RouteEntity[];
+
+  @Column({ length: 255, nullable: true })
+  profileImage: string | null;
+
 }

@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from 'react';
+// redux
+import { useSelector, useDispatch, batch } from 'react-redux';
+import {
+  savePinInfo,
+  savePinImageFiles,
+  savePinPosition,
+} from '../../redux/actions/index';
+import type { RootState } from './../../redux/reducer/index';
+// other Files
 import './createPinMap.css';
 import createPinModal from '../../modals/createPinModal/createPinModal'; // 핀 생성 모달창
 import SearchPinBar from '../../components/searchPinBar/searchPinBar'; // 핀 검색창
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
 import FakeHeader from '../../components/map-test/fakeHeader'; // 가짜 헤더입니다 착각 조심 ^ㅁ^
+import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBar';
+import { persistor } from '../../../src/index';
+import { setFlagsFromString } from 'v8';
 
 const { kakao }: any = window;
 
@@ -14,22 +26,33 @@ const { kakao }: any = window;
 // 지도 핀 직접 찍는 메서드랑 검색 메서드 나누기 가능 ...? 루트 연결 가능 ??? 하 ..
 
 function CreatePinMap() {
+  const dispatch = useDispatch();
+  /* redux 전역 상태관리 */ // 왜 type 할당 : RootState는 되고 RootPersistState는 안되나요 ?
+  // persist-redux createRouteReducer 상태 데려옴
+  const routeState: any = useSelector(
+    (state: RootState) => state.createRouteReducer,
+  ); // starte._persist
+  // pin 저장 배열만 빼옴
+  const { pins, files, pinPosition, route } = routeState;
+  console.log('route', route);
+  console.log('pins', pins); // 잘 업데이트가 되었다는 소린데 ..
+  console.log('files', files);
+  console.log('pinPosition', pinPosition);
+
   // *상태 관리
   const [currLevel, setCurrLevel] = useState(8); // 지도의 레벨
-  const [currMarkerLocation, setCurrMarkerLocation] = useState([
+  const [blueMarkerLocation, setBlueMarkerLocation] = useState([
     37.566826, 126.9786567,
   ]); // 지도에 표시된 마커의 위도, 경도
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달창 오픈 여부
   const [searchText, setSearchText] = useState(''); // 검색창 단어
-  const [pinTitle, setPinTitle] = useState(null); // 핀의 제목
-  const [pinImages, setPinImages] = useState<any[]>([]); // 핀의 사진 (formData 변환을 마친 아이들)  -> useState<any[]>([]) 그냥 할당하는것과 어떤차이가 있는지 ??
+  const [pinTitle, setPinTitle] = useState(''); // 핀의 제목
+  const [pinImages, setPinImages] = useState<any[]>([]); // 핀의 사진 (file객체에서 바로 빼내온 사진들 배열)  -> useState<any[]>([]) 그냥 할당하는것과 어떤차이가 있는지 ??
   const [pinImageNames, setPinImageNames] = useState<any[]>([]); // 핀의 사진의 이름들
   const [mutations, setMutations] = useState(0); // DOM의 변경사항 감지
 
-  /* 나 테스트 할거다. */
-  const [currSearchMarkerLocation, setCurrSearchMarkerLocation] = useState([
-    37.566826, 126.9786567,
-  ]);
+  /* 나 테스트 할거다. --------------------------------------------------------------------------------------------------------------------------------- */
+  /* 파란 마커와 회색 마커 지도 위에 한 가지 종류만 띄우기 */
   const [blueMarker, setBlueMarker] = useState(false);
   const [grayMarker, setGrayMarker] = useState(true);
   const handleBlueMarker = (boolean: boolean): void => {
@@ -38,10 +61,62 @@ function CreatePinMap() {
   const handleGrayMarker = (boolean: boolean): void => {
     setGrayMarker(boolean);
   };
-  const [positions, setPositions] = useState([]);
-  const addPin = () => {
-    console.log('핀 더하면 포지션으로');
-  };
+  /* 브라우저 위에 뜨는 핀 저장 모달창은 어짜피 하나다. 즉, 선택된 현재 위치도 언제나 한 개다. */
+  /* 클릭된 핀의 모든 주소 정보를 담고 있는 객체다 :) */
+  const [currMarkerInfo, setCurrMarkerInfo] = useState({
+    latitude: 37.566826,
+    longitude: 126.9786567,
+    lotAddress: null,
+    roadAddress: null,
+    ward: null,
+  });
+  /* 저장버튼 클릭 상태 -> 이거 함수로 묶어줘야겄다 .. */
+  const [saveBtnClick, setSaveBtnClick] = useState(false);
+  /* 저장 버튼이 클릭되었다면 reducer로 action을 보내줍니다 */
+  if (saveBtnClick) {
+    const pinID = `pin${pinPosition.length}`;
+    const ranking = Number(pinPosition.length);
+    const latlng: any = [
+      currMarkerInfo['latitude'],
+      currMarkerInfo['longitude'],
+    ];
+    const formData = new FormData();
+    pinImages.forEach((img, idx: number) => {
+      formData.append('imgFiles', pinImages[idx]);
+    });
+    console.log(Array.from(formData)); // -> formData의 원래 형식 기억해둡시다. 최대한 형태 보존하면서 객체 안의 키값만 문자열로 바꿔놓긴했는데, 서버로 한꺼번에 보낼 때 잘 변환해서 드려야한다..!
+    const arr = Array.from(formData).map((el) => {
+      const obj: any = {};
+      const title = el[0];
+      const imgInfo: any = el[1];
+      for (const key in imgInfo) {
+        obj[key] = String(imgInfo[key]);
+      }
+      return [title, obj];
+    });
+    batch(() => {
+      dispatch(savePinInfo(pinID, ranking, pinTitle, currMarkerInfo));
+      dispatch(savePinImageFiles(pinID, ranking, arr));
+      dispatch(savePinPosition(pinID, pinTitle, latlng));
+    });
+    setSaveBtnClick(false);
+    // /*---------- formData axios 요청 보낼 것. -> 핀 하나만 수정할 때 쓸 수 있는 폼 데이터 형식 ------------*/
+    // // window의 formData 생성
+    // const formData = new FormData();
+    // const data = [
+    //   {
+    //     pinTitle: pinTitle,
+    //   },
+    // ];
+    // pinImages.forEach((img, idx: number) => {
+    //   formData.append('imgFiles', pinImages[idx]);
+    // });
+    // formData.append(
+    //   'data',
+    //   new Blob([JSON.stringify(data)], { type: 'application/json' }),
+    // );
+    // /*---------- formData axios 요청 보낼 것. -> 핀 하나만 수정할 때 쓸 수 있는 폼 데이터 형식 ------------*/
+  }
   /* 나 테스트 할거다. -----------------------------------------------------------------------------------------------------------------------------------*/
 
   // 핀 생성 모달창 open/close 핸들러 함수 (검색창으로 내려주고있어요. **)
@@ -63,8 +138,8 @@ function CreatePinMap() {
   // 핀의 제목 input 핸들러 함수
   const handlePinTitle = (event: any): void => {
     const text = event.target.value;
-    setPinTitle(text);
-    // 인포윈도우 창 아무곳이나 눌러야 출력되는 기이한 현상..일단 저장버튼 눌렀을 때 타이틀값이 들어온다는 것에 만족해야하나.
+    setPinTitle(text); // -----------------------------------------------------------------------------------------------------------> 핀 제목
+    // 인포윈도우 창 아무곳이나 눌러야 출력되는 기이한 현상..일단 저장버튼 눌렀을 때 타이틀값이 들어온다는 것에 만족해야하나 -> 이벤트핸들러 input이 해결해줌.
   };
   // 핀의 사진 업로드 버튼 핸들러 함수
   const handlePinImgFiles = (event: any) => {
@@ -74,7 +149,7 @@ function CreatePinMap() {
     for (let i = 0; i < fileList.length; i++) {
       imgArr.push(fileList[i]);
     }
-    setPinImages(imgArr);
+    setPinImages(imgArr); // ---------------------------------------------------------------------------------------------------------> 핀 사진 배열
     /* js migrate */
     const container: any = document.getElementById(
       'createPinModal-pictures-container',
@@ -133,26 +208,10 @@ function CreatePinMap() {
   // 핀 삭제 / 수정 버튼 (사이드바) 요청에 따라 또 전역 상태 변경해줘야하는데 .. -> 모두 리덕스에서 sessionStorage를 처리하도록 해야겄다..!
   const handleSavePin = () => {
     console.log('저장 버튼을 눌렀습니다.');
+    setSaveBtnClick(true);
 
-    /*---------- formData axios 요청 보낼 것. -> 핀 하나만 수정할 때 쓸 수 있는 폼 데이터 형식 ------------*/
-    // window의 formData 생성
-    const formData = new FormData();
-    const data = [
-      {
-        pinTitle: pinTitle,
-      },
-    ];
-    pinImages.forEach((img, idx: number) => {
-      formData.append('imgFiles', pinImages[idx]);
-    });
-    formData.append(
-      'data',
-      new Blob([JSON.stringify(data)], { type: 'application/json' }),
-    );
-    /*---------- formData axios 요청 보낼 것. -> 핀 하나만 수정할 때 쓸 수 있는 폼 데이터 형식 ------------*/
     // 잠깐만 ... 이것도 일단 잔역 상태(store)에 이미지 배열만 좌르륵 저장해놓고 -> 루트 저장버튼을 누르면 (사이드바) 그제서야 form을 생성하여 데이터를 보내줘야할까.
     // 이제 핀을 생성한 후에 이미지들이 들어있는 배열을 0으로 만들때 쓰는 상태업데이트.
-    // setPinImages([]);
   };
   // 핀 닫기 버튼 핸들러 함수
   const handleClosePin = () => {
@@ -160,7 +219,6 @@ function CreatePinMap() {
     const deleteTag: any = document.getElementById('createPinModal-background');
     deleteTag.remove();
     handleIsModalOpen(false);
-    setPinTitle(null);
   };
   // 핀의 사진 개별 삭제 버튼 핸들러 함수 (브라우저위에서만 제거합니다. 실제 상태를 업데이트하지는 않습니다.)
   function deletePinImgFile(event: any) {
@@ -174,8 +232,7 @@ function CreatePinMap() {
 
   /* 지도 위 동작 - 이미지or함수 ----------------------------------------------------------------------------- */
 
-  const [lat, lng] = currMarkerLocation;
-  // const [latS, lngS] = currSearchMarkerLocation; // 글쎄 동작 안하녜
+  const [lat, lng] = blueMarkerLocation;
 
   // center (가공된)위도 경도 얻는 함수
   const sliceLatLng = (num: number): number => {
@@ -257,7 +314,7 @@ function CreatePinMap() {
     const pinTitleTag: any = document.getElementById(
       'createPinModal-place-title', // 왜 null | HTMLInputElement 는 안되나
     );
-    pinTitleTag?.addEventListener('change', handlePinTitle);
+    pinTitleTag?.addEventListener('change', handlePinTitle); // 와 .. input 내부의 값을 감지하는 건 input 이라는 이벤트핸들러군요 ..
     // 핀의 사진 업로드 버튼 태그 이벤트 등록
     const uploadTag = document.getElementById('file-upload');
     uploadTag?.addEventListener('change', handlePinImgFiles);
@@ -279,6 +336,14 @@ function CreatePinMap() {
   }, [mutations]);
 
   useEffect(() => {
+    // localStorage.clear();
+    const what: any = localStorage.getItem('persist:createRoute');
+    const whatObj = JSON.parse(what);
+    for (const key in whatObj) {
+      console.log(key); // pins 로컬스토리지 업데이트부터 해결하세요.
+      console.log(JSON.parse(whatObj[key])); // JSON.parse할 때 문제가 생긴다는거구나 !
+    }
+    // console.log(JSON.parse(what));
     // 지도를 표시할 div
     const mapContainer = document.getElementById('map');
     // 파란 마커냐 회색 마커냐에 따라 중심 좌표 바꿔주기.
@@ -286,7 +351,7 @@ function CreatePinMap() {
     // const currLng = blueMarker ? lng : lngS;
     // 지도의 option들
     const mapOptions = {
-      center: new kakao.maps.LatLng(lat, lng), // 지도의 중심 좌표 : 일단 서울로 고정하고 테스트 중.(센터는 고정이 답인가 ..?) -> 지도의 중심을 마커에 마추고싶다면 파란마커 회색마커 나눠서 진행할것.
+      center: new kakao.maps.LatLng(lat, lng), // -> 지도의 중심을 마커에 마추고싶다면 파란마커 회색마커 나눠서 진행할것.
       level: currLevel, // 지도의 확대 레벨 (분포도가 잘 보이는 레벨: 8) (지역이 잘 보이는 레벨: 3)
       draggable: true, // 마우스 드래그, 휠, 모바일 터치를 이용한 확대 및 축소 가능 여부
       scrollwheel: true, // 마우스 휠, 모바일 터치를 이용한 확대 및 축소 가능 여부
@@ -308,8 +373,6 @@ function CreatePinMap() {
     // marker.setMap(map); // --------------------------------------------------------------------------------------------------------------------------------> test
     if (blueMarker) marker.setMap(map);
     kakao.maps.event.addListener(marker, 'click', function () {
-      // customCreatePinModal.setMap(map);
-      // -> 게속 커스텀 오버레이로 갈건지 고민.
       // -> infoWindow를 개조해서 가는 걸로 결정.
       handleIsModalOpen(true); // 모달창 오픈 여부 상태 저장
       infoWindowModal.setContent(createPinModal);
@@ -337,21 +400,21 @@ function CreatePinMap() {
               sliceLatLng(latlng.Ma),
               sliceLatLng(latlng.La),
             ];
-            setCurrMarkerLocation(latlngMarker); // [latlng.Ma, latlng.La] 위도와 경도 배열로 뽑아낼 수 있음. -> 현재 테스트중입니다.
+            setBlueMarkerLocation(latlngMarker); // [latlng.Ma, latlng.La] 위도와 경도 배열로 뽑아낼 수 있음. -> 현재 테스트중입니다.
             setCurrLevel(level);
+            // setPinTitle(null);
 
-            // 도로명 주소 / 지번 주소 / 구 DB에 테이블 모두 넣어주기
-            console.log(`위도: ${latlng.getLat()}, 경도: ${latlng.getLng()}`);
-            console.log(
-              `도로명 주소: ${
-                !!result[0].road_address
-                  ? result[0].road_address.address_name
-                  : ''
-              }`,
-            );
-            console.log(`지번 주소: ${result[0].address.address_name}`);
-            console.log(`구: ${result[0].address.region_2depth_name}`);
-            console.log('------------------------------------------');
+            const place = result[0].address;
+            const blueMinfo: any = {
+              latitude: sliceLatLng(latlng.Ma), // 위도
+              longitude: sliceLatLng(latlng.La), // 경도
+              lotAddress: place.address_name, // 지번 주소
+              roadAddress: !!place.road_address
+                ? place.road_address.address_name
+                : '', // 도로명 주소
+              ward: place.region_2depth_name, // 지역 '구'
+            };
+            setCurrMarkerInfo(blueMinfo);
           }
         },
       );
@@ -403,10 +466,15 @@ function CreatePinMap() {
         // 검색용 마커도 현재위치를 전환할 수 있는 기회를 주었다. 오류가 났다.
         // 그래서 다른 상태로 업데이트하기로 했다.
         addEventHandler();
-        setCurrSearchMarkerLocation([
-          sliceLatLng(place.y),
-          sliceLatLng(place.x),
-        ]);
+
+        const grayMinfo: any = {
+          latitude: sliceLatLng(place.y),
+          longitude: sliceLatLng(place.x),
+          lotAddress: place.address_name,
+          roadAddress: !!place.road_address_name ? place.road_address_name : '',
+          ward: place.address_name.split(' ')[1],
+        };
+        setCurrMarkerInfo(grayMinfo);
       });
       // 검색용 마커 위에 마우스를 올렸을 때 발생되는 이벤트
       kakao.maps.event.addListener(markerForSearch, 'mouseover', function () {
@@ -428,7 +496,7 @@ function CreatePinMap() {
         infoWindow.close();
       });
     }
-  }, [currMarkerLocation, searchText, blueMarker, grayMarker]); // -------------------------------------------------------------------------------------------> test
+  }, [blueMarkerLocation, searchText, blueMarker, grayMarker, saveBtnClick]); // -------------------------------------------------------------------------------------------> test
   return (
     <>
       <div id="map-whole-container">
@@ -441,6 +509,7 @@ function CreatePinMap() {
             handleIsModalOpen={handleIsModalOpen}
           />
         </div>
+        <TimeLineSideBar />
         <div id="map"></div>
       </div>
     </>

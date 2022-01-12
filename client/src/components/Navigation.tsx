@@ -5,11 +5,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import OpenedMenu from './openedmenu';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/reducer';
+import { loginModal } from '../redux/actions/index';
 
 function Nav() {
   const [isOpen, SetOpen] = useState(false);
   const navigate = useNavigate();
-  const modalLogin = useSelector((state: RootState) => state.loginModalReducer); // 로그인 모달창
+  const modalLogin = useSelector(
+    (state: RootState) => state.modal.isLoginModal, // test중입니다.
+  ); // 로그인 모달창
   const dispatch = useDispatch();
   return (
     <div>
@@ -45,11 +48,11 @@ function Nav() {
             // onClick={() => SetLoginModal(!LoginModal)}
 
             onClick={() => {
-              dispatch({ type: 'openLoginModal' });
+              dispatch(loginModal(true));
               console.log(modalLogin);
             }}
             onKeyDown={() => {
-              dispatch({ type: 'openLoginModal' });
+              dispatch(loginModal(true));
               console.log(modalLogin);
             }}
             role="menu"

@@ -5,6 +5,5 @@ import path from 'path';
 const swaggerSpec: any = YAML.load(
   path.join(__dirname, '../../src/swagger.yaml'),
 );
-console.log(__dirname);
 
 export { swaggerUi, swaggerSpec };

@@ -1,0 +1,225 @@
+#pinControllTower-fix {
+  position: fixed;
+  z-index: 999; /*검색창때문에.*/
+}
+/*사이드바 컨테이너*/
+#pinControllTower-container {
+  position: fixed;
+  right: 0;
+  z-index: 99;
+  /* width: 360px; -> 굳이 설정안해도되는 옵션*/
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+/*사이드바*/
+#pinControllTower-sidebar {
+  position: absolute;
+  top: 20px;
+  right: -330px;
+  z-index: 99;
+  width: 330px;
+  height: 100vh;
+  background-color: white;
+  transition: right 0.3s;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+}
+/*사이드바 open+close*/
+#pinControllTower-sidebar.active-bar {
+  right: 0;
+}
+/*사이드바 열고닫는 버튼*/
+#pinControllTower-close-open-btn {
+  position: absolute;
+  right: 0;
+  z-index: 99;
+  width: 30px;
+  height:70px;
+  border: none;
+  outline-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px 0px 0px 10px;
+  background-color: rgb(127, 177, 151);
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
+  transition: all 0.3s; /*애니메이션 추가*/
+}
+/*사이드바 버튼 open+close*/
+#pinControllTower-close-open-btn.active-btn {
+  right: 330px;
+}
+/*사이드바 버튼의 이미지*/
+#pinControllTower-close-open-btn-img {
+  width: 11px;
+  height: 13px;
+}
+/*사이드바 밖 부분*/
+#pinControllTower-overlay {
+  display: none;
+  position: fixed;
+  z-index: 98;
+  width: 100%;
+  height: 100%;
+  background: rgb(111, 111, 111, 0.3);
+}
+/*사이즈바 밖 open+close*/
+#pinControllTower-overlay.show-layer {
+  display: block;
+}
+#pinControllTower-fixed-content {
+  position: absolute;
+  width: 100%;
+  height: inherit;
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  justify-content: center;
+}
+/*사이드바 내부 컨텐트 (박스)*/
+.pinControllTower-content {
+  width: 260px;
+  height: 80%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+/*-------------------------------------------------*/
+/*컨텐츠들 컨테이너 스크롤바 디자인*/
+.pinControllTower-content::-webkit-scrollbar {
+  width: 7px;
+}
+.pinControllTower-content::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgb(148, 148, 148);
+}
+.pinControllTower-content::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+/*컨텐츠 틀*/
+.pinControllTower-content-structure {
+  position: relative;
+  width: 100%;
+}
+/*타임라인 고정.*/
+#pinControllTower-timeLine-fix {
+  width: 100%;
+  position: absolute;
+  top: 0px;
+}
+/*타임라인 컨테이너*/
+.ct-timeLine-container {
+  width: inherit;
+  height: inherit;
+  display: flex;
+  flex-flow: column wrap;
+}
+/*타임라인 틀*/
+.ct-timeLine-structure {
+  display: flex;
+  align-items: center;
+}
+/*타임라인 타임*/
+.ct-timeLine-time {
+  color:rgb(111, 111, 111);
+  font-weight: 300;
+  font-size: 0.95em;
+} 
+/*타임라인 선*/
+.ct-timeLine-line {
+  width: 100%;
+  margin: 0 10px;
+  border-bottom: 1px dashed rgba(49, 49, 49, 0.2);
+}
+/*타임라인 dropzone*/
+#ct-timeLine-dropzone {
+  height: 30px; /*드롭존 사이즈*/
+}
+/*-------------------------------------------------*/
+
+/* 핀 카드 */
+.pinCard-container {
+  width: 100%;
+  display: flex;
+  flex-flow: column wrap;
+  border-radius: 7px;
+  margin-left: 3.5px;
+  margin-top: 1px;
+  background-color: #f2f2f2;
+  border: 2px solid rgb(232, 232, 232);
+}
+.pinCard-container:hover {
+  background-color: #cee2d5;
+}
+.pinCard-title {
+  color: rgb(89, 89, 89);
+  /* position: absolute;
+  top: 5px; */
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin: 9px 0 2px 8px; 
+}
+.pinCard-description {
+  color:rgb(123, 123, 123);
+  /* position: absolute; */
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 7px;
+  height: 36px;
+  overflow: hidden;
+  text-align: left;
+  word-wrap: break-word;
+  /*글자 넘침 표현*/
+  text-overflow: ellipsis;
+  display: -webkit-box; 
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;
+  visibility: hidden;
+}
+.pinCard-time-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 9px;
+  right: 8px;
+  padding: 2px 4px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.7em;
+  color: white;
+  background-color: rgb(139, 139, 209);
+}
+.pinCard-time-calculate {
+  color: white;
+}
+/* .plancard__delete-btn {
+  display: none;
+  background-color: #fff6f7;
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  font-size: 0.7rem;
+} */
+
+
+
+/*루트 저장버튼 컨테이너*/
+.pinControllTower-btn-container {
+  width: 260px;
+  margin-top: 50px;
+}
+/*루트 저장 버튼*/
+#pinControllTower-save-btn {
+  line-height: 33px;
+  width: 100%;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  background-color: #91BA9F;
+}
