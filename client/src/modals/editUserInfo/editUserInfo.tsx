@@ -2,6 +2,7 @@ import React from 'react';
 import Mist from '../../components/mist';
 import './editUserInfo.css';
 import { useDispatch } from 'react-redux';
+import { editUserInfoModal, withdrawalModal } from '../../redux/actions/index';
 function EditUserInfo() {
   const dispatch = useDispatch();
   return (
@@ -70,8 +71,8 @@ function EditUserInfo() {
             <button
               className="EditNickname withdrawalButton"
               onClick={() => {
-                dispatch({ type: 'closeEditUserInfoModal' });
-                dispatch({ type: 'openWithdrawalModal' });
+                dispatch(editUserInfoModal(false));
+                dispatch(withdrawalModal(true));
               }}
             >
               회원탈퇴
@@ -81,7 +82,7 @@ function EditUserInfo() {
         <div className="titleLogin">
           <button
             className="SignUpButton pointer"
-            onClick={() => dispatch({ type: 'closeEditUserInfoModal' })}
+            onClick={() => dispatch(editUserInfoModal(false))}
           >
             회원정보 수정완료
           </button>

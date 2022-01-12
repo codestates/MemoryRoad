@@ -14,19 +14,13 @@ import { RootState } from '../redux/reducer';
 
 // Home 화면입니다
 const MemoryRoad = () => {
-  const modalLogin = useSelector((state: RootState) => state.loginModalReducer); // 로그인 모달창
-  const modalSignup = useSelector(
-    (state: RootState) => state.signupModalReducer,
-  ); // 회원가입 모달창
-  const modalCheckPassword = useSelector(
-    (state: RootState) => state.checkingPasswordModalReducer,
-  ); // 회원정보 수정하기 전 비밀번호 확인 모달창
-  const modalEditUserInfo = useSelector(
-    (state: RootState) => state.editUserInfoModalReducer,
-  ); // 회원정보 수정 모달창
-  const modalWithdrawal = useSelector(
-    (state: RootState) => state.withdrawalModalReducer,
-  ); // 회원탈퇴 모달창
+  const state = useSelector((state: RootState) => state.modal);
+  const modalLogin = state.isLoginModal; // 로그인 모달창
+  const modalSignup = state.isSigninModal; // 회원가입 모달창
+  const modalCheckPassword = state.isCheckingPasswordModal; // 회원정보 수정하기 전 비밀번호 확인 모달창
+  const modalEditUserInfo = state.isEditUserInfoModal; // 회원정보 수정 모달창
+  const modalWithdrawal = state.iswithdrawalModal; // 회원탈퇴 모달창
+
   const dispatch = useDispatch();
 
   const [isLogin, setLogin] = useState(false); // 로그인 여부

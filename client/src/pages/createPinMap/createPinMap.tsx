@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { savePinInfo } from '../../redux/actions/index';
+// redux
+import { useSelector, useDispatch, batch } from 'react-redux';
+import {
+  savePinInfo,
+  savePinImageFiles,
+  savePinPosition,
+} from '../../redux/actions/index';
 import type { RootState } from './../../redux/reducer/index';
+// other Files
 import './createPinMap.css';
 import createPinModal from '../../modals/createPinModal/createPinModal'; // 핀 생성 모달창
 import SearchPinBar from '../../components/searchPinBar/searchPinBar'; // 핀 검색창
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
 import FakeHeader from '../../components/map-test/fakeHeader'; // 가짜 헤더입니다 착각 조심 ^ㅁ^
+import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBar';
+import { persistor } from '../../../src/index';
+import { setFlagsFromString } from 'v8';
 
 const { kakao }: any = window;
 
@@ -22,10 +31,13 @@ function CreatePinMap() {
   // persist-redux createRouteReducer 상태 데려옴
   const routeState: any = useSelector(
     (state: RootState) => state.createRouteReducer,
-  );
+  ); // starte._persist
   // pin 저장 배열만 빼옴
-  const pinPositions = routeState.pinPosition;
-  console.log(pinPositions);
+  const { pins, files, pinPosition, route } = routeState;
+  console.log('route', route);
+  console.log('pins', pins); // 잘 업데이트가 되었다는 소린데 ..
+  console.log('files', files);
+  console.log('pinPosition', pinPosition);
 
   // *상태 관리
   const [currLevel, setCurrLevel] = useState(8); // 지도의 레벨
@@ -58,15 +70,52 @@ function CreatePinMap() {
     roadAddress: null,
     ward: null,
   });
-  /* 저장버튼 클릭 상태 */
+  /* 저장버튼 클릭 상태 -> 이거 함수로 묶어줘야겄다 .. */
   const [saveBtnClick, setSaveBtnClick] = useState(false);
   /* 저장 버튼이 클릭되었다면 reducer로 action을 보내줍니다 */
   if (saveBtnClick) {
-    const len = pinPositions.length;
-    const pinID = len === 0 ? 'pin1' : `pin${len + 1}`;
-    const ranking = len === 0 ? 1 : len + 1;
-    dispatch(savePinInfo(pinID, ranking, pinTitle, currMarkerInfo));
+    const pinID = `pin${pinPosition.length}`;
+    const ranking = Number(pinPosition.length);
+    const latlng: any = [
+      currMarkerInfo['latitude'],
+      currMarkerInfo['longitude'],
+    ];
+    const formData = new FormData();
+    pinImages.forEach((img, idx: number) => {
+      formData.append('imgFiles', pinImages[idx]);
+    });
+    console.log(Array.from(formData)); // -> formData의 원래 형식 기억해둡시다. 최대한 형태 보존하면서 객체 안의 키값만 문자열로 바꿔놓긴했는데, 서버로 한꺼번에 보낼 때 잘 변환해서 드려야한다..!
+    const arr = Array.from(formData).map((el) => {
+      const obj: any = {};
+      const title = el[0];
+      const imgInfo: any = el[1];
+      for (const key in imgInfo) {
+        obj[key] = String(imgInfo[key]);
+      }
+      return [title, obj];
+    });
+    batch(() => {
+      dispatch(savePinInfo(pinID, ranking, pinTitle, currMarkerInfo));
+      dispatch(savePinImageFiles(pinID, ranking, arr));
+      dispatch(savePinPosition(pinID, pinTitle, latlng));
+    });
     setSaveBtnClick(false);
+    // /*---------- formData axios 요청 보낼 것. -> 핀 하나만 수정할 때 쓸 수 있는 폼 데이터 형식 ------------*/
+    // // window의 formData 생성
+    // const formData = new FormData();
+    // const data = [
+    //   {
+    //     pinTitle: pinTitle,
+    //   },
+    // ];
+    // pinImages.forEach((img, idx: number) => {
+    //   formData.append('imgFiles', pinImages[idx]);
+    // });
+    // formData.append(
+    //   'data',
+    //   new Blob([JSON.stringify(data)], { type: 'application/json' }),
+    // );
+    // /*---------- formData axios 요청 보낼 것. -> 핀 하나만 수정할 때 쓸 수 있는 폼 데이터 형식 ------------*/
   }
   /* 나 테스트 할거다. -----------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -160,23 +209,6 @@ function CreatePinMap() {
   const handleSavePin = () => {
     console.log('저장 버튼을 눌렀습니다.');
     setSaveBtnClick(true);
-
-    // /*---------- formData axios 요청 보낼 것. -> 핀 하나만 수정할 때 쓸 수 있는 폼 데이터 형식 ------------*/
-    // // window의 formData 생성
-    // const formData = new FormData();
-    // const data = [
-    //   {
-    //     pinTitle: pinTitle,
-    //   },
-    // ];
-    // pinImages.forEach((img, idx: number) => {
-    //   formData.append('imgFiles', pinImages[idx]);
-    // });
-    // formData.append(
-    //   'data',
-    //   new Blob([JSON.stringify(data)], { type: 'application/json' }),
-    // );
-    // /*---------- formData axios 요청 보낼 것. -> 핀 하나만 수정할 때 쓸 수 있는 폼 데이터 형식 ------------*/
 
     // 잠깐만 ... 이것도 일단 잔역 상태(store)에 이미지 배열만 좌르륵 저장해놓고 -> 루트 저장버튼을 누르면 (사이드바) 그제서야 form을 생성하여 데이터를 보내줘야할까.
     // 이제 핀을 생성한 후에 이미지들이 들어있는 배열을 0으로 만들때 쓰는 상태업데이트.
@@ -304,6 +336,14 @@ function CreatePinMap() {
   }, [mutations]);
 
   useEffect(() => {
+    // localStorage.clear();
+    const what: any = localStorage.getItem('persist:createRoute');
+    const whatObj = JSON.parse(what);
+    for (const key in whatObj) {
+      console.log(key); // pins 로컬스토리지 업데이트부터 해결하세요.
+      console.log(JSON.parse(whatObj[key])); // JSON.parse할 때 문제가 생긴다는거구나 !
+    }
+    // console.log(JSON.parse(what));
     // 지도를 표시할 div
     const mapContainer = document.getElementById('map');
     // 파란 마커냐 회색 마커냐에 따라 중심 좌표 바꿔주기.
@@ -469,6 +509,7 @@ function CreatePinMap() {
             handleIsModalOpen={handleIsModalOpen}
           />
         </div>
+        <TimeLineSideBar />
         <div id="map"></div>
       </div>
     </>
