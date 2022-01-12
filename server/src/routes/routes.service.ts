@@ -788,7 +788,6 @@ export class RoutesService {
             'Pins.ward',
             'Pictures.fileName',
           ])
-          .whereInIds(routeIds)
           .where(
             'Routes.public = 1 AND Routes.time = :time AND Routes.id IN (:routeIds)',
             {
