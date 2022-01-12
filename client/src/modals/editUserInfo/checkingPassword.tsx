@@ -2,6 +2,7 @@ import React from 'react';
 import Mist from '../../components/mist';
 import './checkingPassword.css';
 import { useDispatch } from 'react-redux';
+import { checkingPasswordModal } from '../../redux/actions/index';
 function CheckingPassword() {
   const dispatch = useDispatch();
   return (
@@ -22,8 +23,8 @@ function CheckingPassword() {
           <button
             className="LoginButton pointer greenButtonCheck"
             onClick={() => {
-              dispatch({ type: 'closeCheckingPasswordModal' });
-              dispatch({ type: 'openEditUserInfoModal' });
+              dispatch(checkingPasswordModal(false));
+              dispatch(checkingPasswordModal(true));
             }}
           >
             비밀번호 확인
@@ -31,7 +32,7 @@ function CheckingPassword() {
           <button
             className="LoginButton pointer grayButtonNext"
             onClick={() => {
-              dispatch({ type: 'closeCheckingPasswordModal' });
+              dispatch(checkingPasswordModal(false));
             }}
           >
             다음에 할게요

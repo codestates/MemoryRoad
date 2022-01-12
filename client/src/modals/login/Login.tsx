@@ -3,8 +3,8 @@ import './Login.css';
 import { useState } from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../../redux/reducer';
 import Mist from '../../components/mist';
+import { loginModal, signupModal } from '../../redux/actions/index';
 
 interface Props {
   loginHandler: any;
@@ -78,12 +78,12 @@ function Login({ loginHandler }: Props) {
           <b
             className="pointer"
             onClick={() => {
-              dispatch({ type: 'closeLoginModal' });
-              dispatch({ type: 'openSignupModal' });
+              dispatch(loginModal(false));
+              dispatch(signupModal(true));
             }}
             onKeyDown={() => {
-              dispatch({ type: 'closeLoginModal' });
-              dispatch({ type: 'openSignupModal' });
+              dispatch(loginModal(false));
+              dispatch(signupModal(true));
             }}
             role="menu"
             tabIndex={0}

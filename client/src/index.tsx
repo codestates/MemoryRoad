@@ -4,9 +4,8 @@ import './index.css';
 // import MapTest from './pages/map-test/map-test';
 // import MemoryRoad from './pages/MemoryRoad';
 // import SearchPinBar from './components/searchPinBar/searchPinBar';
-// import CreatePinMap from './pages/createPinMap/createPinMap';
-// import GridTestCaseB from './components/grid-test/grid-test copy';
-import GridTest from './components/grid-test/grid-test';
+import CreatePinMap from './pages/createPinMap/createPinMap';
+// import GridTest from './components/grid-test/grid-test';
 // import Mm from './components/grid-test/mm';
 // import MemoryRoad from "./pages/MemoryRoad";
 
@@ -16,14 +15,14 @@ import store from './redux/store/index';
 // reudx-persist
 import { persistStore } from 'redux-persist';
 import { PersistGate } from 'redux-persist/integration/react';
-const persistor = persistStore(store); // { manualPersist: true } -> redux-persist를 바로 시작하지 않을 수도 있습니다.
+export const persistor = persistStore(store); // { manualPersist: true } -> redux-persist를 바로 시작하지 않을 수도 있습니다.
 
 // redux-persist 사용하면 로딩이 꽤 걸리기때문에 loading중에 띄울 창을 필요로 한다 ... 하
 
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <GridTest />
+      <CreatePinMap />
     </PersistGate>
   </Provider>,
   document.getElementById('root'),

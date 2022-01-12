@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/reducer';
 import './Mypage.css';
 import Login from '../modals/login/Login';
+import { checkingPasswordModal } from '../redux/actions/index';
 
 function Mypage() {
   const modalCheckPassword = useSelector(
-    (state: RootState) => state.checkingPasswordModalReducer,
+    (state: RootState) => state.modalReducer.isCheckingPasswordModal,
   );
+
   const dispatch = useDispatch();
   return (
     <div>
@@ -27,11 +29,11 @@ function Mypage() {
               className="changeUserInfo"
               onClick={() => {
                 if (modalCheckPassword) {
-                  dispatch({ type: 'closeCheckingPasswordModal' });
+                  dispatch(checkingPasswordModal(false));
                 }
                 if (!modalCheckPassword) {
                   // modalCheckPassword가 false일 때
-                  dispatch({ type: 'openCheckingPasswordModal' });
+                  dispatch(checkingPasswordModal(true));
                 }
               }}
             >

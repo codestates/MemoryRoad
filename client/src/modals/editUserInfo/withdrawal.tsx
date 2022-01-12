@@ -2,6 +2,7 @@ import React from 'react';
 import Mist from '../../components/mist';
 import './withdrawal.css';
 import { useDispatch } from 'react-redux';
+import { withdrawalModal } from '../../redux/actions/index';
 function Widthdrawal() {
   const dispatch = useDispatch();
   return (
@@ -13,7 +14,7 @@ function Widthdrawal() {
           <button
             className="LoginButton pointer greenButtonCheck"
             onClick={() => {
-              dispatch({ type: 'closeWithdrawalModal' });
+              dispatch(withdrawalModal(false));
             }}
           >
             조금 더 생각해 볼께요
@@ -21,7 +22,7 @@ function Widthdrawal() {
           <button
             className="LoginButton pointer withdrawalButton"
             onClick={() => {
-              dispatch({ type: 'closeWithdrawalModal' });
+              dispatch(withdrawalModal(false));
             }}
           >
             탈퇴할게요
