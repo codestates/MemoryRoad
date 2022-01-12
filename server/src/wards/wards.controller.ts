@@ -8,7 +8,7 @@ export class WardsController {
 
   @Get()
   async getRouteCount(@Res() res: Response) {
-    const result = this.wardsService.getRouteCount();
+    const result = await this.wardsService.getRouteCount();
     res.status(200).json({ result: result, message: '잘 전달되었습니다.' });
   }
 }
