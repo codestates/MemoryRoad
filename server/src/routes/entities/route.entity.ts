@@ -1,7 +1,10 @@
+import { Users } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -12,6 +15,10 @@ import { PinEntity } from './pin.entity';
 export class RouteEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @ManyToOne(() => Users, (Users) => Users.id, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'userId' })
+  Users: Users;
 
   @Column()
   userId: number;
@@ -37,8 +44,9 @@ export class RouteEntity {
   @Column()
   time: number;
 
-  @OneToMany(() => PinEntity, (Pins) => Pins.routesId, {
+  @OneToMany(() => PinEntity, (Pins) => Pins.Routes, {
     cascade: true,
   })
+  @JoinColumn()
   Pins: PinEntity[];
 }
