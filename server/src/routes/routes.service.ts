@@ -211,6 +211,15 @@ export class RoutesService {
         const routeIds = [];
         getIds.forEach((obj) => routeIds.push(obj['routesId']));
 
+        //일치하는 루트가 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (routeIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
+
         const routes = await this.routesRepository
           .createQueryBuilder('Routes')
           .leftJoinAndSelect('Routes.Pins', 'Pins')
@@ -233,10 +242,13 @@ export class RoutesService {
             'Pins.ward',
             'Pictures.fileName',
           ])
-          .whereInIds(routeIds) //배열을 받애서 해당 아이디에 속하는 루트를 찾는다
-          .where('Routes.public = 1 AND Routes.routeName LIKE :rq', {
-            rq: `%${rq}%`,
-          })
+          .where(
+            'Routes.public = 1 AND Routes.routeName LIKE :rq AND Routes.id IN (:id)',
+            {
+              rq: `%${rq}%`,
+              id: routeIds,
+            },
+          )
           .orderBy('Routes.createdAt')
           .addOrderBy('Pins.ranking')
           .addOrderBy('Pictures.id')
@@ -333,6 +345,15 @@ export class RoutesService {
         const routeIds = [];
         getIds.forEach((obj) => routeIds.push(obj['routesId']));
 
+        //일치하는 루트가 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (routeIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
+
         const routes = await this.routesRepository
           .createQueryBuilder('Routes')
           .leftJoinAndSelect('Routes.Pins', 'Pins')
@@ -355,12 +376,12 @@ export class RoutesService {
             'Pins.ward',
             'Pictures.fileName',
           ])
-          .whereInIds(routeIds) //배열을 받애서 해당 아이디에 속하는 루트를 찾는다
           .where(
-            'Routes.public = 1 AND Routes.routeName LIKE :rq AND Routes.time = :time',
+            'Routes.public = 1 AND Routes.routeName LIKE :rq AND Routes.time = :time AND Routes.id IN (:id)',
             {
               rq: `%${rq}%`,
               time: time,
+              id: routeIds,
             },
           )
           .orderBy('Routes.createdAt')
@@ -434,6 +455,15 @@ export class RoutesService {
         //중복이 제거된 루트의 아이디들
         const routeIds = [];
         getIds.forEach((obj) => routeIds.push(obj['routesId']));
+
+        //일치하는 루트가 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (routeIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
 
         const routes = await this.routesRepository
           .createQueryBuilder('Routes')
@@ -525,6 +555,15 @@ export class RoutesService {
         const routeIds = [];
         getIds.forEach((obj) => routeIds.push(obj['routesId']));
 
+        //일치하는 루트가 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (routeIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
+
         const routes = await this.routesRepository
           .createQueryBuilder('Routes')
           .leftJoinAndSelect('Routes.Pins', 'Pins')
@@ -614,6 +653,15 @@ export class RoutesService {
         //중복이 제거된 루트의 아이디들
         const routeIds = [];
         getIds.forEach((obj) => routeIds.push(obj['routesId']));
+
+        //일치하는 루트가 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (routeIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
 
         const routes = await this.routesRepository
           .createQueryBuilder('Routes')
@@ -708,6 +756,15 @@ export class RoutesService {
         //중복이 제거된 루트의 아이디들
         const routeIds = [];
         getIds.forEach((obj) => routeIds.push(obj['routesId']));
+
+        //일치하는 루트가 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (routeIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
 
         const routes = await this.routesRepository
           .createQueryBuilder('Routes')
