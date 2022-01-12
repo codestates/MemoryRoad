@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { RouteEntity } from './route.entity';
 import { PictureEntity } from './picture.entity';
-import { PlaceKeywordEntity } from './placeKeyword.entity';
+import { PinsPlaceKeywordEntity } from './pinsPlaceKeyword.entity';
 
 @Entity('Pins')
 export class PinEntity {
@@ -18,7 +18,9 @@ export class PinEntity {
   id: number;
 
   //참조하는 루트가 삭제되면 같이 삭제된다.
-  @ManyToOne(() => RouteEntity, (Routes) => Routes.id, { onDelete: 'CASCADE' })
+  @ManyToOne(() => RouteEntity, (Routes) => Routes.Pins, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'routesId' })
   Routes: RouteEntity;
 
@@ -31,10 +33,12 @@ export class PinEntity {
   @Column({ length: 45 })
   locationName: string;
 
-  @Column()
+  //고정 소숫점. 총 18자리, 소숫점 아래 15자리
+  @Column('decimal', { precision: 18, scale: 15 })
   latitude: number;
 
-  @Column()
+  //고정 소숫점. 총 18자리, 소숫점 아래 15자리
+  @Column('decimal', { precision: 18, scale: 15 })
   longitude: number;
 
   @Column({ length: 100 })
@@ -55,27 +59,33 @@ export class PinEntity {
   @Column()
   endTime: number;
 
-  @OneToMany(() => PictureEntity, (Pictures) => Pictures.pinId, {
+  @OneToMany(() => PictureEntity, (Pictures) => Pictures.Pins, {
     cascade: true,
   })
   Pictures: PictureEntity[];
 
   //M:N 조인테이블 설정.
-  @ManyToMany(
-    () => PlaceKeywordEntity,
-    (PlaceKeywords) => PlaceKeywords.keyword,
+  // @ManyToMany(
+  //   () => PlaceKeywordEntity,
+  //   (PlaceKeywords) => PlaceKeywords.keyword,
+  //   { cascade: true },
+  // )
+  // @JoinTable({
+  //   name: 'PinsPlaceKeywords',
+  //   joinColumn: {
+  //     name: 'pinId',
+  //     referencedColumnName: 'id',
+  //   },
+  //   inverseJoinColumn: {
+  //     name: 'keyword',
+  //     referencedColumnName: 'keyword',
+  //   },
+  // })
+  // PlaceKeywords: PlaceKeywordEntity[];
+  @OneToMany(
+    () => PinsPlaceKeywordEntity,
+    (PinsPlaceKeywords) => PinsPlaceKeywords.Pins,
     { cascade: true },
   )
-  @JoinTable({
-    name: 'PinsPlaceKeywords',
-    joinColumn: {
-      name: 'pinId',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'keyword',
-      referencedColumnName: 'keyword',
-    },
-  })
-  PlaceKeywords: PlaceKeywordEntity[];
+  PinsPlaceKeywords: PinsPlaceKeywordEntity[];
 }
