@@ -7,7 +7,6 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getConnection } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-userDto';
 import { UserEntity } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
@@ -46,11 +45,12 @@ export class UsersService {
     const queryRunner = await getConnection().createQueryRunner();
     await queryRunner.startTransaction();
 
-    createUserDto.salt = await bcrypt.genSalt();
+    const salt = await bcrypt.genSalt();
     createUserDto.saltedPassword = await bcrypt.hash(
       createUserDto.password,
-      createUserDto.salt,
+      salt,
     );
+    console.log(createUserDto.saltedPassword);
     try {
       const user: UserEntity = await this.usersRepository.create(createUserDto);
       await this.usersRepository.save(user);
@@ -60,7 +60,7 @@ export class UsersService {
       throw new NotFoundException(`회원가입에 실패하였습니다.\n ${error}`);
     }
   }
-  async kakao(body: any) {
+  async kakao(body: any): Promise<UserEntity> {
     const options = {
       uri: 'https://kauth.kakao.com/oauth/token',
       method: 'POST',
@@ -134,14 +134,10 @@ export class UsersService {
         email: result.email,
       });
     }
-    const accessToken = jwt.sign(
-      { ...userInfo },
-      this.configService.get<string>('ACCESS_SECRET'),
-      { expiresIn: '6h' },
-    );
-    return accessToken;
+    console.log(userInfo);
+    return userInfo;
   }
-  async naver(body: any) {
+  async naver(body: any): Promise<UserEntity> {
     const redirectURI = encodeURI('https://localhost:3000');
     const code = body.authorizationCode;
     const state = body.state;
@@ -196,15 +192,10 @@ export class UsersService {
         email: result.email,
       });
     }
-    const accessToken = jwt.sign(
-      { ...userInfo },
-      this.configService.get<string>('ACCESS_SECRET'),
-      { expiresIn: '6h' },
-    );
-    console.log(acceptToken.data);
-    return accessToken;
+    console.log(userInfo);
+    return userInfo;
   }
-  async google(body: any) {
+  async google(body: any): Promise<UserEntity> {
     const decode: any = await axios
       .post('https://oauth2.googleapis.com/token', {
         client_id: this.configService.get<string>('GOOGLE_CLIENT_ID'),
@@ -222,7 +213,7 @@ export class UsersService {
         console.log(err);
         return err;
       });
-    const { email, name, picture } = decode; // picture 아직 전달 안 해줬다.
+    const { email, name, picture } = decode; // picture 아직 전달 안 해줬음.
     let userInfo: UserEntity = await this.usersRepository.findOne({
       email: email,
       oauthLogin: 'google',
@@ -245,55 +236,40 @@ export class UsersService {
         email: email,
       });
     }
-    const accessToken = jwt.sign(
-      { ...userInfo },
-      this.configService.get<string>('ACCESS_SECRET'),
-      { expiresIn: '6h' },
-    );
-    return accessToken;
+    console.log(userInfo);
+    return userInfo;
   }
   //로컬 로그인 이메일, 비밀번호
-  async local(loginUserDto: LoginUserDto) {
+  async local(loginUserDto: LoginUserDto): Promise<UserEntity> {
     const isExistUser: UserEntity = await this.usersRepository.findOne({
       email: loginUserDto.email,
     });
     if (!isExistUser) {
       throw new NotFoundException(`유효하지 않은 이메일입니다`);
     }
-    if (!bcrypt.compare(loginUserDto.password, isExistUser.saltedPassword)) {
+    const isCorrectPassword = await bcrypt.compare(
+      loginUserDto.password,
+      isExistUser.saltedPassword,
+    );
+    console.log(isExistUser.saltedPassword);
+    console.log(isCorrectPassword);
+    if (!isCorrectPassword) {
       throw new NotFoundException(`비밀번호가 일치하지 않습니다`);
     }
-    const accessToken = jwt.sign(
-      { ...isExistUser },
-      this.configService.get<string>('ACCESS_SECRET'),
-      { expiresIn: '6h' },
-    );
-    return accessToken;
+    console.log(isExistUser);
+    return isExistUser;
   }
-  //로그아웃
-  async logOut(accessToken: string) {
-    const decoded = this.verifyAccessToken(accessToken);
+
+  //로그아웃, 하는 건 없는데, 로그아웃 이후의 이벤트등을 추가할 경우에 사용할 수 있을 것 같아 남겨둠
+  async logOut(accessToken: string): Promise<string | jwt.JwtPayload> {
+    const decoded = await this.verifyAccessToken(accessToken);
     return decoded;
   }
 
-  //회원 정보 업데이트 닉네임. 비밀번호, 프로필이미지
-  async update(accessToken: string, updateUserDto: UpdateUserDto) {
-    const decoded = this.verifyAccessToken(accessToken);
-    console.log(decoded);
-    if (updateUserDto.nickName) {
-      decoded['nickName'] = updateUserDto.nickName;
-    }
-    if (updateUserDto.password) {
-      const salt = await bcrypt.genSalt();
-      decoded['saltedPassword'] = await bcrypt.hash(
-        updateUserDto.password,
-        salt,
-      );
-    }
-    if (updateUserDto.profileImage) {
-      decoded['profileImage'] = updateUserDto.profileImage;
-    }
-    // 닉네임, 비번, 프로필 이미지 중에 하나만 와도 바꿔줘야 한다.
+  //회원 정보 업데이트 닉네임. 비밀번호, 프로필이미지. 프로필 이미지때문에 대대적으로 수정해야 한다고 함.
+  async updateProfile(accessToken: string, profile: string) {
+    const decoded = await this.verifyAccessToken(accessToken);
+    decoded['profileImage'] = profile;
     const user: UserEntity = {
       id: decoded['id'],
       email: decoded['email'],
@@ -304,19 +280,46 @@ export class UsersService {
       profileImage: decoded['profileImage'],
     };
     await this.usersRepository.save(user);
-    console.log(decoded);
-    return decoded;
+  }
+  async updateUserName(accessToken: string, userName: string) {
+    const decoded = await this.verifyAccessToken(accessToken);
+    decoded['nickName'] = userName;
+    const user: UserEntity = {
+      id: decoded['id'],
+      email: decoded['email'],
+      oauthLogin: decoded['oauthLogin'],
+      oauthCI: decoded['oauthCI'],
+      nickName: decoded['nickName'],
+      saltedPassword: decoded['saltedPassword'],
+      profileImage: decoded['profileImage'],
+    };
+    await this.usersRepository.save(user);
+  }
+  async updatePassword(accessToken: string, password: string) {
+    const decoded = await this.verifyAccessToken(accessToken);
+    const salt = await bcrypt.genSalt();
+    decoded['saltedPassword'] = await bcrypt.hash(password, salt);
+    const user: UserEntity = {
+      id: decoded['id'],
+      email: decoded['email'],
+      oauthLogin: decoded['oauthLogin'],
+      oauthCI: decoded['oauthCI'],
+      nickName: decoded['nickName'],
+      saltedPassword: decoded['saltedPassword'],
+      profileImage: decoded['profileImage'],
+    };
+    await this.usersRepository.save(user);
   }
 
   //회원 탈퇴
   async remove(accessToken: string) {
-    const decoded = this.verifyAccessToken(accessToken);
+    const decoded = await this.verifyAccessToken(accessToken);
     await this.usersRepository.delete({ id: decoded['id'] });
   }
 
-  //이것도 쿠키받아서 쿠키로 처리해줘야 하네.
+  //비밀번호 검증 엔드포인트
   async checkPassword(accessToken: string, password: string) {
-    const decoded = this.verifyAccessToken(accessToken);
+    const decoded = await this.verifyAccessToken(accessToken);
     const isExistPassword = await bcrypt.compare(
       password,
       decoded['saltedPassword'],
@@ -326,6 +329,7 @@ export class UsersService {
     }
   }
 
+  //이메일 검증 엔드포인트
   async checkEmail(email: string) {
     const isExistEmail: UserEntity = await this.usersRepository.findOne({
       email: email,
@@ -335,11 +339,23 @@ export class UsersService {
     }
   }
   // 쿠키 검증
-  verifyAccessToken(accessToken: string) {
-    const decoded = jwt.verify(
+  async verifyAccessToken(
+    accessToken: string,
+  ): Promise<string | jwt.JwtPayload> {
+    const decoded = await jwt.verify(
       accessToken,
       this.configService.get<string>('ACCESS_SECRET'),
     );
     return decoded;
+  }
+
+  //액세스 토큰을 만들어줌
+  async getAccessToken(userInfo: UserEntity): Promise<string> {
+    const accessToken = await jwt.sign(
+      { ...userInfo },
+      this.configService.get<string>('ACCESS_SECRET'),
+      { expiresIn: '6h' },
+    );
+    return accessToken;
   }
 }

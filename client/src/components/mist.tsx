@@ -1,5 +1,12 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, batch } from 'react-redux';
+import {
+  loginModal,
+  signupModal,
+  checkingPasswordModal,
+  editUserInfoModal,
+  withdrawalModal,
+} from '../redux/actions/index';
 import './mist.css';
 function Mist() {
   const dispatch = useDispatch();
@@ -7,17 +14,21 @@ function Mist() {
     <div
       className="mist"
       onClick={() => {
-        dispatch({ type: 'closeLoginModal' });
-        dispatch({ type: 'closeSignupModal' });
-        dispatch({ type: 'closeCheckingPasswordModal' });
-        dispatch({ type: 'closeEditUserInfoModal' });
-        dispatch({ type: 'closeWithdrawalModal' });
+        batch(() => {
+          dispatch(loginModal(false));
+          dispatch(signupModal(false));
+          dispatch(checkingPasswordModal(false));
+          dispatch(editUserInfoModal(false));
+          dispatch(withdrawalModal(false));
+        });
       }}
       onKeyDown={() => {
-        dispatch({ type: 'closeLoginModal' });
-        dispatch({ type: 'closeSignupModal' });
-        dispatch({ type: 'closeCheckingPasswordModal' });
-        dispatch({ type: 'closeWithdrawalModal' });
+        batch(() => {
+          dispatch(loginModal(false));
+          dispatch(signupModal(false));
+          dispatch(checkingPasswordModal(false));
+          dispatch(withdrawalModal(false));
+        });
       }}
       role="menu"
       tabIndex={0}

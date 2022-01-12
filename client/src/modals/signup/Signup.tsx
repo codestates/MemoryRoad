@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/reducer/index';
 import Mist from '../../components/mist';
+import { loginModal, signupModal } from '../../redux/actions/index';
 
 function SignUp() {
   const dispatch = useDispatch();
@@ -87,12 +88,12 @@ function SignUp() {
           <b
             className="pointer"
             onClick={() => {
-              dispatch({ type: 'closeSignupModal' }); // 회원가입 모달창을 닫고
-              dispatch({ type: 'openLoginModal' }); // 로그인 모달창을 연다
+              dispatch(signupModal(false)); // 회원가입 모달창을 닫고
+              dispatch(loginModal(true)); // 로그인 모달창을 연다
             }}
             onKeyDown={() => {
-              dispatch({ type: 'closeSignupModal' });
-              dispatch({ type: 'openLoginModal' });
+              dispatch(signupModal(false));
+              dispatch(loginModal(true));
             }}
             role="menu"
             tabIndex={0}
