@@ -35,9 +35,5 @@ export class UserEntity {
   Routes?: RouteEntity[];
 
   @Column({ length: 255, nullable: true })
-<<<<<<< HEAD
   profileImage?: string | null;
-=======
-  profileImage: string | null;
->>>>>>> 733dab8 (feat : delete picture)
 }
