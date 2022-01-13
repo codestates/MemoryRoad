@@ -179,6 +179,8 @@ export class UsersService {
       .then((resp) => {
         const idToken = resp.data.id_token;
         const info = jwtDecode(idToken);
+        console.log(idToken);
+        console.log(info);
         return info;
       })
       .catch((err) => {
@@ -190,6 +192,7 @@ export class UsersService {
       email: email,
       oauthLogin: 'google',
     });
+    console.log(userInfo);
     if (!userInfo) {
       const sameEmail: UserEntity = await this.usersRepository.findOne({
         email: email,
@@ -197,6 +200,7 @@ export class UsersService {
       if (sameEmail) {
         throw new BadRequestException('이미 사용중인 이메일입니다');
       }
+      console.log(name, email, picture);
       userInfo = await this.usersRepository.save({
         nickName: name,
         email: email,

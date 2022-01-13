@@ -1,6 +1,12 @@
 import * as React from 'react';
 import Nav from '../components/Navigation';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useNavigate,
+} from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Mypage from './Mypage';
@@ -22,7 +28,7 @@ const MemoryRoad = () => {
   const modalCheckPassword = state.isCheckingPasswordModal; // 회원정보 수정하기 전 비밀번호 확인 모달창
   const modalEditUserInfo = state.isEditUserInfoModal; // 회원정보 수정 모달창
   const modalWithdrawal = state.iswithdrawalModal; // 회원탈퇴 모달창
-  const url = 'http://localhost:3000/';
+  const url = 'http://localhost80';
   const dispatch = useDispatch();
 
   // 유효성 검사
@@ -54,10 +60,11 @@ const MemoryRoad = () => {
   useEffect(() => {
     const url = new URL(window.location.href);
     const authorizationCode = url.searchParams.get('code');
+
     if (authorizationCode) {
       if (socialLogin === 'kakao') {
         axios
-          .post(`http://localhost/users/auth/oauth/google`, {
+          .post(`http://localhost/users/auth/oauth/kakao`, {
             authorizationCode: authorizationCode,
           })
           .then((res) => {
@@ -74,6 +81,7 @@ const MemoryRoad = () => {
           });
       }
       if (socialLogin === 'naver') {
+        console.log(authorizationCode);
         axios
           .post(`http://localhost/users/auth/oauth/naver`, {
             authorizationCode: authorizationCode,
@@ -92,6 +100,7 @@ const MemoryRoad = () => {
           });
       }
       if (socialLogin === 'google') {
+        console.log(authorizationCode);
         axios
           .post(`http://localhost/users/auth/oauth/google`, {
             authorizationCode: authorizationCode,
@@ -122,7 +131,7 @@ const MemoryRoad = () => {
             <EditUserInfo isvalid={isvalid} url={url} />
           ) : null}
           {modalWithdrawal ? <Withdrawal url={url} /> : null}
-          <Nav />
+          <Nav url={url} />
           <Routes>
             <Route element={<Mypage />} path="/Mypage" />
           </Routes>
