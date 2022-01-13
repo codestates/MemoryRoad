@@ -1036,7 +1036,7 @@ export class RoutesService {
       for (let i = 0; i < picturesInfo.length; i++) {
         //동기적으로 파일 삭제
         fs.unlinkSync(
-          `${join(__dirname, '..', '..')}/${picturesInfo[i].fileName}`,
+          `${join(__dirname, '..', '..', '..')}/${picturesInfo[i].fileName}`,
         );
       }
 
@@ -1251,7 +1251,7 @@ export class RoutesService {
       for (let i = 0; i < picturesInfo.length; i++) {
         //동기적으로 파일 삭제
         fs.unlinkSync(
-          `${join(__dirname, '..', '..')}/${picturesInfo[i].fileName}`,
+          `${join(__dirname, '..', '..', '..')}/${picturesInfo[i].fileName}`,
         );
       }
 
@@ -1367,6 +1367,58 @@ export class RoutesService {
       } else if (err.status === 401) {
         throw err;
       } else {
+        throw new InternalServerErrorException();
+      }
+    }
+  }
+
+  async deletePicture(
+    routeId: number,
+    pinId: number,
+    pictureId: number,
+    accessToken: string | undefined,
+  ) {
+    try {
+      const decode = jwt.verify(
+        accessToken,
+        this.configService.get<string>('ACCESS_SECRET'),
+      );
+
+      //사진을 지우기 전, 핀에 속한 사진의 정보를 가져온다.
+      //유저id, 루트id등으로 조회한 사진이 없으면 예외를 던진다.
+      const deleteResult = await this.picturesRepository
+        .createQueryBuilder('Pictures')
+        .leftJoin('Pictures.Pins', 'Pins')
+        .leftJoin('Pins.Routes', 'Routes')
+        .where(
+          'Pictures.pinId = :pinId AND Pins.routesId = :routesId AND Routes.userId = :userId AND Pictures.id = :pictureId',
+          {
+            pinId: pinId,
+            routesId: routeId,
+            userId: decode['id'],
+            pictureId: pictureId,
+          },
+        )
+        .getOne();
+
+      //없는 사진, 또는 다른 유저의 사진을 삭제하려는 경우
+      if (!deleteResult) {
+        throw new UnauthorizedException();
+      }
+      await this.picturesRepository.remove(deleteResult);
+
+      //사진 파일 삭제
+      //동기적으로 파일 삭제
+      fs.unlinkSync(
+        `${join(__dirname, '..', '..', '..')}/${deleteResult.fileName}`,
+      );
+    } catch (err) {
+      console.log(err);
+      if (err.status === 401) {
+      } else if (err instanceof JsonWebTokenError) {
+        throw err;
+      } else {
+        //테이블의 정보는 삭제 되더라도 실제 파일이 없는 경우 이 에러가 발생한다. (테이블에서는 삭제 처리된다.)
         throw new InternalServerErrorException();
       }
     }

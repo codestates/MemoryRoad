@@ -1,4 +1,4 @@
-import { Users } from 'src/users/entities/user.entity';
+import { UserEntity } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -16,9 +16,9 @@ export class RouteEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Users, (Users) => Users.id, { onDelete: 'CASCADE' })
+  @ManyToOne(() => UserEntity, (Users) => Users.id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
-  Users: Users;
+  Users: UserEntity;
 
   @Column()
   userId: number;
