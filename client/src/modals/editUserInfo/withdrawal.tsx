@@ -14,11 +14,15 @@ import {
 function Withdrawal({ url }: any) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  // 회원탈퇴 API요청
   const withdraw = () => {
     axios.delete(`${url}/users`).then((res) => {
       if (res.status === 200) {
         alert('회원에서 탈퇴하셨습니다.');
-        dispatch(setUserInfo(false, null, null, null, null, null)); // 회원탈퇴에 성공하면 유저상태를 로그아웃 상태로 만듬
+        window.localStorage.clear(); // 로컬 스토리지를 비우고
+        window.location.reload(); // 새로고침
+        // dispatch(setUserInfo(false, null, null, null, null, null)); // 회원탈퇴에 성공하면 유저상태를 로그아웃 상태로 만듬
         navigate('/'); // 홈으로 이동
       }
     });
