@@ -22,7 +22,6 @@ export class UserEntity {
   @Column({ length: 10, nullable: true })
   oauthLogin?: string | null;
 
-
   @Column({ length: 100, nullable: true })
   saltedPassword?: string | null;
 
