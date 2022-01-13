@@ -20,34 +20,34 @@ export interface CombineReducers {
 const persistConfig: any = {
   key: 'root',
   storage, // localStorage에 저장합니다 (sessionStorage아닙니다)
-  whitelist: [], // localStorage에 담고싶은 reducer들을 담아주세요 아 설마 문자열 때문에 ...?
+  whitelist: ['createRouteReducer'], // localStorage에 담고싶은 reducer들을 담아주세요 아 설마 문자열 때문에 ...?
   blacklist: ['modalReducer', 'createRouteReducer'], // localStorage에 담고싶지 않은 reducer들을 담아주세요 (참고사항)
   stateReconciler: autoMergeLevel2,
 };
 /* redux-persist createRoute config 객체 */
-const createRoutePersistConfig: any = {
-  key: 'createRoute',
-  storage,
-  blacklist: [
-    'isLoginModal',
-    'isSigninModal',
-    'isCheckingPasswordModal',
-    'isEditUserInfoModal',
-    'iswithdrawalModal',
-  ],
-  stateReconciler: autoMergeLevel2,
-};
-const createRoutePersistReducer = persistReducer(
-  createRoutePersistConfig,
-  createRouteReducer,
-);
+// const createRoutePersistConfig: any = {
+//   key: 'createRoute',
+//   storage,
+//   blacklist: [
+//     'isLoginModal',
+//     'isSigninModal',
+//     'isCheckingPasswordModal',
+//     'isEditUserInfoModal',
+//     'iswithdrawalModal',
+//   ],
+//   stateReconciler: autoMergeLevel2,
+// };
+// const createRoutePersistReducer = persistReducer(
+//   createRoutePersistConfig,
+//   createRouteReducer,
+// );
 
 export const rootReducer: any = combineReducers({
   // 학민
   modalReducer,
   // 승연
   createRouteReducer,
-  createRoutePersistReducer,
+  // createRoutePersistReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 
