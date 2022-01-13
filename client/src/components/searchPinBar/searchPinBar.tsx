@@ -4,9 +4,16 @@ import './searchPinBar.css';
 interface props {
   getSearchText: (text: string) => void;
   handleIsModalOpen: (boolean: boolean) => void;
+  handleBlueMarker: (boolean: boolean) => void;
+  handleGrayMarker: (boolean: boolean) => void;
 }
 
-function SearchPinBar({ getSearchText, handleIsModalOpen }: props): any {
+function SearchPinBar({
+  getSearchText,
+  handleBlueMarker,
+  handleIsModalOpen,
+  handleGrayMarker,
+}: props): any {
   // 검색어 상태
   const [searchText, setSearchText] = useState('');
   const handleSearchBar = (event: { target: HTMLInputElement }): void => {
@@ -19,9 +26,23 @@ function SearchPinBar({ getSearchText, handleIsModalOpen }: props): any {
       <div id="searchPin-static-location">
         <div id="searchPin-background">
           <div id="searchPin-container">
+            <button
+              id="searchPin-my-blue-marker-btn"
+              onClick={() => {
+                handleBlueMarker(true);
+                handleGrayMarker(false);
+              }}
+            >
+              <img
+                alt="blue_marker"
+                id="searchPin-my-blue-marker-img"
+                src="http://127.0.0.1:5500/client/public/img/blue_marker.png"
+              ></img>
+            </button>
             <input
               className="searchPin-input"
               onChange={handleSearchBar}
+              placeholder="원하는 장소를 검색해보세요 !"
               type="text"
             />
             <button
@@ -29,6 +50,8 @@ function SearchPinBar({ getSearchText, handleIsModalOpen }: props): any {
               onClick={() => {
                 getSearchText(searchText);
                 handleIsModalOpen(false);
+                handleBlueMarker(false);
+                handleGrayMarker(true);
               }}
             >
               검색

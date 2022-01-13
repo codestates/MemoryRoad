@@ -111,7 +111,7 @@
   height: 100%;
 }
 /*사진 닫기 버튼*/
-#createPinModal-delete-picture {
+.createPinModal-delete-picture {
   position: absolute;
   right: 12px;
   bottom: 43px;
