@@ -7,6 +7,7 @@ import {
   savePinPosition,
 } from '../../redux/actions/index';
 import type { RootState } from './../../redux/reducer/index';
+import { persistor } from '../../../src/index';
 // other Files
 import './createPinMap.css';
 import createPinModal from '../../modals/createPinModal/createPinModal'; // 핀 생성 모달창
@@ -14,8 +15,6 @@ import SearchPinBar from '../../components/searchPinBar/searchPinBar'; // 핀 �
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
 import FakeHeader from '../../components/map-test/fakeHeader'; // 가짜 헤더입니다 착각 조심 ^ㅁ^
 import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBar';
-import { persistor } from '../../../src/index';
-import { setFlagsFromString } from 'v8';
 
 const { kakao }: any = window;
 
@@ -28,16 +27,15 @@ const { kakao }: any = window;
 function CreatePinMap() {
   const dispatch = useDispatch();
   /* redux 전역 상태관리 */ // 왜 type 할당 : RootState는 되고 RootPersistState는 안되나요 ?
-  // persist-redux createRouteReducer 상태 데려옴
   const routeState: any = useSelector(
     (state: RootState) => state.createRouteReducer,
-  ); // starte._persist
+  );
   // pin 저장 배열만 빼옴
-  const { pins, files, pinPosition, route } = routeState;
-  console.log('route', route);
-  console.log('pins', pins); // 잘 업데이트가 되었다는 소린데 ..
-  console.log('files', files);
-  console.log('pinPosition', pinPosition);
+  const { route, pins, files, pinPosition, mapPinPosition } = routeState;
+  // console.log('route', route);
+  // console.log('pins', pins); // 잘 업데이트가 되었다는 소린데 ..
+  // console.log('files', files);
+  // console.log('pinPosition', pinPosition);
 
   // *상태 관리
   const [currLevel, setCurrLevel] = useState(8); // 지도의 레벨
@@ -52,6 +50,59 @@ function CreatePinMap() {
   const [mutations, setMutations] = useState(0); // DOM의 변경사항 감지
 
   /* 나 테스트 할거다. --------------------------------------------------------------------------------------------------------------------------------- */
+
+  let map: any = [];
+  // 아 진짜 persist 포기할까
+  /* redux-persist test */
+  // const rawData: any = localStorage.getItem('persist:root'); // 로컬스토리지에서 상태가져오기 -> localStorage값으로 id, ranking 업데이트.
+  // const rawDataJSONone = JSON.parse(rawData);
+  // const bb: any = rawDataJSONone?.createRouteReducer;
+  // console.log(bb);
+  // console.log(cc);
+  // const persistedState: any = {};
+  // for (const key in cc) {
+  //   if (typeof cc[key] === 'object') {
+  //     persistedState[key] = cc[key];
+  //   }
+  // }
+  // const { route, pins, files, pinPosition } = persistedState;
+
+  /* 타임라인사이드바에서 올라온 핀카드애오 ---------------------------------------------------------------------------------*/
+  /* react-grid-layout */
+  const [layoutState, setLayoutState] = useState([]);
+  // for (const key in rawDataJSONtwo) {
+  //   if(typeof rawDataJSONtwo[key] !== undefined){
+  //     persistedState[key] = JSON.parse(rawDataJSONone[key]);
+  //   }
+  // }
+  // 아니 왜 여기서 이중for문을 돌면서 join을 하고 앉았냐고
+  const pinCards = pinPosition?.map((card: any) => {
+    // 맨 앞 null data 제거해줍니다.
+    let newObj = card;
+    pins.forEach((el: any) => {
+      if (el['pinID'] === card.pinID) {
+        newObj = Object.assign(card, {
+          startTime: el['startTime'],
+          endTime: el['endTime'],
+        });
+      }
+    });
+    return newObj;
+  });
+  console.log('persistedState의 pinCards', pinCards); // 생성 잘됩니다.
+
+  /* 핀 카드로 길을 표현해볼게요. */
+  /* 핀 이미지 마커 */
+  const distanceOverlay = '어쩌라고';
+  const savedMarkerImageSrc =
+    'http://127.0.0.1:5500/client/public/img/red_pin.png';
+  const savedMarkerImageSize = new kakao.maps.Size(55, 54);
+  const savedMarkerImage = new kakao.maps.MarkerImage(
+    savedMarkerImageSrc,
+    savedMarkerImageSize,
+  );
+  /* 타임라인사이드바에서 올라온 핀카드애오 ---------------------------------------------------------------------------------*/
+
   /* 파란 마커와 회색 마커 지도 위에 한 가지 종류만 띄우기 */
   const [blueMarker, setBlueMarker] = useState(false);
   const [grayMarker, setGrayMarker] = useState(true);
@@ -72,10 +123,11 @@ function CreatePinMap() {
   });
   /* 저장버튼 클릭 상태 -> 이거 함수로 묶어줘야겄다 .. */
   const [saveBtnClick, setSaveBtnClick] = useState(false);
-  /* 저장 버튼이 클릭되었다면 reducer로 action을 보내줍니다 */
+  /* 저장 버튼이 클릭되었다면 reducer로 action을 보내줍니다 --------------------------> 어쩔 수 없이 밖에 나와있는 이 로직.. 이벤트 핸들러를 나중에 붙이는 바람에 생기는 상태 업데이트 밀림*/
   if (saveBtnClick) {
-    const pinID = `pin${pinPosition.length}`;
-    const ranking = Number(pinPosition.length);
+    /* redux-persist test */
+    const pinID = `pin${pinPosition?.length}`;
+    const ranking = Number(pinPosition?.length);
     const latlng: any = [
       currMarkerInfo['latitude'],
       currMarkerInfo['longitude'],
@@ -84,7 +136,7 @@ function CreatePinMap() {
     pinImages.forEach((img, idx: number) => {
       formData.append('imgFiles', pinImages[idx]);
     });
-    console.log(Array.from(formData)); // -> formData의 원래 형식 기억해둡시다. 최대한 형태 보존하면서 객체 안의 키값만 문자열로 바꿔놓긴했는데, 서버로 한꺼번에 보낼 때 잘 변환해서 드려야한다..!
+    // console.log(Array.from(formData)); // -> formData의 원래 형식 기억해둡시다. 최대한 형태 보존하면서 객체 안의 키값만 문자열로 바꿔놓긴했는데, 서버로 한꺼번에 보낼 때 잘 변환해서 드려야한다..!
     const arr = Array.from(formData).map((el) => {
       const obj: any = {};
       const title = el[0];
@@ -95,11 +147,15 @@ function CreatePinMap() {
       return [title, obj];
     });
     batch(() => {
-      dispatch(savePinInfo(pinID, ranking, pinTitle, currMarkerInfo));
+      dispatch(savePinInfo(pinID, ranking, pinTitle, currMarkerInfo)); // 첫번째 저장은 빨리 됩니다.
+
       dispatch(savePinImageFiles(pinID, ranking, arr));
       dispatch(savePinPosition(pinID, pinTitle, latlng));
     });
     setSaveBtnClick(false);
+    setPinTitle('');
+    setPinImages([]);
+    setPinImageNames([]);
     // /*---------- formData axios 요청 보낼 것. -> 핀 하나만 수정할 때 쓸 수 있는 폼 데이터 형식 ------------*/
     // // window의 formData 생성
     // const formData = new FormData();
@@ -207,18 +263,14 @@ function CreatePinMap() {
   // 핀 자체의 시간이 늘어나고 줄어들었을 때 (사이드바) 도 상태를 변경해야한다.
   // 핀 삭제 / 수정 버튼 (사이드바) 요청에 따라 또 전역 상태 변경해줘야하는데 .. -> 모두 리덕스에서 sessionStorage를 처리하도록 해야겄다..!
   const handleSavePin = () => {
-    console.log('저장 버튼을 눌렀습니다.');
+    console.log('저장 버튼을 눌렀습니다. 창을 닫습니다');
+    const deleteTag: any = document.getElementById('createPinModal-background');
+    deleteTag.remove();
+    handleIsModalOpen(false);
     setSaveBtnClick(true);
 
     // 잠깐만 ... 이것도 일단 잔역 상태(store)에 이미지 배열만 좌르륵 저장해놓고 -> 루트 저장버튼을 누르면 (사이드바) 그제서야 form을 생성하여 데이터를 보내줘야할까.
     // 이제 핀을 생성한 후에 이미지들이 들어있는 배열을 0으로 만들때 쓰는 상태업데이트.
-  };
-  // 핀 닫기 버튼 핸들러 함수
-  const handleClosePin = () => {
-    console.log('닫기 버튼을 눌렀습니다.');
-    const deleteTag: any = document.getElementById('createPinModal-background');
-    deleteTag.remove();
-    handleIsModalOpen(false);
   };
   // 핀의 사진 개별 삭제 버튼 핸들러 함수 (브라우저위에서만 제거합니다. 실제 상태를 업데이트하지는 않습니다.)
   function deletePinImgFile(event: any) {
@@ -321,9 +373,6 @@ function CreatePinMap() {
     // 핀 저장 버튼 태그 이벤트 등록
     const saveBtnTag: any = document.getElementById('createPinModal-save-btn');
     saveBtnTag?.addEventListener('click', handleSavePin);
-    // 핀 닫기 버튼 태그 이벤트 등록
-    const closeBtnTag = document.getElementById('createPinModal-not-save-btn');
-    closeBtnTag?.addEventListener('click', handleClosePin);
   }
 
   /* 지도 위 동작 useEffect ----------------------------------------------------------------------------- */
@@ -336,15 +385,10 @@ function CreatePinMap() {
   }, [mutations]);
 
   useEffect(() => {
-    // localStorage.clear();
-    const what: any = localStorage.getItem('persist:createRoute');
-    const whatObj = JSON.parse(what);
-    for (const key in whatObj) {
-      console.log(key); // pins 로컬스토리지 업데이트부터 해결하세요.
-      console.log(JSON.parse(whatObj[key])); // JSON.parse할 때 문제가 생긴다는거구나 !
-    }
-    // console.log(JSON.parse(what));
-    // 지도를 표시할 div
+    // localStorage.clear(); // ----------------------------------------------------------------------------------> 로컬스토리지 클리어 버튽
+    // persistor.purge();
+
+    // *지도를 표시할 div
     const mapContainer = document.getElementById('map');
     // 파란 마커냐 회색 마커냐에 따라 중심 좌표 바꿔주기.
     // const currLat = blueMarker ? lat : latS;
@@ -358,7 +402,7 @@ function CreatePinMap() {
       disableDoubleClickZoom: true, // 마우스 더블 클릭으로 지도 확대 및 축소 불가능 여부
     };
     // 지도를 생성합니다
-    const map = new kakao.maps.Map(mapContainer, mapOptions);
+    map = new kakao.maps.Map(mapContainer, mapOptions);
     // map.setMaxLevel(8); // 지도의 최고 레벨값. -> 서울 지역을 벗어나면 검색이 안되게끔 해야 이걸 적용할 수 있음 .. 지금은 검색 기능 & bound 기능때문에 제한 걸지 못함.
 
     // 지도 이벤트 모음
@@ -368,6 +412,42 @@ function CreatePinMap() {
       setCurrLevel(level); // 지도 레벨 상태 저장
     });
 
+    /* 저장된 핀과 선을 지도에 표시 */
+    // const linePath = [];
+    if (mapPinPosition) {
+      // 왜 자꾸 사라지니 ..
+      for (let i = 0; i < mapPinPosition?.length; i++) {
+        /* pinPosition 안에 latlng 요소가 있을 때 */
+        if (mapPinPosition[i].latlng) {
+          const lat: any = mapPinPosition[i]?.latlng[0];
+          const lng: any = mapPinPosition[i]?.latlng[1];
+          // linePath.push(new kakao.maps.LatLng(lat, lng)); // 성 생성
+          if (i > 1) {
+            const prevLat: any = mapPinPosition[i - 1]?.latlng[0];
+            const prevLng: any = mapPinPosition[i - 1]?.latlng[1];
+            const linePath = [
+              new kakao.maps.LatLng(prevLat, prevLng),
+              new kakao.maps.LatLng(lat, lng),
+            ];
+            const polyline = new kakao.maps.Polyline({
+              path: linePath,
+              strokeWeight: 5,
+              strokeColor: '#eb3838',
+              strokeOpacity: 0.7,
+              strokeStyle: 'dashed',
+            });
+            polyline.setMap(map);
+          }
+          const savedMarker = new kakao.maps.Marker({
+            image: savedMarkerImage,
+            position: new kakao.maps.LatLng(lat, lng), // 마커 생성
+            clickable: true,
+          });
+          savedMarker.setMap(map);
+        }
+      }
+    }
+    /* -------------------------------- */
     // 내가 생성한 마커 이벤트 모음
     // *마커 생성
     // marker.setMap(map); // --------------------------------------------------------------------------------------------------------------------------------> test
@@ -496,7 +576,14 @@ function CreatePinMap() {
         infoWindow.close();
       });
     }
-  }, [blueMarkerLocation, searchText, blueMarker, grayMarker, saveBtnClick]); // -------------------------------------------------------------------------------------------> test
+  }, [
+    blueMarkerLocation,
+    searchText,
+    blueMarker,
+    grayMarker,
+    saveBtnClick,
+    layoutState,
+  ]); // -------------------------------------------------------------------------------------------> test
   return (
     <>
       <div id="map-whole-container">
@@ -509,7 +596,11 @@ function CreatePinMap() {
             handleIsModalOpen={handleIsModalOpen}
           />
         </div>
-        <TimeLineSideBar />
+        <TimeLineSideBar
+          layoutState={layoutState}
+          pinCards={pinCards}
+          setLayoutState={setLayoutState}
+        />
         <div id="map"></div>
       </div>
     </>

@@ -1,36 +1,70 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Mist from '../../components/mist';
 import './checkingPassword.css';
 import { useDispatch } from 'react-redux';
-import { checkingPasswordModal } from '../../redux/actions/index';
-function CheckingPassword() {
+import axios from 'axios';
+import {
+  checkingPasswordModal,
+  editUserInfoModal,
+} from '../../redux/actions/index';
+function CheckingPassword({ url }: any) {
   const dispatch = useDispatch();
+  const [password, setpassword] = useState(''); // 회원이 입력한 비밀번호
+  const [errorMessage, setErrorMessage] = useState(''); // 잘못 입력했을 때 나오는 에러메시지
+
+  const checkingPassword = () => {
+    if (password.length === 0) {
+      setErrorMessage('기존 비밀번호를 입력해주세요');
+    } else {
+      axios
+        .post(`${url}/users/auth/local/password`, { password: password })
+        .then((res) => {
+          if (res.status === 200) {
+            dispatch(checkingPasswordModal(false)); // 비밀번호 확인 모달창을 닫고
+            dispatch(editUserInfoModal(true)); // 회원정보 수정창을 연다
+          } else {
+            setErrorMessage('회원 정보 변경 권한이 없습니다.');
+          }
+        });
+    }
+  };
   return (
     <div>
       <Mist />
-      <div className="LoginBorder" id="checingPasswordBorder">
-        <div className="checkingPasswordTitle">
-          <div className="center2">회원 정보 수정을 위해서는</div>
-          <div className="center2">기존 비밀번호 확인이 필요합니다.</div>
+      <div
+        className="checkingpassword-checkingPasswordBorder"
+        id="checingPasswordBorder"
+      >
+        <div className="checkingpassword-checkingPasswordTitle">
+          <div className="checkingpassword-center2">
+            회원 정보 수정을 위해서는
+          </div>
+          <div className="checkingpassword-center2">
+            기존 비밀번호 확인이 필요합니다.
+          </div>
         </div>
         <input
-          className="inputPasswordforChecking"
+          className="checkingpassword-inputPasswordforChecking"
+          onChange={(e) => {
+            setpassword(e.target.value);
+          }}
           placeholder="비밀번호"
           type="password"
         ></input>
-        <div className="ErrorMessage">에러 메시지</div>
-        <div className="center">
+        <div className="checkingpassword-ErrorMessage">{errorMessage}</div>
+        <div className="checkingpassword-center2">
           <button
-            className="LoginButton pointer greenButtonCheck"
+            className="checkingpassword-Button userModalPointer checkingpassword-greenButtonCheck"
             onClick={() => {
-              dispatch(checkingPasswordModal(false));
-              dispatch(checkingPasswordModal(true));
+              dispatch(checkingPasswordModal(false)); // 주석 처리
+              dispatch(editUserInfoModal(true)); // 주석 처리
+              // checkingPassword();
             }}
           >
             비밀번호 확인
           </button>
           <button
-            className="LoginButton pointer grayButtonNext"
+            className="checkingpassword-Button userModalPointer checkingpassword-grayButtonNext"
             onClick={() => {
               dispatch(checkingPasswordModal(false));
             }}

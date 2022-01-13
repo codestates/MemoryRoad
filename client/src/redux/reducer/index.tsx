@@ -6,6 +6,8 @@ import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 /* reducer들 불러오기 */
 import modalReducer from './modalReducer/ModalReducer';
 import type { ModalReducerType } from './modalReducer/ModalReducer';
+import setUserInfoReducer from './setUserinforeducer/setUserInfoReducer';
+import type { SetUserInfoReducerType } from './setUserinforeducer/setUserInfoReducer';
 import createRouteReducer from './createRouteReducer/createRouteReducer';
 import type { CreateRouteReducerType } from './createRouteReducer/createRouteReducer';
 import { PersistPartial } from 'redux-persist/lib/persistReducer';
@@ -13,6 +15,7 @@ import { PersistConfig } from 'redux-persist/lib/types';
 
 export interface CombineReducers {
   modalReducer: ModalReducerType;
+  setUserInfoReducer: PersistPartial & SetUserInfoReducerType;
   createRouteReducer: PersistPartial & CreateRouteReducerType;
 }
 
@@ -20,34 +23,35 @@ export interface CombineReducers {
 const persistConfig: any = {
   key: 'root',
   storage, // localStorage에 저장합니다 (sessionStorage아닙니다)
-  whitelist: [], // localStorage에 담고싶은 reducer들을 담아주세요 아 설마 문자열 때문에 ...?
+  whitelist: ['setUserInfoReducer'], // localStorage에 담고싶은 reducer들을 담아주세요 아 설마 문자열 때문에 ...?
   blacklist: ['modalReducer', 'createRouteReducer'], // localStorage에 담고싶지 않은 reducer들을 담아주세요 (참고사항)
   stateReconciler: autoMergeLevel2,
 };
 /* redux-persist createRoute config 객체 */
-const createRoutePersistConfig: any = {
-  key: 'createRoute',
-  storage,
-  blacklist: [
-    'isLoginModal',
-    'isSigninModal',
-    'isCheckingPasswordModal',
-    'isEditUserInfoModal',
-    'iswithdrawalModal',
-  ],
-  stateReconciler: autoMergeLevel2,
-};
-const createRoutePersistReducer = persistReducer(
-  createRoutePersistConfig,
-  createRouteReducer,
-);
+// const createRoutePersistConfig: any = {
+//   key: 'createRoute',
+//   storage,
+//   blacklist: [
+//     'isLoginModal',
+//     'isSigninModal',
+//     'isCheckingPasswordModal',
+//     'isEditUserInfoModal',
+//     'iswithdrawalModal',
+//   ],
+//   stateReconciler: autoMergeLevel2,
+// };
+// const createRoutePersistReducer = persistReducer(
+//   createRoutePersistConfig,
+//   createRouteReducer,
+// );
 
 export const rootReducer: any = combineReducers({
   // 학민
   modalReducer,
+  setUserInfoReducer,
   // 승연
   createRouteReducer,
-  createRoutePersistReducer,
+  // createRoutePersistReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 

@@ -1,20 +1,21 @@
-.gridContainer2 {
+.opendmenu-gridContainer2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  z-index: 999;
 }
-#X {
+#opendmenu-X {
   margin-right: 80%;
   color: white;
   font-size: 100%;
 }
-.Menutext {
+.opendmenu-Menutext {
   text-align: center;
   font-size: 50%;
   color: black;
   display: grid;
   grid-template-rows: 2fr 1fr;
 }
-#background {
+#opendmenu-background {
   background-color: #b8e9d2;
   opacity: 0.8;
   position: fixed;
@@ -26,7 +27,7 @@
 }
 @media (min-width: 500px) {
   /* 500px 이상 */
-  #background {
+  #opendmenu-background {
     width: 40%;
   }
 }
