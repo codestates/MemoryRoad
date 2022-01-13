@@ -1,9 +1,11 @@
+import { RouteEntity } from 'src/routes/entities/route.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   OneToMany,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity('Users')
@@ -18,14 +20,21 @@ export class UserEntity {
   email: string;
 
   @Column({ length: 10, nullable: true })
-  oauthLogin: string | null;
+  oauthLogin?: string | null;
+
 
   @Column({ length: 100, nullable: true })
-  saltedPassword: string | null;
+  saltedPassword?: string | null;
 
   @Column({ length: 255, nullable: true })
-  oauthCI: string | null;
+  oauthCI?: string | null;
+
+  @OneToMany(() => RouteEntity, (Routes) => Routes.userId, {
+    cascade: true,
+  })
+  @JoinColumn()
+  Routes?: RouteEntity[];
 
   @Column({ length: 255, nullable: true })
-  profileImage: string | null;
+  profileImage?: string | null;
 }

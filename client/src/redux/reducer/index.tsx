@@ -1,50 +1,64 @@
-import { combineReducers } from 'redux';
+import { AnyAction, combineReducers, Reducer } from 'redux';
 /* redux-persist 관련 설정 */
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 /* reducer들 불러오기 */
-import {
-  loginModalReducer,
-  signupModalReducer,
-  checkingPasswordModalReducer,
-  editUserInfoModalReducer,
-  withdrawalModalReducer,
-} from './modalReducer/ModalReducer';
+import modalReducer from './modalReducer/ModalReducer';
+import type { ModalReducerType } from './modalReducer/ModalReducer';
+import setUserInfoReducer from './setUserinforeducer/setUserInfoReducer';
+import type { SetUserInfoReducerType } from './setUserinforeducer/setUserInfoReducer';
 import createRouteReducer from './createRouteReducer/createRouteReducer';
+import type { CreateRouteReducerType } from './createRouteReducer/createRouteReducer';
+import { PersistPartial } from 'redux-persist/lib/persistReducer';
+import { PersistConfig } from 'redux-persist/lib/types';
+
+export interface CombineReducers {
+  modalReducer: ModalReducerType;
+  setUserInfoReducer: PersistPartial & SetUserInfoReducerType;
+  createRouteReducer: PersistPartial & CreateRouteReducerType;
+}
+
 /* redux-persist config 객체 */
 const persistConfig: any = {
   key: 'root',
   storage, // localStorage에 저장합니다 (sessionStorage아닙니다)
-  whitelist: [createRouteReducer], // localStorage에 담고싶은 reducer들을 담아주세요
-  // blacklist: [] // localStorage에 담고싶지 않은 reducer들을 담아주세요 (참고사항)
+  whitelist: ['setUserInfoReducer'], // localStorage에 담고싶은 reducer들을 담아주세요 아 설마 문자열 때문에 ...?
+  blacklist: ['modalReducer', 'createRouteReducer'], // localStorage에 담고싶지 않은 reducer들을 담아주세요 (참고사항)
   stateReconciler: autoMergeLevel2,
 };
+/* redux-persist createRoute config 객체 */
+// const createRoutePersistConfig: any = {
+//   key: 'createRoute',
+//   storage,
+//   blacklist: [
+//     'isLoginModal',
+//     'isSigninModal',
+//     'isCheckingPasswordModal',
+//     'isEditUserInfoModal',
+//     'iswithdrawalModal',
+//   ],
+//   stateReconciler: autoMergeLevel2,
+// };
+// const createRoutePersistReducer = persistReducer(
+//   createRoutePersistConfig,
+//   createRouteReducer,
+// );
 
-/* root reducer */ // any 적용하면 절대 안될것같음 ..
-const rootReducer: any = combineReducers({
-  loginModalReducer,
-  signupModalReducer,
-  checkingPasswordModalReducer,
-  editUserInfoModalReducer,
-  withdrawalModalReducer,
-  /* 승연 */
+export const rootReducer: any = combineReducers({
+  // 학민
+  modalReducer,
+  setUserInfoReducer,
+  // 승연
   createRouteReducer,
+  // createRoutePersistReducer,
 });
+export type RootState = ReturnType<typeof rootReducer>;
 
 /* redux-persist 환경설정을 변수에 담아 root reducer를 완성합니다 */
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-export default persistedReducer;
-
-export type RootPersistState = ReturnType<typeof persistedReducer>;
-export type RootState = {
-  loginModalReducer: boolean;
-  signupModalReducer: boolean;
-  checkingPasswordModalReducer: boolean;
-  editUserInfoModalReducer: boolean;
-  withdrawalModalReducer: boolean;
-  createRouteReducer: object | undefined;
-};
+const persistRootReeucer = persistReducer(persistConfig, rootReducer);
+export default persistRootReeucer;
+export type PersistRootState = ReturnType<typeof persistRootReeucer>;
 
 /* [ ReturnType 예시 ] - 부가 설명 (지워도 됩니다!)
 

@@ -88,30 +88,6 @@ export class UsersService {
     });
     const result = kakaoInfo.data;
     const profile = result.properties.profile_image;
-    // {
-    //   id: 2066492386,
-    //   connected_at: '2022-01-05T14:33:16Z',
-    //   properties: {
-    //     nickname: '양재영',
-    //     profile_image: 'http://k.kakaocdn.net/dn/crXJwu/btqUsRhQUx0/cH6CxkKCcteXkkcuRUulx1/img_640x640.jpg',
-    //     thumbnail_image: 'http://k.kakaocdn.net/dn/crXJwu/btqUsRhQUx0/cH6CxkKCcteXkkcuRUulx1/img_110x110.jpg'
-    //   },
-    //   kakao_account: {
-    //     profile_nickname_needs_agreement: false,
-    //     profile_image_needs_agreement: false,
-    //     profile: {
-    //       nickname: '양재영',
-    //       thumbnail_image_url: 'http://k.kakaocdn.net/dn/crXJwu/btqUsRhQUx0/cH6CxkKCcteXkkcuRUulx1/img_110x110.jpg',
-    //       profile_image_url: 'http://k.kakaocdn.net/dn/crXJwu/btqUsRhQUx0/cH6CxkKCcteXkkcuRUulx1/img_640x640.jpg',
-    //       is_default_image: false
-    //     },
-    //     has_email: true,
-    //     email_needs_agreement: false,
-    //     is_email_valid: true,
-    //     is_email_verified: true,
-    //     email: 'terrabattle@naver.com'
-    //   }
-    // }
     let userInfo: UserEntity = await this.usersRepository.findOne({
       email: result.kakao_account.email,
       oauthLogin: 'kakao',
@@ -123,15 +99,13 @@ export class UsersService {
       if (sameEmail) {
         throw new BadRequestException('이미 사용중인 이메일입니다');
       }
-      await this.usersRepository.save({
+      userInfo = await this.usersRepository.save({
         nickName: result.properties.nickname,
         email: result.kakao_account.email,
         oauthLogin: 'kakao',
         saltedPassword: null,
         oauthCI: result.id,
-      });
-      userInfo = await this.usersRepository.findOne({
-        email: result.email,
+        profileImage: profile,
       });
     }
     console.log(userInfo);
@@ -181,15 +155,13 @@ export class UsersService {
       if (sameEmail) {
         throw new BadRequestException('이미 사용중인 이메일입니다');
       }
-      await this.usersRepository.save({
+      userInfo = await this.usersRepository.save({
         nickName: result.email,
         email: result.email,
         oauthLogin: 'naver',
         saltedPassword: null,
         oauthCI: result.id,
-      });
-      userInfo = await this.usersRepository.findOne({
-        email: result.email,
+        profileImage: profile,
       });
     }
     console.log(userInfo);
@@ -225,15 +197,13 @@ export class UsersService {
       if (sameEmail) {
         throw new BadRequestException('이미 사용중인 이메일입니다');
       }
-      await this.usersRepository.save({
+      userInfo = await this.usersRepository.save({
         nickName: name,
         email: email,
         oauthLogin: 'google',
         saltedPassword: null,
         oauthCI: null,
-      });
-      userInfo = await this.usersRepository.findOne({
-        email: email,
+        profileImage: picture,
       });
     }
     console.log(userInfo);
@@ -266,20 +236,20 @@ export class UsersService {
     return decoded;
   }
 
-  //회원 정보 업데이트 닉네임. 비밀번호, 프로필이미지. 프로필 이미지때문에 대대적으로 수정해야 한다고 함.
-  async updateProfile(accessToken: string, profile: string) {
+  //회원 정보 업데이트 닉네임. 비밀번호, 프로필이미지.
+  async updateProfile(accessToken: string, file: Express.Multer.File) {
+    console.log(file);
+    console.log(file.path);
     const decoded = await this.verifyAccessToken(accessToken);
-    decoded['profileImage'] = profile;
+    decoded['profileImage'] = file.filename;
     const user: UserEntity = {
       id: decoded['id'],
       email: decoded['email'],
-      oauthLogin: decoded['oauthLogin'],
-      oauthCI: decoded['oauthCI'],
       nickName: decoded['nickName'],
-      saltedPassword: decoded['saltedPassword'],
       profileImage: decoded['profileImage'],
     };
     await this.usersRepository.save(user);
+    return file.filename;
   }
   async updateUserName(accessToken: string, userName: string) {
     const decoded = await this.verifyAccessToken(accessToken);
@@ -287,11 +257,7 @@ export class UsersService {
     const user: UserEntity = {
       id: decoded['id'],
       email: decoded['email'],
-      oauthLogin: decoded['oauthLogin'],
-      oauthCI: decoded['oauthCI'],
       nickName: decoded['nickName'],
-      saltedPassword: decoded['saltedPassword'],
-      profileImage: decoded['profileImage'],
     };
     await this.usersRepository.save(user);
   }
@@ -302,11 +268,8 @@ export class UsersService {
     const user: UserEntity = {
       id: decoded['id'],
       email: decoded['email'],
-      oauthLogin: decoded['oauthLogin'],
-      oauthCI: decoded['oauthCI'],
       nickName: decoded['nickName'],
       saltedPassword: decoded['saltedPassword'],
-      profileImage: decoded['profileImage'],
     };
     await this.usersRepository.save(user);
   }

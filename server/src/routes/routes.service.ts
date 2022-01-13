@@ -1,13 +1,12 @@
 import {
   BadRequestException,
-  HttpException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryFailedError, Repository, UpdateResult } from 'typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 import { PatchPinDto } from './dto/patchPin.dto';
 import { PatchRouteDto } from './dto/patchRoute.dto';
 import { PostRouteDto } from './dto/postRoute.dto';
@@ -27,6 +26,7 @@ import { UsersService } from 'src/users/users.service';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { PlaceKeywordEntity } from './entities/placeKeyword.entity';
+import { PinsPlaceKeywordEntity } from './entities/pinsPlaceKeyword.entity';
 
 @Injectable()
 export class RoutesService {
@@ -41,7 +41,9 @@ export class RoutesService {
     private readonly usersService: UsersService,
     private configService: ConfigService,
     @InjectRepository(PlaceKeywordEntity)
-    private placeKeywords: Repository<PlaceKeywordEntity>,
+    private placeKeywordsRepository: Repository<PlaceKeywordEntity>,
+    @InjectRepository(PinsPlaceKeywordEntity)
+    private pinsPlaceKeywordsRepository: Repository<PinsPlaceKeywordEntity>,
   ) {}
 
   async getUserRoutes(page: number, accessToken: string | undefined) {
@@ -68,6 +70,9 @@ export class RoutesService {
         'Pins.id',
         'Pins.ranking',
         'Pins.locationName',
+        'Pins.lotAddress',
+        'Pins.roadAddress',
+        'Pins.ward',
         'Pictures.fileName',
       ])
       .where('Routes.userId = :userId', { userId: decode['id'] })
@@ -98,6 +103,725 @@ export class RoutesService {
       route['thumbnail'] = fileName;
     });
     return response;
+  }
+
+  async getSearchedRoutes(
+    nwLat: number,
+    nwLng: number,
+    seLat: number,
+    seLng: number,
+    rq?: string,
+    lq?: string,
+    location?: string,
+    time?: number,
+    page?: number,
+  ) {
+    //루트명, 장소명은 하나만 주어지거나 주어지지 않는다.
+    if (!rq && !lq) {
+      if (!nwLat || !nwLng || !seLat || !seLng) throw new BadRequestException();
+      //위도, 경도 조건에 해당되는 핀들을 전부 가져온다.
+      //rq, lq가 주어지지 않는 경우는 검색이 아니므로, 화면의 모든 루트를 보여줘야 한다. 페이지네이션을 하지 않는다.
+      //공개된 루트 중 사진을 제외한 정보를 보내준다.
+      const routes = await this.routesRepository
+        .createQueryBuilder('Routes')
+        .leftJoinAndSelect('Routes.Pins', 'Pins')
+        .where(
+          'Routes.public = 1 AND Pins.latitude BETWEEN :nwLat AND :seLat AND Pins.longitude BETWEEN :nwLng AND :seLng',
+          { nwLat: nwLat, seLat: seLat, nwLng: nwLng, seLng: seLng },
+        )
+        .orderBy('Routes.createdAt')
+        .addOrderBy('Pins.ranking')
+        .getMany();
+
+      const response = {
+        code: 200,
+        routes: routes,
+      };
+
+      return response;
+    } else if (rq !== undefined) {
+      //루트명이 주어질 경우
+      //검색 시에는 페이지네이션을 위해 page파라미터가 반드시 주어져야 한다.
+      //위도, 경도의 정보도 받아야 하는지?
+
+      if (location === undefined && time === undefined) {
+        //장소필터, 시간 필터가 둘 다 주어지지 않은 경우
+        const routes = await this.routesRepository
+          .createQueryBuilder('Routes')
+          .leftJoinAndSelect('Routes.Pins', 'Pins')
+          .leftJoinAndSelect('Pins.Pictures', 'Pictures')
+          .select([
+            'Routes.id',
+            'Routes.userId',
+            'Routes.routeName',
+            'Routes.description',
+            'Routes.createdAt',
+            'Routes.updatedAt',
+            'Routes.public',
+            'Routes.color',
+            'Routes.time',
+            'Pins.id',
+            'Pins.ranking',
+            'Pins.locationName',
+            'Pins.lotAddress',
+            'Pins.roadAddress',
+            'Pins.ward',
+            'Pictures.fileName',
+          ])
+          .where('Routes.public = 1 AND Routes.routeName LIKE :rq', {
+            rq: `%${rq}%`,
+          })
+          .orderBy('Routes.createdAt')
+          .addOrderBy('Pins.ranking')
+          .addOrderBy('Pictures.id')
+          .getMany();
+
+        const response = {
+          code: 200,
+          routes: routes.slice(page * 5 - 5, page * 5),
+          count: routes.length,
+        };
+        response.routes.forEach((route) => {
+          let fileName = null;
+          //핀들의 사진을 조회해서 가장 처음 사진을 대표 사진으로 한다.
+          for (let i = 0; i < route.Pins.length; i++) {
+            if (!route.Pins[i].Pictures.length) continue;
+            if (route.Pins[i].Pictures.length !== 0) {
+              fileName = route.Pins[i].Pictures[0].fileName;
+              break;
+            }
+          }
+
+          route['thumbnail'] = fileName;
+        });
+
+        return response;
+      } else if (location !== undefined && time === undefined) {
+        //장소필터만 주어진 경우. location과 일치하는 핀이 하나라도 있을 경우 해당 루트를 반환한다.
+
+        //핀들을 '구'의 정보로 찾아서 루트의 아이디를 가져온다.
+        const getIds = await this.pinsRepository
+          .createQueryBuilder()
+          .select(['routesId'])
+          .distinct(true)
+          .where('ward = :ward', { ward: location })
+          .getRawMany();
+
+        //중복이 제거된 루트의 아이디들
+        const routeIds = [];
+        getIds.forEach((obj) => routeIds.push(obj['routesId']));
+
+        //일치하는 루트가 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (routeIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
+
+        const routes = await this.routesRepository
+          .createQueryBuilder('Routes')
+          .leftJoinAndSelect('Routes.Pins', 'Pins')
+          .leftJoinAndSelect('Pins.Pictures', 'Pictures')
+          .select([
+            'Routes.id',
+            'Routes.userId',
+            'Routes.routeName',
+            'Routes.description',
+            'Routes.createdAt',
+            'Routes.updatedAt',
+            'Routes.public',
+            'Routes.color',
+            'Routes.time',
+            'Pins.id',
+            'Pins.ranking',
+            'Pins.locationName',
+            'Pins.lotAddress',
+            'Pins.roadAddress',
+            'Pins.ward',
+            'Pictures.fileName',
+          ])
+          .where(
+            'Routes.public = 1 AND Routes.routeName LIKE :rq AND Routes.id IN (:id)',
+            {
+              rq: `%${rq}%`,
+              id: routeIds,
+            },
+          )
+          .orderBy('Routes.createdAt')
+          .addOrderBy('Pins.ranking')
+          .addOrderBy('Pictures.id')
+          .getMany();
+
+        const response = {
+          code: 200,
+          routes: routes.slice(page * 5 - 5, page * 5),
+          count: routes.length,
+        };
+        response.routes.forEach((route) => {
+          let fileName = null;
+          //핀들의 사진을 조회해서 가장 처음 사진을 대표 사진으로 한다.
+          for (let i = 0; i < route.Pins.length; i++) {
+            if (!route.Pins[i].Pictures.length) continue;
+            if (route.Pins[i].Pictures.length !== 0) {
+              fileName = route.Pins[i].Pictures[0].fileName;
+              break;
+            }
+          }
+
+          route['thumbnail'] = fileName;
+        });
+
+        return response;
+      } else if (location === undefined && time !== undefined) {
+        //시간필터만 주어진 경우
+        const routes = await this.routesRepository
+          .createQueryBuilder('Routes')
+          .leftJoinAndSelect('Routes.Pins', 'Pins')
+          .leftJoinAndSelect('Pins.Pictures', 'Pictures')
+          .select([
+            'Routes.id',
+            'Routes.userId',
+            'Routes.routeName',
+            'Routes.description',
+            'Routes.createdAt',
+            'Routes.updatedAt',
+            'Routes.public',
+            'Routes.color',
+            'Routes.time',
+            'Pins.id',
+            'Pins.ranking',
+            'Pins.locationName',
+            'Pins.lotAddress',
+            'Pins.roadAddress',
+            'Pins.ward',
+            'Pictures.fileName',
+          ])
+          .where(
+            'Routes.public = 1 AND Routes.routeName LIKE :rq AND Routes.time = :time',
+            {
+              rq: `%${rq}%`,
+              time: time,
+            },
+          )
+          .orderBy('Routes.createdAt')
+          .addOrderBy('Pins.ranking')
+          .addOrderBy('Pictures.id')
+          .getMany();
+
+        const response = {
+          code: 200,
+          routes: routes.slice(page * 5 - 5, page * 5),
+          count: routes.length,
+        };
+        response.routes.forEach((route) => {
+          let fileName = null;
+          //핀들의 사진을 조회해서 가장 처음 사진을 대표 사진으로 한다.
+          for (let i = 0; i < route.Pins.length; i++) {
+            if (!route.Pins[i].Pictures.length) continue;
+            if (route.Pins[i].Pictures.length !== 0) {
+              fileName = route.Pins[i].Pictures[0].fileName;
+              break;
+            }
+          }
+
+          route['thumbnail'] = fileName;
+        });
+
+        return response;
+      } else {
+        //필터가 전부 주어진 경우
+
+        //핀들을 '구'의 정보로 찾아서 루트의 아이디를 가져온다.
+        const getIds = await this.pinsRepository
+          .createQueryBuilder()
+          .select(['routesId'])
+          .distinct(true)
+          .where('ward = :ward', { ward: location })
+          .getRawMany();
+
+        //중복이 제거된 루트의 아이디들
+        const routeIds = [];
+        getIds.forEach((obj) => routeIds.push(obj['routesId']));
+
+        //일치하는 루트가 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (routeIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
+
+        const routes = await this.routesRepository
+          .createQueryBuilder('Routes')
+          .leftJoinAndSelect('Routes.Pins', 'Pins')
+          .leftJoinAndSelect('Pins.Pictures', 'Pictures')
+          .select([
+            'Routes.id',
+            'Routes.userId',
+            'Routes.routeName',
+            'Routes.description',
+            'Routes.createdAt',
+            'Routes.updatedAt',
+            'Routes.public',
+            'Routes.color',
+            'Routes.time',
+            'Pins.id',
+            'Pins.ranking',
+            'Pins.locationName',
+            'Pins.lotAddress',
+            'Pins.roadAddress',
+            'Pins.ward',
+            'Pictures.fileName',
+          ])
+          .where(
+            'Routes.public = 1 AND Routes.routeName LIKE :rq AND Routes.time = :time AND Routes.id IN (:id)',
+            {
+              rq: `%${rq}%`,
+              time: time,
+              id: routeIds,
+            },
+          )
+          .orderBy('Routes.createdAt')
+          .addOrderBy('Pins.ranking')
+          .addOrderBy('Pictures.id')
+          .getMany();
+
+        const response = {
+          code: 200,
+          routes: routes.slice(page * 5 - 5, page * 5),
+          count: routes.length,
+        };
+        response.routes.forEach((route) => {
+          let fileName = null;
+          //핀들의 사진을 조회해서 가장 처음 사진을 대표 사진으로 한다.
+          for (let i = 0; i < route.Pins.length; i++) {
+            if (!route.Pins[i].Pictures.length) continue;
+            if (route.Pins[i].Pictures.length !== 0) {
+              fileName = route.Pins[i].Pictures[0].fileName;
+              break;
+            }
+          }
+
+          route['thumbnail'] = fileName;
+        });
+
+        return response;
+      }
+    } else {
+      //키워드(lq)가 주어질 경우
+      //키위드를 공백으로 구분한다
+      //키워드와 전부 일치하는 핀이 속한 루트를 반환한다.
+      const keywords = lq.split(' ');
+
+      if (location === undefined && time === undefined) {
+        //장소필터, 시간 필터가 둘 다 주어지지 않은 경우
+
+        //pinId로 그룹을 지정한 뒤, 일차하는 키위드의 수가 들어있는 keywordCount컬럼을 만든다.
+        const getPinIds = await this.pinsPlaceKeywordsRepository
+          .createQueryBuilder('PPR')
+          .where('PPR.keyword IN (:keywords)', { keywords: keywords })
+          .addSelect('COUNT(PPR.keyword) AS keywordCount')
+          .groupBy('PPR.pinId')
+          .getRawMany();
+
+        //주어진 키워드와 전부 일치하면(count 수와 키워드의 수가 같으면) 배열에 추가한다.
+        const pinIds = [];
+        getPinIds.forEach((obj) => {
+          if (Number(obj['keywordCount']) === keywords.length) {
+            pinIds.push(obj['PPR_pinId']);
+          }
+        });
+
+        //일치하는 핀이 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (pinIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
+
+        //핀들을 아이디의 정보로 찾아서 루트의 아이디를 가져온다.
+        const getIds = await this.pinsRepository
+          .createQueryBuilder()
+          .select(['routesId'])
+          .distinct(true)
+          .where('id IN (:id)', { id: pinIds })
+          .getRawMany();
+
+        //중복이 제거된 루트의 아이디들
+        const routeIds = [];
+        getIds.forEach((obj) => routeIds.push(obj['routesId']));
+
+        //일치하는 루트가 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (routeIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
+
+        const routes = await this.routesRepository
+          .createQueryBuilder('Routes')
+          .leftJoinAndSelect('Routes.Pins', 'Pins')
+          .leftJoinAndSelect('Pins.Pictures', 'Pictures')
+          .select([
+            'Routes.id',
+            'Routes.userId',
+            'Routes.routeName',
+            'Routes.description',
+            'Routes.createdAt',
+            'Routes.updatedAt',
+            'Routes.public',
+            'Routes.color',
+            'Routes.time',
+            'Pins.id',
+            'Pins.ranking',
+            'Pins.locationName',
+            'Pins.lotAddress',
+            'Pins.roadAddress',
+            'Pins.ward',
+            'Pictures.fileName',
+          ])
+          .where('Routes.public = 1 AND Routes.id IN (:routeIds)', {
+            routeIds: routeIds,
+          }) //raw 쿼리에 배열 넣을때 는 소괄호로 감싸자
+          .orderBy('Routes.createdAt')
+          .addOrderBy('Pins.ranking')
+          .addOrderBy('Pictures.id')
+          .getMany();
+
+        const response = {
+          code: 200,
+          routes: routes.slice(page * 5 - 5, page * 5),
+          count: routes.length,
+        };
+        response.routes.forEach((route) => {
+          let fileName = null;
+          //핀들의 사진을 조회해서 가장 처음 사진을 대표 사진으로 한다.
+          for (let i = 0; i < route.Pins.length; i++) {
+            if (!route.Pins[i].Pictures.length) continue;
+            if (route.Pins[i].Pictures.length !== 0) {
+              fileName = route.Pins[i].Pictures[0].fileName;
+              break;
+            }
+          }
+
+          route['thumbnail'] = fileName;
+        });
+
+        return response;
+      } else if (location !== undefined && time === undefined) {
+        //장소필터만 주어진 경우. location과 일치하는 핀이 하나라도 있을 경우 해당 루트를 반환한다.
+
+        //pinId로 그룹을 지정한 뒤, 일차하는 키위드의 수가 들어있는 keywordCount컬럼을 만든다.
+        const getPinIds = await this.pinsPlaceKeywordsRepository
+          .createQueryBuilder('PPR')
+          .where('PPR.keyword IN (:keywords)', { keywords: keywords })
+          .addSelect('COUNT(PPR.keyword) AS keywordCount')
+          .groupBy('PPR.pinId')
+          .getRawMany();
+
+        //주어진 키워드와 전부 일치하면(count 수와 키워드의 수가 같으면) 배열에 추가한다.
+        const pinIds = [];
+        getPinIds.forEach((obj) => {
+          if (Number(obj['keywordCount']) === keywords.length) {
+            pinIds.push(obj['PPR_pinId']);
+          }
+        });
+
+        //일치하는 핀이 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (pinIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
+
+        //핀들을 아이디, '구'의 정보로 찾아서 루트의 아이디를 가져온다.
+        const getIds = await this.pinsRepository
+          .createQueryBuilder()
+          .select(['routesId'])
+          .distinct(true)
+          .where('id IN (:id) AND ward = :ward', { id: pinIds, ward: location })
+          .getRawMany();
+
+        //중복이 제거된 루트의 아이디들
+        const routeIds = [];
+        getIds.forEach((obj) => routeIds.push(obj['routesId']));
+
+        //일치하는 루트가 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (routeIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
+
+        const routes = await this.routesRepository
+          .createQueryBuilder('Routes')
+          .leftJoinAndSelect('Routes.Pins', 'Pins')
+          .leftJoinAndSelect('Pins.Pictures', 'Pictures')
+          .select([
+            'Routes.id',
+            'Routes.userId',
+            'Routes.routeName',
+            'Routes.description',
+            'Routes.createdAt',
+            'Routes.updatedAt',
+            'Routes.public',
+            'Routes.color',
+            'Routes.time',
+            'Pins.id',
+            'Pins.ranking',
+            'Pins.locationName',
+            'Pins.lotAddress',
+            'Pins.roadAddress',
+            'Pins.ward',
+            'Pictures.fileName',
+          ])
+          .where('Routes.public = 1 AND Routes.id IN (:routeIds)', {
+            routeIds: routeIds,
+          }) //raw 쿼리에 배열 넣을때 는 소괄호로 감싸자
+          .orderBy('Routes.createdAt')
+          .addOrderBy('Pins.ranking')
+          .addOrderBy('Pictures.id')
+          .getMany();
+
+        const response = {
+          code: 200,
+          routes: routes.slice(page * 5 - 5, page * 5),
+          count: routes.length,
+        };
+        response.routes.forEach((route) => {
+          let fileName = null;
+          //핀들의 사진을 조회해서 가장 처음 사진을 대표 사진으로 한다.
+          for (let i = 0; i < route.Pins.length; i++) {
+            if (!route.Pins[i].Pictures.length) continue;
+            if (route.Pins[i].Pictures.length !== 0) {
+              fileName = route.Pins[i].Pictures[0].fileName;
+              break;
+            }
+          }
+
+          route['thumbnail'] = fileName;
+        });
+
+        return response;
+      } else if (location === undefined && time !== undefined) {
+        //시간 필터만 주어진 경우
+
+        //pinId로 그룹을 지정한 뒤, 일차하는 키워드의 수가 들어있는 keywordCount컬럼을 만든다.
+        const getPinIds = await this.pinsPlaceKeywordsRepository
+          .createQueryBuilder('PPR')
+          .where('PPR.keyword IN (:keywords)', { keywords: keywords })
+          .addSelect('COUNT(PPR.keyword) AS keywordCount')
+          .groupBy('PPR.pinId')
+          .getRawMany();
+
+        //주어진 키워드와 전부 일치하면(count 수와 키워드의 수가 같으면) 배열에 추가한다.
+        const pinIds = [];
+        getPinIds.forEach((obj) => {
+          if (Number(obj['keywordCount']) === keywords.length) {
+            pinIds.push(obj['PPR_pinId']);
+          }
+        });
+
+        //일치하는 핀이 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (pinIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
+
+        //핀들을 아이디, '구'의 정보로 찾아서 루트의 아이디를 가져온다.
+        const getIds = await this.pinsRepository
+          .createQueryBuilder()
+          .select(['routesId'])
+          .distinct(true)
+          .where('id IN (:id)', { id: pinIds })
+          .getRawMany();
+
+        //중복이 제거된 루트의 아이디들
+        const routeIds = [];
+        getIds.forEach((obj) => routeIds.push(obj['routesId']));
+
+        //일치하는 루트가 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (routeIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
+
+        const routes = await this.routesRepository
+          .createQueryBuilder('Routes')
+          .leftJoinAndSelect('Routes.Pins', 'Pins')
+          .leftJoinAndSelect('Pins.Pictures', 'Pictures')
+          .select([
+            'Routes.id',
+            'Routes.userId',
+            'Routes.routeName',
+            'Routes.description',
+            'Routes.createdAt',
+            'Routes.updatedAt',
+            'Routes.public',
+            'Routes.color',
+            'Routes.time',
+            'Pins.id',
+            'Pins.ranking',
+            'Pins.locationName',
+            'Pins.lotAddress',
+            'Pins.roadAddress',
+            'Pins.ward',
+            'Pictures.fileName',
+          ])
+          .where(
+            'Routes.public = 1 AND Routes.time = :time AND Routes.id IN (:routeIds)',
+            {
+              time: time,
+              routeIds: routeIds,
+            },
+          )
+          .orderBy('Routes.createdAt')
+          .addOrderBy('Pins.ranking')
+          .addOrderBy('Pictures.id')
+          .getMany();
+
+        const response = {
+          code: 200,
+          routes: routes.slice(page * 5 - 5, page * 5),
+          count: routes.length,
+        };
+        response.routes.forEach((route) => {
+          let fileName = null;
+          //핀들의 사진을 조회해서 가장 처음 사진을 대표 사진으로 한다.
+          for (let i = 0; i < route.Pins.length; i++) {
+            if (!route.Pins[i].Pictures.length) continue;
+            if (route.Pins[i].Pictures.length !== 0) {
+              fileName = route.Pins[i].Pictures[0].fileName;
+              break;
+            }
+          }
+
+          route['thumbnail'] = fileName;
+        });
+
+        return response;
+      } else {
+        //필터가 전부(구, 시간) 주어진 경우
+
+        //pinId로 그룹을 지정한 뒤, 일차하는 키위드의 수가 들어있는 keywordCount컬럼을 만든다.
+        const getPinIds = await this.pinsPlaceKeywordsRepository
+          .createQueryBuilder('PPR')
+          .where('PPR.keyword IN (:keywords)', { keywords: keywords })
+          .addSelect('COUNT(PPR.keyword) AS keywordCount')
+          .groupBy('PPR.pinId')
+          .getRawMany();
+
+        //주어진 키워드와 전부 일치하면(count 수와 키워드의 수가 같으면) 배열에 추가한다.
+        const pinIds = [];
+        getPinIds.forEach((obj) => {
+          if (Number(obj['keywordCount']) === keywords.length) {
+            pinIds.push(obj['PPR_pinId']);
+          }
+        });
+
+        //일치하는 핀이 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (pinIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
+
+        //핀들을 아이디, '구'의 정보로 찾아서 루트의 아이디를 가져온다.
+        const getIds = await this.pinsRepository
+          .createQueryBuilder()
+          .select(['routesId'])
+          .distinct(true)
+          .where('id IN (:id) AND ward = :ward', { id: pinIds, ward: location })
+          .getRawMany();
+
+        //중복이 제거된 루트의 아이디들
+        const routeIds = [];
+        getIds.forEach((obj) => routeIds.push(obj['routesId']));
+
+        //일치하는 루트가 없으면(검색결과가 없으면) 빈 배열을 반환한다.
+        if (routeIds.length === 0) {
+          return {
+            code: 200,
+            routes: [],
+            count: 0,
+          };
+        }
+
+        const routes = await this.routesRepository
+          .createQueryBuilder('Routes')
+          .leftJoinAndSelect('Routes.Pins', 'Pins')
+          .leftJoinAndSelect('Pins.Pictures', 'Pictures')
+          .select([
+            'Routes.id',
+            'Routes.userId',
+            'Routes.routeName',
+            'Routes.description',
+            'Routes.createdAt',
+            'Routes.updatedAt',
+            'Routes.public',
+            'Routes.color',
+            'Routes.time',
+            'Pins.id',
+            'Pins.ranking',
+            'Pins.locationName',
+            'Pins.lotAddress',
+            'Pins.roadAddress',
+            'Pins.ward',
+            'Pictures.fileName',
+          ])
+          .where(
+            'Routes.public = 1 AND Routes.time = :time AND Routes.id IN (:routeIds)',
+            {
+              time: time,
+              routeIds: routeIds,
+            },
+          )
+          .orderBy('Routes.createdAt')
+          .addOrderBy('Pins.ranking')
+          .addOrderBy('Pictures.id')
+          .getMany();
+
+        const response = {
+          code: 200,
+          routes: routes.slice(page * 5 - 5, page * 5),
+          count: routes.length,
+        };
+        response.routes.forEach((route) => {
+          let fileName = null;
+          //핀들의 사진을 조회해서 가장 처음 사진을 대표 사진으로 한다.
+          for (let i = 0; i < route.Pins.length; i++) {
+            if (!route.Pins[i].Pictures.length) continue;
+            if (route.Pins[i].Pictures.length !== 0) {
+              fileName = route.Pins[i].Pictures[0].fileName;
+              break;
+            }
+          }
+
+          route['thumbnail'] = fileName;
+        });
+
+        return response;
+      }
+    }
   }
 
   // 핀을 추가하기 위해서는 새로 생성된 루트의 아이디가 필요하므로, 루트를 생성하고, 루트 아이디를 이용해 핀들을 생성한다.
@@ -176,9 +900,18 @@ export class RoutesService {
       //DB핀들 업데이트 dbPinId가 빈 배열일 경우 실행되지 않는다.
       await this.pinsRepository.save(dbPinId);
 
+      //키워드 테이블을 갱신하기 위한 객체
+      const keywordObj = {};
+
       //pin각각에 routeId를 추가해 준다.
       pins.forEach((pin) => {
         pin['routesId'] = newRoute.id;
+        let keywords = [];
+        //기본값으로 구 정보 추가
+        keywords.push(pin.ward);
+        keywords = [...keywords, ...pin.keywords];
+
+        keywordObj[pin.ranking] = keywords;
       });
 
       //새 핀들 생성
@@ -187,8 +920,24 @@ export class RoutesService {
 
       //핀을 생성한 뒤, 핀의 아이디와 핀의 랭킹을 매칭하기 위한 객체
       const mapPinIdRanking = {};
-      insertPinsResult.forEach((pin) => {
+      insertPinsResult.forEach(async (pin) => {
         mapPinIdRanking[pin.ranking] = pin.id;
+
+        //키워드 테이블과 조인 테이블을 갱신한다.
+        const keywords = [];
+        //구의 정보를 기본 키워드로 넣는다
+        keywords.push({ keyword: pin.ward });
+        for (let i = 0; i < pin.keywords.length; i++) {
+          keywords.push({ keyword: pin.keywords[i] });
+        }
+
+        //키워드 업데이트의 결과
+        const newKeywords = await this.placeKeywordsRepository.save(keywords);
+        newKeywords.forEach((obj) => {
+          obj['pinId'] = pin.id;
+        });
+        //jointable을 갱신한다.
+        await this.pinsPlaceKeywordsRepository.save(newKeywords);
       });
 
       //사진들을 핀 별로 분리하기 위한 배열
@@ -367,24 +1116,57 @@ export class RoutesService {
         this.configService.get<string>('ACCESS_SECRET'),
       );
 
-      const result = await this.pinsRepository
+      //키워드를 업데이트 한다.(없는 경우 새로 생성한다.)
+      const keywords = [];
+      //구의 정보를 기본 키워드로 넣는다
+      keywords.push({ keyword: pin.ward });
+      for (let i = 0; i < pin.keywords.length; i++) {
+        keywords.push({ keyword: pin.keywords[i] });
+      }
+      //키워드 업데이트의 결과
+      const newKeywords = await this.placeKeywordsRepository.save(keywords);
+      //pin객체 안에 관계명인 PlaceKeywords를 key로 넣는다.
+      delete pin.keywords;
+      // pin['PlaceKeywords'] = newKeywords;
+
+      //update시 leftjoin이 불가하기 때문에(https://github.com/typeorm/typeorm/issues/564) select문으로 업데이트가 가능한 레코드가 있는지 조회한다.
+      //조건(유저, 루트 id, 핀 id)에 맞는 핀이 있는지 조회한다.
+      const isExist = await this.pinsRepository
         .createQueryBuilder('Pins')
         .leftJoin('Pins.Routes', 'Routes')
-        .update('Pins')
-        .set(pin)
         .where(
           'Pins.routesId = :routesId AND Pins.id = :id AND Routes.userId = :userId',
-          {
-            routesId: routeId,
-            id: pinId,
-            userId: decode['id'],
-          },
+          { routesId: routeId, id: pinId, userId: decode['id'] },
         )
-        .execute();
-
-      if (!result.affected) {
+        .getOne();
+      //레코드가 없는 경우(다른 유저, 또는 존재하지 않는 루트나 핀을 업데이트 하려는 경우)
+      if (!isExist) {
         throw new UnauthorizedException();
       }
+
+      //핀 업데이트
+      await this.pinsRepository
+        .createQueryBuilder()
+        .update('Pins')
+        .set(pin)
+        .where('Pins.routesId = :routesId AND Pins.id = :id', {
+          routesId: routeId,
+          id: pinId,
+        })
+        .execute();
+
+      //jointable을 갱신하기 위해 기존 레코드를 삭제한다.
+      await this.pinsPlaceKeywordsRepository
+        .createQueryBuilder()
+        .delete()
+        .where('pinId = :pinId', { pinId: pinId })
+        .execute();
+
+      //jointable을 갱신한다.
+      newKeywords.forEach((obj) => {
+        obj['pinId'] = pinId;
+      });
+      await this.pinsPlaceKeywordsRepository.save(newKeywords);
 
       const newPictures = [];
       files.forEach((file) => {
@@ -531,7 +1313,24 @@ export class RoutesService {
 
       //핀을 생성한다.
       const newPin = { ...pin, routesId: routeId };
+      //생성된 핀에 대한 정보
       const createPinResult = await this.pinsRepository.save(newPin);
+
+      //키워드를 업데이트 한다.(없는 경우 새로 생성한다.)
+      const keywords = [];
+      //구의 정보를 기본 키워드로 넣는다
+      keywords.push({ keyword: pin.ward });
+      for (let i = 0; i < pin.keywords.length; i++) {
+        keywords.push({ keyword: pin.keywords[i] });
+      }
+      //키워드 업데이트의 결과
+      const newKeywords = await this.placeKeywordsRepository.save(keywords);
+
+      //jointable을 갱신한다.
+      newKeywords.forEach((obj) => {
+        obj['pinId'] = createPinResult.id;
+      });
+      await this.pinsPlaceKeywordsRepository.save(newKeywords);
 
       const dbPins = await this.pinsRepository
         .createQueryBuilder('Pins')
@@ -553,8 +1352,11 @@ export class RoutesService {
           fileName: file.path,
         });
       });
+
       //DB에 사진 정보 저장
       await this.picturesRepository.save(newPictures);
+
+      //placeKeyword 테이블에 키워드들 추가
     } catch (err) {
       //잘못된 칼럼 정보를 추가하려는 경우
       if (err instanceof QueryFailedError) {
@@ -568,9 +1370,5 @@ export class RoutesService {
         throw new InternalServerErrorException();
       }
     }
-  }
-
-  async testKeyword() {
-    console.log(await this.placeKeywords.find());
   }
 }

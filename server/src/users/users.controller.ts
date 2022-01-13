@@ -8,11 +8,15 @@ import {
   Delete,
   Res,
   Req,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-userDto';
 import { Request, Response } from 'express';
+import { multerOptions } from '../routes/routes.multerOpt';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UsersController {
@@ -39,6 +43,7 @@ export class UsersController {
       secure: true,
     });
     return res.status(200).json({
+      id: userInfo.id,
       userName: userInfo.nickName,
       profile: userInfo.profileImage,
       email: userInfo.email,
@@ -62,6 +67,7 @@ export class UsersController {
       secure: true,
     });
     return res.status(200).json({
+      id: userInfo.id,
       userName: userInfo.nickName,
       profile: userInfo.profileImage,
       email: userInfo.email,
@@ -83,6 +89,7 @@ export class UsersController {
       secure: true,
     });
     return res.status(200).json({
+      id: userInfo.id,
       userName: userInfo.nickName,
       profile: userInfo.profileImage,
       email: userInfo.email,
@@ -104,6 +111,7 @@ export class UsersController {
       secure: true,
     });
     return res.status(200).json({
+      id: userInfo.id,
       userName: userInfo.nickName,
       profile: userInfo.profileImage,
       email: userInfo.email,
@@ -130,8 +138,6 @@ export class UsersController {
     }
     try {
       const accessToken = req.cookies.accessToken;
-      // const accessToken =
-      //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjIsIm5pY2tOYW1lIjoieWF5d3dAbmF2ZXIuY29tIiwiZW1haWwiOiJ5YXl3d0BuYXZlci5jb20iLCJvYXV0aExvZ2luIjoibmF2ZXIiLCJzYWx0ZWRQYXNzd29yZCI6bnVsbCwib2F1dGhDSSI6ImtCYTNOekRnelhSbmlJbnRQOTVFemZMLUpPalRDdnMwMFVvcjZvbTBpV3MiLCJwcm9maWxlSW1hZ2UiOm51bGwsImlhdCI6MTY0MTkxNDg3MCwiZXhwIjoxNjQxOTM2NDcwfQ.ObjUOjSAVvUNIB6obez7iL6_1Vd6rle01UgDakTRK6Y';
       await this.usersService.checkPassword(accessToken, password);
       return res.status(200).json({ message: '비밀번호가 일치합니다' });
     } catch (err) {
@@ -141,8 +147,9 @@ export class UsersController {
 
   // 프로필 회원 정보 수정
   @Patch('profile')
+  @UseInterceptors(FileInterceptor('file', multerOptions))
   async updateProfile(
-    @Body() profile: string,
+    @UploadedFile() file: Express.Multer.File,
     @Res() res: Response,
     @Req() req: Request,
   ) {
@@ -152,12 +159,8 @@ export class UsersController {
     try {
       console.log(req.cookies);
       const accessToken = req.cookies.accessToken;
-      // const accessToken =
-      //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjIsIm5pY2tOYW1lIjoieWF5d3dAbmF2ZXIuY29tIiwiZW1haWwiOiJ5YXl3d0BuYXZlci5jb20iLCJvYXV0aExvZ2luIjoibmF2ZXIiLCJzYWx0ZWRQYXNzd29yZCI6bnVsbCwib2F1dGhDSSI6ImtCYTNOekRnelhSbmlJbnRQOTVFemZMLUpPalRDdnMwMFVvcjZvbTBpV3MiLCJwcm9maWxlSW1hZ2UiOm51bGwsImlhdCI6MTY0MTkxNDg3MCwiZXhwIjoxNjQxOTM2NDcwfQ.ObjUOjSAVvUNIB6obez7iL6_1Vd6rle01UgDakTRK6Y';
-      await this.usersService.updateProfile(accessToken, profile);
-      return res
-        .status(200)
-        .json({ message: '프로필 이미지가 변경되었습니다' });
+      const profile = await this.usersService.updateProfile(accessToken, file);
+      return res.status(200).json({ profile: profile });
     } catch (err) {
       return err;
     }
@@ -176,8 +179,6 @@ export class UsersController {
     try {
       console.log(req.cookies);
       const accessToken = req.cookies.accessToken;
-      // const accessToken =
-      //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjIsIm5pY2tOYW1lIjoieWF5d3dAbmF2ZXIuY29tIiwiZW1haWwiOiJ5YXl3d0BuYXZlci5jb20iLCJvYXV0aExvZ2luIjoibmF2ZXIiLCJzYWx0ZWRQYXNzd29yZCI6bnVsbCwib2F1dGhDSSI6ImtCYTNOekRnelhSbmlJbnRQOTVFemZMLUpPalRDdnMwMFVvcjZvbTBpV3MiLCJwcm9maWxlSW1hZ2UiOm51bGwsImlhdCI6MTY0MTkxNDg3MCwiZXhwIjoxNjQxOTM2NDcwfQ.ObjUOjSAVvUNIB6obez7iL6_1Vd6rle01UgDakTRK6Y';
       await this.usersService.updateUserName(accessToken, userName);
       return res.status(200).json({ message: '닉네임이 변경되었습니다' });
     } catch (err) {
@@ -197,8 +198,6 @@ export class UsersController {
     try {
       console.log(req.cookies);
       const accessToken = req.cookies.accessToken;
-      // const accessToken =
-      //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjIsIm5pY2tOYW1lIjoieWF5d3dAbmF2ZXIuY29tIiwiZW1haWwiOiJ5YXl3d0BuYXZlci5jb20iLCJvYXV0aExvZ2luIjoibmF2ZXIiLCJzYWx0ZWRQYXNzd29yZCI6bnVsbCwib2F1dGhDSSI6ImtCYTNOekRnelhSbmlJbnRQOTVFemZMLUpPalRDdnMwMFVvcjZvbTBpV3MiLCJwcm9maWxlSW1hZ2UiOm51bGwsImlhdCI6MTY0MTkxNDg3MCwiZXhwIjoxNjQxOTM2NDcwfQ.ObjUOjSAVvUNIB6obez7iL6_1Vd6rle01UgDakTRK6Y';
       await this.usersService.updatePassword(accessToken, password);
       return res.status(200).json({ message: '비밀번호가 변경되었습니다' });
     } catch (err) {
@@ -214,8 +213,6 @@ export class UsersController {
     }
     try {
       const accessToken = req.cookies.accessToken;
-      // const accessToken =
-      //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjIsIm5pY2tOYW1lIjoieWF5d3dAbmF2ZXIuY29tIiwiZW1haWwiOiJ5YXl3d0BuYXZlci5jb20iLCJvYXV0aExvZ2luIjoibmF2ZXIiLCJzYWx0ZWRQYXNzd29yZCI6bnVsbCwib2F1dGhDSSI6ImtCYTNOekRnelhSbmlJbnRQOTVFemZMLUpPalRDdnMwMFVvcjZvbTBpV3MiLCJwcm9maWxlSW1hZ2UiOm51bGwsImlhdCI6MTY0MTkxNDg3MCwiZXhwIjoxNjQxOTM2NDcwfQ.ObjUOjSAVvUNIB6obez7iL6_1Vd6rle01UgDakTRK6Y';
       await this.usersService.remove(accessToken);
       res.cookie('accessToken', 'success', {
         httpOnly: true,
@@ -237,8 +234,6 @@ export class UsersController {
     }
     try {
       const accessToken = req.cookies.accessToken;
-      // const accessToken =
-      //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjIsIm5pY2tOYW1lIjoieWF5d3dAbmF2ZXIuY29tIiwiZW1haWwiOiJ5YXl3d0BuYXZlci5jb20iLCJvYXV0aExvZ2luIjoibmF2ZXIiLCJzYWx0ZWRQYXNzd29yZCI6bnVsbCwib2F1dGhDSSI6ImtCYTNOekRnelhSbmlJbnRQOTVFemZMLUpPalRDdnMwMFVvcjZvbTBpV3MiLCJwcm9maWxlSW1hZ2UiOm51bGwsImlhdCI6MTY0MTkxNDg3MCwiZXhwIjoxNjQxOTM2NDcwfQ.ObjUOjSAVvUNIB6obez7iL6_1Vd6rle01UgDakTRK6Y';
       await this.usersService.logOut(accessToken);
       //아무것도 없는 쿠키 전달
       res.cookie('accessToken', 'success', {
