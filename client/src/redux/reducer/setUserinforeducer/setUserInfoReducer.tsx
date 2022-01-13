@@ -2,7 +2,7 @@ import initialState from '../initialState';
 import { SET_USERINFO } from '../../actions';
 import type { State } from '../initialState';
 import type { Action } from '../../actions/index';
-
+import { PURGE } from 'redux-persist';
 const setUserInfoReducer = (
   state: State = initialState,
   action: Action,

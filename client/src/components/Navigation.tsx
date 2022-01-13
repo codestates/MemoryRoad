@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/reducer';
 import { loginModal, setUserInfo } from '../redux/actions/index';
 import axios from 'axios';
-import { persistor } from '..';
+import { persistor } from '../index';
 
 function Nav() {
   const [isOpen, SetOpen] = useState(false);
@@ -72,15 +72,15 @@ function Nav() {
             onClick={() => {
               if (userinfo.isLogin) {
                 navigate('/');
-                dispatch(setUserInfo(false, null, null, null, null, null));
+                window.localStorage.clear(); // 로컬 스토리지를 비우고
+                window.location.reload(); // 새로고침
+                // persistor.purge(); // 로그아웃 누르면 상태가 안바뀜 , 다시 새로고침 하면 상태가 로그아웃 상태가됨
+                // dispatch(setUserInfo(false, null, null, null, null, null));
                 // persist purge를 이용?
                 console.log(userinfo);
-                // const userData = window.localStorage.getItem(userinfo);
-                // console.log(userData);
               } else {
                 dispatch(loginModal(true));
               }
-              console.log(modalLogin);
               // loginButtonHandler();
             }}
             onKeyDown={() => {

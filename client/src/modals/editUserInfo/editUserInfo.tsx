@@ -9,6 +9,7 @@ import {
 } from '../../redux/actions/index';
 import { RootState } from '../../redux/reducer';
 import axios from 'axios';
+import { blob } from 'node:stream/consumers';
 function EditUserInfo({ isvalid, url }: any) {
   const dispatch = useDispatch();
   const userinfo = useSelector(
@@ -43,32 +44,45 @@ function EditUserInfo({ isvalid, url }: any) {
         );
         previewImage.src = e.target.result;
       };
-      setprofile(image.files[0].name);
-      // console.log(image.files[0].name);
+      // console.log(image.files[0]);
+      setprofile(image.files[0]);
       reader.readAsDataURL(image.files[0]);
       return true;
     } else {
-      setprofile(userinfo.profile);
+      setprofile(userinfo.profile); // 유저의 원래 프로필
       return false;
     }
   };
   // 프로필 사진을 수정하는 API요청
   useEffect(() => {
-    console.log(profile);
-    axios.patch(`${url}/users/profile`, { profile: profile }).then((res) => {
-      if (res.status === 200) {
-        dispatch(
-          setUserInfo(
-            true,
-            userinfo.id,
-            userinfo.email,
-            userinfo.username,
-            profile,
-            userinfo.OAuthLogin,
-          ),
-        );
-      }
+    const getelement: any = document.getElementById('ProfileImg');
+    const profileImg = getelement.files[0];
+    const formData = new FormData(); // 폼데이터 형식으로 보냄
+    formData.append('profile', profileImg);
+
+    // blob : 사진을 저장할 때 사용함
+    const blob = new Blob([JSON.stringify(profileImg)], {
+      type: 'application/json',
     });
+
+    axios
+      .patch(`${url}/users/profile`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch(
+            setUserInfo(
+              true,
+              userinfo.id,
+              userinfo.email,
+              userinfo.username,
+              res.data.profile,
+              userinfo.OAuthLogin,
+            ),
+          );
+        }
+      });
   }, [profile]);
 
   // 닉네임 수정버튼을 누를 때 API 요청
@@ -83,7 +97,7 @@ function EditUserInfo({ isvalid, url }: any) {
                 true,
                 userinfo.id,
                 userinfo.email,
-                username,
+                res.data.username,
                 userinfo.profile,
                 userinfo.OAuthLogin,
               ),
@@ -141,6 +155,7 @@ function EditUserInfo({ isvalid, url }: any) {
                     id="ProfileImg"
                     name="ProfileImage"
                     onChange={(e) => {
+                      console.log(e.target.name);
                       readProfile(e.target);
                       if (readProfile(e.target)) {
                         setShowProfile(true);
