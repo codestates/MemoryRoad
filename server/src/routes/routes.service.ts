@@ -27,6 +27,11 @@ import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { PlaceKeywordEntity } from './entities/placeKeyword.entity';
 import { PinsPlaceKeywordEntity } from './entities/pinsPlaceKeyword.entity';
+import {
+  runOnTransactionCommit,
+  runOnTransactionRollback,
+  Transactional,
+} from 'typeorm-transactional-cls-hooked';
 
 @Injectable()
 export class RoutesService {
@@ -825,12 +830,19 @@ export class RoutesService {
   }
 
   // 핀을 추가하기 위해서는 새로 생성된 루트의 아이디가 필요하므로, 루트를 생성하고, 루트 아이디를 이용해 핀들을 생성한다.
+  @Transactional() //open a transaction
   async createRoute(
     routeStr: string,
     files: Array<Express.Multer.File>,
     accessToken: string | undefined,
   ) {
     try {
+      //트랜잭션이 롤백 됐을 때 실행되는 콜백 함수를 인자로 가지는 Hook. 메소드의 위치와 관계 없이 롤백이 일어나면 콜백 함수가 실행된다.
+      runOnTransactionRollback((err) => {
+        console.log('------Rollback------');
+        console.log(err);
+      });
+
       const decode = jwt.verify(
         accessToken,
         this.configService.get<string>('ACCESS_SECRET'),
@@ -920,25 +932,29 @@ export class RoutesService {
 
       //핀을 생성한 뒤, 핀의 아이디와 핀의 랭킹을 매칭하기 위한 객체
       const mapPinIdRanking = {};
-      insertPinsResult.forEach(async (pin) => {
-        mapPinIdRanking[pin.ranking] = pin.id;
+      //병렬적으로 비동기 구문을 처리한다
+      //forEach고차함수는 독립적인 함수를 생성하므로 안에서 await를 사용했을 경우 의도대로 동작하지 않을 수 있다.(https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop)
+      await Promise.all(
+        insertPinsResult.map(async (pin) => {
+          mapPinIdRanking[pin.ranking] = pin.id;
 
-        //키워드 테이블과 조인 테이블을 갱신한다.
-        const keywords = [];
-        //구의 정보를 기본 키워드로 넣는다
-        keywords.push({ keyword: pin.ward });
-        for (let i = 0; i < pin.keywords.length; i++) {
-          keywords.push({ keyword: pin.keywords[i] });
-        }
+          //키위드 테이블과 조인 테이블을 갱신한다.
+          const keywords = [];
+          //구의 정보를 기본 키워드로 넣는다.
+          keywords.push({ keyword: pin.ward });
+          for (let i = 0; i < pin.keywords.length; i++) {
+            keywords.push({ keyword: pin.keywords[i] });
+          }
 
-        //키워드 업데이트의 결과
-        const newKeywords = await this.placeKeywordsRepository.save(keywords);
-        newKeywords.forEach((obj) => {
-          obj['pinId'] = pin.id;
-        });
-        //jointable을 갱신한다.
-        await this.pinsPlaceKeywordsRepository.save(newKeywords);
-      });
+          //키위드 업데이트의 결과
+          const newKeywords = await this.placeKeywordsRepository.save(keywords);
+          for (const obj of newKeywords) {
+            obj['pinId'] = pin.id;
+          }
+          //jointable을 갱신한다.
+          await this.pinsPlaceKeywordsRepository.save(newKeywords);
+        }),
+      );
 
       //사진들을 핀 별로 분리하기 위한 배열
       const eachPicture = [];
@@ -966,12 +982,19 @@ export class RoutesService {
     }
   }
 
+  @Transactional() //open a transaction
   async updateRoute(
     routeId: number,
     route: PatchRouteDto,
     accessToken: string | undefined,
   ) {
     try {
+      //트랜잭션이 롤백 됐을 때 실행되는 콜백 함수를 인자로 가지는 Hook. 메소드의 위치와 관계 없이 롤백이 일어나면 콜백 함수가 실행된다.
+      runOnTransactionRollback((err) => {
+        console.log('------Rollback------');
+        console.log(err);
+      });
+
       const decode = jwt.verify(
         accessToken,
         this.configService.get<string>('ACCESS_SECRET'),
@@ -1000,8 +1023,15 @@ export class RoutesService {
     }
   }
 
+  @Transactional() //open a transaction
   async deleteRoute(routeId: number, accessToken: string | undefined) {
     try {
+      //트랜잭션이 롤백 됐을 때 실행되는 콜백 함수를 인자로 가지는 Hook. 메소드의 위치와 관계 없이 롤백이 일어나면 콜백 함수가 실행된다.
+      runOnTransactionRollback((err) => {
+        console.log('------Rollback------');
+        console.log(err);
+      });
+
       const decode = jwt.verify(
         accessToken,
         this.configService.get<string>('ACCESS_SECRET'),
@@ -1086,6 +1116,7 @@ export class RoutesService {
     }
   }
 
+  @Transactional() //open a transaction
   async updatePin(
     routeId: number,
     pinId: number,
@@ -1094,6 +1125,12 @@ export class RoutesService {
     accessToken: string | undefined,
   ) {
     try {
+      //트랜잭션이 롤백 됐을 때 실행되는 콜백 함수를 인자로 가지는 Hook. 메소드의 위치와 관계 없이 롤백이 일어나면 콜백 함수가 실행된다.
+      runOnTransactionRollback((err) => {
+        console.log('------Rollback------');
+        console.log(err);
+      });
+
       //문자열 JSON을 parse한 뒤, PatchPinDto타입의 객체를 생성한다.
       const pin = plainToClass(PatchPinDto, JSON.parse(pinStr));
 
@@ -1207,12 +1244,19 @@ export class RoutesService {
     }
   }
 
+  @Transactional() //open a transaction
   async deletePin(
     routeId: number,
     pinId: number,
     accessToken: string | undefined,
   ) {
     try {
+      //트랜잭션이 롤백 됐을 때 실행되는 콜백 함수를 인자로 가지는 Hook. 메소드의 위치와 관계 없이 롤백이 일어나면 콜백 함수가 실행된다.
+      runOnTransactionRollback((err) => {
+        console.log('------Rollback------');
+        console.log(err);
+      });
+
       const decode = jwt.verify(
         accessToken,
         this.configService.get<string>('ACCESS_SECRET'),
@@ -1274,6 +1318,7 @@ export class RoutesService {
     }
   }
 
+  @Transactional() //open a transaction
   async createPin(
     routeId: number,
     pinStr: string,
@@ -1281,9 +1326,17 @@ export class RoutesService {
     accessToken: string | undefined,
   ) {
     try {
+      //트랜잭션이 성공적으로 커밋 됐을 때 실행되는 콜백 함수를 인자로 가지는 Hook
+      // runOnTransactionCommit(() => console.log('-------success-------'));
+
+      //트랜잭션이 롤백 됐을 때 실행되는 콜백 함수를 인자로 가지는 Hook. 메소드의 위치와 관계 없이 롤백이 일어나면 콜백 함수가 실행된다.
+      runOnTransactionRollback((err) => {
+        console.log('------Rollback------');
+        console.log(err);
+      });
+
       //문자열 JSON을 parse한 뒤, PatchPinDto타입의 객체를 생성한다.
       const pin = plainToClass(PatchPinDto, JSON.parse(pinStr));
-
       //새로 생성한 객체의 유효성 검증
       //유효하지 않은 키가 있으면 pinValError 배열에 추가된다.
       const pinValError = await validate(pin, {
@@ -1323,6 +1376,7 @@ export class RoutesService {
       for (let i = 0; i < pin.keywords.length; i++) {
         keywords.push({ keyword: pin.keywords[i] });
       }
+      //placeKeyword 테이블에 키워드들 추가
       //키워드 업데이트의 결과
       const newKeywords = await this.placeKeywordsRepository.save(keywords);
 
@@ -1355,8 +1409,6 @@ export class RoutesService {
 
       //DB에 사진 정보 저장
       await this.picturesRepository.save(newPictures);
-
-      //placeKeyword 테이블에 키워드들 추가
     } catch (err) {
       //잘못된 칼럼 정보를 추가하려는 경우
       if (err instanceof QueryFailedError) {
@@ -1372,6 +1424,7 @@ export class RoutesService {
     }
   }
 
+  @Transactional() //open a transaction
   async deletePicture(
     routeId: number,
     pinId: number,
@@ -1379,6 +1432,12 @@ export class RoutesService {
     accessToken: string | undefined,
   ) {
     try {
+      //트랜잭션이 롤백 됐을 때 실행되는 콜백 함수를 인자로 가지는 Hook. 메소드의 위치와 관계 없이 롤백이 일어나면 콜백 함수가 실행된다.
+      runOnTransactionRollback((err) => {
+        console.log('------Rollback------');
+        console.log(err);
+      });
+
       const decode = jwt.verify(
         accessToken,
         this.configService.get<string>('ACCESS_SECRET'),
@@ -1413,7 +1472,6 @@ export class RoutesService {
         `${join(__dirname, '..', '..', '..')}/${deleteResult.fileName}`,
       );
     } catch (err) {
-      console.log(err);
       if (err.status === 401) {
       } else if (err instanceof JsonWebTokenError) {
         throw err;
