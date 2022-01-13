@@ -210,7 +210,6 @@ export class RoutesController {
     });
   }
 
-  //TODO: 해당 사용자가 작성한 루트의 핀만 생성할 수 있다. 사진도 같이 추가하기
   //해당 루트에 핀을 새로 생성한다.
   //filesInterceptor는 세 가지 인자를 받는다. 첫 번째 인자는 HTML양식에서 필드 이름이다.
   //두 번째 인자는 업로드 가능한 파일의 숫자이다(10개)
@@ -236,6 +235,27 @@ export class RoutesController {
     return res.status(201).json({
       code: 201,
       message: 'created',
+    });
+  }
+
+  //핀의 사진을 삭제한다.
+  @Delete('/:routeId/pins/:pinId/pictures/:pictureId')
+  async deletePicture(
+    @Param('routeId') routeId: number,
+    @Param('pinId') pinId: number,
+    @Param('pictureId') pictureId: number,
+    @Req() request: Request,
+    @Res() res: Response,
+  ) {
+    await this.routesService.deletePicture(
+      routeId,
+      pinId,
+      pictureId,
+      request.cookies['accessToken'],
+    );
+    return res.status(200).json({
+      code: 200,
+      message: 'deleted',
     });
   }
 }
