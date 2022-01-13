@@ -20,14 +20,14 @@ export class UserEntity {
   email: string;
 
   @Column({ length: 10, nullable: true })
-  oauthLogin: string | null;
+  oauthLogin?: string | null;
 
 
   @Column({ length: 100, nullable: true })
-  saltedPassword: string | null;
+  saltedPassword?: string | null;
 
   @Column({ length: 255, nullable: true })
-  oauthCI: string | null;
+  oauthCI?: string | null;
 
   @OneToMany(() => RouteEntity, (Routes) => Routes.userId, {
     cascade: true,
@@ -36,6 +36,5 @@ export class UserEntity {
   Routes?: RouteEntity[];
 
   @Column({ length: 255, nullable: true })
-  profileImage: string | null;
-
+  profileImage?: string | null;
 }
