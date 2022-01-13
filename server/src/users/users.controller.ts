@@ -8,12 +8,15 @@ import {
   Delete,
   Res,
   Req,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-userDto';
 import { Request, Response } from 'express';
+import { multerOptions } from '../routes/routes.multerOpt';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UsersController {
@@ -21,112 +24,182 @@ export class UsersController {
 
   //회원가입
   @Post()
-  async create(@Body() createUserDto: CreateUserDto, @Res() res) {
+  async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
     const createUser = await this.usersService.create(createUserDto);
-    res.status(201).send({ createUser, message: '회원 가입 성공' });
+    return res.status(201).send({ createUser, message: '회원 가입 성공' });
   }
 
   //oauth 카카오
   @Post('/auth/oauth/kakao')
   async kakaoLogin(@Req() req: Request, @Res() res: Response) {
-    const accessToken = await this.usersService.kakao(req.body);
+    const userInfo = await this.usersService.kakao(req.body);
+    const accessToken: string = await this.usersService.getAccessToken(
+      userInfo,
+    );
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       maxAge: 5 * 60 * 60 * 1000,
       sameSite: 'none',
       secure: true,
     });
-    res.status(200).send({ message: '카카오 로그인 했습니다.' });
+    return res.status(200).json({
+      id: userInfo.id,
+      userName: userInfo.nickName,
+      profile: userInfo.profileImage,
+      email: userInfo.email,
+      oauthLogin: userInfo.oauthLogin,
+    });
   }
 
   //oauth 네이버
   @Post('/auth/oauth/naver')
   async naverLogin(@Req() req: Request, @Res() res: Response) {
-    const accessToken = await this.usersService.naver(req.body);
+    const userInfo = await this.usersService.naver(req.body);
+    const accessToken: string = await this.usersService.getAccessToken(
+      userInfo,
+    );
+    console.log(accessToken);
+    console.log(userInfo);
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       maxAge: 5 * 60 * 60 * 1000,
       sameSite: 'none',
       secure: true,
     });
-    res.status(200).send({ message: '네이버 로그인 했습니다.' });
+    return res.status(200).json({
+      id: userInfo.id,
+      userName: userInfo.nickName,
+      profile: userInfo.profileImage,
+      email: userInfo.email,
+      oauthLogin: userInfo.oauthLogin,
+    });
   }
 
   //oauth 구글
   @Post('/auth/oauth/google')
   async googleLogin(@Req() req: Request, @Res() res: Response) {
-    const accessToken = await this.usersService.google(req.body);
+    const userInfo = await this.usersService.google(req.body);
+    const accessToken: string = await this.usersService.getAccessToken(
+      userInfo,
+    );
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       maxAge: 5 * 60 * 60 * 1000,
       sameSite: 'none',
       secure: true,
     });
-    res.status(200).send({ message: '구글 로그인 했습니다.' });
+    return res.status(200).json({
+      id: userInfo.id,
+      userName: userInfo.nickName,
+      profile: userInfo.profileImage,
+      email: userInfo.email,
+      oauthLogin: userInfo.oauthLogin,
+    });
   }
 
   //로컬 로그인
   @Post('/auth/local')
   async localLogin(@Body() loginUserDto: LoginUserDto, @Res() res: Response) {
-    const accessToken = await this.usersService.local(loginUserDto);
+    const userInfo = await this.usersService.local(loginUserDto);
+    const accessToken: string = await this.usersService.getAccessToken(
+      userInfo,
+    );
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       maxAge: 5 * 60 * 60 * 1000,
       sameSite: 'none',
       secure: true,
     });
-    res.status(200).send({ message: '로컬 로그인 했습니다.' });
+    return res.status(200).json({
+      id: userInfo.id,
+      userName: userInfo.nickName,
+      profile: userInfo.profileImage,
+      email: userInfo.email,
+      oauthLogin: userInfo.oauthLogin,
+    });
   }
 
   //중복된 이메일 여부 확인
   @Post('/auth/local/email')
-  async checkEmail(@Body('email') email: string, @Res() res) {
+  async checkEmail(@Body('email') email: string, @Res() res: Response) {
     const check = await this.usersService.checkEmail(email);
-    res.status(200).send({ check, message: '사용 가능한 이메일입니다' });
+    return res.status(200).send({ check, message: '사용 가능한 이메일입니다' });
   }
 
   //일치하는 비밀번호 확인
   @Post('/auth/local/password')
   async checkPassword(
     @Body('password') password: string,
-    @Res() res,
-    @Req() req,
+    @Res() res: Response,
+    @Req() req: Request,
   ) {
+    if (!req.cookies || !req.cookies.accessToken) {
+      return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
+    }
     try {
-      if (!req.cookies || !req.cookies.accessToken) {
-        return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
-      }
       const accessToken = req.cookies.accessToken;
-      // const accessToken =
-      //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTEsIm5pY2tOYW1lIjoieWF5d3dAbmF2ZXIuY29tIiwiZW1haWwiOiJ5YXl3d0BuYXZlci5jb20iLCJvYXV0aExvZ2luIjoibmF2ZXIiLCJzYWx0ZWRQYXNzd29yZCI6bnVsbCwib2F1dGhDSSI6ImtCYTNOekRnelhSbmlJbnRQOTVFemZMLUpPalRDdnMwMFVvcjZvbTBpV3MiLCJpYXQiOjE2NDE0NDQ4MzUsImV4cCI6MTY0MTQ2NjQzNX0.OcMyOMOZiLO-0V0w_ClBkVHK9-AmmbAzbndqcIV1k8s';
-      const check = await this.usersService.checkPassword(
-        accessToken,
-        password,
-      );
-      res.status(200).send({ check: check, message: '비밀번호가 일치합니다' });
+      await this.usersService.checkPassword(accessToken, password);
+      return res.status(200).json({ message: '비밀번호가 일치합니다' });
     } catch (err) {
       return err;
     }
   }
 
-  // 회원 정보 수정
-  @Patch()
-  async update(@Body() updateUserDto: UpdateUserDto, @Res() res, @Req() req) {
+  // 프로필 회원 정보 수정
+  @Patch('profile')
+  @UseInterceptors(FileInterceptor('file', multerOptions))
+  async updateProfile(
+    @UploadedFile() file: Express.Multer.File,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
     if (!req.cookies || !req.cookies.accessToken) {
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
     try {
       console.log(req.cookies);
       const accessToken = req.cookies.accessToken;
-      // const accessToken =
-      //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTEsIm5pY2tOYW1lIjoieWF5d3dAbmF2ZXIuY29tIiwiZW1haWwiOiJ5YXl3d0BuYXZlci5jb20iLCJvYXV0aExvZ2luIjoibmF2ZXIiLCJzYWx0ZWRQYXNzd29yZCI6bnVsbCwib2F1dGhDSSI6ImtCYTNOekRnelhSbmlJbnRQOTVFemZMLUpPalRDdnMwMFVvcjZvbTBpV3MiLCJpYXQiOjE2NDE0NDQ4MzUsImV4cCI6MTY0MTQ2NjQzNX0.OcMyOMOZiLO-0V0w_ClBkVHK9-AmmbAzbndqcIV1k8s';
-      const decoded = await this.usersService.update(
-        accessToken,
-        updateUserDto,
-      );
-      res
-        .status(200)
-        .json({ decoded: decoded, message: '회원 정보가 수정되었습니다' });
+      const profile = await this.usersService.updateProfile(accessToken, file);
+      return res.status(200).json({ profile: profile });
+    } catch (err) {
+      return err;
+    }
+  }
+
+  // 유저네임 회원 정보 수정
+  @Patch('/user-name')
+  async updateUserName(
+    @Body() userName: string,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
+    if (!req.cookies || !req.cookies.accessToken) {
+      return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
+    }
+    try {
+      console.log(req.cookies);
+      const accessToken = req.cookies.accessToken;
+      await this.usersService.updateUserName(accessToken, userName);
+      return res.status(200).json({ message: '닉네임이 변경되었습니다' });
+    } catch (err) {
+      return err;
+    }
+  }
+  // 비밀번호 정보 수정
+  @Patch('/password')
+  async updatePassword(
+    @Body() password: string,
+    @Res() res: Response,
+    @Req() req: Request,
+  ) {
+    if (!req.cookies || !req.cookies.accessToken) {
+      return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
+    }
+    try {
+      console.log(req.cookies);
+      const accessToken = req.cookies.accessToken;
+      await this.usersService.updatePassword(accessToken, password);
+      return res.status(200).json({ message: '비밀번호가 변경되었습니다' });
     } catch (err) {
       return err;
     }
@@ -134,16 +207,20 @@ export class UsersController {
 
   // 회원 탈퇴
   @Delete()
-  async remove(@Res() res, @Req() req) {
+  async remove(@Res() res: Response, @Req() req: Request) {
     if (!req.cookies || !req.cookies.accessToken) {
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
     try {
       const accessToken = req.cookies.accessToken;
-      // const accessToken =
-      //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTEsIm5pY2tOYW1lIjoieWF5d3dAbmF2ZXIuY29tIiwiZW1haWwiOiJ5YXl3d0BuYXZlci5jb20iLCJvYXV0aExvZ2luIjoibmF2ZXIiLCJzYWx0ZWRQYXNzd29yZCI6bnVsbCwib2F1dGhDSSI6ImtCYTNOekRnelhSbmlJbnRQOTVFemZMLUpPalRDdnMwMFVvcjZvbTBpV3MiLCJpYXQiOjE2NDE0NDQ4MzUsImV4cCI6MTY0MTQ2NjQzNX0.OcMyOMOZiLO-0V0w_ClBkVHK9-AmmbAzbndqcIV1k8s';
       await this.usersService.remove(accessToken);
-      res.status(200).send({ message: '회원에서 탈퇴하셨습니다' });
+      res.cookie('accessToken', 'success', {
+        httpOnly: true,
+        maxAge: 5 * 60 * 60 * 1000,
+        sameSite: 'none',
+        secure: true,
+      });
+      return res.status(200).send({ message: '회원에서 탈퇴하셨습니다' });
     } catch (err) {
       return err;
     }
@@ -151,14 +228,12 @@ export class UsersController {
 
   // 로그 아웃
   @Get('/auth')
-  async logOut(@Res() res, @Req() req) {
+  async logOut(@Res() res: Response, @Req() req: Request) {
     if (!req.cookies || !req.cookies.accessToken) {
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
     try {
       const accessToken = req.cookies.accessToken;
-      // const accessToken =
-      //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTEsIm5pY2tOYW1lIjoieWF5d3dAbmF2ZXIuY29tIiwiZW1haWwiOiJ5YXl3d0BuYXZlci5jb20iLCJvYXV0aExvZ2luIjoibmF2ZXIiLCJzYWx0ZWRQYXNzd29yZCI6bnVsbCwib2F1dGhDSSI6ImtCYTNOekRnelhSbmlJbnRQOTVFemZMLUpPalRDdnMwMFVvcjZvbTBpV3MiLCJpYXQiOjE2NDE0NDQ4MzUsImV4cCI6MTY0MTQ2NjQzNX0.OcMyOMOZiLO-0V0w_ClBkVHK9-AmmbAzbndqcIV1k8s';
       await this.usersService.logOut(accessToken);
       //아무것도 없는 쿠키 전달
       res.cookie('accessToken', 'success', {
@@ -167,7 +242,7 @@ export class UsersController {
         sameSite: 'none',
         secure: true,
       });
-      res.status(200).send({ message: '로그아웃 하셨습니다' });
+      return res.status(200).send({ message: '로그아웃 하셨습니다' });
     } catch (err) {
       return err;
     }

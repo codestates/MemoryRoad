@@ -1,28 +1,40 @@
+import { RouteEntity } from 'src/routes/entities/route.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   OneToMany,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity('Users')
-export class Users {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ length: 45 })
   nickName: string;
 
-  @Column({ length: 45, unique: true })
+  @Column({ length: 100, unique: true })
   email: string;
 
-  @Column({ length: 10 })
-  oauthLogin: string;
+  @Column({ length: 10, nullable: true })
+  oauthLogin?: string | null;
 
-  @Column({ length: 45 })
-  saltedPassword: string;
 
-  @Column()
-  oauthCI: string;
+  @Column({ length: 100, nullable: true })
+  saltedPassword?: string | null;
+
+  @Column({ length: 255, nullable: true })
+  oauthCI?: string | null;
+
+  @OneToMany(() => RouteEntity, (Routes) => Routes.userId, {
+    cascade: true,
+  })
+  @JoinColumn()
+  Routes?: RouteEntity[];
+
+  @Column({ length: 255, nullable: true })
+  profileImage?: string | null;
 }

@@ -17,6 +17,12 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "esModuleInterop": true,
-  }
+    "resolveJsonModule": true,
+    "esModuleInterop": true,//옛날 방식으로 된건 이거 안 하면 import가 안되서
+  },
+  "exclude": ["node_modules", "dist"],
+  "include": [
+    "./src/**/*",
+    "migration"
+  ]
 }

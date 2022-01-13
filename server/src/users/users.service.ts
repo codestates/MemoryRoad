@@ -7,9 +7,8 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getConnection } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-userDto';
-import { Users } from './entities/user.entity';
+import { UserEntity } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 // import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
@@ -21,18 +20,17 @@ import requestPromise from 'request-promise';
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(Users)
-    private usersRepository: Repository<Users>,
+    @InjectRepository(UserEntity)
+    private usersRepository: Repository<UserEntity>,
     // private httpService: HttpService,
     private configService: ConfigService,
   ) {}
-
   async create(createUserDto: CreateUserDto) {
     // 이메일과 닉네임을 확인해서 있는지 없는지 확인
-    const isExistemail: Users = await this.usersRepository.findOne({
+    const isExistemail: UserEntity = await this.usersRepository.findOne({
       email: createUserDto.email,
     });
-    const isExistNick: Users = await this.usersRepository.findOne({
+    const isExistNick: UserEntity = await this.usersRepository.findOne({
       nickName: createUserDto.nickName,
     });
     console.log('이게 콘솔임', isExistemail);
@@ -47,13 +45,14 @@ export class UsersService {
     const queryRunner = await getConnection().createQueryRunner();
     await queryRunner.startTransaction();
 
-    createUserDto.salt = await bcrypt.genSalt();
+    const salt = await bcrypt.genSalt();
     createUserDto.saltedPassword = await bcrypt.hash(
       createUserDto.password,
-      createUserDto.salt,
+      salt,
     );
+    console.log(createUserDto.saltedPassword);
     try {
-      const user: Users = await this.usersRepository.create(createUserDto);
+      const user: UserEntity = await this.usersRepository.create(createUserDto);
       await this.usersRepository.save(user);
       await queryRunner.commitTransaction();
     } catch (error) {
@@ -61,7 +60,7 @@ export class UsersService {
       throw new NotFoundException(`회원가입에 실패하였습니다.\n ${error}`);
     }
   }
-  async kakao(body: any) {
+  async kakao(body: any): Promise<UserEntity> {
     const options = {
       uri: 'https://kauth.kakao.com/oauth/token',
       method: 'POST',
@@ -89,60 +88,30 @@ export class UsersService {
     });
     const result = kakaoInfo.data;
     const profile = result.properties.profile_image;
-    // {
-    //   id: 2066492386,
-    //   connected_at: '2022-01-05T14:33:16Z',
-    //   properties: {
-    //     nickname: '양재영',
-    //     profile_image: 'http://k.kakaocdn.net/dn/crXJwu/btqUsRhQUx0/cH6CxkKCcteXkkcuRUulx1/img_640x640.jpg',
-    //     thumbnail_image: 'http://k.kakaocdn.net/dn/crXJwu/btqUsRhQUx0/cH6CxkKCcteXkkcuRUulx1/img_110x110.jpg'
-    //   },
-    //   kakao_account: {
-    //     profile_nickname_needs_agreement: false,
-    //     profile_image_needs_agreement: false,
-    //     profile: {
-    //       nickname: '양재영',
-    //       thumbnail_image_url: 'http://k.kakaocdn.net/dn/crXJwu/btqUsRhQUx0/cH6CxkKCcteXkkcuRUulx1/img_110x110.jpg',
-    //       profile_image_url: 'http://k.kakaocdn.net/dn/crXJwu/btqUsRhQUx0/cH6CxkKCcteXkkcuRUulx1/img_640x640.jpg',
-    //       is_default_image: false
-    //     },
-    //     has_email: true,
-    //     email_needs_agreement: false,
-    //     is_email_valid: true,
-    //     is_email_verified: true,
-    //     email: 'terrabattle@naver.com'
-    //   }
-    // }
-    let userInfo: Users = await this.usersRepository.findOne({
+    let userInfo: UserEntity = await this.usersRepository.findOne({
       email: result.kakao_account.email,
       oauthLogin: 'kakao',
     });
     if (!userInfo) {
-      const sameEmail: Users = await this.usersRepository.findOne({
+      const sameEmail: UserEntity = await this.usersRepository.findOne({
         email: result.kakao_account.email,
       });
       if (sameEmail) {
         throw new BadRequestException('이미 사용중인 이메일입니다');
       }
-      await this.usersRepository.save({
+      userInfo = await this.usersRepository.save({
         nickName: result.properties.nickname,
         email: result.kakao_account.email,
         oauthLogin: 'kakao',
         saltedPassword: null,
         oauthCI: result.id,
-      });
-      userInfo = await this.usersRepository.findOne({
-        email: result.email,
+        profileImage: profile,
       });
     }
-    const accessToken = jwt.sign(
-      { ...userInfo },
-      this.configService.get<string>('ACCESS_SECRET'),
-      { expiresIn: '6h' },
-    );
-    return accessToken;
+    console.log(userInfo);
+    return userInfo;
   }
-  async naver(body: any) {
+  async naver(body: any): Promise<UserEntity> {
     const redirectURI = encodeURI('https://localhost:3000');
     const code = body.authorizationCode;
     const state = body.state;
@@ -175,36 +144,30 @@ export class UsersService {
     const profile = result.profile_image; //프로필 사진은 전달 안 해주고 있음
     console.log(result);
     // 여기까지가 데이터 가져오는 코드
-    let userInfo: Users = await this.usersRepository.findOne({
+    let userInfo: UserEntity = await this.usersRepository.findOne({
       email: result.email,
       oauthLogin: 'naver',
     });
     if (!userInfo) {
-      const sameEmail: Users = await this.usersRepository.findOne({
+      const sameEmail: UserEntity = await this.usersRepository.findOne({
         email: result.email,
       });
       if (sameEmail) {
         throw new BadRequestException('이미 사용중인 이메일입니다');
       }
-      await this.usersRepository.save({
+      userInfo = await this.usersRepository.save({
         nickName: result.email,
         email: result.email,
         oauthLogin: 'naver',
         saltedPassword: null,
         oauthCI: result.id,
-      });
-      userInfo = await this.usersRepository.findOne({
-        email: result.email,
+        profileImage: profile,
       });
     }
-    const accessToken = jwt.sign(
-      { ...userInfo },
-      this.configService.get<string>('ACCESS_SECRET'),
-      { expiresIn: '6h' },
-    );
-    return accessToken;
+    console.log(userInfo);
+    return userInfo;
   }
-  async google(body: any) {
+  async google(body: any): Promise<UserEntity> {
     const decode: any = await axios
       .post('https://oauth2.googleapis.com/token', {
         client_id: this.configService.get<string>('GOOGLE_CLIENT_ID'),
@@ -223,116 +186,139 @@ export class UsersService {
         return err;
       });
     const { email, name, picture } = decode; // picture 아직 전달 안 해줬음.
-    let userInfo: Users = await this.usersRepository.findOne({
+    let userInfo: UserEntity = await this.usersRepository.findOne({
       email: email,
       oauthLogin: 'google',
     });
     if (!userInfo) {
-      const sameEmail: Users = await this.usersRepository.findOne({
+      const sameEmail: UserEntity = await this.usersRepository.findOne({
         email: email,
       });
       if (sameEmail) {
         throw new BadRequestException('이미 사용중인 이메일입니다');
       }
-      await this.usersRepository.save({
+      userInfo = await this.usersRepository.save({
         nickName: name,
         email: email,
         oauthLogin: 'google',
         saltedPassword: null,
         oauthCI: null,
-      });
-      userInfo = await this.usersRepository.findOne({
-        email: email,
+        profileImage: picture,
       });
     }
-    const accessToken = jwt.sign(
-      { ...userInfo },
-      this.configService.get<string>('ACCESS_SECRET'),
-      { expiresIn: '6h' },
-    );
-    return accessToken;
+    console.log(userInfo);
+    return userInfo;
   }
   //로컬 로그인 이메일, 비밀번호
-  async local(loginUserDto: LoginUserDto) {
-    const isExistUser: Users = await this.usersRepository.findOne({
+  async local(loginUserDto: LoginUserDto): Promise<UserEntity> {
+    const isExistUser: UserEntity = await this.usersRepository.findOne({
       email: loginUserDto.email,
     });
     if (!isExistUser) {
       throw new NotFoundException(`유효하지 않은 이메일입니다`);
     }
-    if (!bcrypt.compare(loginUserDto.password, isExistUser.saltedPassword)) {
+    const isCorrectPassword = await bcrypt.compare(
+      loginUserDto.password,
+      isExistUser.saltedPassword,
+    );
+    console.log(isExistUser.saltedPassword);
+    console.log(isCorrectPassword);
+    if (!isCorrectPassword) {
       throw new NotFoundException(`비밀번호가 일치하지 않습니다`);
     }
-    const accessToken = jwt.sign(
-      { ...isExistUser },
-      this.configService.get<string>('ACCESS_SECRET'),
-      { expiresIn: '6h' },
-    );
-    return accessToken;
+    console.log(isExistUser);
+    return isExistUser;
   }
-  //로그아웃
-  async logOut(accessToken: string) {
-    const decoded = this.verifyAccessToken(accessToken);
+
+  //로그아웃, 하는 건 없는데, 로그아웃 이후의 이벤트등을 추가할 경우에 사용할 수 있을 것 같아 남겨둠
+  async logOut(accessToken: string): Promise<string | jwt.JwtPayload> {
+    const decoded = await this.verifyAccessToken(accessToken);
     return decoded;
   }
 
-  //회원 정보 업데이트 닉네임. 비밀번호, 프로필이미지
-  async update(accessToken: string, updateUserDto: UpdateUserDto) {
-    const decoded = this.verifyAccessToken(accessToken);
-    console.log(decoded);
-    if (updateUserDto.nickName) {
-      decoded.nickName = updateUserDto.nickName;
-    }
-    if (updateUserDto.password) {
-      const salt = await bcrypt.genSalt();
-      decoded.saltedPassword = await bcrypt.hash(updateUserDto.password, salt);
-    }
-    if (updateUserDto.profileImage) {
-      decoded.profileImage = updateUserDto.profileImage;
-    }
-    // 닉네임, 비번, 프로필 이미지 중에 하나만 와도 바꿔줘야 한다.
-    await this.usersRepository.save(decoded);
-    console.log(decoded);
-    return decoded;
+  //회원 정보 업데이트 닉네임. 비밀번호, 프로필이미지.
+  async updateProfile(accessToken: string, file: Express.Multer.File) {
+    console.log(file);
+    console.log(file.path);
+    const decoded = await this.verifyAccessToken(accessToken);
+    decoded['profileImage'] = file.filename;
+    const user: UserEntity = {
+      id: decoded['id'],
+      email: decoded['email'],
+      nickName: decoded['nickName'],
+      profileImage: decoded['profileImage'],
+    };
+    await this.usersRepository.save(user);
+    return file.filename;
+  }
+  async updateUserName(accessToken: string, userName: string) {
+    const decoded = await this.verifyAccessToken(accessToken);
+    decoded['nickName'] = userName;
+    const user: UserEntity = {
+      id: decoded['id'],
+      email: decoded['email'],
+      nickName: decoded['nickName'],
+    };
+    await this.usersRepository.save(user);
+  }
+  async updatePassword(accessToken: string, password: string) {
+    const decoded = await this.verifyAccessToken(accessToken);
+    const salt = await bcrypt.genSalt();
+    decoded['saltedPassword'] = await bcrypt.hash(password, salt);
+    const user: UserEntity = {
+      id: decoded['id'],
+      email: decoded['email'],
+      nickName: decoded['nickName'],
+      saltedPassword: decoded['saltedPassword'],
+    };
+    await this.usersRepository.save(user);
   }
 
   //회원 탈퇴
   async remove(accessToken: string) {
-    const decoded = this.verifyAccessToken(accessToken);
-    await this.usersRepository.delete({ id: decoded.id });
+    const decoded = await this.verifyAccessToken(accessToken);
+    await this.usersRepository.delete({ id: decoded['id'] });
   }
 
-  //이것도 쿠키받아서 쿠키로 처리해줘야 하네.
+  //비밀번호 검증 엔드포인트
   async checkPassword(accessToken: string, password: string) {
-    const decoded = this.verifyAccessToken(accessToken);
+    const decoded = await this.verifyAccessToken(accessToken);
     const isExistPassword = await bcrypt.compare(
       password,
-      decoded.saltedPassword,
+      decoded['saltedPassword'],
     );
     if (!isExistPassword) {
       throw new BadRequestException(`비밀번호가 일치하지 않습니다`);
     }
   }
 
+  //이메일 검증 엔드포인트
   async checkEmail(email: string) {
-    const isExistEmail: Users = await this.usersRepository.findOne({
+    const isExistEmail: UserEntity = await this.usersRepository.findOne({
       email: email,
     });
     if (isExistEmail) {
       throw new BadRequestException('사용중인 이메일입니다');
     }
   }
-
   // 쿠키 검증
-  verifyAccessToken(accessToken: string) {
-    const decoded = jwt.verify(
+  async verifyAccessToken(
+    accessToken: string,
+  ): Promise<string | jwt.JwtPayload> {
+    const decoded = await jwt.verify(
       accessToken,
       this.configService.get<string>('ACCESS_SECRET'),
-      (err, decoded) => {
-        if (err) throw new BadRequestException(`${err}`);
-        return decoded;
-      },
     );
     return decoded;
+  }
+
+  //액세스 토큰을 만들어줌
+  async getAccessToken(userInfo: UserEntity): Promise<string> {
+    const accessToken = await jwt.sign(
+      { ...userInfo },
+      this.configService.get<string>('ACCESS_SECRET'),
+      { expiresIn: '6h' },
+    );
+    return accessToken;
   }
 }

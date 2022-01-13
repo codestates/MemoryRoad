@@ -1,7 +1,12 @@
+import { Transform } from 'class-transformer';
 import { IsNumber, IsString } from 'class-validator';
 import { Pin } from './../interface/pin.interface';
 
+//핀의 추가 업데이트 시 이용되는 DTO
 export class PatchPinDto implements Pin {
+  @Transform(({ value }) => {
+    return Number(value);
+  })
   @IsNumber()
   readonly ranking: number;
 
@@ -9,7 +14,13 @@ export class PatchPinDto implements Pin {
   readonly locationName: string;
 
   @IsString()
-  readonly address: string;
+  readonly lotAddress: string;
+
+  @IsString()
+  readonly roadAddress: string;
+
+  @IsString()
+  readonly ward: string;
 
   @IsNumber()
   readonly latitude: number;
@@ -17,11 +28,12 @@ export class PatchPinDto implements Pin {
   @IsNumber()
   readonly longitude: number;
 
-  @IsString()
-  readonly startTime: string;
+  @IsNumber()
+  readonly startTime: number;
 
-  @IsString()
-  readonly endTime: string;
+  @IsNumber()
+  readonly endTime: number;
 
-  //TODO 사진의 정보들
+  @IsString({ each: true })
+  keywords: string[];
 }

@@ -66,6 +66,10 @@ export const setUserInfo = (
 export const SAVE_PIN_INFO = 'SAVE_PIN_INFO' as const;
 export const SAVE_PIN_IMAGE_FILES = 'SAVE_PIN_IMAGE_FILES' as const;
 export const SAVE_PIN_POSITION = 'SAVE_PIN_POSITION' as const;
+export const UPDATE_PIN_TIME = 'UPDATE_PIN_TIME' as const;
+export const UPDATE_PIN_RANK = 'UPDATE_PIN_RANK' as const;
+export const UPDATE_FILE_RANK = 'UPDATE_FILE_RANK' as const;
+export const UPDATE_PIN_POSITION = 'UPDATE_PIN_POSITION' as const;
 
 // 핀 정보 저장 (First)
 // 핀 사진 저장 (First)
@@ -89,7 +93,7 @@ export const savePinInfo = (
       roadAddress,
       ward,
       startTime: '00:00',
-      endTime: '02:00', // 첫 생성때만 시간 고정.
+      endTime: '00:30', // 첫 생성때만 시간 고정.
     },
   };
 };
@@ -118,6 +122,23 @@ export const savePinPosition = (
   },
 });
 
+export const updatePinTime = (arr: any) => ({
+  type: UPDATE_PIN_TIME,
+  payload: arr,
+});
+export const updatePinRank = (arr: any) => ({
+  type: UPDATE_PIN_RANK,
+  payload: arr,
+});
+export const updateFileRank = (arr: any) => ({
+  type: UPDATE_FILE_RANK,
+  payload: arr,
+});
+export const updatePinPosition = (arr: any) => ({
+  type: UPDATE_PIN_POSITION,
+  paylaod: arr,
+});
+
 //Action type 꼭 명시 부탁드립니다.
 export type Action =
   | ReturnType<typeof savePinInfo>
@@ -129,3 +150,7 @@ export type Action =
   | ReturnType<typeof editUserInfoModal>
   | ReturnType<typeof withdrawalModal>
   | ReturnType<typeof setUserInfo>;
+  | ReturnType<typeof updatePinTime>
+  | ReturnType<typeof updatePinRank>
+  | ReturnType<typeof updateFileRank>
+  | ReturnType<typeof updatePinPosition>;

@@ -24,7 +24,6 @@ const createPinModal: string =
   '        </div>' +
   '      </div>' +
   "      <button id='createPinModal-save-btn'>장소 저장</button>" +
-  "      <button id='createPinModal-not-save-btn'>창 닫기</button>" +
   '    </div>' +
   '  </div>';
 

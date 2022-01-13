@@ -1,6 +1,9 @@
 import * as swaggerUi from 'swagger-ui-express';
 import * as YAML from 'yamljs';
+import path from 'path';
 
-const swaggerSpec = YAML.load('./src/memoryroad-1.0.0-swagger.yaml');
+const swaggerSpec: any = YAML.load(
+  path.join(__dirname, '../../src/swagger.yaml'),
+);
 
 export { swaggerUi, swaggerSpec };

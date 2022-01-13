@@ -1,71 +1,103 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector, batch } from 'react-redux';
 import GridLayout from 'react-grid-layout';
 import './gridLayout.css';
 import './timeLineSideBar.css';
+import {
+  updatePinTime,
+  updatePinRank,
+  updateFileRank,
+  updatePinPosition,
+} from '../../redux/actions/index';
+import { RootState } from '../../redux/reducer/index';
 import SetTime from './setTime';
 
-function TimeLineSideBar() {
-  /* react-grid-layout */
-  const cards = [
-    // cards -> 얘 redux에서 상태로 들고와야되는애다 -> 아직 미완
-    { startTime: '00:00', endTime: '02:00' },
-    { startTime: '00:00', endTime: '02:00' },
-    { startTime: '00:00', endTime: '02:00' },
-    { startTime: '00:00', endTime: '02:00' },
-    { startTime: '00:00', endTime: '02:00' }, // 오 영향을 끼치지않음.
-  ];
-  const [layoutState, setLayoutState] = useState([]);
+function TimeLineSideBar({ pinCards, layoutState, setLayoutState }: any) {
+  const dispatch = useDispatch();
+  const routeState: any = useSelector(
+    (state: RootState) => state.createRouteReducer,
+  );
+  console.log(routeState.pins);
+  console.log(routeState.pinPosition);
+
+  // localStorage에서 pinPosition 가져오기. -> 위도,경도,장소의 이름
+  // layout 상태 추적해서 상태가 변경되면
+  //    * 순서 변경
+  //    1. pinPosition 배열의 위치 이동시키기
+  //    2. reducer로 [pinID, pinPosition내 인덱스값] 묶어서 다 보내기 -> pins의 랭킹 업데이트 & 파일의 랭킹 업데이트
+  //    * 시간 변경
+  //    1. reducer로 [pinID, startTime, endTime] 묶어서 다 보내기 -> pins의 시작시작,끝시간 업데이트
+  //    ==>  순서와 시간 모두 한꺼번에 batch 로 해야함.
+
   const generateLayout: any = () => {
-    // 아니 이것도 any처리해줘야되냐
-    if (cards && cards.length) {
-      // 상태에 핀이 있을 때만 렌더링해줘야지.
-      cards.map((card, idx) => {
-        const { startTime, endTime } = card;
-        const startHour = Number(startTime.split(':')[0]);
-        const startMin = Number(startTime.split(':')[1]);
-        const endHour = Number(endTime.split(':')[0]);
-        const endMin = Number(endTime.split(':')[1]);
-        return {
-          x: 1,
-          y: startHour * 4 + startMin / 15, // 15분 단위로 나눴으니 시간/4, 분/15 ok
-          w: 1,
-          h: endHour * 4 + endMin / 15 - (startHour * 4 + endMin / 15),
-          maxH: 48,
-          i: idx.toString(),
-          move: false,
-          static: false,
-        };
-      });
-    }
+    // 상태에 핀이 있을 때만 렌더링해줘야지.
+    pinCards?.map((pinCard: any, idx: number) => {
+      const { pinID, locationName, latlng, startTime, endTime } = pinCard;
+      // startHour map으로 배열 생성했는데 안된다 중간에 undefined 뜨는 게 있음 ㅠ.ㅠ
+      const startHour = Number(startTime?.split(':')[0]);
+      const startMin = Number(startTime?.split(':')[1]);
+      const endHour = Number(endTime?.split(':')[0]);
+      const endMin = Number(endTime?.split(':')[1]);
+      const height =
+        (endHour - startHour) * 2 + (endMin - startMin < 0 ? -1 : 0);
+      return {
+        x: 1,
+        y: startHour * 2 + startMin / 30, // y랑 h적용안되고있어 .. 무슨일이냐..!
+        w: 1,
+        h: height,
+        maxH: 24,
+        i: String(idx + 1),
+        move: true,
+        static: false,
+      };
+    });
   };
   const onLayoutChange = (layout: any) => {
-    // if (
-    //   layoutState &&
-    //   !layoutState.length &&
-    //   cards &&
-    //   cards.length &&
-    //   layout &&
-    //   layout.length
-    // ) {
-    //   const newTimeList = cards.map((card, idx) => {
-    //     /* 일단은 */
-    //     const startHour = Math.floor(layout[idx].y / 4);
-    //     const startMin =
-    //       (layout[idx].y % 4) * 15 === 0 ? '00' : (layout[idx].y % 4) * 15;
-    //     const endHour = Math.floor((layout[idx].y + layout[idx].h) / 4);
-    //     const endMin =
-    //       ((layout[idx].y + layout[idx].h) % 4) * 15 === 0
-    //         ? '00'
-    //         : ((layout[idx].y + layout[idx].h) % 4) * 15;
-    //     const newTime = Object.assign({}, card, {
-    //       startTime: startHour + ':' + startMin,
-    //       endTime: endHour + ':' + endMin,
-    //     });
-    //     return newTime;
-    //   });
-    //   /* 레이아웃이 바뀌면 여기서 상태변경 action 전달하기. (시간변경, 순서변경)*/
-    // }
-    console.log(layout);
+    console.log('레이아웃이 변경되고있습니다.');
+    // 시간 변경 로직
+    const newTimePinCards = pinCards?.slice(1).map((pinCard: any, idx: any) => {
+      const sh = parseInt(layout[idx].y) * 0.5;
+      const eh = parseInt(layout[idx].y + layout[idx].h) * 0.5;
+      const getHour = (hour: any) =>
+        Math.floor((hour * 60) / 60).toString().length === 1
+          ? '0' + Math.floor((hour * 60) / 60)
+          : Math.floor((hour * 60) / 60);
+      const getMinute = (hour: any) =>
+        ((hour * 60) % 60).toString() === '0'
+          ? '0' + ((hour * 60) % 60)
+          : (hour * 60) % 60;
+      const newTimeCard = Object.assign(
+        {},
+        {
+          pinID: pinCard.pinID,
+          startTime: getHour(sh) + ':' + getMinute(sh),
+          endTime: getHour(eh) + ':' + getMinute(eh),
+        },
+      );
+      return newTimeCard;
+    });
+    /* 시간 변경 상태변화 요청 보내기 --> 업데이트 잘 됩니다 !! */
+    dispatch(updatePinTime(newTimePinCards));
+    // 순서 변경 로직
+    const reRankedPins = layout
+      .map((el: any) => {
+        const pinID = `pin${Number(el.i) + 1}`;
+        const y = el.y;
+        return [pinID, y];
+      })
+      .sort((a: any, b: any) => a[1] - b[1])
+      .map((el: any, idx: number) => {
+        el[1] = idx + 1;
+        return el;
+      });
+    console.log(reRankedPins); // re-rank된 핀 추적 !! olleh !!
+    batch(() => {
+      dispatch(updatePinRank(reRankedPins));
+      dispatch(updateFileRank(reRankedPins));
+      dispatch(updatePinPosition(reRankedPins));
+    });
+    /* 레이아웃 상태 업데이트 */
+    setLayoutState(layout);
   };
   // 사이드바 열고 닫기
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -74,8 +106,10 @@ function TimeLineSideBar() {
   };
   /* -------------------------------- useEffect */
   useEffect(() => {
-    setLayoutState(generateLayout()); // 초기 레이아웃 생성
-  });
+    // 초기 레이아웃 1번만
+    const layout = generateLayout();
+    setLayoutState(layout);
+  }, []);
   return (
     <>
       <div id="pinControllTower-fix">
@@ -99,16 +133,16 @@ function TimeLineSideBar() {
               <div className="pinControllTower-content">
                 <div className="pinControllTower-content-structure">
                   <GridLayout
-                    // id="timeLine-real"
-                    layout={generateLayout() || layoutState}
-                    onLayoutChange={(layout) => onLayoutChange(layout)}
+                    layout={layoutState}
+                    onLayoutChange={(layout) => onLayoutChange(layout)} // grid의 레이아웃이 변했을 때 동작.
+
                     style={{ zIndex: '9999', left: '35px' }} // 이거없으면 사라집니다.
                     {...{
                       isDraggable: true,
                       isResizable: true,
-                      items: cards.length ? cards.length : 1,
+                      items: pinCards ? pinCards.length + 1 : 1,
                       cols: 1,
-                      rows: 96,
+                      rows: 48,
                       rowHeight: 37,
                       compactType: null,
                       preventCollision: false, // 열어놨다.
@@ -117,24 +151,42 @@ function TimeLineSideBar() {
                     }}
                   >
                     {/* 카드 목업데이터 */}
-                    {cards.map((card, idx) => {
-                      const { startTime, endTime } = card;
+                    {pinCards?.slice(1).map((pinCard: any, idx: number) => {
+                      const {
+                        pinID,
+                        locationName,
+                        latlng,
+                        startTime,
+                        endTime,
+                      } = pinCard;
+                      const sh = Number(startTime?.split(':')[0]);
+                      const eh = Number(endTime?.split(':')[0]);
+                      const sm = Number(startTime?.split(':')[1]);
+                      const em = Number(endTime?.split(':')[1]);
+                      const getTime = (
+                        sh: number,
+                        eh: number,
+                        sm: number,
+                        em: number,
+                      ) => {
+                        if (em - sm < 0) return eh - sh - 1 + 0.5;
+                        else {
+                          if (em - sm !== 0) return eh - sh + 0.5;
+                          if (em - sm === 0) return eh - sh;
+                        }
+                      };
+                      const time = getTime(sh, eh, sm, em);
                       return (
                         <div className="pinCard-container" key={idx}>
-                          <div className="pinCard-title">나만의 맛집기록</div>
+                          <div className="pinCard-title">{locationName}</div>
                           {/* <SetTime
                             endTime={endTime}
                             readonly
                             startTime={startTime}
                           /> */}
                           <div className="pinCard-time-container">
-                            <div className="pinCard-time-calculate">14.5</div>
+                            <div className="pinCard-time-calculate">{time}</div>
                             시간
-                          </div>
-                          <div className="pinCard-description">
-                            여긴 내가 진짜 맛있게 먹은곳 ! 아무도 몰랐으면
-                            좋겠다 ㅠ 사장님 너무 친절하심 ㅎㅎ 굳굳 지금이건
-                            오버플로우 테스트지롱
                           </div>
                           {/* <button className="plancard__delete-btn">삭제</button> */}
                         </div>

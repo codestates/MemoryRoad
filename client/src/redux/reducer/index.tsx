@@ -28,22 +28,22 @@ const persistConfig: any = {
   stateReconciler: autoMergeLevel2,
 };
 /* redux-persist createRoute config 객체 */
-const createRoutePersistConfig: any = {
-  key: 'createRoute',
-  storage,
-  blacklist: [
-    'isLoginModal',
-    'isSigninModal',
-    'isCheckingPasswordModal',
-    'isEditUserInfoModal',
-    'iswithdrawalModal',
-  ],
-  stateReconciler: autoMergeLevel2,
-};
-const createRoutePersistReducer = persistReducer(
-  createRoutePersistConfig,
-  createRouteReducer,
-);
+// const createRoutePersistConfig: any = {
+//   key: 'createRoute',
+//   storage,
+//   blacklist: [
+//     'isLoginModal',
+//     'isSigninModal',
+//     'isCheckingPasswordModal',
+//     'isEditUserInfoModal',
+//     'iswithdrawalModal',
+//   ],
+//   stateReconciler: autoMergeLevel2,
+// };
+// const createRoutePersistReducer = persistReducer(
+//   createRoutePersistConfig,
+//   createRouteReducer,
+// );
 
 export const rootReducer: any = combineReducers({
   // 학민
@@ -51,7 +51,7 @@ export const rootReducer: any = combineReducers({
   setUserInfoReducer,
   // 승연
   createRouteReducer,
-  createRoutePersistReducer,
+  // createRoutePersistReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 

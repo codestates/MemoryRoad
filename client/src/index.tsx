@@ -1,13 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-// import MapTest from './pages/map-test/map-test';
-import MemoryRoad from './pages/MemoryRoad';
-// import SearchPinBar from './components/searchPinBar/searchPinBar';
+// import MemoryRoad from './pages/MemoryRoad';
 import CreatePinMap from './pages/createPinMap/createPinMap';
-// import GridTest from './components/grid-test/grid-test';
-// import Mm from './components/grid-test/mm';
-// import MemoryRoad from "./pages/MemoryRoad";
 
 // redux
 import { Provider } from 'react-redux';
