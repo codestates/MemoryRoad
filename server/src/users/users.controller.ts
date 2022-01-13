@@ -78,6 +78,7 @@ export class UsersController {
   //oauth 구글
   @Post('/auth/oauth/google')
   async googleLogin(@Req() req: Request, @Res() res: Response) {
+    console.log(req.body);
     const userInfo = await this.usersService.google(req.body);
     const accessToken: string = await this.usersService.getAccessToken(
       userInfo,
