@@ -17,7 +17,15 @@ function CheckingPassword({ url }: any) {
       setErrorMessage('기존 비밀번호를 입력해주세요');
     } else {
       axios
-        .post(`${url}/users/auth/local/password`, { password: password })
+        .post(
+          `${url}/users/auth/local/password`,
+          { password: password },
+          {
+            headers: {
+              'Content-Type': `application/json`,
+            },
+          },
+        )
         .then((res) => {
           if (res.status === 200) {
             dispatch(checkingPasswordModal(false)); // 비밀번호 확인 모달창을 닫고
@@ -56,9 +64,9 @@ function CheckingPassword({ url }: any) {
           <button
             className="checkingpassword-Button userModalPointer checkingpassword-greenButtonCheck"
             onClick={() => {
-              dispatch(checkingPasswordModal(false)); // 주석 처리
-              dispatch(editUserInfoModal(true)); // 주석 처리
-              // checkingPassword();
+              // dispatch(checkingPasswordModal(false)); // 주석 처리
+              // dispatch(editUserInfoModal(true)); // 주석 처리
+              checkingPassword();
             }}
           >
             비밀번호 확인

@@ -149,7 +149,7 @@ export type Action =
   | ReturnType<typeof checkingPasswordModal>
   | ReturnType<typeof editUserInfoModal>
   | ReturnType<typeof withdrawalModal>
-  | ReturnType<typeof setUserInfo>;
+  | ReturnType<typeof setUserInfo>
   | ReturnType<typeof updatePinTime>
   | ReturnType<typeof updatePinRank>
   | ReturnType<typeof updateFileRank>
