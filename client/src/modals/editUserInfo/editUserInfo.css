@@ -1,9 +1,51 @@
-.gridProfile {
+.edituserinfo-gridProfile {
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+.edituserinfo-form {
+  /* width: 100px; */
+  margin-top: 30px;
+  text-align: right;
+}
+.edituserinfo-titleEdituserinfo {
+  margin-top: 5%;
+  font-size: 18px;
+  text-align: center;
+}
+.edituserinfo-textOninput {
+  font-size: 12px;
+  margin-top: 10px;
+  margin-left: 32px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.edituserinfo-center {
+  padding-top: 10%;
+  padding-bottom: 2%;
+  text-align: center;
+}
+.edituserinfo-input2 {
+  border: none;
+  border-bottom: 1px solid black;
+  width: 230px;
+  padding-bottom: 8px;
+  margin-left: 10%;
+  margin-top: 0%;
+  font-size: 12px;
+}
+.edituserinfo-input2:focus {
+  outline: none;
+}
 
-.EditBorder {
+.edituserinfo-ErrorMessage2 {
+  margin-left: 30px;
+  margin-top: 8px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  color: red;
+}
+
+.edituserinfo-EditBorder {
   position: fixed;
   top: 7em;
   background-color: white;
@@ -16,40 +58,39 @@
   right: 0;
   z-index: 999;
 }
-.EditBorder2 {
-  width: 300px;
+.edituserinfo-EditBorder2 {
   height: 320px;
-  padding-bottom: 0px;
 }
 
-.EditProfile {
+.edituserinfo-EditProfile {
   font-size: 50px;
   margin: 30px;
   margin-top: 15px;
   color: gray;
   opacity: 0.7;
 }
-.EditProfileButton {
-  margin-left: 24px;
-  padding: 5px;
-  font-size: 11px;
-  cursor: pointer;
-  width: 90px;
-  border: 2px solid white;
-  border-radius: 5px;
-}
-.CreateScrollBar {
-  overflow: scroll;
+
+.edituserinfo-CreateScrollBar {
+  overflow: auto;
   overflow-x: hidden;
+  margin-right: 20px;
+}
+.edituserinfo-CreateScrollBar::-webkit-scrollbar {
+  width: 5px;
+  background-color: white;
+}
+.edituserinfo-CreateScrollBar::-webkit-scrollbar-thumb {
+  background-color: silver;
+  border-radius: 10px;
 }
 
-.EditButtonColor {
+.edituserinfo-EditButtonColor {
   background-color: gray;
   color: black;
   opacity: 0.6;
   font-weight: bold;
 }
-.EditProfileButton {
+.edituserinfo-EditProfileButton {
   margin: 10px;
   padding: 6px;
   padding-left: 14px;
@@ -59,8 +100,8 @@
   border: 2px solid white;
   border-radius: 5px;
 }
-.EditNickname {
-  margin: 10px;
+.edituserinfo-EditNickname {
+  margin: 5px;
   padding: 5px;
   font-size: 11px;
   cursor: pointer;
@@ -68,13 +109,31 @@
   border: 2px solid white;
   border-radius: 5px;
 }
-#EditProfileButtonRight {
+#edituserinfo-EditProfileButtonRight {
   text-align: right;
-  margin-right: 20px;
+  margin-right: 5px;
 }
-.withdrawalButton {
+.edituserinfo-withdrawalButton {
   color: white;
   background-color: #da4747;
   font-weight: bold;
   margin-top: 10px;
+}
+
+.edituserinfo-edituserinfoButton {
+  width: 80%;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #91ba9f;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  border: 2px solid white;
+}
+#edituserinfo-previewImage {
+  width: 70px;
+  height: 70px;
+  margin: 10px;
+  margin-left: 0px;
+  border-radius: 80px;
 }

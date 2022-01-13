@@ -20,6 +20,7 @@ import {
   UPDATE_PIN_RANK,
   UPDATE_FILE_RANK,
   UPDATE_PIN_POSITION,
+
 } from '../../actions/index';
 import type { State } from '../initialState';
 import type { Action } from '../../actions/index';

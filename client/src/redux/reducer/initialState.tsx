@@ -32,6 +32,15 @@ interface Position {
   latlng: any;
 }
 
+interface UserInfo {
+  isLogin: boolean; // 로그인 상태
+  id: number | null; // 유저의 id값
+  email: string | null; // 유저의 email
+  username: string | null; // 유저의 닉네임
+  profile: string | null; // 유저의 프로필
+  OAuthLogin: string | null; // 유저의 소셜로그인 상태
+}
+
 export type State = {
   // 학민
   isLoginModal: boolean | null | undefined;
@@ -39,6 +48,7 @@ export type State = {
   isCheckingPasswordModal: boolean | null | undefined;
   isEditUserInfoModal: boolean | null | undefined;
   iswithdrawalModal: boolean | null | undefined;
+  userInfo: UserInfo;
   // 승연
   route: Route;
   pins: Array<Pin> | null | undefined;
@@ -59,6 +69,14 @@ const initialState: State | any = {
   isCheckingPasswordModal: false,
   isEditUserInfoModal: false,
   iswithdrawalModal: false,
+  userInfo: {
+    isLogin: false,
+    id: null,
+    email: null,
+    username: null,
+    profile: null,
+    OAuthLogin: null,
+  },
   // 승연
   route: {
     routeName: null, // 루트 제목

@@ -21,6 +21,7 @@ export const SIGNUP_MODAL = 'SIGNUP_MODAL' as const;
 export const CHECKING_PASSWORD_MODAL = 'CHECKING_PASSWORD_MODAL' as const;
 export const EDIT_USER_INFO_MODAL = 'EDIT_USER_INFO_MODAL' as const;
 export const WITHDRAWAL_MODAL = 'WITHDRAWAL_MODAL' as const;
+export const SET_USERINFO = 'SET_USERINFO' as const;
 
 export const loginModal = (boolean: boolean) => ({
   type: LOGIN_MODAL,
@@ -41,6 +42,24 @@ export const editUserInfoModal = (boolean: boolean) => ({
 export const withdrawalModal = (boolean: boolean) => ({
   type: WITHDRAWAL_MODAL,
   payload: boolean,
+});
+export const setUserInfo = (
+  isLogin: boolean,
+  id: number | null,
+  email: string | null,
+  username: string | null,
+  profile: string | null,
+  OAuthLogin: string | null,
+) => ({
+  type: SET_USERINFO,
+  payload: {
+    isLogin,
+    id,
+    email,
+    username,
+    profile,
+    OAuthLogin,
+  },
 });
 
 // 승연
@@ -102,6 +121,7 @@ export const savePinPosition = (
     latlng,
   },
 });
+
 export const updatePinTime = (arr: any) => ({
   type: UPDATE_PIN_TIME,
   payload: arr,
@@ -129,6 +149,7 @@ export type Action =
   | ReturnType<typeof checkingPasswordModal>
   | ReturnType<typeof editUserInfoModal>
   | ReturnType<typeof withdrawalModal>
+  | ReturnType<typeof setUserInfo>;
   | ReturnType<typeof updatePinTime>
   | ReturnType<typeof updatePinRank>
   | ReturnType<typeof updateFileRank>

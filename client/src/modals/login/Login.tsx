@@ -4,82 +4,181 @@ import { useState } from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import Mist from '../../components/mist';
-import { loginModal, signupModal } from '../../redux/actions/index';
+import { RootState } from '../../redux/reducer';
+import { useNavigate } from 'react-router-dom';
+import {
+  loginModal,
+  signupModal,
+  setUserInfo,
+} from '../../redux/actions/index';
+import '../userModalPointer.css';
 
-interface Props {
-  loginHandler: any;
-}
-
-function Login({ loginHandler }: Props) {
+function LoginModal({ url }: any) {
   const dispatch = useDispatch();
-
-  // 로그인할 때 Email 입력값
+  const userinfo = useSelector(
+    (state: RootState) => state.setUserInfoReducer.userInfo,
+  ); // 유저 정보
+  const navigate = useNavigate();
   const [Email, setEmail] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const InputEmail = (e: any) => {
     setEmail(e.target.value);
-    console.log(Email);
   };
   // 로그인할 때 Password 입력값
   const [Password, setPassword] = useState('');
   const InputPassword = (e: any) => {
     setPassword(e.target.value);
-    console.log(Password);
   };
+
+  // 로그인 요청 API
+  const LoginHandler = () => {
+    if (Email === '' || Password === '') {
+      setErrorMessage('이메일과 비밀번호를 입력해주세요');
+    } else {
+      // ---주석 처리---
+      // dispatch(Login(Email, Email, null));
+      dispatch(setUserInfo(true, 1, Email, Email, null, null));
+      // isLogin, id , email, username, profile,OAuthLogin
+      // window.localStorage.getItem()
+      dispatch(loginModal(false)); // 로그인 모달창을 닫는다
+      navigate('/Mypage');
+      // 서버와 통신 가능 하면 else부터 여기까지 주석 처리
+      // --- 주석 처리 ---
+
+      // axios
+      //   .post(`${url}/users/auth/local`, { email: Email, password: Password })
+      //   .then((res) => {
+      //     if (res.status === 200) {
+      //       dispatch(
+      //         setUserInfo(
+      //           true,
+      //           res.data.id,
+      //           res.data.email,
+      //           res.data.username,
+      //           res.data.profile,
+      //           null,
+      //         ),
+      //       ); // 로그인 성공시 유저상태 바꿈
+      //       dispatch(loginModal(false)); // 로그인 성공시 로그인 모달창 닫음
+      //       navigate('/Mypage'); // 로그인 성공시 마이페이지로 이동
+      //     } else {
+      //       setErrorMessage(
+      //         '로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요',
+      //       );
+      //     }
+      //   });
+    }
+  };
+
+  const redirect_uri = 'http://localhost:3000';
+  // 카카오 로그인 API
+  const KakaoLoginHandler = () => {
+    //  카카오에서 Authorization code를 받아오고
+    // 카카오 서버에 Authorization code를 보여주고 access Token을 받아옴
+    // access Token을 서버에 주면 사용자는 웹사이트 이용 가능
+    window.localStorage.setItem('socialLogin', 'kako');
+    const kakao_Login_url = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=6e1927a3fa6b237cefcfcee8cafd9ce6&redirect_uri=${redirect_uri}`;
+    window.location.assign(kakao_Login_url);
+
+    // console.log(window.location.href); // http://localhost:3000/
+  };
+
+  // 네이버 로그인 API
+  const NaverLoginHandler = () => {
+    window.localStorage.setItem('socialLogin', 'naver');
+    const naver_Login_url = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=8izF9e9K1PRGrQ_nEUGi&redirect_uri=${redirect_uri}`;
+    window.location.assign(naver_Login_url);
+  };
+
+  // Google 로그인 API
+  const GoogleLoginHandler = () => {
+    window.localStorage.setItem('socialLogin', 'google');
+    const google_Login_url = `https://accounts.google.com/o/oauth2/v2/auth?scope=openid&access_type=offline&include_granted_scopes=true&response_type=code&redirect_uri=${redirect_uri}&client_id=721113525638-iqgb0cig5l1vd2gvndncagbpq161sdde.apps.googleusercontent.com`;
+    window.location.assign(google_Login_url);
+  };
+
   return (
     <div>
       <div>
         <Mist />
       </div>
-      <div className="LoginBorder">
-        <div className="center titleLogin">로그인</div>
+      <div className="login-LoginBorder">
+        <div className="login-center login-titleLogin">로그인</div>
         <input
-          className="input"
+          className="login-input"
+          maxLength={20}
           onChange={InputEmail}
           placeholder="이메일"
           type="text"
         ></input>
         <br />
         <input
-          className="input"
+          className="login-input"
+          maxLength={16}
           onChange={InputPassword}
           placeholder="비밀번호"
           type="password"
         ></input>
-        <div className="ErrorMessage">
-          {Email === '' || Password === ''
-            ? '이메일과 비밀번호를 입력해주세요'
-            : null}
+        <div className="login-ErrorMessage">{errorMessage}</div>
+        <div className="login-center">
+          <button
+            className="login-Button userModalPointer"
+            onClick={() => {
+              LoginHandler();
+              // console.log(initialState.userInfo);
+            }}
+          >
+            로그인
+          </button>
         </div>
-        <div className="center">
-          <button className="LoginButton pointer">로그인</button>
+        <div className="login-center">
+          <hr className="login-linebottom"></hr>
         </div>
-        <div className="center">
-          <hr className="linebottom"></hr>
+        <div className="login-OauthButton">
+          <div
+            onClick={GoogleLoginHandler}
+            onKeyDown={GoogleLoginHandler}
+            role="button"
+            tabIndex={0}
+          >
+            <img
+              alt="googleLoginButton"
+              className="login-GoogleButton login-pointer"
+              src="http://127.0.0.1:5500/client/public/img/google_btn.png"
+            />
+          </div>
+          <div
+            onClick={NaverLoginHandler}
+            onKeyDown={NaverLoginHandler}
+            role="button"
+            tabIndex={0}
+          >
+            <img
+              alt="naverLoginButton"
+              className="login-NaverButton login-pointer"
+              src="http://127.0.0.1:5500/client/public/img/naver_btn.png"
+            />
+          </div>
+          <div
+            onClick={KakaoLoginHandler}
+            onKeyDown={KakaoLoginHandler}
+            role="button"
+            tabIndex={0}
+          >
+            <img
+              alt="kakoLoginButton"
+              className="login-kakaoButton login-pointer"
+              src="http://127.0.0.1:5500/client/public/img/kakao_btn.png"
+            />
+          </div>
         </div>
-        <div className="OauthButton">
-          <img
-            alt="googleLoginButton"
-            className="GoogleButton pointer"
-            src="http://127.0.0.1:5500/client/public/img/google_btn.png"
-          />
-          <img
-            alt="naverLoginButton"
-            className="NaverButton pointer"
-            src="http://127.0.0.1:5500/client/public/img/naver_btn.png"
-          />
-          <img
-            alt="kakoLoginButton"
-            className="kakaoButton pointer"
-            src="http://127.0.0.1:5500/client/public/img/kakao_btn.png"
-          />
-        </div>
-        <div className="center TotheSignup">
+        <div className="login-center login-TotheSignup">
           혹시 회원이 아니신가요?{' '}
           <b
-            className="pointer"
+            className="login-pointer"
             onClick={() => {
-              dispatch(loginModal(false));
-              dispatch(signupModal(true));
+              dispatch(loginModal(false)); // 로그인 모달창을 닫고
+              dispatch(signupModal(true)); // 회원가입 모달창을 연다
             }}
             onKeyDown={() => {
               dispatch(loginModal(false));
@@ -96,4 +195,4 @@ function Login({ loginHandler }: Props) {
   );
 }
 
-export default Login;
+export default LoginModal;

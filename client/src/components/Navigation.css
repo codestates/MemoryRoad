@@ -1,18 +1,18 @@
-.gridContainer {
+.nav-gridContainer {
   box-shadow: 2px 3px 5px #d6e0e5;
   text-align: center;
   display: grid;
   grid-template-columns: 2fr 1fr 0.5fr 1fr;
   grid-template-rows: 60px;
 }
-.logo {
+.nav-logo {
   height: 60px;
 }
-.item {
+.nav-item {
   cursor: pointer;
   /* border: 2px solid black; */
 }
-.Mypagefont {
+.nav-Mypagefont {
   /* border: 2px solid black; */
   line-height: 600%;
   cursor: pointer;
@@ -20,7 +20,7 @@
   padding-left: 50%;
 }
 
-.loginfont {
+.nav-loginfont {
   /* border: 2px solid black; */
   width: 100px;
   line-height: 400%;
@@ -29,33 +29,33 @@
   text-decoration: none;
 }
 
-.mobile {
+.nav-mobile {
   color: #b1bcb7;
   cursor: pointer;
 }
 /* 노트북, 데스크탑*/
 @media (min-width: 800px) {
-  .mobile {
+  .nav-mobile {
     display: none;
   }
 }
 /* 800px이하 */
 /* 모바일 */
 @media (max-width: 800px) {
-  .loginfont {
+  .nav-loginfont {
     display: none;
   }
   .logo {
     width: 180px;
   }
-  .gridContainer {
+  .nav-gridContainer {
     box-shadow: 2px 3px 5px #d6e0e5;
     text-align: center;
     display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-columns: 1fr 3fr 1fr 0.3fr;
   }
-  .mobile {
-    margin-top: 10%;
+  .nav-mobile {
+    margin: 13px;
     font-size: 30px;
   }
 }

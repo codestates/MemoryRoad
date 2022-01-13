@@ -1,4 +1,4 @@
-.SignUpBorder {
+.signup-SignUpBorder {
   position: fixed;
   top: 7em;
   background-color: white;
@@ -11,25 +11,25 @@
   right: 0;
   z-index: 999;
 }
-.titleLogin {
+.signup-titleSignup {
   font-size: 18px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
 }
-.center {
-  padding-top: 5%;
+.signup-center {
+  padding-top: 10%;
   padding-bottom: 2%;
   text-align: center;
 }
-.textOninput {
+.signup-textOninput {
   font-size: 12px;
   margin-top: 10px;
   margin-left: 32px;
   margin-bottom: 5px;
   font-weight: bold;
 }
-.Emailcheck {
+.signup-Emailcheck {
   position: absolute;
   padding: 5px;
   font-size: 11px;
@@ -38,10 +38,10 @@
   width: 90px;
   border: 2px solid white;
   border-radius: 5px;
-  top: 90px;
+  top: 92px;
   right: 27px;
 }
-.input2 {
+.signup-input2 {
   border: none;
   border-bottom: 1px solid black;
   width: 237px;
@@ -51,18 +51,18 @@
   font-size: 12px;
 }
 
-.input2:focus {
+.signup-input2:focus {
   outline: none;
 }
 
-.ErrorMessage2 {
+.signup-ErrorMessage2 {
   margin-left: 30px;
   margin-top: 8px;
   margin-bottom: 15px;
   font-size: 12px;
   color: red;
 }
-.SignUpButton {
+.signup-SignUpButton {
   width: 80%;
   padding: 10px;
   border-radius: 8px;
@@ -72,9 +72,14 @@
   font-weight: bold;
   border: 2px solid white;
 }
-.ToLogin {
-  font-size: 11px;
+.signup-center2 {
+  text-align: center;
+  margin-right: 20px;
 }
-.pointer {
+.signup-ToLogin {
+  font-size: 11px;
+  text-align: center;
+}
+.signup-pointer {
   cursor: pointer;
 }

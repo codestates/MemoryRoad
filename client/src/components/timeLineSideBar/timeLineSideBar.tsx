@@ -135,6 +135,7 @@ function TimeLineSideBar({ pinCards, layoutState, setLayoutState }: any) {
                   <GridLayout
                     layout={layoutState}
                     onLayoutChange={(layout) => onLayoutChange(layout)} // grid의 레이아웃이 변했을 때 동작.
+
                     style={{ zIndex: '9999', left: '35px' }} // 이거없으면 사라집니다.
                     {...{
                       isDraggable: true,

@@ -12,7 +12,7 @@ function Mist() {
   const dispatch = useDispatch();
   return (
     <div
-      className="mist"
+      className="mist-mist"
       onClick={() => {
         batch(() => {
           dispatch(loginModal(false));

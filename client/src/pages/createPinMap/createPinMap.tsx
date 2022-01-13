@@ -50,6 +50,7 @@ function CreatePinMap() {
   const [mutations, setMutations] = useState(0); // DOM의 변경사항 감지
 
   /* 나 테스트 할거다. --------------------------------------------------------------------------------------------------------------------------------- */
+
   let map: any = [];
   // 아 진짜 persist 포기할까
   /* redux-persist test */
@@ -147,6 +148,7 @@ function CreatePinMap() {
     });
     batch(() => {
       dispatch(savePinInfo(pinID, ranking, pinTitle, currMarkerInfo)); // 첫번째 저장은 빨리 됩니다.
+
       dispatch(savePinImageFiles(pinID, ranking, arr));
       dispatch(savePinPosition(pinID, pinTitle, latlng));
     });
