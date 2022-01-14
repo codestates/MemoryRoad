@@ -507,13 +507,41 @@ paths:
       tags:
         - routes
       summary: '사용자 루트 조회. 로그인한 사용자의 루트를 조회하거나, 검색어, 필터를 통한 루트들을 요청할 수 있다.'
-      description: '1. page파라미터가 주어질 경우, 토큰을 이용해 마이페이지의 루트들을 반환한다. 2. page외의 파라미터들이 주어질 경우, 검색어에 따른 루트들이 반환된다.'
+      description: |
+        1. search=true 파라미터가 주어지지 않을 경우, 토큰을 이용해 마이페이지의 루트들을 반환한다. 페이지별로 조회하기 위해 page 파라미터가 필요하다.
+        2. search=true 파라미터가 주어지면 두 가지 경우로 나뉜다. \
+           2.1 검색을 하지 않고 화면의 위도, 경도 안에 해당되는 루트들을 불러올 때(nwLat, nwLng, seLat, seLng파라미터가 필요하다.) <br> 2.2 루트, 장소별로 검색을 한 뒤, location, time으로 필터링 할 수 있다. (이 경우 page파라미터가 필요하다. 위도, 경도의 정보는 사용하지 않는다.)
       parameters:
         - name: page
           in: query
           description: 페이지 요청
           schema:
             type: integer
+        - name: search
+          in: query
+          description: true로 값을 줄 경우 다른 파라미터들을 받아 검색에 활용할 수 있다.
+          schema:
+            type: boolean
+        - name: nwLat
+          in: query
+          description: 화면의 북서쪽 위도
+          schema:
+            type: number
+        - name: nwLng
+          in: query
+          description: 화면의 북서쪽 경도
+          schema:
+            type: number
+        - name: seLat
+          in: query
+          description: 화면의 남동쪽 위도 정보
+          schema:
+            type: number
+        - name: seLng
+          in: query
+          description: 화면의 남동쪽 경도 정보
+          schema:
+            type: number
         - name: rq
           in: query
           description: 루트명 검색어
@@ -562,7 +590,7 @@ paths:
     post:
       tags:
         - routes
-      summary: 루트 최초 생성. 루트와 dots의 정보를 body로 전달 받는다.
+      summary: '루트 최초 생성. 루트와 핀, 사진들의 정보를 전달 받는다.'
       description: 루트 생성
       responses:
         '201':
@@ -577,6 +605,18 @@ paths:
                   message:
                     type: string
                     example: created
+        '400':
+          description: 잘못된 형식의 요청을 받은 경우
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: bad img type | Bad Request
         '500':
           description: 서버 오류
           content:
@@ -587,64 +627,44 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
-                routeName:
-                  description: 루트 제목
+                '0':
+                  type: file
+                  description: ranking이 0인 핀의 사진들
+                '1':
+                  type: file
+                  description: rankingdl 1인 핀의 사진들
+                route:
                   type: string
-                  example: 루트 제목
-                description:
-                  description: 루트 설명
-                  type: string
-                  example: 루트 설명
-                public:
-                  description: 루트 공개 여부
-                  type: boolean
-                  example: false
-                color:
-                  description: 루트 색깔
-                  type: string
-                  example: red
-                time:
-                  description: 루트 시간
-                  type: number
-                  example: 5
-                pins:
-                  description: 루트에 포함된 핀들
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      ranking:
-                        type: integer
-                        description: 핀의 순서
-                        example: 0
-                      locationName:
-                        type: string
-                        description: 핀의 이름
-                        example: 경치 좋은 곳
-                      latitude:
-                        type: number
-                        description: 위도
-                        example: 33
-                      longitude:
-                        type: number
-                        description: 경도
-                        example: 126
-                      address:
-                        type: string
-                        description: 핀의 주소
-                        example: 서울특별시 성북구
-                      startTime:
-                        type: string
-                        description: 핀의 시작 시간
-                        example: '12'
-                      endTime:
-                        type: string
-                        description: 핀의 종료 시간
-                        example: '13'
+                  description: '루트, 핀들의 정보'
+                  example:
+                    routeName: 루트 제목
+                    description: 루트 설명
+                    public: false
+                    color: red
+                    time: 5
+                    pins:
+                      - ranking: 0
+                        locationName: 경치 좋은 곳
+                        latitude: 33
+                        longitude: 126
+                        lotAddress: 서울특별시 성북구
+                        roadAddress: 서울특별시 성북구 종암로
+                        ward: 성북구
+                        startTime: 12
+                        endTime: 13
+                      - ranking: 1
+                        locationName: 경치 좋은 곳
+                        latitude: 33
+                        longitude: 126.123
+                        lotAddress: 서울특별시 구로구
+                        roadAddress: 서울특별시 구로구
+                        ward: 구로구
+                        startTime: 22
+                        endTime: 23
   '/routes/{routesId}':
     patch:
       tags:
@@ -659,7 +679,30 @@ paths:
           schema:
             type: integer
       responses:
-        '201': null
+        '201':
+          description: 수정 성공
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: updated
+        '401':
+          description: '없는 루트, 또는 다른 유저가 작성한 루트를 업데이트 하려는 경우'
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: unauthorized
         '500':
           description: 서버 오류
           content:
@@ -667,17 +710,6 @@ paths:
               schema:
                 type: object
                 $ref: '#/components/responses/ServerErr'
-        description: 수정 성공
-        content:
-          application/json:
-            schema: null
-            properties:
-              code:
-                type: integer
-                example: 201
-              message:
-                type: string
-                example: updated
       requestBody:
         required: true
         content:
@@ -730,6 +762,18 @@ paths:
                   message:
                     type: string
                     example: deleted
+        '401':
+          description: '없는 루트, 또는 다른 유저가 작성한 루트를 삭제 하려는 경우'
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: unauthorized
         '500':
           description: 서버 오류
           content:
@@ -808,6 +852,18 @@ paths:
                   message:
                     type: string
                     example: bad img type | Bad Request
+        '401':
+          description: 루트를 수정할 권한이 없는 경우
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: unauthorized
         '500':
           description: 서버 오류
           content:
@@ -826,13 +882,15 @@ paths:
                   type: string
                   description: 핀의 정보들
                   example:
-                    ranking: '2'
+                    ranking: 2
                     locationName: 핀이름
-                    address: 주소
-                    latitude: '12.123'
-                    longitude: '123.123'
-                    startTime: '1'
-                    endTime: '2'
+                    lotAddress: 지번 주소
+                    roadAddress: 도로명 주소
+                    ward: 구
+                    latitude: 12.123
+                    longitude: 123.123
+                    startTime: 1
+                    endTime: 2
                 files:
                   type: file
                   description: 핀의 사진들
@@ -868,7 +926,7 @@ paths:
                   message:
                     type: string
                     example: updated
-        '404':
+        '401':
           description: '없는 핀, 또는 다른 유저가 작성한 핀을 업데이트 하려는 경우'
           content:
             application/json:
@@ -876,10 +934,10 @@ paths:
                 properties:
                   code:
                     type: integer
-                    example: 404
+                    example: 401
                   message:
                     type: string
-                    example: not found
+                    example: unauthorized
         '500':
           description: 서버 오류
           content:
@@ -890,38 +948,26 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               type: object
               properties:
-                ranking:
-                  type: integer
-                  description: 핀의 순서
-                  example: 0
-                locationName:
+                pin:
                   type: string
-                  description: 핀의 이름
-                  example: 경치 좋은 곳
-                latitude:
-                  type: number
-                  description: 위도
-                  example: 33
-                longitude:
-                  type: number
-                  description: 경도
-                  example: 126
-                address:
-                  type: string
-                  description: 핀의 주소
-                  example: 서울특별시 성북구
-                startTime:
-                  type: string
-                  description: 핀의 시작 시간
-                  example: '12'
-                endTime:
-                  type: string
-                  description: 핀의 종료 시간
-                  example: '13'
+                  description: 핀의 정보들
+                  example:
+                    ranking: 1
+                    locationName: 새로운 핀이름
+                    lotAddress: 새로운 지번 주소
+                    roadAddress: 새로운 도로명 주소
+                    ward: 새로운 구
+                    latitude: 12.123
+                    longitude: 123.123
+                    startTime: 1
+                    endTime: 2
+                files:
+                  type: file
+                  description: 핀의 사진들. 기존 사진의 삭제는 다른 엔드포인트에 요청해야 한다.
     delete:
       tags:
         - routes
@@ -953,7 +999,7 @@ paths:
                   message:
                     type: string
                     example: deleted
-        '404':
+        '401':
           description: '없는 핀, 또는 다른 유저가 작성한 핀을 삭제 하려는 경우'
           content:
             application/json:
@@ -961,10 +1007,67 @@ paths:
                 properties:
                   code:
                     type: integer
-                    example: 404
+                    example: 401
                   message:
                     type: string
-                    example: not found
+                    example: unauthorized
+        '500':
+          description: 서버 오류
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/responses/ServerErr'
+  '/routes/{routesId}/pins/{pinId}/pictures/{pictureId}':
+    delete:
+      tags:
+        - routes
+      summary: 핀의 사진 삭제
+      description: 핀의 사진 삭제
+      parameters:
+        - name: routeId
+          in: path
+          description: 루트의 아이디
+          required: true
+          schema:
+            type: integer
+        - name: pinId
+          in: path
+          description: 핀의 아이디
+          required: true
+          schema:
+            type: integer
+        - name: pictureId
+          in: path
+          description: 사진의 아이디
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 삭제 성공
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: deleted
+        '401':
+          description: '없는 사진, 또는 다른 유저가 업로드한 사진을 삭제 하려는 경우'
+          content:
+            application/json:
+              schema:
+                properties:
+                  code:
+                    type: integer
+                    example: 401
+                  message:
+                    type: string
+                    example: unauthorized
         '500':
           description: 서버 오류
           content:
@@ -1032,9 +1135,9 @@ components:
           description: 갱신일자
           example: 2021-12-16T13:28:26.000Z
         public:
-          type: integer
+          type: boolean
           description: 루트의 공개 여부
-          example: 0
+          example: false
         color:
           type: string
           description: 루트의 색깔
@@ -1067,6 +1170,14 @@ components:
                 items:
                   type: object
                   properties:
+                    id:
+                      type: numner
+                      description: 사진의 아이디
+                      example: 60
+                    pinId:
+                      type: numner
+                      description: 사진이 속한 핀의 아이디
+                      example: 1
                     fileName:
                       type: string
                       description: 사진 파일명
@@ -1111,13 +1222,13 @@ components:
           description: 해당 핀이 DB에 저장한 핀과 인접한 핀인지 판별
           example: true
         startTime:
-          type: string
+          type: number
           description: 핀의 시작 시간
-          example: '12'
+          example: 12
         endTime:
-          type: string
+          type: number
           description: 핀의 종료 시간
-          example: '13'
+          example: 13
         Pictures:
           type: array
           description: 핀의 사진 정보들
@@ -1127,7 +1238,7 @@ components:
               id:
                 type: number
                 description: 사진 파일의 id
-                example: 1
+                example: 30
               pinId:
                 type: number
                 description: 사진이 속한 핀의 id
