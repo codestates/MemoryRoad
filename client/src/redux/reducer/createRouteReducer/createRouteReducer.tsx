@@ -20,9 +20,43 @@ import {
   UPDATE_PIN_RANK,
   UPDATE_FILE_RANK,
   UPDATE_PIN_POSITION,
+  DELETE_PIN,
+  UPDATE_ALL_PINS_TIME,
 } from '../../actions/index';
 import type { State } from '../initialState';
 import type { Action } from '../../actions/index';
+
+function deletePinID(arr: any, targetID: string) {
+  arr?.forEach((el: any, idx: number) => {
+    if (el['pinID'] === targetID) {
+      arr.splice(idx, 1);
+      return;
+    }
+  });
+}
+
+function updatePinRanking(updateList: any, updateTarget: any) {
+  updateList?.forEach((list: any) => {
+    updateTarget?.forEach((target: any) => {
+      if (list['pinID'] === target['pinID']) {
+        // target['ranking'] = target['ranking'] - 1;
+        target['pinID'] = `pin${target['ranking'] - 1}`;
+      }
+    });
+  });
+}
+
+function updatePositionName(updateList: any, updateTarget: any) {
+  updateList?.forEach((list: any) => {
+    updateTarget?.forEach((target: any) => {
+      if (list['pinID'] === target['pinID']) {
+        const str = target['pinID'];
+        const lastStr = str.charAt(str.length - 1);
+        target['pinID'] = 'pin' + String(Number(lastStr) - 1);
+      }
+    });
+  });
+}
 
 const createRouteReducer = (
   state: State = initialState,
@@ -101,8 +135,43 @@ const createRouteReducer = (
           }
         });
       });
-      console.log(newPositionedPins);
       copiedState.mapPinPosition = newPositionedPins;
+      return copiedState;
+    // 핀 삭제 -> 제일 번거로움. pinID와 ranking 모두 업데이트 해줘야함.
+    case DELETE_PIN:
+      const pinsArr4 = state?.pins?.slice();
+      const filesArr3 = state?.files?.slice();
+      const positionArr3 = state?.pinPosition?.slice();
+      const mapPosition1 = state?.mapPinPosition?.slice();
+      let idxForUpdate = 0;
+      mapPosition1?.forEach((el: any, idx: number) => {
+        if (el['pinID'] === action.payload) {
+          idxForUpdate = idx;
+        }
+      });
+      const pinNamesForUpdate = mapPosition1?.filter((el: any, idx: number) => {
+        if (idx >= idxForUpdate) return true;
+      });
+      console.log(pinNamesForUpdate); // check
+
+      deletePinID(pinsArr4, action.payload);
+      deletePinID(filesArr3, action.payload);
+      deletePinID(positionArr3, action.payload);
+      updatePinRanking(pinNamesForUpdate, pinsArr4);
+      updatePinRanking(pinNamesForUpdate, filesArr3);
+      updatePositionName(
+        pinNamesForUpdate,
+        positionArr3,
+      ); /* pinPosition은 업데이트 방식이 조금 독특함 */
+
+      copiedState.pins = pinsArr4;
+      copiedState.files = filesArr3;
+      copiedState.pinPosition = positionArr3;
+
+      return copiedState;
+    // 핀 전체 시간 업데이트
+    case UPDATE_ALL_PINS_TIME:
+      copiedState.route.time = action.payload;
       return copiedState;
     default:
       return state;

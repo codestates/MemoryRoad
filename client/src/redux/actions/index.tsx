@@ -51,6 +51,8 @@ export const UPDATE_PIN_TIME = 'UPDATE_PIN_TIME' as const;
 export const UPDATE_PIN_RANK = 'UPDATE_PIN_RANK' as const;
 export const UPDATE_FILE_RANK = 'UPDATE_FILE_RANK' as const;
 export const UPDATE_PIN_POSITION = 'UPDATE_PIN_POSITION' as const;
+export const DELETE_PIN = 'DELETE_PIN' as const;
+export const UPDATE_ALL_PINS_TIME = 'UPDATE_ALL_PINS_TIME' as const;
 
 // 핀 정보 저장 (First)
 // 핀 사진 저장 (First)
@@ -118,6 +120,14 @@ export const updatePinPosition = (arr: any) => ({
   type: UPDATE_PIN_POSITION,
   paylaod: arr,
 });
+export const deletePin = (pinID: string) => ({
+  type: DELETE_PIN,
+  payload: pinID,
+});
+export const updateAllpinsTime = (time: number) => ({
+  type: UPDATE_ALL_PINS_TIME,
+  payload: time,
+});
 
 //Action type 꼭 명시 부탁드립니다.
 export type Action =
@@ -132,4 +142,6 @@ export type Action =
   | ReturnType<typeof updatePinTime>
   | ReturnType<typeof updatePinRank>
   | ReturnType<typeof updateFileRank>
-  | ReturnType<typeof updatePinPosition>;
+  | ReturnType<typeof updatePinPosition>
+  | ReturnType<typeof deletePin>
+  | ReturnType<typeof updateAllpinsTime>;
