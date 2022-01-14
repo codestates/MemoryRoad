@@ -9,7 +9,7 @@ import { loginModal, setUserInfo } from '../redux/actions/index';
 import axios from 'axios';
 import { persistor } from '../index';
 
-function Nav() {
+function Nav({ url }: any) {
   const [isOpen, SetOpen] = useState(false);
   const navigate = useNavigate();
   const modalLogin = useSelector(
@@ -24,9 +24,11 @@ function Nav() {
   const loginButtonHandler = () => {
     if (userinfo.isLogin) {
       // 로그아웃 API
-      axios.get(`url/users/auth`).then((res) => {
+      axios.get(`${url}/users/auth`).then((res) => {
         if (res.status === 200) {
-          dispatch(setUserInfo(false, null, null, null, null, null)); // 유저의 정보를 모두 null 값으로 바꾸고 유저의 로그인 상태를 false로 바꿈
+          window.localStorage.clear(); // 로컬 스토리지를 비우고
+          window.location.reload(); // 새로고침
+          // dispatch(setUserInfo(false, null, null, null, null, null)); // 유저의 정보를 모두 null 값으로 바꾸고 유저의 로그인 상태를 false로 바꿈
           navigate('/'); // home으로 이동
         }
       });
@@ -77,7 +79,7 @@ function Nav() {
                 // persistor.purge(); // 로그아웃 누르면 상태가 안바뀜 , 다시 새로고침 하면 상태가 로그아웃 상태가됨
                 // dispatch(setUserInfo(false, null, null, null, null, null));
                 // persist purge를 이용?
-                console.log(userinfo);
+                // loginButtonHandler();
               } else {
                 dispatch(loginModal(true));
               }

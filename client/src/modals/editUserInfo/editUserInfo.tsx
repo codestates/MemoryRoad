@@ -57,9 +57,10 @@ function EditUserInfo({ isvalid, url }: any) {
   useEffect(() => {
     const getelement: any = document.getElementById('ProfileImg');
     const profileImg = getelement.files[0];
+    console.log(profileImg);
     const formData = new FormData(); // 폼데이터 형식으로 보냄
     formData.append('profile', profileImg);
-
+    console.log(formData.get('profile'));
     // blob : 사진을 저장할 때 사용함
     const blob = new Blob([JSON.stringify(profileImg)], {
       type: 'application/json',
@@ -155,7 +156,6 @@ function EditUserInfo({ isvalid, url }: any) {
                     id="ProfileImg"
                     name="ProfileImage"
                     onChange={(e) => {
-                      console.log(e.target.name);
                       readProfile(e.target);
                       if (readProfile(e.target)) {
                         setShowProfile(true);

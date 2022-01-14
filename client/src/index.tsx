@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-// import MemoryRoad from './pages/MemoryRoad';
+import MemoryRoad from './pages/MemoryRoad';
 import CreatePinMap from './pages/createPinMap/createPinMap';
 
 // redux

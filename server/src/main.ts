@@ -5,8 +5,15 @@ import cookieParser from 'cookie-parser';
 import { swaggerUi, swaggerSpec } from './swaggerDoc';
 import express from 'express';
 import { join } from 'path';
+import 'reflect-metadata';
+import {
+  initializeTransactionalContext,
+  patchTypeORMRepositoryWithBaseRepository,
+} from 'typeorm-transactional-cls-hooked';
 
 async function bootstrap() {
+  initializeTransactionalContext(); // Initialize cls-hooked
+  patchTypeORMRepositoryWithBaseRepository(); // patch Repository with BaseRepository. 레포지토리가 BaseRepository를 상속해 사용하지 않고, typeorm repository(https://github.com/typeorm/typeorm/blob/master/src/repository/Repository.ts)를 사용하는 경우 이 메소드를 사용한다.
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
     new ValidationPipe({

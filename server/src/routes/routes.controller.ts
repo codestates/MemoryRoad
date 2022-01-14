@@ -125,7 +125,6 @@ export class RoutesController {
     });
   }
 
-  //TODO: 해당 사용자가 작성한 루트만 삭제할 수 있어야 한다.
   // 루트를 삭제하면 루트를 참조하는 핀, 핀을 참조하는 사진들이 전부 삭제된다.(외래키에 on delete : cascade 속성이 있다.)
   @Delete('/:routeId')
   async deleteRoute(
@@ -144,7 +143,6 @@ export class RoutesController {
     });
   }
 
-  //TODO: 해당 사용자가 작성한 루트의 핀들만 조회할 수 있어야 한다.
   //해당 루트의 핀들 조회
   @Get('/:routeId/pins')
   async getPins(
@@ -162,7 +160,6 @@ export class RoutesController {
     });
   }
 
-  //TODO: 해당 사용자가 작성한 루트의 핀들만 업데이트 할 수 있어야 한다.
   //루트의 핀 업데이트. 사진은 추가만 가능하다.
   @Patch('/:routeId/pins/:pinId')
   @UseInterceptors(FilesInterceptor('files', 10, multerOptions))
