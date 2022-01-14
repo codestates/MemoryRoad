@@ -105,6 +105,8 @@ export class UsersController {
     const accessToken: string = await this.usersService.getAccessToken(
       userInfo,
     );
+    console.log(accessToken);
+    console.log(userInfo);
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       maxAge: 5 * 60 * 60 * 1000,
@@ -123,6 +125,7 @@ export class UsersController {
   //중복된 이메일 여부 확인
   @Post('/auth/local/email')
   async checkEmail(@Body('email') email: string, @Res() res: Response) {
+    console.log('hello');
     const check = await this.usersService.checkEmail(email);
     return res.status(200).send({ check, message: '사용 가능한 이메일입니다' });
   }
@@ -147,8 +150,8 @@ export class UsersController {
   }
 
   // 프로필 회원 정보 수정
-  @Patch('profile')
-  @UseInterceptors(FileInterceptor('file', multerOptions))
+  @Patch('/profile')
+  @UseInterceptors(FileInterceptor('profile', multerOptions))
   async updateProfile(
     @UploadedFile() file: Express.Multer.File,
     @Res() res: Response,
@@ -170,7 +173,7 @@ export class UsersController {
   // 유저네임 회원 정보 수정
   @Patch('/user-name')
   async updateUserName(
-    @Body() userName: string,
+    @Body('userName') userName: string,
     @Res() res: Response,
     @Req() req: Request,
   ) {
@@ -189,7 +192,7 @@ export class UsersController {
   // 비밀번호 정보 수정
   @Patch('/password')
   async updatePassword(
-    @Body() password: string,
+    @Body('password') password: string,
     @Res() res: Response,
     @Req() req: Request,
   ) {

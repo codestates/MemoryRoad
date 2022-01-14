@@ -217,6 +217,7 @@ export class UsersService {
   async local(loginUserDto: LoginUserDto): Promise<UserEntity> {
     const isExistUser: UserEntity = await this.usersRepository.findOne({
       email: loginUserDto.email,
+      oauthLogin: null,
     });
     if (!isExistUser) {
       throw new NotFoundException(`유효하지 않은 이메일입니다`);
@@ -258,6 +259,7 @@ export class UsersService {
   async updateUserName(accessToken: string, userName: string) {
     const decoded = await this.verifyAccessToken(accessToken);
     decoded['nickName'] = userName;
+    console.log(decoded['nickName']);
     const user: UserEntity = {
       id: decoded['id'],
       email: decoded['email'],
@@ -301,6 +303,7 @@ export class UsersService {
     const isExistEmail: UserEntity = await this.usersRepository.findOne({
       email: email,
     });
+    console.log(isExistEmail);
     if (isExistEmail) {
       throw new BadRequestException('사용중인 이메일입니다');
     }
