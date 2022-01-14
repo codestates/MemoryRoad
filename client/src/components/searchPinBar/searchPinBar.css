@@ -20,7 +20,7 @@
 /*검색창 전체 컨테이너*/
 #searchPin-background {
   position: fixed;
-  z-index: 995;
+  /* z-index: 3; */
   width: 320px;
   height: 40px;
   display: flex;

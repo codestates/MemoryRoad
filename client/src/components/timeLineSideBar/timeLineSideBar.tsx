@@ -8,18 +8,31 @@ import {
   updatePinRank,
   updateFileRank,
   updatePinPosition,
+  deletePin,
+  updateAllpinsTime,
 } from '../../redux/actions/index';
 import { RootState } from '../../redux/reducer/index';
 import SetTime from './setTime';
 
-function TimeLineSideBar({ pinCards, layoutState, setLayoutState }: any) {
+function TimeLineSideBar({
+  pinCards,
+  layoutState,
+  setLayoutState,
+  handleSidebarSaveBtn,
+}: any) {
+  // 사이드바 열고 닫기
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const handleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+  const [isMouseOnCard, setIsMouseOnCard] = useState(false);
+  const [currCardTitle, setCurrCardTitle] = useState(null);
   const dispatch = useDispatch();
   const routeState: any = useSelector(
     (state: RootState) => state.createRouteReducer,
   );
-  console.log(routeState.pins);
-  console.log(routeState.pinPosition);
 
+  const handleDeletePin = (pinID: string) => dispatch(deletePin(pinID));
   // localStorage에서 pinPosition 가져오기. -> 위도,경도,장소의 이름
   // layout 상태 추적해서 상태가 변경되면
   //    * 순서 변경
@@ -78,6 +91,17 @@ function TimeLineSideBar({ pinCards, layoutState, setLayoutState }: any) {
     });
     /* 시간 변경 상태변화 요청 보내기 --> 업데이트 잘 됩니다 !! */
     dispatch(updatePinTime(newTimePinCards));
+    /* 총 시간 구하기 */
+    const totalTime = pinCards
+      ?.slice(1)
+      .reduce((prev: any, curr: any, currIdx: number) => {
+        const currSH = parseInt(layout[currIdx].y) * 0.5;
+        const currEH = parseInt(layout[currIdx].y + layout[currIdx].h) * 0.5;
+        const currTimes = currEH - currSH;
+        return prev + currTimes;
+      }, 0);
+    console.log(totalTime); // 굳굳
+    dispatch(updateAllpinsTime(totalTime));
     // 순서 변경 로직
     const reRankedPins = layout
       .map((el: any) => {
@@ -99,10 +123,16 @@ function TimeLineSideBar({ pinCards, layoutState, setLayoutState }: any) {
     /* 레이아웃 상태 업데이트 */
     setLayoutState(layout);
   };
-  // 사이드바 열고 닫기
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const handleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+  /* onMouseEnter -> 이벤트 버블링이 발생하지 않습니다. */
+  const onMouseEnter = (event: any) => {
+    /* 하나의 레이어가 얹혀진다고 생각하자. */
+    const locationName = event.target.childNodes[0].textContent;
+    setCurrCardTitle(locationName);
+    setIsMouseOnCard(true);
+  };
+  /* onMouseLeave -> 이벤트 버블링이 발생하지 않습니다. */
+  const onMouseLeave = () => {
+    setIsMouseOnCard(false);
   };
   /* -------------------------------- useEffect */
   useEffect(() => {
@@ -177,18 +207,35 @@ function TimeLineSideBar({ pinCards, layoutState, setLayoutState }: any) {
                       };
                       const time = getTime(sh, eh, sm, em);
                       return (
-                        <div className="pinCard-container" key={idx}>
+                        <div
+                          className="pinCard-container"
+                          key={idx}
+                          // onBlur={() => console.log('onBlur')}
+                          // onFocus={() => console.log('onFocus')}
+                          onMouseEnter={onMouseEnter}
+                          onMouseLeave={onMouseLeave}
+                        >
                           <div className="pinCard-title">{locationName}</div>
-                          {/* <SetTime
-                            endTime={endTime}
-                            readonly
-                            startTime={startTime}
-                          /> */}
-                          <div className="pinCard-time-container">
-                            <div className="pinCard-time-calculate">{time}</div>
-                            시간
-                          </div>
-                          {/* <button className="plancard__delete-btn">삭제</button> */}
+                          {isMouseOnCard && currCardTitle === locationName ? (
+                            <div className="pinCard-btn-container">
+                              <button
+                                className="pinCard-delete-btn"
+                                onClick={() => handleDeletePin(pinID)}
+                              >
+                                삭제
+                              </button>
+                              <button className="pinCard-modify-btn">
+                                수정
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="pinCard-time-container">
+                              <div className="pinCard-time-calculate">
+                                {time}
+                              </div>
+                              시간
+                            </div>
+                          )}
                         </div>
                       );
                     })}
@@ -216,7 +263,14 @@ function TimeLineSideBar({ pinCards, layoutState, setLayoutState }: any) {
                 </div>
               </div>
               <div className="pinControllTower-btn-container">
-                <button id="pinControllTower-save-btn">루트 저장하기</button>
+                <button
+                  id="pinControllTower-save-btn"
+                  onClick={() => {
+                    handleSidebarSaveBtn(true);
+                  }}
+                >
+                  루트 저장하기
+                </button>
               </div>
             </div>
           </div>

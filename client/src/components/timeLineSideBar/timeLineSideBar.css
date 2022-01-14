@@ -1,6 +1,6 @@
 #pinControllTower-fix {
   position: fixed;
-  z-index: 999; /*검색창때문에.*/
+  z-index: 6; /*검색창때문에.*/
 }
 /*사이드바 컨테이너*/
 #pinControllTower-container {
@@ -152,7 +152,7 @@
   border: 2px solid rgb(232, 232, 232);
 }
 .pinCard-container:hover {
-  background-color: #cee2d5;
+  background-color: #b2d4be;
 }
 .pinCard-title {
   color: rgb(89, 89, 89);
@@ -162,6 +162,7 @@
   font-weight: 700;
   margin: 9px 0 2px 8px; 
 }
+/* 열심히 구현은 해놓았으나 쓰이지 않았다. */
 .pinCard-description {
   color:rgb(123, 123, 123);
   /* position: absolute; */
@@ -196,15 +197,29 @@
 .pinCard-time-calculate {
   color: white;
 }
-/* .plancard__delete-btn {
-  display: none;
-  background-color: #fff6f7;
-  position: absolute;
-  right: 1rem;
-  bottom: 1rem;
-  font-size: 0.7rem;
-} */
-
+.pinCard-btn-container {
+  z-index: 8;
+}
+.pinCard-delete-btn {
+  position: fixed;
+  top: 6px;
+  left: 150px;
+  border: none;
+  font-size: 0.8em;
+  font-weight: 600;
+  color: white;
+  background-color: transparent;
+}
+.pinCard-modify-btn {
+  position: fixed;
+  top: 6px;
+  left: 120px;
+  border: none;
+  font-size: 0.8em;
+  font-weight: 600;
+  color: white;
+  background-color: transparent;
+}
 
 
 /*루트 저장버튼 컨테이너*/
