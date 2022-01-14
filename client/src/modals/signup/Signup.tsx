@@ -83,90 +83,103 @@ function SignUp({ isvalid, url }: any) {
   return (
     <div>
       <Mist />
-      <div className="signup-SignUpBorder">
-        <div className="signup-center signup-titleSignup">회원가입</div>
-        <div className="signup-textOninput">이메일</div>
-        <input
-          className="signup-input2"
-          maxLength={20}
-          onChange={InputEmail}
-          placeholder="이메일을 입력해주세요."
-          type="text"
-        ></input>
-        <button className="signup-Emailcheck" onClick={emailChecking}>
-          이메일 중복확인
-        </button>
-        <div className="signup-ErrorMessage2" style={{ marginBottom: '30px' }}>
-          {isvalid(Email, '', '') === 'Email'
-            ? null
-            : '5자이상 영문,숫자,특수기호만 사용가능합니다'}
-        </div>
-        <div className="signup-textOninput">닉네임</div>
-        <input
-          className="signup-input2"
-          maxLength={10}
-          onChange={InputUsername}
-          placeholder="닉네임을 입력해주세요."
-          type="text"
-        ></input>
-        <div className="signup-ErrorMessage2" style={{ marginBottom: '30px' }}>
-          {isvalid('', username, '') === 'Username'
-            ? null
-            : '공백이 들어갈 수 없고 2자이상이어야 합니다'}
-        </div>
-        <div className="signup-textOninput">비밀번호</div>
-        <input
-          className="signup-input2"
-          maxLength={16}
-          onChange={InputPassword}
-          placeholder="비밀번호를 입력해주세요."
-          type="password"
-        ></input>
-        <div className="signup-ErrorMessage2">
-          {isvalid('', '', Password) === 'Password'
-            ? null
-            : '8~16자의 영문,숫자,특수문자를 사용하세요'}
-        </div>
-        <input
-          className="signup-input2"
-          maxLength={16}
-          onChange={InputCheckingPassword}
-          placeholder="비밀번호을 다시 한번 입력해주세요."
-          type="password"
-        ></input>
-        <div className="signup-ErrorMessage2" style={{ marginBottom: '15px' }}>
-          {Password === checkingPassword
-            ? null
-            : '비밀번호가 일치하지 않습니다.'}
-        </div>
-        <div className="signup-center">
-          <button
-            className="signup-SignUpButton signup-pointer"
-            onClick={signup}
-          >
-            회원가입
-          </button>
-        </div>
-        <div className="signup-ErrorMessage2 signup-center2">
-          {errorMessage}
-        </div>
-        <div className="signup-ToLogin">
-          혹시 회원이신가요?{' '}
-          <b
-            className="signup-pointer"
-            onClick={() => {
-              dispatch(signupModal(false)); // 회원가입 모달창을 닫고
-              dispatch(loginModal(true)); // 로그인 모달창을 연다
-            }}
-            onKeyDown={() => {
-              dispatch(signupModal(false));
-              dispatch(loginModal(true));
-            }}
-            role="menu"
-            tabIndex={0}
-          >
-            로그인
-          </b>
+      <div className="signup-modal-align-center-fix">
+        <div className="signup-SignUpBorder">
+          <div className="signup-center signup-titleSignup">회원가입</div>
+          <div className="signup-center-fix-fix-fix">
+            <div className="signup-textOninput">이메일</div>
+            <input
+              className="signup-input2"
+              maxLength={20}
+              onChange={InputEmail}
+              placeholder="이메일을 입력해주세요."
+              type="text"
+            ></input>
+            <button className="signup-Emailcheck" onClick={emailChecking}>
+              이메일 중복확인
+            </button>
+            <div
+              className="signup-ErrorMessage2"
+              style={{ marginBottom: '30px' }}
+            >
+              {isvalid(Email, '', '') === 'Email'
+                ? null
+                : '5자이상 영문,숫자,특수기호만 사용가능합니다'}
+            </div>
+            <div className="signup-textOninput">닉네임</div>
+            <input
+              className="signup-input2"
+              maxLength={10}
+              onChange={InputUsername}
+              placeholder="닉네임을 입력해주세요."
+              type="text"
+            ></input>
+            <div
+              className="signup-ErrorMessage2"
+              style={{ marginBottom: '30px' }}
+            >
+              {isvalid('', username, '') === 'Username'
+                ? null
+                : '공백이 들어갈 수 없고 2자이상이어야 합니다'}
+            </div>
+            <div className="signup-textOninput">비밀번호</div>
+            <input
+              className="signup-input2"
+              maxLength={16}
+              onChange={InputPassword}
+              placeholder="비밀번호를 입력해주세요."
+              type="password"
+            ></input>
+            <div className="signup-ErrorMessage2">
+              {isvalid('', '', Password) === 'Password'
+                ? null
+                : '8~16자의 영문,숫자,특수문자를 사용하세요'}
+            </div>
+            <input
+              className="signup-input2"
+              maxLength={16}
+              onChange={InputCheckingPassword}
+              placeholder="비밀번호을 다시 한번 입력해주세요."
+              type="password"
+            ></input>
+            <div
+              className="signup-ErrorMessage2"
+              style={{ marginBottom: '15px' }}
+            >
+              {Password === checkingPassword
+                ? null
+                : '비밀번호가 일치하지 않습니다.'}
+            </div>
+            <div className="signup-ErrorMessage2 signup-center2">
+              {errorMessage}
+            </div>
+            <div className="signup-center">
+              <button
+                className="signup-SignUpButton signup-pointer"
+                onClick={signup}
+              >
+                회원가입
+              </button>
+            </div>
+          </div>
+          <div className="signup-ToLogin">
+            혹시 회원이신가요?{' '}
+            <b
+              className="signup-pointer"
+              onClick={() => {
+                dispatch(signupModal(false)); // 회원가입 모달창을 닫고
+                dispatch(loginModal(true)); // 로그인 모달창을 연다
+              }}
+              onKeyDown={() => {
+                dispatch(signupModal(false));
+                dispatch(loginModal(true));
+              }}
+              role="menu"
+              tabIndex={0}
+            >
+              로그인
+            </b>
+          </div>
         </div>
       </div>
     </div>

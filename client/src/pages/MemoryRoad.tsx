@@ -122,21 +122,19 @@ const MemoryRoad = () => {
   }, [socialLogin]);
   return (
     <div>
-      <BrowserRouter>
-        <div>
-          {modalLogin ? <LoginModal url={url} /> : null}
-          {modalSignup ? <SignUp isvalid={isvalid} url={url} /> : null}
-          {modalCheckPassword ? <CheckingPassword url={url} /> : null}
-          {modalEditUserInfo ? (
-            <EditUserInfo isvalid={isvalid} url={url} />
-          ) : null}
-          {modalWithdrawal ? <Withdrawal url={url} /> : null}
-          <Nav url={url} />
-          <Routes>
-            <Route element={<Mypage />} path="/Mypage" />
-          </Routes>
-        </div>
-      </BrowserRouter>
+      <div>
+        {modalLogin ? <LoginModal url={url} /> : null}
+        {modalSignup ? <SignUp isvalid={isvalid} url={url} /> : null}
+        {modalCheckPassword ? <CheckingPassword url={url} /> : null}
+        {modalEditUserInfo ? (
+          <EditUserInfo isvalid={isvalid} url={url} />
+        ) : null}
+        {modalWithdrawal ? <Withdrawal url={url} /> : null}
+        <Nav url={url} />
+        <Routes>
+          <Route element={<Mypage />} path="/Mypage" />
+        </Routes>
+      </div>
     </div>
   );
 };

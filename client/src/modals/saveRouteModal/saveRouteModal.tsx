@@ -120,6 +120,7 @@ function SaveRouteModal({ handleSidebarSaveBtn }: any) {
       // axios({
 
       // })
+      // axios 요청 성공적으로 보내면 창 닫기 로직 구현. handleSidebarSaveBtn(false) -> then메서드 이후에 처리할것.
     }
   };
   return (
