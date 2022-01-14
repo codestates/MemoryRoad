@@ -33,6 +33,8 @@ paths:
     $ref: './route.yaml#/~1routes~1{routesId}~1pins'
   /routes/{routesId}/pins/{pinId}:
     $ref: './route.yaml#/~1routes~1{routesId}~1pins~1{pinId}'
+  /routes/{routesId}/pins/{pinId}/pictures/{pictureId}:
+    $ref: './route.yaml#/~1routes~1{routesId}~1pins~1{pinId}~1pictures~1{pictureId}'
 
   /wards:
     $ref: './ward.yaml#/~1wards'
@@ -69,9 +71,9 @@ components:
           description: 갱신일자
           example: 2021-12-16 13:28:26
         public:
-          type: integer
+          type: boolean
           description: 루트의 공개 여부
-          example: 0
+          example: false
         color:
           type: string
           description: 루트의 색깔
@@ -104,6 +106,14 @@ components:
                 items:
                   type: object
                   properties:
+                    id:
+                      type: numner
+                      description: 사진의 아이디
+                      example: 60
+                    pinId:
+                      type: numner
+                      description: 사진이 속한 핀의 아이디
+                      example: 1
                     fileName:
                       type: string
                       description: 사진 파일명
@@ -148,13 +158,13 @@ components:
           description: 해당 핀이 DB에 저장한 핀과 인접한 핀인지 판별
           example: true
         startTime:
-          type: string
+          type: number
           description: 핀의 시작 시간
-          example: '12'
+          example: 12
         endTime: 
-          type: string
+          type: number
           description: 핀의 종료 시간
-          example: '13'
+          example: 13
         Pictures:
           type: array
           description: 핀의 사진 정보들
@@ -164,7 +174,7 @@ components:
               id: 
                 type: number
                 description: 사진 파일의 id
-                example: 1
+                example: 30
               pinId:
                 type: number
                 description: 사진이 속한 핀의 id

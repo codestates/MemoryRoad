@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-// import MemoryRoad from './pages/MemoryRoad';
+import MemoryRoad from './pages/MemoryRoad';
 import CreatePinMap from './pages/createPinMap/createPinMap';
 // import SaveRouteModal from './modals/saveRouteModal/saveRouteModal';
 
@@ -18,7 +18,7 @@ export const persistor = persistStore(store); // { manualPersist: true } -> redu
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <CreatePinMap />
+      <MemoryRoad />
     </PersistGate>
   </Provider>,
   document.getElementById('root'),

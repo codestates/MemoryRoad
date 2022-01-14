@@ -59,6 +59,8 @@ function CreatePinMap() {
     setIsSidebarSaveBtnClicked(bool);
   };
 
+  /* 나 테스트 할거다. --------------------------------------------------------------------------------------------------------------------------------- */
+
   let map: any = [];
 
   /* 타임라인사이드바에서 올라온 핀카드애오 ---------------------------------------------------------------------------------*/
@@ -136,6 +138,7 @@ function CreatePinMap() {
     });
     batch(() => {
       dispatch(savePinInfo(pinID, ranking, pinTitle, currMarkerInfo)); // 첫번째 저장은 빨리 됩니다.
+
       dispatch(savePinImageFiles(pinID, ranking, arr));
       dispatch(savePinPosition(pinID, pinTitle, latlng));
     });

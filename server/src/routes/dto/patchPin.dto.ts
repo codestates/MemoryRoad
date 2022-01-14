@@ -33,4 +33,7 @@ export class PatchPinDto implements Pin {
 
   @IsNumber()
   readonly endTime: number;
+
+  @IsString({ each: true })
+  keywords: string[];
 }

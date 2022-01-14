@@ -22,6 +22,7 @@ import {
   UPDATE_PIN_POSITION,
   DELETE_PIN,
   UPDATE_ALL_PINS_TIME,
+
 } from '../../actions/index';
 import type { State } from '../initialState';
 import type { Action } from '../../actions/index';
