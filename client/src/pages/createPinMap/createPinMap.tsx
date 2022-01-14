@@ -12,6 +12,8 @@ import { persistor } from '../../../src/index';
 import './createPinMap.css';
 import createPinModal from '../../modals/createPinModal/createPinModal'; // 핀 생성 모달창
 import SearchPinBar from '../../components/searchPinBar/searchPinBar'; // 핀 검색창
+import ConfirmPinIsEmptyModal from '../../modals/confirmPinIsEmpty/confirmPinIsEmptyModal'; // 핀 오류 모달창
+import SaveRouteModal from '../../modals/saveRouteModal/saveRouteModal'; // 루트 저장 모달창
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
 import FakeHeader from '../../components/map-test/fakeHeader'; // 가짜 헤더입니다 착각 조심 ^ㅁ^
 import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBar';
@@ -32,10 +34,12 @@ function CreatePinMap() {
   );
   // pin 저장 배열만 빼옴
   const { route, pins, files, pinPosition, mapPinPosition } = routeState;
-  // console.log('route', route);
-  // console.log('pins', pins); // 잘 업데이트가 되었다는 소린데 ..
-  // console.log('files', files);
-  // console.log('pinPosition', pinPosition);
+  console.log('-------------------------------');
+  console.log('route', route);
+  console.log('pins', pins);
+  console.log('files', files);
+  console.log('pinPosition', pinPosition);
+  console.log('mapPinPosition', mapPinPosition);
 
   // *상태 관리
   const [currLevel, setCurrLevel] = useState(8); // 지도의 레벨
@@ -48,33 +52,20 @@ function CreatePinMap() {
   const [pinImages, setPinImages] = useState<any[]>([]); // 핀의 사진 (file객체에서 바로 빼내온 사진들 배열)  -> useState<any[]>([]) 그냥 할당하는것과 어떤차이가 있는지 ??
   const [pinImageNames, setPinImageNames] = useState<any[]>([]); // 핀의 사진의 이름들
   const [mutations, setMutations] = useState(0); // DOM의 변경사항 감지
+  const [isEmptyInfo, setIsEmptyInfo] = useState(false);
+  const [isSidebarSaveBtnClicked, setIsSidebarSaveBtnClicked] = useState(false);
+
+  const handleSidebarSaveBtn = (bool: boolean) => {
+    setIsSidebarSaveBtnClicked(bool);
+  };
 
   /* 나 테스트 할거다. --------------------------------------------------------------------------------------------------------------------------------- */
 
   let map: any = [];
-  // 아 진짜 persist 포기할까
-  /* redux-persist test */
-  // const rawData: any = localStorage.getItem('persist:root'); // 로컬스토리지에서 상태가져오기 -> localStorage값으로 id, ranking 업데이트.
-  // const rawDataJSONone = JSON.parse(rawData);
-  // const bb: any = rawDataJSONone?.createRouteReducer;
-  // console.log(bb);
-  // console.log(cc);
-  // const persistedState: any = {};
-  // for (const key in cc) {
-  //   if (typeof cc[key] === 'object') {
-  //     persistedState[key] = cc[key];
-  //   }
-  // }
-  // const { route, pins, files, pinPosition } = persistedState;
 
   /* 타임라인사이드바에서 올라온 핀카드애오 ---------------------------------------------------------------------------------*/
   /* react-grid-layout */
   const [layoutState, setLayoutState] = useState([]);
-  // for (const key in rawDataJSONtwo) {
-  //   if(typeof rawDataJSONtwo[key] !== undefined){
-  //     persistedState[key] = JSON.parse(rawDataJSONone[key]);
-  //   }
-  // }
   // 아니 왜 여기서 이중for문을 돌면서 join을 하고 앉았냐고
   const pinCards = pinPosition?.map((card: any) => {
     // 맨 앞 null data 제거해줍니다.
@@ -89,7 +80,6 @@ function CreatePinMap() {
     });
     return newObj;
   });
-  console.log('persistedState의 pinCards', pinCards); // 생성 잘됩니다.
 
   /* 핀 카드로 길을 표현해볼게요. */
   /* 핀 이미지 마커 */
@@ -153,9 +143,10 @@ function CreatePinMap() {
       dispatch(savePinPosition(pinID, pinTitle, latlng));
     });
     setSaveBtnClick(false);
-    setPinTitle('');
-    setPinImages([]);
-    setPinImageNames([]);
+    // setPinTitle('');
+    // setPinImages([]);
+    // setPinImageNames([]);
+
     // /*---------- formData axios 요청 보낼 것. -> 핀 하나만 수정할 때 쓸 수 있는 폼 데이터 형식 ------------*/
     // // window의 formData 생성
     // const formData = new FormData();
@@ -264,13 +255,16 @@ function CreatePinMap() {
   // 핀 삭제 / 수정 버튼 (사이드바) 요청에 따라 또 전역 상태 변경해줘야하는데 .. -> 모두 리덕스에서 sessionStorage를 처리하도록 해야겄다..!
   const handleSavePin = () => {
     console.log('저장 버튼을 눌렀습니다. 창을 닫습니다');
-    const deleteTag: any = document.getElementById('createPinModal-background');
-    deleteTag.remove();
-    handleIsModalOpen(false);
-    setSaveBtnClick(true);
-
-    // 잠깐만 ... 이것도 일단 잔역 상태(store)에 이미지 배열만 좌르륵 저장해놓고 -> 루트 저장버튼을 누르면 (사이드바) 그제서야 form을 생성하여 데이터를 보내줘야할까.
-    // 이제 핀을 생성한 후에 이미지들이 들어있는 배열을 0으로 만들때 쓰는 상태업데이트.
+    if (pinTitle.length === 0) {
+      setIsEmptyInfo(true);
+    } else {
+      const deleteTag: any = document.getElementById(
+        'createPinModal-background',
+      );
+      deleteTag.remove();
+      handleIsModalOpen(false);
+      setSaveBtnClick(true);
+    }
   };
   // 핀의 사진 개별 삭제 버튼 핸들러 함수 (브라우저위에서만 제거합니다. 실제 상태를 업데이트하지는 않습니다.)
   function deletePinImgFile(event: any) {
@@ -587,6 +581,12 @@ function CreatePinMap() {
   return (
     <>
       <div id="map-whole-container">
+        {isEmptyInfo ? (
+          <ConfirmPinIsEmptyModal setIsEmptyInfo={setIsEmptyInfo} />
+        ) : null}
+        {isSidebarSaveBtnClicked ? (
+          <SaveRouteModal handleSidebarSaveBtn={handleSidebarSaveBtn} />
+        ) : null}
         <div id="map-navigator-top">
           <FakeHeader />
           <SearchPinBar
@@ -597,6 +597,7 @@ function CreatePinMap() {
           />
         </div>
         <TimeLineSideBar
+          handleSidebarSaveBtn={handleSidebarSaveBtn}
           layoutState={layoutState}
           pinCards={pinCards}
           setLayoutState={setLayoutState}
