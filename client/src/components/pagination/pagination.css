@@ -1,0 +1,24 @@
+/*페이지네이션*/
+.myRouteStore-paginations-prev-btn,
+.myRouteStore-paginations-next-btn {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 5px;
+}
+.myRouteStore-paginations-prev-img,
+.myRouteStore-paginations-next-img {
+  width: 15px;
+  opacity: 0.4;
+}
+.myRouteStore-paginations-page-btn { /*page nums*/
+  border: 2px solid rgb(232, 232, 232);
+  border-radius: 8px;
+  outline: none;
+  margin: 0 4px;
+  font-size: 0.8em;
+  font-weight: 800;
+  color: rgb(72, 72, 72);
+  background: transparent;
+  cursor: pointer;
+}

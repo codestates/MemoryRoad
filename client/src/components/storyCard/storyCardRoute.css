@@ -1,0 +1,26 @@
+.myRouteStore-card-pin {
+    text-align: center;
+    font-size: 0.75em;
+  }
+  .myRouteStore-card-dot-title {
+    width: 50px;
+    height: 14x;
+    /*글자 넘침 표현*/
+    overflow: hidden;
+    word-wrap: break-word;
+    text-overflow: ellipsis;
+    display: -webkit-box; 
+    -webkit-line-clamp: 3; 
+    -webkit-box-orient: vertical;
+    margin: 5px 0 8px 0px;
+    color: rgb(0, 0, 0);
+  }
+  .myRouteStore-card-dot {
+    width: 11px;
+  }
+  .myRouteStore-card-dot-line {
+    position: absolute;
+    margin-top: 4px;
+    width: 100%;
+    height: 3px;
+  }
