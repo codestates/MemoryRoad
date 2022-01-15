@@ -29,7 +29,7 @@ async function bootstrap() {
   });
 
   //사진이 저장된 정적 파일 경로 지정
-  app.use('/upload', express.static(join(__dirname, '../upload')));
+  app.use('/upload', express.static(join(__dirname, '../../upload')));
   app.use(cookieParser());
   //스웨거 적용을 위한 전역 미들웨어
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
