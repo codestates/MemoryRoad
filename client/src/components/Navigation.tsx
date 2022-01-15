@@ -50,7 +50,7 @@ function Nav({ url }: any) {
             <img
               alt="Logo"
               className="nav-logo"
-              src="http://127.0.0.1:5500/client/public/img/MeMoryRoadLogo.png"
+              src="http://127.0.0.1:5500/client/public/img/LOGO.png"
             />
           </div>
           <div></div>

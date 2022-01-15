@@ -1,0 +1,329 @@
+.myRouteStore-wrapper {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+.myRouteStore-background {
+  width: 100vw;
+  height: 92vh;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+}
+.myRouteStore-container {
+  width: 65%;
+  height: 100%;
+}
+
+.myRouteStore-title {
+  font-size: 2em;
+  font-weight: 800;
+  color: rgb(53, 53, 53);
+  margin: 90px 0;
+}
+
+.myRouteStore-divide-line {
+  height: 2px;
+  border: none;
+  background-color: rgb(234, 234, 234);
+}
+
+/*selectBoxZone*/
+.myRouteStore-selectZone {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  margin: 30px 0;
+}
+.myRouteStore-selectBoxZone {
+  width: 330px;
+  display: flex;
+  justify-content: space-between;
+}
+.myRouteStore-searchBoxZone {
+  width: 247px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/*검색창*/
+.myRouteStore-search-input {
+  width: 180px;
+  height: 30px;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  border: 2px solid rgb(194, 194, 194);
+  background-color: rgb(227, 227, 227);
+  padding-left: 5px;
+}
+.myRouteStore-search-btn {
+  width: 50px;
+  height: 35px;
+  border: none;
+  outline: none;
+  color: white;
+  font-size: 0.9em;
+  font-weight: 700;
+  border-radius: 8px;
+  background-color: #91BA9F;
+}
+
+/*카드 상자*/
+.myRouteStore-contentBox {
+  /* position: relative; */
+  width: 100%;
+  height: 65%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+}
+.myRouteStore-contents {
+  width: 1100px;
+  height: 90%; /*컨텐츠 내부 박스 높이*/
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.myRouteStore-contents::-webkit-scrollbar {
+  width: 7px;
+}
+.myRouteStore-contents::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgb(148, 148, 148);
+}
+.myRouteStore-contents::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/*루트 생성창으로 이동하는 버튼*/
+.myRouteStore-createRouteBox-btn {
+  width: 320px;
+  height: 220px;
+  border: none;
+  border: 2.5px dashed rgb(203, 203, 203);
+  border-radius: 20px;
+  margin: 12px;
+  outline: none;
+  cursor: pointer;
+  background-color: transparent;
+}
+.myRouteStore-createRouteBox-add-image {
+  width: 25px;
+  opacity: 0.3;
+}
+
+/*컴포넌트 디자인*/
+.myRouteStore-card-container {
+  width: 320px;
+  height: 220px;
+  margin: 12px;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+.myRouteStore-card-top {
+  width: 100%;
+  height: 45%;
+}
+.myRouteStore-card-image { /*image*/
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.75;
+  border-radius: 15px 15px 0 0;
+}
+.myRouteStore-card-bottom {
+  width: 100%;
+  height: 55%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0 0 15px 15px;
+  background-color: rgb(232, 232, 232);
+}
+.myRouteStore-card-title {
+  position: relative;
+  width: 295px;
+  display: flex;
+  justify-content: space-between;
+}
+.myRouteStore-card-text { /*text*/
+  margin: none;
+  margin: 10px 0 0 5px;
+  font-size: 1.1em;
+  font-weight: 700;
+  color:rgb(38, 38, 38);
+}
+.myRouteStore-card-time-container { /*time*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 9px;
+  right: 8px;
+  padding: 3px 7px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.7em;
+  color: white;
+  background-color: rgb(139, 139, 209);
+}
+.myRouteStore-card-time {
+  margin-right: 1px;
+  margin-bottom: 0.5px;
+}
+.myRouteStore-card-date { /*date*/
+  position: relative;
+  right: 108px;
+  font-weight: 300;
+  font-size: 0.8em;
+  color:rgb(155, 155, 155);
+}
+.myRouteStore-card-route { /*route line*/
+  position: relative;
+  width: 280px;
+  display: flex;
+  justify-content: space-evenly;
+}
+.myRouteStore-card-pin {
+  text-align: center;
+  font-size: 0.75em;
+}
+.myRouteStore-card-dot-title {
+  width: 50px;
+  height: 14x;
+  /*글자 넘침 표현*/
+  overflow: hidden;
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  display: -webkit-box; 
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;
+  margin: 5px 0 8px 0px;
+  color: rgb(0, 0, 0);
+}
+.myRouteStore-card-dot {
+  width: 11px;
+}
+.myRouteStore-card-dot-line {
+  position: absolute;
+  margin-top: 4px;
+  width: 100%;
+  height: 3px;
+}
+
+/*페이지네이션*/
+.myRouteStore-paginations {
+  position: relative;
+  top: 40px;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+}
+.myRouteStore-paginations-prev-btn,
+.myRouteStore-paginations-next-btn {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 5px;
+}
+.myRouteStore-paginations-prev-img,
+.myRouteStore-paginations-next-img {
+  width: 15px;
+  opacity: 0.4;
+}
+.myRouteStore-paginations-page-btn { /*page nums*/
+  border: 2px solid rgb(232, 232, 232);
+  border-radius: 8px;
+  outline: none;
+  margin: 0 4px;
+  font-size: 0.8em;
+  font-weight: 800;
+  color: rgb(72, 72, 72);
+  background: transparent;
+  cursor: pointer;
+}
+
+/*아이패드 프로 대응*/
+@media screen and (max-width: 1024px){
+  .myRouteStore-container{
+    width: 75%;
+  }
+  .myRouteStore-contentBox{
+    height: 78%;
+  }
+  .myRouteStore-contents {
+    height: 80%;
+  }
+}
+/*아이패드 대응*/
+@media screen and (max-width: 800px){
+  .myRouteStore-container{
+    width: 95%;
+  }
+  .myRouteStore-title {
+    margin-top: 120px;
+    margin-bottom: 70px;
+  }
+}
+/*아이폰 대응*/
+@media screen and (max-width: 600px){
+  .myRouteStore-searchBoxZone {
+    width: 100vw;
+    position: relative;
+    justify-content: flex-end;
+    margin-top: 15px;
+  }
+  .myRouteStore-search-input {
+    margin-right: 6px;
+  }
+  .myRouteStore-title {
+    margin-top: 100px;
+    margin-bottom: 55px;
+  }
+  .myRouteStore-selectZone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .myRouteStore-searchBoxZone {
+    margin-right: 17%;
+  }
+  .myRouteStore-paginations {
+    padding-bottom: 190px;
+  }
+}
+/*갤럭시 대응*/
+@media screen and (max-width: 360px){
+  .myRouteStore-searchBoxZone {
+    margin-right: 12%;
+  }
+}
+/*갤럭시 폴더 대응*/
+@media screen and (max-width: 280px){
+  .myRouteStore-selectBoxZone {
+    width: 100vw;
+    flex-flow: column wrap;
+    align-items: flex-end;
+    margin-right: 10px;
+  }
+  .myRouteStore-searchBoxZone {
+    margin-left: 12%;
+  }
+  .myRouteStore-card-container {
+    width: 250px;
+    height: 180px;
+  }
+  .myRouteStore-card-date {
+    right: 85px;
+  }
+}
