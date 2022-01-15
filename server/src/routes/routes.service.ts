@@ -68,7 +68,6 @@ export class RoutesService {
       .leftJoinAndSelect('Pins.Pictures', 'Pictures')
       .select([
         'Routes.id',
-        'Routes.userId',
         'Routes.routeName',
         'Routes.description',
         'Routes.createdAt',
@@ -77,11 +76,17 @@ export class RoutesService {
         'Routes.color',
         'Routes.time',
         'Pins.id',
+        'Pins.routesId',
         'Pins.ranking',
         'Pins.locationName',
         'Pins.lotAddress',
         'Pins.roadAddress',
         'Pins.ward',
+        'Pins.tooClose',
+        'Pins.latitude',
+        'Pins.longitude',
+        'Pictures.id',
+        'Pictures.pinId',
         'Pictures.fileName',
       ])
       .where('Routes.userId = :userId', { userId: decode['id'] })
@@ -161,7 +166,6 @@ export class RoutesService {
           .leftJoinAndSelect('Pins.Pictures', 'Pictures')
           .select([
             'Routes.id',
-            'Routes.userId',
             'Routes.routeName',
             'Routes.description',
             'Routes.createdAt',
@@ -170,11 +174,17 @@ export class RoutesService {
             'Routes.color',
             'Routes.time',
             'Pins.id',
+            'Pins.routesId',
             'Pins.ranking',
             'Pins.locationName',
             'Pins.lotAddress',
             'Pins.roadAddress',
             'Pins.ward',
+            'Pins.tooClose',
+            'Pins.latitude',
+            'Pins.longitude',
+            'Pictures.id',
+            'Pictures.pinId',
             'Pictures.fileName',
           ])
           .where('Routes.public = 1 AND Routes.routeName LIKE :rq', {
@@ -235,7 +245,6 @@ export class RoutesService {
           .leftJoinAndSelect('Pins.Pictures', 'Pictures')
           .select([
             'Routes.id',
-            'Routes.userId',
             'Routes.routeName',
             'Routes.description',
             'Routes.createdAt',
@@ -244,11 +253,17 @@ export class RoutesService {
             'Routes.color',
             'Routes.time',
             'Pins.id',
+            'Pins.routesId',
             'Pins.ranking',
             'Pins.locationName',
             'Pins.lotAddress',
             'Pins.roadAddress',
             'Pins.ward',
+            'Pins.tooClose',
+            'Pins.latitude',
+            'Pins.longitude',
+            'Pictures.id',
+            'Pictures.pinId',
             'Pictures.fileName',
           ])
           .where(
@@ -291,7 +306,6 @@ export class RoutesService {
           .leftJoinAndSelect('Pins.Pictures', 'Pictures')
           .select([
             'Routes.id',
-            'Routes.userId',
             'Routes.routeName',
             'Routes.description',
             'Routes.createdAt',
@@ -300,11 +314,17 @@ export class RoutesService {
             'Routes.color',
             'Routes.time',
             'Pins.id',
+            'Pins.routesId',
             'Pins.ranking',
             'Pins.locationName',
             'Pins.lotAddress',
             'Pins.roadAddress',
             'Pins.ward',
+            'Pins.tooClose',
+            'Pins.latitude',
+            'Pins.longitude',
+            'Pictures.id',
+            'Pictures.pinId',
             'Pictures.fileName',
           ])
           .where(
@@ -369,7 +389,6 @@ export class RoutesService {
           .leftJoinAndSelect('Pins.Pictures', 'Pictures')
           .select([
             'Routes.id',
-            'Routes.userId',
             'Routes.routeName',
             'Routes.description',
             'Routes.createdAt',
@@ -378,11 +397,17 @@ export class RoutesService {
             'Routes.color',
             'Routes.time',
             'Pins.id',
+            'Pins.routesId',
             'Pins.ranking',
             'Pins.locationName',
             'Pins.lotAddress',
             'Pins.roadAddress',
             'Pins.ward',
+            'Pins.tooClose',
+            'Pins.latitude',
+            'Pins.longitude',
+            'Pictures.id',
+            'Pictures.pinId',
             'Pictures.fileName',
           ])
           .where(
@@ -480,7 +505,6 @@ export class RoutesService {
           .leftJoinAndSelect('Pins.Pictures', 'Pictures')
           .select([
             'Routes.id',
-            'Routes.userId',
             'Routes.routeName',
             'Routes.description',
             'Routes.createdAt',
@@ -489,11 +513,17 @@ export class RoutesService {
             'Routes.color',
             'Routes.time',
             'Pins.id',
+            'Pins.routesId',
             'Pins.ranking',
             'Pins.locationName',
             'Pins.lotAddress',
             'Pins.roadAddress',
             'Pins.ward',
+            'Pins.tooClose',
+            'Pins.latitude',
+            'Pins.longitude',
+            'Pictures.id',
+            'Pictures.pinId',
             'Pictures.fileName',
           ])
           .where('Routes.public = 1 AND Routes.id IN (:routeIds)', {
@@ -579,7 +609,6 @@ export class RoutesService {
           .leftJoinAndSelect('Pins.Pictures', 'Pictures')
           .select([
             'Routes.id',
-            'Routes.userId',
             'Routes.routeName',
             'Routes.description',
             'Routes.createdAt',
@@ -588,11 +617,17 @@ export class RoutesService {
             'Routes.color',
             'Routes.time',
             'Pins.id',
+            'Pins.routesId',
             'Pins.ranking',
             'Pins.locationName',
             'Pins.lotAddress',
             'Pins.roadAddress',
             'Pins.ward',
+            'Pins.tooClose',
+            'Pins.latitude',
+            'Pins.longitude',
+            'Pictures.id',
+            'Pictures.pinId',
             'Pictures.fileName',
           ])
           .where('Routes.public = 1 AND Routes.id IN (:routeIds)', {
@@ -678,7 +713,6 @@ export class RoutesService {
           .leftJoinAndSelect('Pins.Pictures', 'Pictures')
           .select([
             'Routes.id',
-            'Routes.userId',
             'Routes.routeName',
             'Routes.description',
             'Routes.createdAt',
@@ -687,11 +721,17 @@ export class RoutesService {
             'Routes.color',
             'Routes.time',
             'Pins.id',
+            'Pins.routesId',
             'Pins.ranking',
             'Pins.locationName',
             'Pins.lotAddress',
             'Pins.roadAddress',
             'Pins.ward',
+            'Pins.tooClose',
+            'Pins.latitude',
+            'Pins.longitude',
+            'Pictures.id',
+            'Pictures.pinId',
             'Pictures.fileName',
           ])
           .where(
@@ -781,7 +821,6 @@ export class RoutesService {
           .leftJoinAndSelect('Pins.Pictures', 'Pictures')
           .select([
             'Routes.id',
-            'Routes.userId',
             'Routes.routeName',
             'Routes.description',
             'Routes.createdAt',
@@ -790,11 +829,17 @@ export class RoutesService {
             'Routes.color',
             'Routes.time',
             'Pins.id',
+            'Pins.routesId',
             'Pins.ranking',
             'Pins.locationName',
             'Pins.lotAddress',
             'Pins.roadAddress',
             'Pins.ward',
+            'Pins.tooClose',
+            'Pins.latitude',
+            'Pins.longitude',
+            'Pictures.id',
+            'Pictures.pinId',
             'Pictures.fileName',
           ])
           .where(

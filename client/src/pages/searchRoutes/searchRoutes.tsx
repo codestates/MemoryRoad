@@ -1,0 +1,128 @@
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import FakeHeader from '../../components/map-test/fakeHeader';
+import SearchRoutesBar from '../../components/searchRoutesBar/searchRoutesBar';
+import SearchSideBar from '../../components/searchSideBar/searchSideBar';
+import { RootState } from '../../redux/reducer';
+import './searchRoutes.css';
+import { Route } from './../../types/searchRoutesTypes';
+
+//declare : 변수 상수, 함수 또는 클래스가 어딘가에 선언되어 있음을 알린다.
+// declare global : 전역 참조가 가능
+declare global {
+  interface Window {
+    kakao: any;
+  }
+}
+const kakao = window.kakao;
+
+function SearchRoutes() {
+  const dispatch = useDispatch();
+  /* redux 전역 상태관리 */ // 왜 type 할당 : RootState는 되고 RootPersistState는 안되나요 ?
+  const routeState: any = useSelector(
+    (state: RootState) => state.createRouteReducer,
+  );
+
+  //state들
+  //지도의 확대 정도
+  const [currLevel, setCurrLevel] = useState(8);
+  //검색 버튼을 눌러 가져온 루트의 정보들
+  const [searchResult, setSearchResult] = useState<Route[]>([]);
+  //총 루트의 개수. 페이지네이션에 사용
+  const [routeCount, setRouteCount] = useState<number>(0);
+  //검색 요청을 보냈을 때, 검색어
+  const [searchKeyword, setSearchKeyword] = useState('');
+  //사이드바의 열림 상태
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  //핀 이미지 생성
+  const pinImgSrc = 'http://127.0.0.1:5500/client/public/img/gray_marker.png';
+  const pinImgSize = new kakao.maps.Size(33, 54);
+  const pinImgOpt = { offset: new kakao.maps.Point(16, 55) };
+  const pinImgObj = new kakao.maps.MarkerImage(
+    pinImgSrc,
+    pinImgSize,
+    pinImgOpt,
+  );
+
+  //루트를 받아 핀 객체들을 만들고, 랜더링 한다.
+  function generatePins(routeInfo: Route, map: any) {
+    for (const pin of routeInfo.Pins) {
+      const pinObj = new kakao.maps.Marker({
+        image: pinImgObj,
+        map: map,
+        position: new kakao.maps.LatLng(
+          Number(pin.latitude),
+          Number(pin.longitude),
+        ),
+        clickable: true,
+      });
+    }
+  }
+
+  useEffect(() => {
+    // *지도를 표시할 div
+    const mapContainer = document.getElementById('map');
+
+    const mapOptions = {
+      center: new kakao.maps.LatLng(37.566826, 126.9786567),
+      level: currLevel,
+      draggable: true, // 마우스 드래그, 휠, 모바일 터치를 이용한 확대 및 축소 가능 여부
+      scrollwheel: true, // 마우스 휠, 모바일 터치를 이용한 확대 및 축소 가능 여부
+      disableDoubleClickZoom: true, // 마우스 더블 클릭으로 지도 확대 및 축소 불가능 여부
+    };
+
+    // 지도를 생성
+    const map = new kakao.maps.Map(mapContainer, mapOptions);
+
+    //검색 후 핀과 선 랜더링
+    for (const route of searchResult) {
+      generatePins(route, map);
+
+      for (let i = 1; i < route.Pins.length; i++) {
+        const prevLat = route.Pins[i - 1].latitude;
+        const prevLng = route.Pins[i - 1].longitude;
+        const linePath = [
+          new kakao.maps.LatLng(prevLat, prevLng),
+          new kakao.maps.LatLng(
+            route.Pins[i].latitude,
+            route.Pins[i].longitude,
+          ),
+        ];
+        const polyline = new kakao.maps.Polyline({
+          path: linePath,
+          strokeWeight: 5,
+          strokeColor: '#eb3838',
+          strokeOpacity: 0.7,
+          strokeStyle: 'dashed',
+        });
+        polyline.setMap(map);
+      }
+    }
+  }, [currLevel, searchResult]);
+
+  return (
+    <>
+      <div id="map-whole-container">
+        <div id="map-navigator-top">
+          <FakeHeader />
+          <SearchRoutesBar
+            setIsSidebarOpen={setIsSidebarOpen}
+            setRouteCount={setRouteCount}
+            setSearchKeyword={setSearchKeyword}
+            setSearchResult={setSearchResult}
+          />
+          <SearchSideBar
+            isSidebarOpen={isSidebarOpen}
+            routeCount={routeCount}
+            searchKeyword={searchKeyword}
+            searchResult={searchResult}
+            setIsSidebarOpen={setIsSidebarOpen}
+          />
+        </div>
+        <div id="map"></div>
+      </div>
+    </>
+  );
+}
+export default SearchRoutes;
