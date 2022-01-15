@@ -27,11 +27,13 @@ import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { PlaceKeywordEntity } from './entities/placeKeyword.entity';
 import { PinsPlaceKeywordEntity } from './entities/pinsPlaceKeyword.entity';
+import { WardEntity } from 'src/wards/entities/ward.entity';
 import {
   runOnTransactionCommit,
   runOnTransactionRollback,
   Transactional,
 } from 'typeorm-transactional-cls-hooked';
+import { RoutesController } from './routes.controller';
 
 @Injectable()
 export class RoutesService {
@@ -49,6 +51,8 @@ export class RoutesService {
     private placeKeywordsRepository: Repository<PlaceKeywordEntity>,
     @InjectRepository(PinsPlaceKeywordEntity)
     private pinsPlaceKeywordsRepository: Repository<PinsPlaceKeywordEntity>,
+    @InjectRepository(WardEntity)
+    private wardsRepository: Repository<WardEntity>,
   ) {}
 
   async getUserRoutes(page: number, accessToken: string | undefined) {
@@ -926,6 +930,9 @@ export class RoutesService {
         keywordObj[pin.ranking] = keywords;
       });
 
+      //와드 변경 지점. 루트의 핀들에 담긴 구 정보를 토대로 와드 테이블의 구 별 루트 개수를 업데이트한다.
+      await this.updateWardTableCreateRoute(newRoute.id);
+
       //새 핀들 생성
       //bulk insert
       const insertPinsResult = await this.pinsRepository.save(pins);
@@ -1180,6 +1187,8 @@ export class RoutesService {
       if (!isExist) {
         throw new UnauthorizedException();
       }
+      // 핀이 업데이트 되기 전, [핀이 속한 루트의 핀들]의 [ward column] 배열을 받는다.
+      const oldWardList = await this.updateWardTableBeforePinUpdate(routeId);
 
       //핀 업데이트
       await this.pinsRepository
@@ -1191,6 +1200,9 @@ export class RoutesService {
           id: pinId,
         })
         .execute();
+
+      //와드 테이블 변경 시점
+      await this.updateWardTablePinUpdate(routeId, oldWardList);
 
       //jointable을 갱신하기 위해 기존 레코드를 삭제한다.
       await this.pinsPlaceKeywordsRepository
@@ -1286,6 +1298,11 @@ export class RoutesService {
           return this.pinsRepository.remove(Pins);
         });
 
+      console.log(result);
+
+      // 와드 변경 시점
+      await this.updateWardTablePinCD(result, 'delete');
+
       //없는 핀, 또는 다른 유저가 작성한 핀을 삭제 하려는 경우
       if (!result.length) {
         throw new UnauthorizedException();
@@ -1368,6 +1385,9 @@ export class RoutesService {
       const newPin = { ...pin, routesId: routeId };
       //생성된 핀에 대한 정보
       const createPinResult = await this.pinsRepository.save(newPin);
+
+      // 와드 변경 시점
+      await this.updateWardTablePinCD(newPin, 'create');
 
       //키워드를 업데이트 한다.(없는 경우 새로 생성한다.)
       const keywords = [];
@@ -1480,5 +1500,138 @@ export class RoutesService {
         throw new InternalServerErrorException();
       }
     }
+  }
+
+  // [핀이 업데이트 되기 전인 루트]의 핀 정보를 받아오는 함수
+  async updateWardTableBeforePinUpdate(routeId: number): Promise<string[]> {
+    //routeId를 받아서 그 routeId에 있는 pin을 다 스캔해서
+    // pin에 있는 ward 순서대로 정렬받는다.
+    const pinArray = await this.pinsRepository
+      .createQueryBuilder('Pins')
+      .leftJoinAndSelect('Pins.Routes', 'Routes')
+      .select(['Pins.ward'])
+      .where('Routes.id = :routeId', { routeId: routeId })
+      .orderBy('Pins.ward')
+      .getMany();
+
+    // 받아온 ward 값 중에 중복된 게 있으면 거르는 알고리즘
+    let wardName = pinArray[0]['ward'];
+    const wardList = [pinArray[0]['ward']];
+    for (let i = 0; i < pinArray.length; i++) {
+      if (wardName === pinArray[i]['ward']) {
+        continue;
+      }
+      wardName = pinArray[i]['ward'];
+      wardList.push(wardName);
+    }
+    return wardList;
+  }
+
+  // routeId를 받아서 그 routeId에 있는 pin을 다 스캔해서
+  // pin에 있는 ward에 접근해서 그 ward의 값을 id로 갖는 ward의 routeNumber을 1씩 올려야 한다.
+  async updateWardTablePinUpdate(routeId: number, oldWardList: string[]) {
+    const pinArray = await this.pinsRepository
+      .createQueryBuilder('Pins')
+      .leftJoinAndSelect('Pins.Routes', 'Routes')
+      .select(['Pins.ward'])
+      .where('Routes.id = :routeId', { routeId: routeId })
+      .orderBy('Pins.ward')
+      .getMany();
+
+    // 받아온 ward 값 중에 중복된 게 있으면 거르는 알고리즘
+    let wardName = '';
+    const wardList = [];
+    for (let i = 0; i < pinArray.length; i++) {
+      if (wardName === pinArray[i]['ward']) {
+        continue;
+      }
+      wardName = pinArray[i]['ward'];
+      wardList.push(wardName);
+    }
+    console.log(wardList);
+    // 만약 루트가 속한 구 정보에 변화가 있다면
+    if (wardList.length === oldWardList.length) {
+      // 기존 루트가 속한 구의 routeNumber에서 각각 1씩 빼고
+      await this.wardsRepository
+        .createQueryBuilder('Wards')
+        .update()
+        .whereInIds(oldWardList)
+        .set({ routesNumber: () => 'routesNumber - 1' })
+        .execute();
+      // 새로 확인한 구의 routeNumber에 각각 1씩 더함
+      await this.wardsRepository
+        .createQueryBuilder('Wards')
+        .update()
+        .whereInIds(wardList)
+        .set({ routesNumber: () => 'routesNumber + 1' })
+        .execute();
+    }
+  }
+  // wards: WardEntity[];
+  // 핀을 만들거나 제거할 경우, 그 핀이 속한 루트, 구로 정리하여 가져와보고, 그 값이 만약 1이라면 ward테이블에 그 값을 추가한다.
+  // 가져와야 하는 값 : 그 핀이 속한 구.(ward.id)
+  async updateWardTablePinCD(pin: object, action: string) {
+    // 같은 루트의 핀들 중 같은 구의 핀들의 배열을 받아온다
+    const data = await this.pinsRepository
+      .createQueryBuilder('Pins')
+      .leftJoinAndSelect('Pins.Routes', 'Routes')
+      .select(['Pins.ward'])
+      .where('Pins.routesId = :pinRoutes And Pins.ward = :pinWard', {
+        pinRoutes: pin['routesId'],
+        pinWard: pin['ward'],
+      })
+      .getMany();
+    console.log(data[0].ward);
+    // 배열의 길이가 1인 경우(그 구역의 핀이 얘 하나 밖에 없는 경우)에만 발동
+    if (data.length === 1) {
+      // action이 create인 경우엔 + 1, delete인 경우엔 -1
+      if (action === 'create') {
+        await this.wardsRepository
+          .createQueryBuilder('Wards')
+          .update()
+          .whereInIds(data[0].ward)
+          .set({ routesNumber: () => 'routesNumber + 1' })
+          .execute();
+      } else if (action === 'delete') {
+        await this.wardsRepository
+          .createQueryBuilder('Wards')
+          .update()
+          .whereInIds(data[0].ward)
+          .set({ routesNumber: () => 'routesNumber - 1' })
+          .execute();
+      }
+    }
+  }
+
+  // 루트 생성시 와드 테이블 업데이트 하는 메소드
+  async updateWardTableCreateRoute(routeId: number) {
+    // 루트가 가진 핀의 ward값이 요소로 들어간 배열 받기
+    console.log(routeId);
+    const pinArray = await this.pinsRepository
+      .createQueryBuilder('Pins')
+      .leftJoinAndSelect('Pins.Routes', 'Routes')
+      .select(['Pins.ward'])
+      .where('Routes.id = :routeId', { routeId: routeId })
+      .orderBy('Pins.ward')
+      .getMany();
+
+    // 받아온 ward 값 중에 중복된 게 있으면 거르는 알고리즘
+    let wardName = '';
+    const wardList = [];
+    for (let i = 0; i < pinArray.length; i++) {
+      if (wardName === pinArray[i]['ward']) {
+        continue;
+      }
+      wardName = pinArray[i]['ward'];
+      wardList.push(wardName);
+    }
+    console.log(wardList);
+    // 새로 확인한 구의 routeNumber에 각각 1씩 더함
+    await this.wardsRepository
+      .createQueryBuilder('Wards')
+      .update()
+      .whereInIds(wardList)
+      .set({ routesNumber: () => 'routesNumber + 1' })
+      .execute();
   }
 }

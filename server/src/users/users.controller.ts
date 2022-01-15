@@ -10,14 +10,17 @@ import {
   Req,
   UseInterceptors,
   UploadedFile,
+  UseFilters,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-userDto';
 import { Request, Response } from 'express';
-import { multerOptions } from '../routes/routes.multerOpt';
+import { multerOptions } from '../users/users.multerOpt';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UserExceptionFilter } from 'src/userException.filter';
 
+@UseFilters(UserExceptionFilter)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

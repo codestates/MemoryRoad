@@ -22,7 +22,7 @@ import {
 import { Response, Express, Request } from 'express';
 import { PatchRouteDto } from './dto/patchRoute.dto';
 import { RoutesService } from './routes.service';
-import { ExceptionFilter } from 'src/exception.filter';
+import { ExceptionFilter } from 'src/routeException.filter';
 import { multerOptions } from './routes.multerOpt';
 
 @UseFilters(ExceptionFilter)
@@ -255,4 +255,14 @@ export class RoutesController {
       message: 'deleted',
     });
   }
+
+  // 와드 테이블 테스트용 엔드포인트
+  // @Post('/updateWard/1')
+  // async updateWard1(@Body('pin') pin: object, @Body('action') action: string) {
+  //   return await this.routesService.updateWardTablePinCD(pin, action);
+  // }
+  // @Post('/updateWard/2')
+  // async updateWard2(@Body('routeId') routeId: number) {
+  //   return await this.routesService.updateWardTableCreateRoute(routeId);
+  // }
 }
