@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PageBtn from '../pageBtn/pageBtn';
 import RouteCard from '../routeCard/routeCard';
+import StoryCard from '../storyCard/storyCard';
 import './searchSideBar.css';
 import { Route } from './../../types/searchRoutesTypes';
 
@@ -10,6 +11,8 @@ type Props = {
   searchKeyword: string;
   isSidebarOpen: boolean;
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedRoute: React.Dispatch<React.SetStateAction<Route | null>>;
+  selectedRoute: Route | null;
 };
 
 function SearchSideBar({
@@ -18,6 +21,8 @@ function SearchSideBar({
   searchKeyword,
   isSidebarOpen,
   setIsSidebarOpen,
+  setSelectedRoute,
+  selectedRoute,
 }: Props) {
   const wardsStr = [
     '강남구',
@@ -91,7 +96,12 @@ function SearchSideBar({
               </div>
               <div className="pinControllTower-content">
                 {searchResult.map((routeInfo) => (
-                  <RouteCard key={routeInfo.id} routeInfo={routeInfo} />
+                  <StoryCard
+                    key={routeInfo.id}
+                    routeInfo={routeInfo}
+                    selectedRoute={selectedRoute}
+                    setSelectedRoute={setSelectedRoute}
+                  />
                 ))}
                 {routeCount > 5 ? (
                   <PageBtn

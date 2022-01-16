@@ -8,6 +8,7 @@ type Props = {
   setRouteCount: React.Dispatch<React.SetStateAction<number>>;
   setSearchKeyword: React.Dispatch<React.SetStateAction<string>>;
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedRoute: React.Dispatch<React.SetStateAction<Route | null>>;
 };
 
 function SearchRoutesBar({
@@ -15,6 +16,7 @@ function SearchRoutesBar({
   setRouteCount,
   setSearchKeyword,
   setIsSidebarOpen,
+  setSelectedRoute,
 }: Props) {
   //state들
   //검색창에 입력된 텍스트
@@ -22,6 +24,7 @@ function SearchRoutesBar({
 
   //검색 요청
   const postSearch = () => {
+    if (searchBarText === '') return alert('검색어를 입력해 주세요!');
     axios
       .get(
         `https://server.memory-road.tk/routes?search=true&page=1&rq=${searchBarText}`,
@@ -31,6 +34,7 @@ function SearchRoutesBar({
         setSearchResult(result.data.routes);
         setSearchKeyword(searchBarText);
         setIsSidebarOpen(true);
+        setSelectedRoute(null);
       })
       .catch((err) => {
         console.log(err);

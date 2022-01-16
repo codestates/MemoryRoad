@@ -83,6 +83,8 @@ export class RoutesService {
         'Pins.roadAddress',
         'Pins.ward',
         'Pins.tooClose',
+        'Pins.startTime',
+        'Pins.endTime',
         'Pins.latitude',
         'Pins.longitude',
         'Pictures.id',
@@ -96,12 +98,26 @@ export class RoutesService {
       .getMany(); //여러 개의 결과를 가져온다. entity를 반환한다. getRawMany등으로 raw data를 가져올 수 있다.
 
     //count는 총 루트의 개수
-    //페이지네이션을 위해 8개씩 나누어 보낸다
-    const response = {
-      code: 200,
-      routes: routes.slice(page * 8 - 8, page * 8),
-      count: routes.length,
+    let response: {
+      code: number;
+      routes: RouteEntity[];
+      count: number;
     };
+    if (page === undefined) {
+      // 페이지 파라미터가 주어지지 않은 경우 모든 루트를 반환한다.
+      response = {
+        code: 200,
+        routes: routes,
+        count: routes.length,
+      };
+    } else {
+      response = {
+        code: 200,
+        routes: routes.slice(page * 8 - 8, page * 8),
+        count: routes.length,
+      };
+    }
+    //페이지네이션을 위해 8개씩 나누어 보낸다
 
     response.routes.forEach((route) => {
       let fileName = null;
@@ -984,29 +1000,28 @@ export class RoutesService {
 
       //핀을 생성한 뒤, 핀의 아이디와 핀의 랭킹을 매칭하기 위한 객체
       const mapPinIdRanking = {};
-      //병렬적으로 비동기 구문을 처리한다
+
       //forEach고차함수는 독립적인 함수를 생성하므로 안에서 await를 사용했을 경우 의도대로 동작하지 않을 수 있다.(https://stackoverflow.com/questions/37576685/using-async-await-with-a-foreach-loop)
-      await Promise.all(
-        insertPinsResult.map(async (pin) => {
-          mapPinIdRanking[pin.ranking] = pin.id;
+      //순차적으로 비동기 구문을 처리한다.
+      for (const pin of insertPinsResult) {
+        mapPinIdRanking[pin.ranking] = pin.id;
 
-          //키위드 테이블과 조인 테이블을 갱신한다.
-          const keywords = [];
-          //구의 정보를 기본 키워드로 넣는다.
-          keywords.push({ keyword: pin.ward });
-          for (let i = 0; i < pin.keywords.length; i++) {
-            keywords.push({ keyword: pin.keywords[i] });
-          }
+        //키위드 테이블과 조인 테이블을 갱신한다.
+        const keywords = [];
+        //구의 정보를 기본 키워드로 넣는다.
+        keywords.push({ keyword: pin.ward });
+        for (let i = 0; i < pin.keywords.length; i++) {
+          keywords.push({ keyword: pin.keywords[i] });
+        }
 
-          //키위드 업데이트의 결과
-          const newKeywords = await this.placeKeywordsRepository.save(keywords);
-          for (const obj of newKeywords) {
-            obj['pinId'] = pin.id;
-          }
-          //jointable을 갱신한다.
-          await this.pinsPlaceKeywordsRepository.save(newKeywords);
-        }),
-      );
+        //키위드 업데이트의 결과
+        const newKeywords = await this.placeKeywordsRepository.save(keywords);
+        for (const obj of newKeywords) {
+          obj['pinId'] = pin.id;
+        }
+        //jointable을 갱신한다.
+        await this.pinsPlaceKeywordsRepository.save(newKeywords);
+      }
 
       //사진들을 핀 별로 분리하기 위한 배열
       const eachPicture = [];
