@@ -4,6 +4,7 @@ import RouteCard from '../routeCard/routeCard';
 import StoryCard from '../storyCard/storyCard';
 import './searchSideBar.css';
 import { Route } from './../../types/searchRoutesTypes';
+import Pagination from '../pagination/pagination';
 
 type Props = {
   searchResult: Route[];
@@ -104,12 +105,20 @@ function SearchSideBar({
                   />
                 ))}
                 {routeCount > 5 ? (
-                  <PageBtn
-                    cardCount={routeCount}
-                    curPage={curPage}
-                    limit={5}
-                    setCurPage={setCurPage}
-                  />
+                  // <PageBtn
+                  //   cardCount={routeCount}
+                  //   curPage={curPage}
+                  //   limit={5}
+                  //   setCurPage={setCurPage}
+                  // />
+                  <div className="pagination-button">
+                    <Pagination
+                      cardCount={routeCount}
+                      curPage={curPage}
+                      limit={5}
+                      setCurPage={setCurPage}
+                    />
+                  </div>
                 ) : null}
               </div>
             </div>

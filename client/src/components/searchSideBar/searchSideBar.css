@@ -179,3 +179,9 @@
   text-align: center;
 }
 
+/* 페이지 버튼 */
+.pagination-button {
+  display: flex;
+  justify-content: center;
+}
+
