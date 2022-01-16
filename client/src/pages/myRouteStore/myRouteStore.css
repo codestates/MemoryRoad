@@ -21,7 +21,7 @@
   font-size: 2em;
   font-weight: 800;
   color: rgb(53, 53, 53);
-  margin: 90px 0;
+  margin: 70px 0;
 }
 
 .myRouteStore-divide-line {
@@ -73,15 +73,16 @@
 
 /*카드 상자*/
 .myRouteStore-createRouteBox-align {
-  margin-top: 25px;
+  /* margin-top: 35px; */
   width: 100%;
-  height: 82%;
+  height: calc(100vh - 35%);
   display: flex;
   justify-content: center;
 }
 
 .myRouteStore-contentBox {
   /* position: relative; */
+  padding-top: 30px;
   width: 100%;
   height: 65%;
   display: flex;
@@ -111,14 +112,14 @@
   background-color: rgba(255, 255, 255, 0.3);
 }
 
-/*루트 생성창으로 이동하는 버튼*/
+/*루트 생성창으로 이동하는 버튼 + */
 .myRouteStore-createRouteBox-btn {
   width: 320px;
   height: 220px;
   border: none;
   border: 2.5px dashed rgb(203, 203, 203);
   border-radius: 20px;
-  margin: 12px;
+  margin: 12px 12px 12px 2.5%;
   outline: none;
   cursor: pointer;
   background-color: transparent;
@@ -140,113 +141,70 @@
   align-items: center;
 }
 
-/*아이패드 프로 대응*/
-@media screen and (max-width: 1024px){
-  .myRouteStore-container{
-    width: 75%;
-  }
-  .myRouteStore-contentBox{
-    height: 78%;
+/*너비*/
+@media screen and (max-width: 1595px){
+  .myRouteStore-contents{
+    justify-content: center;
   }
 }
-/*아이패드 대응*/
+@media screen and (max-width: 1069px){
+  .myRouteStore-contents{
+    justify-content: center;
+  }
+  .myRouteStore-container{
+    width: 90%;
+  }
+}
 @media screen and (max-width: 800px){
   .myRouteStore-container{
     width: 95%;
   }
-  .myRouteStore-title {
-    margin-top: 120px;
-    margin-bottom: 70px;
+  .myRouteStore-title{
+    margin-top: 75px;
+    margin-bottom: 25px;
   }
 }
-/*아이폰 대응*/
-@media screen and (max-width: 600px){
-  .myRouteStore-contentBox {
-    height: 60%;
-  }
-  .myRouteStore-searchBoxZone {
-    width: 100vw;
-    position: relative;
-    justify-content: flex-end;
-    margin-top: 15px;
-  }
-  .myRouteStore-search-input {
-    margin-right: 6px;
-  }
-  .myRouteStore-title {
-    margin-top: 100px;
-    margin-bottom: 55px;
-  }
-  .myRouteStore-selectZone {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .myRouteStore-searchBoxZone {
-    margin-right: 17%;
-  }
-  .myRouteStore-paginations {
-    padding-bottom: 190px;
-  }
-}
-@media screen and (max-width: 420px) {
-  .myRouteStore-contentBox {
-    height: 50%;
-  }
-  .myRouteStore-contents{
-    justify-content: center;
-  }
-}
-/*갤럭시 대응*/
-@media screen and (max-width: 380px){
-  .myRouteStore-contentBox {
-    height: 45%;
-  }
-  .myRouteStore-contents{
-    justify-content: center;
-  }
-  .myRouteStore-searchBoxZone {
-    margin-right: 12%;
-  }
-}
-@media screen and (max-width: 320px) {
-  .myRouteStore-contentBox {
-    height: 50%;
-  }
-  .myRouteStore-contents{
-    justify-content: center;
-  }
-  .myRouteStore-title {
-    margin: 80px 0 30px 0;
-  }
-  .myRouteStore-selectZone {
-    margin: 10px;
-  }
-  .myRouteStore-searchBoxZone {
-    margin-right: 15px;
-  }
-}
-/*갤럭시 폴더 대응*/
-@media screen and (max-width: 280px){
+@media screen and (max-width: 610px){
   .myRouteStore-selectBoxZone {
-    width: 100vw;
-    flex-flow: column wrap;
-    align-items: flex-end;
-    margin-right: 10px;
-  }
-  .myRouteStore-contents{
-    justify-content: center;
-  }
-  .myRouteStore-searchBoxZone {
-    margin-left: 12%;
-  }
-  .myRouteStore-card-container {
-    width: 250px;
-    height: 180px;
-  }
-  .myRouteStore-card-date {
-    right: 85px;
+    margin-bottom: 10px;
   }
 }
 
-/*아놔 media query 이렇게 쓰는 거 아닌듯 ..*/
+/*높이*/
+@media screen and (max-height: 1400px){
+  .myRouteStore-contentBox {
+    height: 82%;
+  }
+}
+@media screen and (max-height: 1024px){
+  .myRouteStore-contentBox {
+    height: 75%;
+  }
+}
+@media screen and (max-height: 825px){
+  .myRouteStore-contentBox {
+    height: 62%;
+  }
+  .myRouteStore-title{
+    margin-top: 75px;
+    margin-bottom: 25px;
+  }
+  .myRouteStore-selectZone {
+    margin: 15px 0;
+  }
+  .myRouteStore-selectBoxZone {
+    margin-bottom: 10px;
+  }
+}
+@media screen and (max-height: 670px){
+  .myRouteStore-contentBox {
+    height: 55%;
+  }
+}
+@media screen and (max-height: 570px){
+  .myRouteStore-contentBox {
+    height: 45%;
+  }
+}
+
+/*아놔 media query 이렇게 쓰는 거 아닌듯 .. -> 일단 임시방편으로 수정은 해놓음*/

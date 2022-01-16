@@ -55,6 +55,9 @@ export type State = {
   files: Array<File> | null | undefined;
   pinPosition: Array<Position> | null | undefined; // 핀 순서 추적 배열
   mapPinPosition: Array<Position> | null | undefined; // 핀 순서 변경 배열
+  colorDotUrl: Array<string> | null | undefined;
+  colorChip: Array<string> | null | undefined;
+  colorName: Array<string> | null | undefined;
 };
 
 /* 생성된 핀을 저장하는 버튼이 있을거고, 이미 있던 핀을 수정하는 버튼이 있을거다. -> 수정버튼이 들어있는 모달창은 얼른 만들어줍시다. */
@@ -146,6 +149,39 @@ const initialState: State | any = {
       locationName: null,
       latlng: null,
     },
+  ],
+  colorDotUrl: [
+    'http://127.0.0.1:5500/client/public/img/red_dot.png',
+    'http://127.0.0.1:5500/client/public/img/orange_dot.png',
+    'http://127.0.0.1:5500/client/public/img/yellow_dot.png',
+    'http://127.0.0.1:5500/client/public/img/yellowGreen_dot.png',
+    'http://127.0.0.1:5500/client/public/img/green_dot.png',
+    'http://127.0.0.1:5500/client/public/img/sky_dot.png',
+    'http://127.0.0.1:5500/client/public/img/blue_dot.png',
+    'http://127.0.0.1:5500/client/public/img/purple_dot.png',
+    'http://127.0.0.1:5500/client/public/img/pink_dot.png',
+  ],
+  colorChip: [
+    '#DC4B40' /* red */,
+    '#EE8343' /* orange */,
+    '#F8F862' /* yellow */,
+    '#ADE672' /* yellowGreen */,
+    '#8DAF69' /* green */,
+    '#91C1C7' /* sky */,
+    '#6B91E3' /* blue */,
+    '#9E7FCB' /* purple */,
+    '#EE9FE5' /* pink */,
+  ],
+  colorName: [
+    'red',
+    'orange',
+    'yellow',
+    'yellowGreen',
+    'green',
+    'sky',
+    'blue',
+    'purple',
+    'pink',
   ],
 };
 
