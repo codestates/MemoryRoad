@@ -1,11 +1,17 @@
 import React from 'react';
 import './pagination.css';
 
-function Pagination() {
+function Pagination({
+  handleClickedPageNum,
+  pageArr,
+  paginationNum,
+  handleNextPaginationNum,
+  handlePrevPaginationNum,
+}: any) {
   const nextBtnImageUrl =
     'http://127.0.0.1:5500/client/public/img/next_button.png';
   const prevBtnImageUrl =
-    'http://127.0.0.1:5500/client/public/img/prev_button .png';
+    'http://127.0.0.1:5500/client/public/img/prev_button.png';
   return (
     <>
       {/* 받아온 핀 카드를 나눠 페이지 네이션 구현. 최대 5장, 이상은 버튼을 눌러 다음 페이지로 이동하게해야한다. */}
@@ -15,27 +21,29 @@ function Pagination() {
                 아래 6/7/8/9/10 그 뒷 순을 출력한다. 이때 이전 버튼을 누르면 page를 1로바꾸는작업(-1) 상태를 변경해주면 또 그에 맞춰서
                 1/2/3/4/5 가 렌더링된다 okok 페이지를 추적하는 상태가 있어야한다. 앞 버튼을 누르면 page-1 하고 뒷 버튼 누르면 page+1 음수는 배제하시구요. */}
       {/* 버튼을 클릭하면 그 id 에 해당하는 값으로 axios 요청을 보내 card 를 받아온다. 전체 카드 수는 언제나 요청에 담겨져 온다. */}
-      <div className="myRouteStore-paginations-prev-btn">
-        <img
-          alt="prevButton"
-          className="myRouteStore-paginations-prev-img"
-          src={prevBtnImageUrl}
-        ></img>
-      </div>
-      {/* 숫자만큼 렌더링해야하는 곳 */}
-      <button className="myRouteStore-paginations-page-btn">1</button>
-      <button className="myRouteStore-paginations-page-btn">2</button>
-      <button className="myRouteStore-paginations-page-btn">3</button>
-      <button className="myRouteStore-paginations-page-btn">4</button>
-      <button className="myRouteStore-paginations-page-btn">5</button>
-      {/* 숫자만큼 렌더링해야하는 곳 */}
-      <div className="myRouteStore-paginations-next-btn">
-        <img
-          alt="nextButton"
-          className="myRouteStore-paginations-next-img"
-          src={nextBtnImageUrl}
-        ></img>
-      </div>
+      {paginationNum - 1 < 0 ? null : (
+        <button
+          className="myRouteStore-paginations-prev-btn"
+          onClick={handlePrevPaginationNum}
+        ></button>
+      )}
+      {pageArr[paginationNum].map((el: any, idx: any) => (
+        <button
+          className="myRouteStore-paginations-page-btn"
+          id={paginationNum * 5 + idx + 1}
+          key={paginationNum * 5 + idx}
+          onClick={() => handleClickedPageNum(idx + 1)}
+        >
+          {paginationNum * 5 + (idx + 1)}
+        </button>
+      ))}
+      {/* div 태그 button 태그로 치환하기. */}
+      {pageArr[paginationNum + 1] === undefined ? null : (
+        <button
+          className="myRouteStore-paginations-next-btn"
+          onClick={handleNextPaginationNum}
+        ></button>
+      )}
     </>
   );
 }

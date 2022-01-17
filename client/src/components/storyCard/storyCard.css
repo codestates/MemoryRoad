@@ -2,9 +2,10 @@
 .myRouteStore-card-container {
   width: 320px;
   height: 220px;
-  margin: 12px;
+  margin: 12px 12px 12px 2.5%;
   border-radius: 15px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  cursor: pointer;
 }
 .myRouteStore-card-top {
   width: 100%;
@@ -105,79 +106,4 @@
   color: rgb(72, 72, 72);
   background: transparent;
   cursor: pointer;
-}
-
-/*아이패드 프로 대응*/
-@media screen and (max-width: 1024px){
-  .myRouteStore-container{
-    width: 75%;
-  }
-  .myRouteStore-contentBox{
-    height: 78%;
-  }
-  .myRouteStore-contents {
-    height: 80%;
-  }
-}
-/*아이패드 대응*/
-@media screen and (max-width: 800px){
-  .myRouteStore-container{
-    width: 95%;
-  }
-  .myRouteStore-title {
-    margin-top: 120px;
-    margin-bottom: 70px;
-  }
-}
-/*아이폰 대응*/
-@media screen and (max-width: 600px){
-  .myRouteStore-searchBoxZone {
-    width: 100vw;
-    position: relative;
-    justify-content: flex-end;
-    margin-top: 15px;
-  }
-  .myRouteStore-search-input {
-    margin-right: 6px;
-  }
-  .myRouteStore-title {
-    margin-top: 100px;
-    margin-bottom: 55px;
-  }
-  .myRouteStore-selectZone {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .myRouteStore-searchBoxZone {
-    margin-right: 17%;
-  }
-  .myRouteStore-paginations {
-    padding-bottom: 190px;
-  }
-}
-/*갤럭시 대응*/
-@media screen and (max-width: 360px){
-  .myRouteStore-searchBoxZone {
-    margin-right: 12%;
-  }
-}
-/*갤럭시 폴더 대응*/
-@media screen and (max-width: 280px){
-  .myRouteStore-selectBoxZone {
-    width: 100vw;
-    flex-flow: column wrap;
-    align-items: flex-end;
-    margin-right: 10px;
-  }
-  .myRouteStore-searchBoxZone {
-    margin-left: 12%;
-  }
-  .myRouteStore-card-container {
-    width: 250px;
-    height: 180px;
-  }
-  .myRouteStore-card-date {
-    right: 85px;
-  }
 }
