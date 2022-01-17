@@ -1,9 +1,15 @@
+.nav-gridContainer-fix-fix {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+}
 .nav-gridContainer {
   box-shadow: 2px 3px 5px #d6e0e5;
   text-align: center;
   display: grid;
   grid-template-columns: 2fr 1fr 0.5fr 1fr;
   grid-template-rows: 50px;
+  background-color:  white;
 }
 .nav-logo {
   height: 60px;
@@ -53,8 +59,8 @@
     width: 180px;
   }
   .nav-gridContainer {
-    position: absolute;
-    z-index: 5;
+    /* position: absolute; */
+    /* z-index: 5; */
     box-shadow: 2px 3px 5px #d6e0e5;
     text-align: center;
     display: grid;

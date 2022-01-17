@@ -15,7 +15,7 @@ import SearchPinBar from '../../components/searchPinBar/searchPinBar'; // 핀 �
 import ConfirmPinIsEmptyModal from '../../modals/confirmPinIsEmpty/confirmPinIsEmptyModal'; // 핀 오류 모달창
 import SaveRouteModal from '../../modals/saveRouteModal/saveRouteModal'; // 루트 저장 모달창
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
-import FakeHeader from '../../components/map-test/fakeHeader'; // 가짜 헤더입니다 착각 조심 ^ㅁ^
+import Navigation from '../../components/Navigation';
 import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBar';
 
 const { kakao }: any = window;
@@ -588,7 +588,13 @@ function CreatePinMap() {
           <SaveRouteModal handleSidebarSaveBtn={handleSidebarSaveBtn} />
         ) : null}
         <div id="map-navigator-top">
-          <FakeHeader />
+          <Navigation />
+          <TimeLineSideBar
+            handleSidebarSaveBtn={handleSidebarSaveBtn}
+            layoutState={layoutState}
+            pinCards={pinCards}
+            setLayoutState={setLayoutState}
+          />
           <SearchPinBar
             getSearchText={getSearchText}
             handleBlueMarker={handleBlueMarker}
@@ -596,12 +602,6 @@ function CreatePinMap() {
             handleIsModalOpen={handleIsModalOpen}
           />
         </div>
-        <TimeLineSideBar
-          handleSidebarSaveBtn={handleSidebarSaveBtn}
-          layoutState={layoutState}
-          pinCards={pinCards}
-          setLayoutState={setLayoutState}
-        />
         <div id="map"></div>
       </div>
     </>

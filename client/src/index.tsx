@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
-// import MemoryRoad from './pages/MemoryRoad';
-// import CreatePinMap from './pages/createPinMap/createPinMap';
+import MemoryRoad from './pages/MemoryRoad';
+import CreatePinMap from './pages/createPinMap/createPinMap';
 import MyRouteStore from './pages/myRouteStore/myRouteStore';
 
 // redux
@@ -20,7 +20,11 @@ ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
-        <MyRouteStore />
+        <Routes>
+          <Route element={<MemoryRoad />} path="/"></Route>
+          <Route element={<CreatePinMap />} path="map/createRoute"></Route>
+          <Route element={<MyRouteStore />} path="myRouteStore"></Route>
+        </Routes>
       </BrowserRouter>
     </PersistGate>
   </Provider>,
