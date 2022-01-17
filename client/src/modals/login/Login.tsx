@@ -71,12 +71,11 @@ function LoginModal({ url }: any) {
             ); // 로그인 성공시 유저상태 바꿈
             dispatch(loginModal(false)); // 로그인 성공시 로그인 모달창 닫음
             navigate('/Mypage'); // 로그인 성공시 마이페이지로 이동
-          } else {
-            setErrorMessage(
-              '로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요',
-            );
           }
-        });
+        })
+        .catch((error) =>
+          setErrorMessage('이메일또는 비밀번호를 잘못 입력했습니다.'),
+        );
     }
   };
 
