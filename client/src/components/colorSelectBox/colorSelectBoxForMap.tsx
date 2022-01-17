@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './colorSelectBoxForStore.css';
+import './colorSelectBox.css';
 
 function ColorSelectBox() {
   const [clickedColorSelect, setClickedColorSelect] = useState(false);
@@ -36,26 +36,22 @@ function ColorSelectBox() {
     <>
       <div
         className={
-          'saveRouteModal-selectbox-color ' +
-          (clickedColorSelect ? 'btn-active' : null)
+          'selectbox-color ' + (clickedColorSelect ? 'btn-active' : null)
         }
       >
-        <button
-          className="saveRouteModal-selectbox-color-label"
-          onClick={handleColorSelect}
-        >
+        <button className="selectbox-color-label" onClick={handleColorSelect}>
           <img
             alt="selected-dot"
-            className="saveRouteModal-selectbox-color-selected-option"
+            className="selectbox-color-selected-option"
             src={colors[Number(selectedColorId)]}
           />
         </button>
-        <ul className="saveRouteModal-selectbox-color-optionList">
+        <ul className="selectbox-color-optionList">
           {colors.map((color, idx) => {
             const strArr = color.split('/');
             return (
               <li
-                className="saveRouteModal-selectbox-color-option"
+                className="selectbox-color-option"
                 id={String(idx)}
                 key={idx}
                 onClick={(event) => {
@@ -67,7 +63,7 @@ function ColorSelectBox() {
               >
                 <img
                   alt={strArr[6]}
-                  className="saveRouteModal-selectbox-color-img"
+                  className="selectbox-color-img"
                   id={String(idx)}
                   src={color}
                 />

@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Mypage from './Mypage';
+import Mypage from './mypage/mypage';
 import SignUp from '../modals/signup/Signup';
 import CheckingPassword from '../modals/editUserInfo/checkingPassword';
 import EditUserInfo from '../modals/editUserInfo/editUserInfo';
@@ -19,6 +19,7 @@ import { RootState } from '../redux/reducer';
 import { setUserInfo } from '../redux/actions/index';
 import axios from 'axios';
 import LoginModal from '../modals/login/Login';
+import AllRoutesInMap from './mypage/allRoutesInMap';
 
 // Home 화면입니다
 const MemoryRoad = () => {
@@ -133,6 +134,9 @@ const MemoryRoad = () => {
         <Nav url={url} />
         <Routes>
           <Route element={<Mypage />} path="/Mypage" />
+        </Routes>
+        <Routes>
+          <Route element={<AllRoutesInMap />} path="/Mypage/AllRoutesInMap" />
         </Routes>
       </div>
     </div>
