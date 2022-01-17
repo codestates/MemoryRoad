@@ -1,7 +1,12 @@
 import React from 'react';
-import './storyCardRoute.css';
+import './storyCardRouteForSearch.css';
 
-function StoryCardRoute() {
+type Props = {
+  colorIdx: number;
+  pinTitles: string[];
+};
+
+function StoryCardRoute({ colorIdx, pinTitles }: Props) {
   const colors = [
     'http://127.0.0.1:5500/client/public/img/red_dot.png',
     'http://127.0.0.1:5500/client/public/img/orange_dot.png',
@@ -24,27 +29,26 @@ function StoryCardRoute() {
     '#9E7FCB' /* purple */,
     '#EE9FE5' /* pink */,
   ]; /* 라인 표현할 때 쓰는 색깔 컬러 */
-  const pinTitles = [
-    '한옥 마을',
-    '분식집',
-    '돌담길',
-    '찻집',
-  ]; /* 서버에서 받아온 pin 점 title들 */
+
   return (
     <>
       {/* 서버에서 받아온 pins 데이터 map돌려서 pin '점' 정렬 */}
-      {pinTitles.slice(0, 4).map((el, idx) => (
-        <div className="myRouteStore-card-pin" key={idx}>
-          <img alt="tt" className="myRouteStore-card-dot" src={colors[5]}></img>
-          <p className="myRouteStore-card-dot-title">
+      {pinTitles.map((el, idx) => (
+        <div className="myRouteStore-card-pin-search" key={idx}>
+          <img
+            alt="tt"
+            className="myRouteStore-card-dot-search"
+            src={colors[colorIdx]}
+          ></img>
+          <p className="myRouteStore-card-dot-title-search">
             {el} {/* Pin-title */}
           </p>
         </div>
       ))}
       <div
-        className="myRouteStore-card-dot-line"
+        className="myRouteStore-card-dot-line-search"
         style={{
-          backgroundColor: `${colorNumber[5]}`,
+          backgroundColor: `${colorNumber[colorIdx]}`,
         }}
       ></div>
     </>

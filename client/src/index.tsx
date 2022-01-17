@@ -5,6 +5,9 @@ import './index.css';
 import MemoryRoad from './pages/MemoryRoad';
 import CreatePinMap from './pages/createPinMap/createPinMap';
 import MyRouteStore from './pages/myRouteStore/myRouteStore';
+import MemoryRoad from './pages/MemoryRoad';
+import CreatePinMap from './pages/createPinMap/createPinMap';
+import SearchRoutes from './pages/searchRoutes/searchRoutes';
 
 // redux
 import { Provider } from 'react-redux';

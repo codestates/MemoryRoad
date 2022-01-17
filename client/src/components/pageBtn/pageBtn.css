@@ -1,0 +1,31 @@
+/* 화살표, 버튼이 들어있는 컨테이너 */
+.page-button-container {
+    width: 90%;
+    display: flex;
+    padding-left: 3%;
+    /* padding-right: 8%; */
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 페이지 버튼 */
+.page-button {
+    border: none;
+    background: rgb(108, 147, 127);
+    border-radius: 9px;
+    font-size: 0.9rem;
+}
+
+.page-button.unactive {
+    border: none;
+    background: white;
+    border-radius: 9px;
+    font-size: 0.9rem;
+}
+
+.page-button.unactive:hover {
+    border: none;
+    background: rgb(127, 177, 151);
+    cursor: pointer;
+    
+}
