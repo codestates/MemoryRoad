@@ -107,14 +107,16 @@ function MyRouteStore() {
                     ),
                   )}
                 </div>
-                <div className="myRouteStore-paginations">
-                  <Pagination
-                    handleClickedPageNum={handleClickedPageNum}
-                    handleNextPaginationNum={handleNextPaginationNum}
-                    handlePrevPaginationNum={handlePrevPaginationNum}
-                    pageArr={pageArr}
-                    paginationNum={paginationNum}
-                  />
+                <div className="myRouteStore-paginations-wrapper">
+                  <div className="myRouteStore-paginations">
+                    <Pagination
+                      handleClickedPageNum={handleClickedPageNum}
+                      handleNextPaginationNum={handleNextPaginationNum}
+                      handlePrevPaginationNum={handlePrevPaginationNum}
+                      pageArr={pageArr}
+                      paginationNum={paginationNum}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

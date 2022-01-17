@@ -25,20 +25,20 @@ function SearchPinBar({
     <>
       <div id="searchPin-static-location">
         <div id="searchPin-background">
+          <button
+            id="searchPin-my-blue-marker-btn"
+            onClick={() => {
+              handleBlueMarker(true);
+              handleGrayMarker(false);
+            }}
+          >
+            <img
+              alt="blue_marker"
+              id="searchPin-my-blue-marker-img"
+              src="http://127.0.0.1:5500/client/public/img/blue_marker.png"
+            ></img>
+          </button>
           <div id="searchPin-container">
-            <button
-              id="searchPin-my-blue-marker-btn"
-              onClick={() => {
-                handleBlueMarker(true);
-                handleGrayMarker(false);
-              }}
-            >
-              <img
-                alt="blue_marker"
-                id="searchPin-my-blue-marker-img"
-                src="http://127.0.0.1:5500/client/public/img/blue_marker.png"
-              ></img>
-            </button>
             <input
               className="searchPin-input"
               onChange={handleSearchBar}
