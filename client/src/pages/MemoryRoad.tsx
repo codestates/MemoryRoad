@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Nav from '../components/Navigation';
+import Home from './home';
 import {
   BrowserRouter,
   Routes,
@@ -10,16 +11,16 @@ import {
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Mypage from './mypage/mypage';
+import AllRoutesInMap from './mypage/allRoutesInMap';
 import SignUp from '../modals/signup/Signup';
 import CheckingPassword from '../modals/editUserInfo/checkingPassword';
 import EditUserInfo from '../modals/editUserInfo/editUserInfo';
 import Withdrawal from '../modals/editUserInfo/withdrawal';
-import './MemoryRoad.css';
+import './memoryRoad.css';
 import { RootState } from '../redux/reducer';
 import { setUserInfo } from '../redux/actions/index';
 import axios from 'axios';
 import LoginModal from '../modals/login/Login';
-import AllRoutesInMap from './mypage/allRoutesInMap';
 
 // Home 화면입니다
 const MemoryRoad = () => {
@@ -29,7 +30,7 @@ const MemoryRoad = () => {
   const modalCheckPassword = state.isCheckingPasswordModal; // 회원정보 수정하기 전 비밀번호 확인 모달창
   const modalEditUserInfo = state.isEditUserInfoModal; // 회원정보 수정 모달창
   const modalWithdrawal = state.iswithdrawalModal; // 회원탈퇴 모달창
-  const url = 'https://server.memory-road.tk';
+  const url = 'http://localhost';
   const dispatch = useDispatch();
 
   // 유효성 검사
@@ -121,24 +122,26 @@ const MemoryRoad = () => {
       }
     }
   }, [socialLogin]);
+
   return (
     <div>
-      <div>
-        {modalLogin ? <LoginModal url={url} /> : null}
-        {modalSignup ? <SignUp isvalid={isvalid} url={url} /> : null}
-        {modalCheckPassword ? <CheckingPassword url={url} /> : null}
-        {modalEditUserInfo ? (
-          <EditUserInfo isvalid={isvalid} url={url} />
-        ) : null}
-        {modalWithdrawal ? <Withdrawal url={url} /> : null}
-        <Nav url={url} />
-        <Routes>
-          <Route element={<Mypage />} path="/mypage" />
-        </Routes>
-        <Routes>
-          <Route element={<AllRoutesInMap />} path="/mypage/AllRoutesInMap" />
-        </Routes>
-      </div>
+      <BrowserRouter>
+        <div>
+          {modalLogin ? <LoginModal url={url} /> : null}
+          {modalSignup ? <SignUp isvalid={isvalid} url={url} /> : null}
+          {modalCheckPassword ? <CheckingPassword url={url} /> : null}
+          {modalEditUserInfo ? (
+            <EditUserInfo isvalid={isvalid} url={url} />
+          ) : null}
+          {modalWithdrawal ? <Withdrawal url={url} /> : null}
+          <Nav url={url} />
+          <Routes>
+            <Route element={<Home />} path="/" />
+            <Route element={<Mypage />} path="/mypage" />
+            <Route element={<AllRoutesInMap />} path="/mypage/allRoutesInMap" />
+          </Routes>
+        </div>
+      </BrowserRouter>
     </div>
   );
 };

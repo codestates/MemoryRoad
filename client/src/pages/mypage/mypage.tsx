@@ -20,7 +20,6 @@ function Mypage() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   return (
     <div>
       {userinfo.isLogin ? (

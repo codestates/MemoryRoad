@@ -62,7 +62,6 @@ function OpenedMenu({ SetOpen }: Props) {
               로그인
             </div>
           )}
-
           {userinfo.isLogin ? (
             <div
               onClick={() => {
@@ -79,6 +78,8 @@ function OpenedMenu({ SetOpen }: Props) {
               마이 페이지
             </div>
           ) : null}
+          <br />
+          <div>루트 검색하기</div>
         </div>
       </div>
     </div>

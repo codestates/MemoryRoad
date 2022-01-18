@@ -2,6 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
+<<<<<<< HEAD
+=======
+import MemoryRoad from './pages/memoryRoad';
+import CreatePinMap from './pages/createPinMap/createPinMap';
+>>>>>>> 1b974400120bfb7abd9a2b9174b1d57bf355b8eb
 import MyRouteStore from './pages/myRouteStore/myRouteStore';
 import MemoryRoad from './pages/MemoryRoad';
 import CreatePinMap from './pages/createPinMap/createPinMap';
