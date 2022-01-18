@@ -8,10 +8,6 @@ function Pagination({
   handleNextPaginationNum,
   handlePrevPaginationNum,
 }: any) {
-  const nextBtnImageUrl =
-    'http://127.0.0.1:5500/client/public/img/next_button.png';
-  const prevBtnImageUrl =
-    'http://127.0.0.1:5500/client/public/img/prev_button.png';
   return (
     <>
       {/* 받아온 핀 카드를 나눠 페이지 네이션 구현. 최대 5장, 이상은 버튼을 눌러 다음 페이지로 이동하게해야한다. */}

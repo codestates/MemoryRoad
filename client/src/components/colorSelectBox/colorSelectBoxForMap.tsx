@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/reducer';
 import './colorSelectBoxForStore.css';
 
 function ColorSelectBox() {
@@ -10,28 +12,9 @@ function ColorSelectBox() {
   const selectColor = (event: any) => {
     setSelectedCorlorId(event.target.id);
   };
-  const colors = [
-    'http://127.0.0.1:5500/client/public/img/red_dot.png',
-    'http://127.0.0.1:5500/client/public/img/orange_dot.png',
-    'http://127.0.0.1:5500/client/public/img/yellow_dot.png',
-    'http://127.0.0.1:5500/client/public/img/yellowGreen_dot.png',
-    'http://127.0.0.1:5500/client/public/img/green_dot.png',
-    'http://127.0.0.1:5500/client/public/img/sky_dot.png',
-    'http://127.0.0.1:5500/client/public/img/blue_dot.png',
-    'http://127.0.0.1:5500/client/public/img/purple_dot.png',
-    'http://127.0.0.1:5500/client/public/img/pink_dot.png',
-  ];
-  const colorsName = [
-    'red',
-    'orange',
-    'yellow',
-    'yellowGreen',
-    'green',
-    'sky',
-    'blue',
-    'purple',
-    'pink',
-  ];
+  const colorUrls: any = useSelector(
+    (state: RootState) => state.createRouteReducer.colorDotUrl,
+  );
   return (
     <>
       <div
@@ -47,11 +30,11 @@ function ColorSelectBox() {
           <img
             alt="selected-dot"
             className="saveRouteModal-selectbox-color-selected-option"
-            src={colors[Number(selectedColorId)]}
+            src={colorUrls[Number(selectedColorId)]}
           />
         </button>
         <ul className="saveRouteModal-selectbox-color-optionList">
-          {colors.map((color, idx) => {
+          {colorUrls.map((color: any, idx: number) => {
             const strArr = color.split('/');
             return (
               <li

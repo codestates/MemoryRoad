@@ -5,9 +5,8 @@ import './index.css';
 import MemoryRoad from './pages/MemoryRoad';
 import CreatePinMap from './pages/createPinMap/createPinMap';
 import MyRouteStore from './pages/myRouteStore/myRouteStore';
-import MemoryRoad from './pages/MemoryRoad';
-import CreatePinMap from './pages/createPinMap/createPinMap';
-import SearchRoutes from './pages/searchRoutes/searchRoutes';
+// import SearchRoutes from './pages/searchRoutes/searchRoutes';
+import ModifyPinMap from './pages/modifyPinMap/modifyPinMap';
 
 // redux
 import { Provider } from 'react-redux';
@@ -27,6 +26,10 @@ ReactDOM.render(
           <Route element={<MemoryRoad />} path="/"></Route>
           <Route element={<CreatePinMap />} path="map/createRoute"></Route>
           <Route element={<MyRouteStore />} path="myRouteStore"></Route>
+          <Route
+            element={<ModifyPinMap />}
+            path="myRouteStore/route/:id"
+          ></Route>
         </Routes>
       </BrowserRouter>
     </PersistGate>

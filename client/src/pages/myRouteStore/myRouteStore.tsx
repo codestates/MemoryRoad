@@ -8,6 +8,7 @@ import Pagination from '../../components/pagination/paginationForStore';
 import StoryCardMainModal from '../../modals/storyCardMainModal/storyCardMainModal';
 import './myRouteStore.css';
 import { testData } from './textData';
+import axios from 'axios';
 
 function MyRouteStore() {
   /* pagination */
@@ -56,6 +57,18 @@ function MyRouteStore() {
     setIsCardModalOpen(false);
   };
   const addImageUrl = 'http://127.0.0.1:5500/client/public/img/plus_button.png';
+  useEffect(() => {
+    axios({
+      url: 'https://server.memory-road.tk/routes',
+      method: 'get',
+      withCredentials: true,
+      // params: {
+      //   page: 1,
+      // },
+    }).then((data) => {
+      console.log(data);
+    });
+  });
   return (
     <>
       {isCardModalOpen ? (

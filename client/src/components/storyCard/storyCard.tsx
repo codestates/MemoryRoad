@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/reducer';
 import './storyCardForSearch.css';
 import StoryCardRoute from './storyCardRoute';
 import { Route } from './../../types/searchRoutesTypes';
@@ -11,18 +13,12 @@ type Props = {
 
 function StoryCard({ routeInfo, setSelectedRoute, selectedRoute }: Props) {
   const imageUrl = `https://server.memory-road.tk/${routeInfo.thumbnail}`; /* 카드 대표 이미지 url (서버에서 받아온 것)*/
-  const colorsName = [
-    'red',
-    'orange',
-    'yellow',
-    'yellowGreen',
-    'green',
-    'sky',
-    'blue',
-    'purple',
-    'pink',
-  ]; /* 컬러 이름 서버에서 온 컬러이름과 비교해서 인덱스값 추출해낼 것 */
-  const colorIdx = colorsName.indexOf(routeInfo.color);
+
+  const colorNames: any = useSelector(
+    (state: RootState) => state.createRouteReducer.colorName,
+  );
+
+  const colorIdx = colorNames.indexOf(routeInfo.color);
   const pinTitles = routeInfo.Pins.map((pin) => pin.locationName);
 
   function formatDate(date: Date) {
