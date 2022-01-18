@@ -1,7 +1,7 @@
 .mypage-gridMypage {
   display: grid;
   grid-template-columns: 0.8fr 1.5fr 1.5fr 0.75fr;
-  grid-template-rows: 70px 170px 300px;
+  grid-template-rows: 200px 170px 300px;
 }
 .mypage-userProfile {
   width: 150px;
@@ -118,7 +118,7 @@
   .mypage-gridMypage {
     display: grid;
     grid-template-columns: 1fr 6fr 10fr 0.2fr;
-    grid-template-rows: 50px 120px 400px;
+    grid-template-rows: 150px 120px 400px;
   }
   .mypage-Profile {
     font-size: 80px;

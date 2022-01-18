@@ -1,53 +1,119 @@
 .Home-Container {
-  background-color: #587b60;
+  background-color: rgb(88, 123, 96, 21%);
   position: absolute;
-  opacity: 21%;
-  width: 100%;
-  height: 672vh;
 }
 
 .Home-Contents {
   position: relative;
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
-  grid-template-rows: 7% 3% 20% 28% 28%;
-}
-.Home-grid2 {
-  margin-top: 20%;
-  border: 2px solid black;
-  grid-column: 1/4;
-  grid-row: 8/9;
+  grid-template-rows: 6.5%;
 }
 
 /* .Home-checking {
   border: 2px solid black;
 } */
 .Home-MemoryRoad {
+  margin-top: 20%;
   text-align: center;
   color: #adadad;
   font-family: 'Oleo Script', cursive;
   font-size: 9vw;
+  animation: txt_blur 1s alternate ease-in;
+  /* opacity: 0; */
+}
+@keyframes txt_blur {
+  0% {
+    filter: blur(7px);
+    -moz-filter: blur(7px);
+    -webkit-filter: blur(7px);
+    opacity: 0.1;
+  }
+  50% {
+    filter: blur(7px);
+    -moz-filter: blur(7px);
+    -webkit-filter: blur(7px);
+    opacity: 0.3;
+  }
+  100% {
+    filter: blur(0);
+    -moz-filter: blur(0);
+    -webkit-filter: blur(0);
+    opacity: 1;
+  }
+}
+.Home-blink {
+  animation: blink 3s;
+}
+@keyframes blink {
+  to {
+    opacity: 0;
+  }
 }
 .Home-MemoryRoadBorder {
   background-color: white;
   text-align: center;
   font-size: 1vw;
   border-radius: 15px;
+  margin-bottom: 20%;
+  animation: fadeInText 2s 1.2s ease-out forwards;
+  opacity: 0;
 }
 .Home-MemoryRoadcontent {
   padding-top: 10%;
 }
+#Home-message1 {
+  animation: fadeInText 3s 2s ease-out forwards;
+  opacity: 0;
+}
+#Home-message2 {
+  animation: fadeInText 3s 2.5s ease-out forwards;
+  opacity: 0;
+}
+#Home-message3 {
+  animation: fadeInText 3s 3s ease-out forwards;
+  opacity: 0;
+}
+@keyframes fadeInText {
+  100% {
+    opacity: 1;
+  }
+}
+
 .Home-guide {
   font-size: 250%;
   font-weight: bold;
   padding-top: 10%;
   padding-bottom: 5%;
+  animation: fadeInText 3s 3.5s ease-out forwards;
+  opacity: 0;
 }
+.Home-MemoryRoadBorder2 {
+  background-color: white;
+  text-align: center;
+  font-size: 1vw;
+  border-radius: 15px;
+  margin-bottom: 20%;
+}
+.Home-guide2 {
+  font-size: 250%;
+  font-weight: bold;
+  padding-top: 10%;
+  padding-bottom: 5%;
+  opacity: 0;
+}
+.Home-guideEffect {
+  animation: fadeInText 3s 0.5s ease-out forwards;
+  opacity: 0;
+}
+
 .Home-grid1 {
   display: flex;
 }
 .Home-number {
   font-size: 96px;
+  font-family: 'Libre Franklin', sans-serif;
+  font-weight: bold;
 }
 .Home-titleContent {
   margin-top: 20px;
@@ -68,13 +134,18 @@
 }
 .Home-line {
   margin-top: 20%;
+  margin-bottom: 20%;
   color: white;
+  background-color: white;
+  border: 1px solid white;
 }
 .Home-lastBorder {
   margin-top: 20%;
+  margin-bottom: 20%;
 }
 .Home-button {
   background-color: #91ba9f;
+  cursor: pointer;
   color: white;
   font-weight: bold;
   font-size: 18px;
@@ -82,12 +153,45 @@
   border-radius: 10px;
   padding: 2%;
   margin: 2%;
+  margin-bottom: 20px;
+  opacity: 0;
 }
 .Home-button > span {
   color: #626262;
 }
+.Home-button2 {
+  margin-bottom: 15%;
+}
+.Home-ButtonEffect {
+  opacity: 0;
+  animation: fadeInText 3s 1s ease-out forwards;
+}
+.Home-ButtonEffect:hover {
+  background-color: #f8f7f7;
+  color: #91ba9f;
+}
+.Home-topdownButtonPosition {
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+}
+.Home-topdownButton {
+  font-size: 40px;
+  color: silver;
+}
 
-@media (min-width: 800px) {
+@media (min-width: 840px) {
+  .Home-Container {
+    background-color: rgb(88, 123, 96, 21%);
+    position: absolute;
+    /* opacity: 21%; */
+  }
+  .Home-Contents {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-rows: 6.5%;
+  }
   .Home-content2 {
     margin-top: 10px;
     color: #a5a5a5;
@@ -95,12 +199,16 @@
   }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 840px) {
+  .Home-Container {
+    background-color: rgb(88, 123, 96, 21%);
+    position: absolute;
+  }
   .Home-Contents {
     position: relative;
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
-    grid-template-rows: 7% 3% 28% 32% 32%;
+    grid-template-rows: 6.3%;
   }
   .Home-number {
     font-size: 46px;
@@ -117,27 +225,48 @@
     color: #a5a5a5;
     font-size: 10px;
   }
+  .Home-guide {
+    font-size: 20px;
+  }
+  .Home-button {
+    font-size: 10px;
+  }
+  .Home-topdownButtonPosition {
+    position: fixed;
+    bottom: 25px;
+    right: 50px;
+  }
+  .Home-topdownButton {
+    font-size: 25px;
+    color: silver;
+  }
 }
 
 /* 모바일 */
 @media (max-width: 500px) {
+  .Home-Container {
+    background-color: rgb(88, 123, 96, 21%);
+    position: absolute;
+    /* opacity: 21%; */
+  }
   .Home-Contents {
     position: relative;
     display: grid;
-    grid-template-columns: 1fr 23fr 2fr;
-    grid-template-rows: 7% 3% 28% 32% 32%;
+    grid-template-columns: 1fr 25fr 1fr;
+    grid-template-rows: 9.5%;
   }
   .Home-MemoryRoad {
+    margin-top: 40%;
     text-align: center;
     color: #adadad;
     font-family: 'Oleo Script', cursive;
-    font-size: 13vw;
+    font-size: 46px;
   }
   .Home-number {
     font-size: 46px;
   }
   .Home-titleContent {
-    margin-top: 4%;
+    margin-top: 2%;
     margin-left: 7%;
   }
   .Home-title {
@@ -147,5 +276,25 @@
   .Home-content2 {
     color: #a5a5a5;
     font-size: 7px;
+  }
+  .Home-button {
+    background-color: #91ba9f;
+    color: white;
+    font-weight: bold;
+    font-size: 10px;
+    border: 2px solid white;
+    border-radius: 10px;
+    padding: 2%;
+    margin: 2%;
+  }
+  .Home-topdownButtonPosition {
+    position: fixed;
+    bottom: 20px;
+    right: 25px;
+  }
+
+  .Home-topdownButton {
+    font-size: 25px;
+    color: silver;
   }
 }

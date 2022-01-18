@@ -36,6 +36,37 @@ function Nav({ url }: any) {
       dispatch(loginModal(true)); // 로그인 버튼을 누르면 로그인 모달창이 나옴
     }
   };
+
+  // 스크롤 이벤트
+  let beforeScrollBar = document.documentElement.scrollTop;
+  let isScrollDown = true;
+  window.onwheel = function (e) {
+    const currentScrollBar = document.documentElement.scrollTop;
+    const nav = document.querySelector('.nav-gridContainer');
+    // console.log(nav);
+    if (currentScrollBar > 70) {
+      if (beforeScrollBar < currentScrollBar) {
+        // 스크롤 아래로
+        isScrollDown = true;
+      } else {
+        // 스크롤 위로
+        isScrollDown = false;
+      }
+    } else {
+    }
+    beforeScrollBar = currentScrollBar;
+
+    if (isScrollDown && currentScrollBar > 50) {
+      nav?.classList.add('nav-RemoveGridContainer'); // nav바 지움
+    }
+    if (currentScrollBar <= 50) {
+      nav?.classList.remove('nav-RemoveGridContainer'); // nav바가 나옴
+    }
+    if (!isScrollDown) {
+      nav?.classList.remove('nav-RemoveGridContainer'); // nav바가 나옴
+    }
+  };
+
   return (
     <div>
       <div>

@@ -122,6 +122,7 @@ const MemoryRoad = () => {
       }
     }
   }, [socialLogin]);
+
   return (
     <div>
       <BrowserRouter>
@@ -134,7 +135,6 @@ const MemoryRoad = () => {
           ) : null}
           {modalWithdrawal ? <Withdrawal url={url} /> : null}
           <Nav url={url} />
-
           <Routes>
             <Route element={<Home />} path="/" />
             <Route element={<Mypage />} path="/Mypage" />
