@@ -19,6 +19,11 @@ declare global {
 }
 const kakao = window.kakao;
 
+// const findAllRoute = axios
+//   .get('http://localhost/routes')
+//   .then((res) => res.data.routes);
+const findAllRoute = fakeData.routes;
+
 const colorsName = [
   'red',
   'orange',
@@ -43,17 +48,17 @@ function AllRoutesInMap() {
 
   //state
   //지도의 확대 정도
-  const [currLevel, setCurrLevel] = useState(8);
+  const [currLevel, setCurrLevel] = useState(5);
   //전체 루트의 정보
-  const [allRoutes, setAllRoutes] = useState<Array<Route>>(fakeData.routes);
+  const [allRoutes, setAllRoutes] = useState<Array<Route>>(findAllRoute);
   const [prevAllRoutes, setPrevAllRoutes] = useState<Array<Route> | null>(null);
 
   // 루트 색상 정보
-  const [colorIdx, setColorIdx] = useState<string>('');
+  const [colorIdx, setColorIdx] = useState<number>(9);
 
   //핀 이미지 생성
-  const pinImgSize = new kakao.maps.Size(16, 16);
-  const pinImgOpt = { offset: new kakao.maps.Point(5, 8) };
+  const pinImgSize = new kakao.maps.Size(30, 30);
+  const pinImgOpt = { offset: new kakao.maps.Point(14, 14) };
 
   // *infoWindow 기본 css 없애는 함수
   function removeInfoWindowStyle(htmlTag: any): void {
@@ -142,52 +147,9 @@ function AllRoutesInMap() {
     return { minLat, maxLat, minLng, maxLng };
   }
 
-  async function getAllRoute(colorIdx: string) {
-    const routeArray: Route[] = fakeData.routes;
-    if (colorIdx === '') {
-      setAllRoutes(routeArray);
-    } else {
-      const routeColor = colorsName[Number(colorIdx)];
-      const colorFilterRoutes = [];
-      for (let i = 0; i < routeArray.length; i++) {
-        if (routeColor === routeArray[i].color) {
-          colorFilterRoutes.push(routeArray[i]);
-        }
-      }
-      //같은 배열이라면 set하지 않게 하는 함수
-      function isSameRoute(before: Route[], after: Route[]) {
-        for (let i = 0; i < before.length || i < after.length; i++) {
-          if (before[i].id !== after[i].id) {
-            return 'false';
-          } else {
-            continue;
-          }
-        }
-        return 'true';
-      }
-      if (prevAllRoutes === null) return;
-      console.log(isSameRoute(prevAllRoutes, allRoutes));
-      if (isSameRoute(prevAllRoutes, allRoutes)) {
-        return;
-      }
-      console.log('세팅된다');
-      //같은 배열이 아니면 세팅해준다.
-      setAllRoutes(colorFilterRoutes);
-    }
-    // 루트 배열을 받아온다.
-    // const data = await axios.get('http://localhost/routes');
-    // console.log(data);
-    //받아온 루트 배열을 state 값으로 바꾼다.
-    // setAllRoutes(data.data['routes']);
-    // const tmp: Route[] = fakeData.routes;
-    // console.log(tmp);
-    // setAllRoutes(tmp);
-  }
-
   useEffect(() => {
     //colorIdx가 빈 문자열일 경우모든 루트 배열을 받아온다.
     //colorIdx에 값이 있다면
-    getAllRoute(colorIdx);
     console.log(allRoutes);
     console.log(colorIdx);
     // 지도 생성
@@ -257,7 +219,7 @@ function AllRoutesInMap() {
 
         const polyline = new kakao.maps.Polyline({
           path: linePath,
-          strokeWeight: 5,
+          strokeWeight: 10,
           strokeColor: polyColor,
           strokeOpacity: 0.7,
           strokeStyle: 'solid',
@@ -265,13 +227,16 @@ function AllRoutesInMap() {
         polyline.setMap(map);
       }
     }
-    setPrevAllRoutes(allRoutes);
   }, [allRoutes]);
 
   return (
     <div>
       <div className="jyang-allRoutesInMap">
-        <ColorSelectBox setColorIdx={setColorIdx} />
+        <ColorSelectBox
+          findAllRoute={findAllRoute}
+          setAllRoutes={setAllRoutes}
+          setColorIdx={setColorIdx}
+        />
       </div>
       <div id="map" style={{ width: '100%', height: '100vh' }}>
         <div className="allRoutesInMap-menu"></div>

@@ -1,11 +1,26 @@
 import React, { useState } from 'react';
+import { Route } from '../../types/searchRoutesTypes';
 import './colorSelectBox.css';
 
 type Props = {
-  setColorIdx: React.Dispatch<React.SetStateAction<string>>;
+  setColorIdx: React.Dispatch<React.SetStateAction<number>>;
+  setAllRoutes: React.Dispatch<React.SetStateAction<Array<Route>>>;
+  findAllRoute: any;
 };
 
-function ColorSelectBox({ setColorIdx }: Props) {
+const colorsName = [
+  'red',
+  'orange',
+  'yellow',
+  'yellowGreen',
+  'green',
+  'sky',
+  'blue',
+  'purple',
+  'pink',
+];
+
+function ColorSelectBox({ setColorIdx, setAllRoutes, findAllRoute }: Props) {
   const [clickedColorSelect, setClickedColorSelect] = useState(false);
   const [selectedColorId, setSelectedCorlorId] = useState('0');
   const handleColorSelect = () => {
@@ -14,6 +29,23 @@ function ColorSelectBox({ setColorIdx }: Props) {
   const selectColor = (event: any) => {
     setSelectedCorlorId(event.target.id);
   };
+
+  //조건에 맞는 루트 배열을 state값에 저장한다.
+  async function getAllRoute(colorIdx: number) {
+    if (colorIdx === 9) {
+      setAllRoutes(findAllRoute);
+    } else {
+      const routeColor = colorsName[colorIdx];
+      const colorFilterRoutes = [];
+      for (let i = 0; i < findAllRoute.length; i++) {
+        if (routeColor === findAllRoute[i].color) {
+          colorFilterRoutes.push(findAllRoute[i]);
+        }
+      }
+      setAllRoutes(colorFilterRoutes);
+    }
+  }
+
   const colors = [
     'http://127.0.0.1:5500/client/public/img/red_dot.png',
     'http://127.0.0.1:5500/client/public/img/orange_dot.png',
@@ -50,7 +82,8 @@ function ColorSelectBox({ setColorIdx }: Props) {
                 onClick={(event) => {
                   selectColor(event);
                   handleColorSelect();
-                  setColorIdx(String(idx));
+                  setColorIdx(idx);
+                  getAllRoute(idx);
                 }}
                 onKeyPress={selectColor}
                 role="tab"

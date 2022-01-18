@@ -5,7 +5,7 @@ import './index.css';
 import Nav from './components/Navigation';
 import MyRouteStore from './pages/myRouteStore/myRouteStore';
 import ModifyPinMap from './pages/modifyPinMap/modifyPinMap';
-import MemoryRoad from './pages/MemoryRoad';
+import MemoryRoad from './pages/memoryRoad';
 import Mypage from './pages/mypage/mypage';
 import AllRoutesInMap from './pages/mypage/allRoutesInMap';
 import CreatePinMap from './pages/createPinMap/createPinMap';
