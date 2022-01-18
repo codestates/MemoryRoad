@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import Nav from './components/Navigation';
 import MyRouteStore from './pages/myRouteStore/myRouteStore';
+import ModifyPinMap from './pages/modifyPinMap/modifyPinMap';
 import MemoryRoad from './pages/MemoryRoad';
 import Mypage from './pages/mypage/mypage';
 import AllRoutesInMap from './pages/mypage/allRoutesInMap';
@@ -31,6 +32,10 @@ ReactDOM.render(
           <Route element={<AllRoutesInMap />} path="/AllRoutesInMap" />
           <Route element={<CreatePinMap />} path="map/createRoute"></Route>
           <Route element={<MyRouteStore />} path="myRouteStore"></Route>
+          <Route
+            element={<ModifyPinMap />}
+            path="myRouteStore/route/:id"
+          ></Route>
           <Route element={<AllRoutesInMap />} path="allRoutesInMap"></Route>
           <Route element={<SearchRoutes />} path="searchRoutes"></Route>
         </Routes>

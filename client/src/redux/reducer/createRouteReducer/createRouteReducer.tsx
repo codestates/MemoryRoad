@@ -30,6 +30,7 @@ function deletePinID(arr: any, targetID: string) {
   arr?.forEach((el: any, idx: number) => {
     if (el['pinID'] === targetID) {
       arr.splice(idx, 1);
+      console.log(arr);
       return;
     }
   });
@@ -39,8 +40,8 @@ function updatePinRanking(updateList: any, updateTarget: any) {
   updateList?.forEach((list: any) => {
     updateTarget?.forEach((target: any) => {
       if (list['pinID'] === target['pinID']) {
-        // target['ranking'] = target['ranking'] - 1;
-        target['pinID'] = `pin${target['ranking'] - 1}`;
+        target['ranking'] = target['ranking'] - 1;
+        // target['pinID'] = `pin${target['ranking'] - 1}`;
       }
     });
   });
@@ -82,7 +83,7 @@ const createRouteReducer = (
       positionArr1?.push(action.payload);
       copiedState.pinPosition = positionArr1;
       return copiedState;
-    // 핀 시간 변경 업데이트
+    // 핀 시간 변경 업데이트 -----------------------------------
     case UPDATE_PIN_TIME:
       const pinsArr2 = state?.pins?.slice();
       const newTimePinsArr = pinsArr2?.map((el) => {
@@ -127,8 +128,9 @@ const createRouteReducer = (
       const positionArr2 = state?.pinPosition?.slice();
       const positionsLength = positionArr2?.length;
       const newPositionedPins = new Array(positionsLength).fill({});
+      console.log(action.payload);
       positionArr2?.forEach((el: any) => {
-        action.paylaod.forEach((info: any) => {
+        action.payload.forEach((info: any) => {
           if (info[0] === el.pinID) {
             const idx = info[1];
             newPositionedPins[idx] = el;
@@ -159,17 +161,18 @@ const createRouteReducer = (
       deletePinID(positionArr3, action.payload);
       updatePinRanking(pinNamesForUpdate, pinsArr4);
       updatePinRanking(pinNamesForUpdate, filesArr3);
-      updatePositionName(
-        pinNamesForUpdate,
-        positionArr3,
-      ); /* pinPosition은 업데이트 방식이 조금 독특함 */
+      // updatePositionName(
+      //   pinNamesForUpdate,
+      //   positionArr3,
+      // ); /* 이름 바꾸기 잠깐 멈춰. */
+      console.log('testㅉ중', mapPosition1);
 
       copiedState.pins = pinsArr4;
       copiedState.files = filesArr3;
       copiedState.pinPosition = positionArr3;
 
       return copiedState;
-    // 핀 전체 시간 업데이트
+    // 핀 전체 시간 업데이트 ---------------------------
     case UPDATE_ALL_PINS_TIME:
       copiedState.route.time = action.payload;
       return copiedState;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/reducer';
 import './storyCardMainModal.css';
@@ -99,9 +100,11 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
               </div>
               <p className="storyCardMainModal-title">{routeInfo.routeName}</p>
               <div className="storyCardMainModal-btns">
-                <button className="storyCardMainModal-modify-btn">
-                  루트 수정
-                </button>
+                <Link to={`route/${routeInfo.id}`}>
+                  <button className="storyCardMainModal-modify-btn">
+                    루트 수정
+                  </button>
+                </Link>
                 <button className="storyCardMainModal-delete-btn">
                   루트 삭제
                 </button>

@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/reducer';
 import './storyCardForSearch.css';
 import StoryCardRoute from './storyCardRoute';
 import { Route } from './../../types/searchRoutesTypes';
