@@ -2,8 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
-// import MemoryRoad from './pages/memoryRoad';
-// import CreatePinMap from './pages/createPinMap/createPinMap';
 import Nav from './components/Navigation';
 import MyRouteStore from './pages/myRouteStore/myRouteStore';
 import MemoryRoad from './pages/MemoryRoad';
@@ -11,6 +9,7 @@ import Mypage from './pages/mypage/mypage';
 import AllRoutesInMap from './pages/mypage/allRoutesInMap';
 import CreatePinMap from './pages/createPinMap/createPinMap';
 import SearchRoutes from './pages/searchRoutes/searchRoutes';
+import AllRoutesInMap from './pages/mypage/allRoutesInMap';
 
 // redux
 import { Provider } from 'react-redux';
@@ -33,6 +32,7 @@ ReactDOM.render(
           <Route element={<AllRoutesInMap />} path="/AllRoutesInMap" />
           <Route element={<CreatePinMap />} path="map/createRoute"></Route>
           <Route element={<MyRouteStore />} path="myRouteStore"></Route>
+          <Route element={<AllRoutesInMap />} path="allRoutesInMap"></Route>
         </Routes>
       </BrowserRouter>
     </PersistGate>
