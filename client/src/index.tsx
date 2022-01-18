@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import MyRouteStore from './pages/myRouteStore/myRouteStore';
-import MemoryRoad from './pages/MemoryRoad';
+import MemoryRoad from './pages/memoryRoad';
 import CreatePinMap from './pages/createPinMap/createPinMap';
 import SearchRoutes from './pages/searchRoutes/searchRoutes';
 import AllRoutesInMap from './pages/mypage/allRoutesInMap';

@@ -253,6 +253,7 @@ export class UsersService {
     fs.unlinkSync(
       `${join(__dirname, '..', '..', '..')}/${deleteFile['profileImage']}`,
     );
+
     decoded['profileImage'] = file.path;
     const user: UserEntity = {
       id: decoded['id'],
