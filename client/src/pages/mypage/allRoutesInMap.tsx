@@ -266,7 +266,7 @@ function AllRoutesInMap() {
       }
     }
     setPrevAllRoutes(allRoutes);
-  }, [allRoutes, colorIdx]);
+  }, [allRoutes]);
 
   return (
     <div>
