@@ -19,6 +19,8 @@ import { Request, Response } from 'express';
 import { multerOptions } from '../users/users.multerOpt';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserExceptionFilter } from 'src/userException.filter';
+import fs from 'fs';
+import { join } from 'path';
 
 @UseFilters(UserExceptionFilter)
 @Controller('users')
@@ -161,10 +163,11 @@ export class UsersController {
     @Req() req: Request,
   ) {
     if (!req.cookies || !req.cookies.accessToken) {
+      fs.unlinkSync(`${join(__dirname, '..', '..', '..')}/${file.path}`);
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
     try {
-      console.log(req.cookies);
+      // console.log(req.cookies);
       const accessToken = req.cookies.accessToken;
       const profile = await this.usersService.updateProfile(accessToken, file);
       return res.status(200).json({ profile: profile });
