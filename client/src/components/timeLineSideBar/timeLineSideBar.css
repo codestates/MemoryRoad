@@ -1,12 +1,12 @@
 #pinControllTower-fix {
   position: fixed;
-  z-index: 6; /*검색창때문에.*/
+  z-index: 1; /*검색창때문에.*/
 }
 /*사이드바 컨테이너*/
 #pinControllTower-container {
   position: fixed;
   right: 0;
-  z-index: 99;
+  z-index: 1;
   /* width: 360px; -> 굳이 설정안해도되는 옵션*/
   height: 100vh;
   display: flex;
@@ -82,7 +82,8 @@
 /*사이드바 내부 컨텐트 (박스)*/
 .pinControllTower-content {
   width: 260px;
-  height: 80%;
+  height: 75%;
+  margin-top: 10%;
   overflow-y: auto;
   overflow-x: hidden;
 }

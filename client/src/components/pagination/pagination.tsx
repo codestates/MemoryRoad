@@ -1,7 +1,38 @@
 import React from 'react';
-import './pagination.css';
+import './paginationSearch.css';
 
-function Pagination() {
+type Props = {
+  cardCount: number;
+  curPage: number;
+  limit: number;
+  setCurPage: React.Dispatch<React.SetStateAction<number>>;
+};
+
+function Pagination({ cardCount, curPage, limit, setCurPage }: Props) {
+  //버튼의 수
+  const buttonNum = Math.ceil(cardCount / limit);
+
+  const handlepageButton = (clickedNum: number) => {
+    setCurPage(clickedNum);
+  };
+
+  //랜더링할 버튼의 배열을 반환한다.
+  function getButtons(): number[] {
+    //그려야 하는 페이지 묶음
+    const pageBundle = Math.floor((curPage - 1) / 5) + 1;
+
+    const buttonAry: number[] = [];
+    for (
+      let i = (pageBundle - 1) * limit + 1;
+      i <= Math.min(buttonNum, (pageBundle - 1) * limit + limit);
+      i++
+    ) {
+      buttonAry.push(i);
+    }
+
+    return buttonAry;
+  }
+
   const nextBtnImageUrl =
     'http://127.0.0.1:5500/client/public/img/next_button.png';
   const prevBtnImageUrl =
@@ -15,24 +46,54 @@ function Pagination() {
                 아래 6/7/8/9/10 그 뒷 순을 출력한다. 이때 이전 버튼을 누르면 page를 1로바꾸는작업(-1) 상태를 변경해주면 또 그에 맞춰서
                 1/2/3/4/5 가 렌더링된다 okok 페이지를 추적하는 상태가 있어야한다. 앞 버튼을 누르면 page-1 하고 뒷 버튼 누르면 page+1 음수는 배제하시구요. */}
       {/* 버튼을 클릭하면 그 id 에 해당하는 값으로 axios 요청을 보내 card 를 받아온다. 전체 카드 수는 언제나 요청에 담겨져 온다. */}
-      <div className="myRouteStore-paginations-prev-btn">
+      <div
+        className={
+          curPage === 1
+            ? 'myRouteStore-paginations-prev-btn-search unactive'
+            : 'myRouteStore-paginations-prev-btn-search'
+        }
+        onClick={() => {
+          setCurPage((prevPage) => prevPage - 1);
+        }}
+        onKeyDown={() => null}
+        role="button"
+        tabIndex={0}
+      >
         <img
           alt="prevButton"
-          className="myRouteStore-paginations-prev-img"
+          className="myRouteStore-paginations-prev-img-search"
           src={prevBtnImageUrl}
         ></img>
       </div>
-      {/* 숫자만큼 렌더링해야하는 곳 */}
-      <button className="myRouteStore-paginations-page-btn">1</button>
-      <button className="myRouteStore-paginations-page-btn">2</button>
-      <button className="myRouteStore-paginations-page-btn">3</button>
-      <button className="myRouteStore-paginations-page-btn">4</button>
-      <button className="myRouteStore-paginations-page-btn">5</button>
-      {/* 숫자만큼 렌더링해야하는 곳 */}
-      <div className="myRouteStore-paginations-next-btn">
+      {getButtons().map((btn) => (
+        <button
+          className={
+            btn === curPage
+              ? 'myRouteStore-paginations-page-btn-search active'
+              : 'myRouteStore-paginations-page-btn-search'
+          }
+          key={btn}
+          onClick={() => handlepageButton(btn)}
+        >
+          {btn}
+        </button>
+      ))}
+      <div
+        className={
+          curPage === buttonNum
+            ? 'myRouteStore-paginations-next-btn-search unactive'
+            : 'myRouteStore-paginations-next-btn-search'
+        }
+        onClick={() => {
+          setCurPage((prevPage) => prevPage + 1);
+        }}
+        onKeyDown={() => null}
+        role="button"
+        tabIndex={0}
+      >
         <img
           alt="nextButton"
-          className="myRouteStore-paginations-next-img"
+          className="myRouteStore-paginations-next-img-search"
           src={nextBtnImageUrl}
         ></img>
       </div>

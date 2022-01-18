@@ -1,35 +1,69 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Navigation from '../../components/Navigation';
 import ColorSelectBox from '../../components/colorSelectBox/colorSelectBoxForStore';
 import SeoulSelectBox from '../../components/seoulSelectBox/seoulSelectBoxForStore';
 import WardSelectBox from '../../components/wardSelectBox/wardSelectBoxForStore';
 import StoryCard from '../../components/storyCard/storyCardForStore';
 import Pagination from '../../components/pagination/paginationForStore';
+import StoryCardMainModal from '../../modals/storyCardMainModal/storyCardMainModal';
 import './myRouteStore.css';
+import { testData } from './textData';
 
 function MyRouteStore() {
-  const imageUrl = 'http://127.0.0.1:5500/client/public/img/AllRouteMap.jpg';
-  const dotImageUrl = 'http://127.0.0.1:5500/client/public/img/sky_dot.png';
+  /* pagination */
+  const routes = testData.routes;
+  const len = routes.length;
+  const count8 = Math.floor(len / 8) + (Math.floor(len % 8) > 0 ? 1 : 0);
+  const count40 = Math.floor(len / 40) + Math.floor(len % 40 > 0 ? 1 : 0);
+  const dividedRoutes = [];
+  const dividedPages = [];
+  for (let i = 0; i < count8; i++) {
+    dividedRoutes.push(routes.slice(i * 8, (i + 1) * 8));
+  }
+  for (let i = 0; i < count40; i++) {
+    dividedPages.push(dividedRoutes.slice(i * 5, (i + 1) * 5));
+  }
+  const pageArr = dividedPages.map((el, idx) => {
+    const page: any = [];
+    el.forEach((el) => page.push(el.length));
+    return page;
+  });
+  console.log(pageArr);
+  /* pageNumber는 갱신되고있습니다 */
+  const [paginationNum, setPaginationNum] = useState(0);
+  const [clickedPageNum, setClickedPageNum] = useState(0);
+  const handleClickedPageNum = (pageNum: number): void => {
+    setClickedPageNum(pageNum - 1); /* 페이지네이션 업데이트 */
+  };
+  const handlePrevPaginationNum = () => {
+    setPaginationNum(paginationNum - 1);
+    setClickedPageNum(0); /* 다음버튼 누름과 동시에 페이지 상태 초기화 */
+  };
+  const handleNextPaginationNum = () => {
+    setPaginationNum(paginationNum + 1);
+    setClickedPageNum(0); /* 다음버튼 누름과 동시에 페이지 상태 초기화 */
+  };
+  console.log(paginationNum);
+  console.log(clickedPageNum);
+  /* card modal */
+  const [isCardModalOpen, setIsCardModalOpen] = useState(false);
+  const [cardModalId, setCardModalId] = useState(1);
+  const handleCardModalOpen = (pinId: number) => {
+    setCardModalId(Number(pinId));
+    setIsCardModalOpen(true);
+  };
+  const handleCardModalClose = () => {
+    setIsCardModalOpen(false);
+  };
   const addImageUrl = 'http://127.0.0.1:5500/client/public/img/plus_button.png';
-  const nextBtnImageUrl =
-    'http://127.0.0.1:5500/client/public/img/next_button.png';
-  const prevBtnImageUrl =
-    'http://127.0.0.1:5500/client/public/img/prev_button .png';
-  const colorNumber = [
-    '#DC4B40' /* red */,
-    '#EE8343' /* orange */,
-    '#F8F862' /* yellow */,
-    '#ADE672' /* yellowGreen */,
-    '#8DAF69' /* green */,
-    '#91C1C7' /* sky */,
-    '#6B91E3' /* blue */,
-    '#9E7FCB' /* purple */,
-    '#EE9FE5' /* pink */,
-  ];
-  // 페이지 네이션 구현 잊지말자.
-  const cardCounts = 8;
   return (
     <>
+      {isCardModalOpen ? (
+        <StoryCardMainModal
+          handleCardModalClose={handleCardModalClose}
+          routeInfo={dividedPages[paginationNum][clickedPageNum][cardModalId]}
+        />
+      ) : null}
       <div className="myRouteStore-wrapper">
         <Navigation />
         <div className="myRouteStore-background">
@@ -62,14 +96,27 @@ function MyRouteStore() {
                       src={addImageUrl}
                     ></img>
                   </button>
-                  {/* map 돌려서 pagination 구현하는 곳 : 카드 컴포넌트 8개 최대 (카드 내의 점은 최대 4개만 보여주기.)*/}
-                  {new Array(cardCounts).fill(0).map((el, idx) => (
-                    <StoryCard key={idx} />
-                  ))}
+                  {/* 카드 나열 */}
+                  {dividedPages[paginationNum][clickedPageNum].map(
+                    (el, idx) => (
+                      <StoryCard
+                        handleCardModalOpen={handleCardModalOpen}
+                        key={idx}
+                        pin={el}
+                      />
+                    ),
+                  )}
                 </div>
-                {/* map 돌려서 pagination 구현하는 곳 : 카드 컴포넌트 8개 최대 */}
-                <div className="myRouteStore-paginations">
-                  <Pagination />
+                <div className="myRouteStore-paginations-wrapper">
+                  <div className="myRouteStore-paginations">
+                    <Pagination
+                      handleClickedPageNum={handleClickedPageNum}
+                      handleNextPaginationNum={handleNextPaginationNum}
+                      handlePrevPaginationNum={handlePrevPaginationNum}
+                      pageArr={pageArr}
+                      paginationNum={paginationNum}
+                    />
+                  </div>
                 </div>
               </div>
             </div>

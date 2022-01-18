@@ -38,7 +38,7 @@ function Nav({ url }: any) {
   };
   return (
     <div>
-      <div>
+      <div className="nav-gridContainer-fix-fix">
         <div className="nav-gridContainer">
           <div
             className="nav-item"

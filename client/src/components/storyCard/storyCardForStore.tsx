@@ -1,42 +1,42 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/reducer';
 import './storyCard.css';
 import StoryCardRoute from './storyCardRouteForStore';
 
-function StoryCard() {
-  const imageUrl =
-    'http://127.0.0.1:5500/client/public/img/AllRouteMap.jpg'; /* 카드 대표 이미지 url (서버에서 받아온 것)*/
-  const colorsName = [
-    'red',
-    'orange',
-    'yellow',
-    'yellowGreen',
-    'green',
-    'sky',
-    'blue',
-    'purple',
-    'pink',
-  ]; /* 컬러 이름 서버에서 온 컬러이름과 비교해서 인덱스값 추출해낼 것 */
+function StoryCard({ handleCardModalOpen, pin }: any) {
+  const colorNames: any = useSelector(
+    (state: RootState) => state.createRouteReducer.colorName,
+  );
+  const colorIndex = colorNames.indexOf(pin.color);
   return (
     <>
-      <div className="myRouteStore-card-container">
+      <div
+        className="myRouteStore-card-container"
+        id={pin.id}
+        onClick={() => handleCardModalOpen(pin.id - 1)} // 일단 여기때문에 오류생김 ok
+        onKeyPress={() => handleCardModalOpen(pin.id - 1)} // 일단 여기때문에 오류생김 ok
+        role="button"
+        tabIndex={0}
+      >
         <div className="myRouteStore-card-top">
-          <img alt="testImg" className="myRouteStore-card-image" src={imageUrl}>
-            {/* image */}
-          </img>
+          <img
+            alt="testImg"
+            className="myRouteStore-card-image"
+            src={`http://127.0.0.1:5500/client/public/img/${pin.thumbnail}`}
+          ></img>
         </div>
         <div className="myRouteStore-card-bottom">
           <div className="myRouteStore-card-title">
-            <p className="myRouteStore-card-text">
-              친구랑 북촌 투어{/* card-title */}
-            </p>
+            <p className="myRouteStore-card-text">{pin.routeName}</p>
             <div className="myRouteStore-card-time-container">
-              <div className="myRouteStore-card-time">7{/* time */}</div>
+              <div className="myRouteStore-card-time">{pin.time}</div>
               시간
             </div>
           </div>
-          <div className="myRouteStore-card-date">2022.04.05{/* date */}</div>
+          <div className="myRouteStore-card-date">{pin.createdAt}</div>
           <div className="myRouteStore-card-route">
-            <StoryCardRoute /> {/* colorName에서 인덱스값 뽑아서 내려주기 */}
+            <StoryCardRoute colorIndex={colorIndex} pins={pin.Pins} />
           </div>
         </div>
       </div>

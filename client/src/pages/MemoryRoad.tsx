@@ -29,7 +29,7 @@ const MemoryRoad = () => {
   const modalCheckPassword = state.isCheckingPasswordModal; // 회원정보 수정하기 전 비밀번호 확인 모달창
   const modalEditUserInfo = state.isEditUserInfoModal; // 회원정보 수정 모달창
   const modalWithdrawal = state.iswithdrawalModal; // 회원탈퇴 모달창
-  const url = 'http://localhost80';
+  const url = 'https://server.memory-road.tk';
   const dispatch = useDispatch();
 
   // 유효성 검사
@@ -133,10 +133,10 @@ const MemoryRoad = () => {
         {modalWithdrawal ? <Withdrawal url={url} /> : null}
         <Nav url={url} />
         <Routes>
-          <Route element={<Mypage />} path="/Mypage" />
+          <Route element={<Mypage />} path="/mypage" />
         </Routes>
         <Routes>
-          <Route element={<AllRoutesInMap />} path="/Mypage/AllRoutesInMap" />
+          <Route element={<AllRoutesInMap />} path="/mypage/AllRoutesInMap" />
         </Routes>
       </div>
     </div>

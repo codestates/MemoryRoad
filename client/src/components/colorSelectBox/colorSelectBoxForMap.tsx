@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import './colorSelectBox.css';
 
-function ColorSelectBox() {
+type Props = {
+  setColorIdx: React.Dispatch<React.SetStateAction<string>>;
+};
+
+function ColorSelectBox({ setColorIdx }: Props) {
   const [clickedColorSelect, setClickedColorSelect] = useState(false);
   const [selectedColorId, setSelectedCorlorId] = useState('0');
   const handleColorSelect = () => {
@@ -20,17 +24,6 @@ function ColorSelectBox() {
     'http://127.0.0.1:5500/client/public/img/blue_dot.png',
     'http://127.0.0.1:5500/client/public/img/purple_dot.png',
     'http://127.0.0.1:5500/client/public/img/pink_dot.png',
-  ];
-  const colorsName = [
-    'red',
-    'orange',
-    'yellow',
-    'yellowGreen',
-    'green',
-    'sky',
-    'blue',
-    'purple',
-    'pink',
   ];
   return (
     <>
@@ -57,6 +50,7 @@ function ColorSelectBox() {
                 onClick={(event) => {
                   selectColor(event);
                   handleColorSelect();
+                  setColorIdx(String(idx));
                 }}
                 onKeyPress={selectColor}
                 role="tab"
