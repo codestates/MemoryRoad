@@ -2,6 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/reducer';
 import './mypage.css';
+import Login from '../../modals/login/Login';
 import {
   checkingPasswordModal,
   editUserInfoModal,
@@ -81,8 +82,8 @@ function Mypage() {
                 </div>
                 <div
                   className="mypage-content userModalPointer"
-                  onClick={() => navigate('/Mypage/AllRoutesInMap')}
-                  onKeyDown={() => navigate('/Mypage/AllRoutesInMap')}
+                  onClick={() => navigate('/mypage/AllRoutesInMap')}
+                  onKeyDown={() => navigate('/mypage/AllRoutesInMap')}
                   role="menu"
                   tabIndex={0}
                 >

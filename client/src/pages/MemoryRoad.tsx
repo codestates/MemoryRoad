@@ -137,8 +137,8 @@ const MemoryRoad = () => {
           <Nav url={url} />
           <Routes>
             <Route element={<Home />} path="/" />
-            <Route element={<Mypage />} path="/Mypage" />
-            <Route element={<AllRoutesInMap />} path="/Mypage/AllRoutesInMap" />
+            <Route element={<Mypage />} path="/mypage" />
+            <Route element={<AllRoutesInMap />} path="/mypage/allRoutesInMap" />
           </Routes>
         </div>
       </BrowserRouter>
