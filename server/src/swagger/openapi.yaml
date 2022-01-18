@@ -100,6 +100,38 @@ components:
                 type: string
                 description: 핀의 이름
                 example: 경치 좋은 곳
+              latitude:
+                type: number
+                description: 위도
+                example: 33.0000000000
+              longitude:
+                type: number
+                description: 경도
+                example: 126.0000000000                
+              lotAddress:
+                type: string
+                description: 핀의 지번 주소
+                example: 지번 주소
+              roadAddress:
+                type: string
+                description: 핀의 도로명 주소
+                example: 도로명 주소
+              ward:
+                type: string
+                description: 핀이 속한 구
+                example: 성북구
+              tooClose:
+                type: boolean
+                description: 다른 핀과 근접 여부
+                example: false
+              startTime:
+                type: string
+                description: 핀의 시작 시간
+                example: '12:00'
+              endTime:
+                type: string
+                description: 핀의 종료 시간
+                example: '13:00'
               Pictures:
                 type: array
                 description: 핀의 사진 정보들
@@ -149,22 +181,30 @@ components:
           type: number
           description: 경도
           example: 126.0000000000
-        address:
+        lotAddress:
           type: string
-          description: 핀의 주소
-          example: 서울특별시 성북구
+          description: 핀의 지번 주소
+          example: 지번 주소
+        roadAddress:
+          type: string
+          description: 핀의 도로명 주소
+          example: 도로명 주소
+        ward:
+          type: string
+          description: 핀이 속한 구
+          example: 성북구
         tooClose:
           type: boolean
-          description: 해당 핀이 DB에 저장한 핀과 인접한 핀인지 판별
-          example: true
+          description: 다른 핀과 근접 여부
+          example: false
         startTime:
-          type: number
+          type: string
           description: 핀의 시작 시간
-          example: 12
-        endTime: 
-          type: number
+          example: '12:00'
+        endTime:
+          type: string
           description: 핀의 종료 시간
-          example: 13
+          example: '13:00'
         Pictures:
           type: array
           description: 핀의 사진 정보들

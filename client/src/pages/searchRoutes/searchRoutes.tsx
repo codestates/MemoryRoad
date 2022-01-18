@@ -53,10 +53,6 @@ function SearchRoutes() {
   //현재 지도의 중심 위도, 경도
   const [centerLatLng, setCenterLatLng] = useState([37.566826, 126.9786567]);
 
-  console.log(searchQuery);
-  console.log(currLevel);
-  console.log(centerLatLng);
-
   //회색 핀 이미지 생성
   const pinImgSrc = 'http://127.0.0.1:5500/client/public/img/gray_marker.png';
   const pinImgSize = new kakao.maps.Size(33, 54);

@@ -4,7 +4,7 @@ import Home from './home';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import SignUp from '../modals/signup/Signup';
-import './MemoryRoad.css';
+import './memoryRoad.css';
 import { RootState } from '../redux/reducer';
 import { setUserInfo } from '../redux/actions/index';
 import axios from 'axios';
