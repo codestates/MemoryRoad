@@ -69,7 +69,7 @@ function Nav({ url }: any) {
 
   return (
     <div>
-      <div>
+      <div className="nav-gridContainer-fix-fix">
         <div className="nav-gridContainer">
           <div
             className="nav-item"
@@ -81,7 +81,7 @@ function Nav({ url }: any) {
             <img
               alt="Logo"
               className="nav-logo"
-              src="http://127.0.0.1:5500/client/public/img/MeMoryRoadLogo.png"
+              src="http://127.0.0.1:5500/client/public/img/LOGO.png"
             />
           </div>
           <div></div>

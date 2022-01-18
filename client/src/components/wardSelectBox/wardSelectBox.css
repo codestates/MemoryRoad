@@ -1,0 +1,84 @@
+.selectbox-ward {
+  position: relative;
+  width: 150px;
+  height: 35px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  background-color: rgb(210, 210, 210);
+  padding-left: 3px;
+}
+
+/*select-box 옆 삼각형 버튼 디자인*/
+.selectbox-ward-label {
+  display: flex;
+  align-items: center;
+  width: inherit;
+  height: inherit;
+  border: none;
+  outline: none;
+  padding-left: 5px;
+  background: url('http://127.0.0.1:5500/client/public/img/black_triangle.png') calc(100% - 13px) center no-repeat;
+  background-size: 11px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 800;
+  color: rgb(26, 26, 26);
+}
+
+.selectbox-ward-optionList {
+  position: absolute;
+  z-index: 2;
+  top: 36px;
+  left: 0;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 5px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 0;
+  background: rgb(235, 235, 235);
+  transition: 0.2s ease-in;
+}
+
+/*스크롤 디자인 - 사라짐 ...? 무슨일 */
+.selectbox-ward-optionList::-webkit-scrollbar {
+  width: 2px;
+  display: none;
+}
+
+.selectbox-ward.btn-active .selectbox-ward-optionList {
+  max-height: 130px;
+}
+
+.selectbox-ward-option {
+  border-bottom: 0.2px dashed rgb(255, 255, 255);
+  padding: 8px;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: rgb(53, 53, 53);
+  text-align: center;
+  /* color: transparent; */
+  transition: 0.1s;
+}
+
+.selectbox-ward-selected-option {
+  /* margin: 0px 7px; */
+  color: rgb(118, 118, 118);
+}
+
+.selectbox-ward-option:hover {
+  background: rgb(255, 255, 255);
+  cursor: pointer;
+}
+
+.selectbox-ward-option:last-child {
+  border-bottom: none;
+}
+
+@media screen and (max-width: 320px) {
+  .selectbox-ward {
+    width: 140px;
+  }
+}

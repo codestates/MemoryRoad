@@ -1,0 +1,109 @@
+/*컴포넌트 디자인*/
+.myRouteStore-card-container {
+  width: 320px;
+  height: 220px;
+  margin: 12px 12px 12px 2.5%;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  cursor: pointer;
+}
+.myRouteStore-card-top {
+  width: 100%;
+  height: 45%;
+}
+.myRouteStore-card-image { /*image*/
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.75;
+  border-radius: 15px 15px 0 0;
+}
+.myRouteStore-card-bottom {
+  width: 100%;
+  height: 55%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0 0 15px 15px;
+  background-color: rgb(232, 232, 232);
+}
+.myRouteStore-card-title {
+  position: relative;
+  width: 295px;
+  display: flex;
+  justify-content: space-between;
+}
+.myRouteStore-card-text { /*text*/
+  margin: none;
+  margin: 10px 0 0 5px;
+  font-size: 1.1em;
+  font-weight: 700;
+  color:rgb(38, 38, 38);
+}
+.myRouteStore-card-time-container { /*time*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 9px;
+  right: 8px;
+  padding: 3px 7px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.7em;
+  color: white;
+  background-color: rgb(139, 139, 209);
+}
+.myRouteStore-card-time {
+  margin-right: 1px;
+  margin-bottom: 0.5px;
+}
+.myRouteStore-card-date { /*date*/
+  position: relative;
+  right: 108px;
+  font-weight: 300;
+  font-size: 0.8em;
+  color:rgb(155, 155, 155);
+}
+.myRouteStore-card-route { /*route line*/
+  position: relative;
+  width: 280px;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+/*페이지네이션*/
+.myRouteStore-paginations {
+  position: relative;
+  top: 40px;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+}
+.myRouteStore-paginations-prev-btn,
+.myRouteStore-paginations-next-btn {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 5px;
+}
+.myRouteStore-paginations-prev-img,
+.myRouteStore-paginations-next-img {
+  width: 15px;
+  opacity: 0.4;
+}
+.myRouteStore-paginations-page-btn { /*page nums*/
+  border: 2px solid rgb(232, 232, 232);
+  border-radius: 8px;
+  outline: none;
+  margin: 0 4px;
+  font-size: 0.8em;
+  font-weight: 800;
+  color: rgb(72, 72, 72);
+  background: transparent;
+  cursor: pointer;
+}

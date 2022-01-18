@@ -1,9 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import MemoryRoad from './pages/memoryRoad';
 import CreatePinMap from './pages/createPinMap/createPinMap';
-// import SaveRouteModal from './modals/saveRouteModal/saveRouteModal';
+import MyRouteStore from './pages/myRouteStore/myRouteStore';
+import MemoryRoad from './pages/MemoryRoad';
+import CreatePinMap from './pages/createPinMap/createPinMap';
+import SearchRoutes from './pages/searchRoutes/searchRoutes';
 
 // redux
 import { Provider } from 'react-redux';
@@ -18,7 +22,13 @@ export const persistor = persistStore(store); // { manualPersist: true } -> redu
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <MemoryRoad />
+      <BrowserRouter>
+        <Routes>
+          <Route element={<MemoryRoad />} path="/"></Route>
+          <Route element={<CreatePinMap />} path="map/createRoute"></Route>
+          <Route element={<MyRouteStore />} path="myRouteStore"></Route>
+        </Routes>
+      </BrowserRouter>
     </PersistGate>
   </Provider>,
   document.getElementById('root'),

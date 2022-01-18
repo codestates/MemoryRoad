@@ -12,7 +12,6 @@ import {
   updateAllpinsTime,
 } from '../../redux/actions/index';
 import { RootState } from '../../redux/reducer/index';
-import SetTime from './setTime';
 
 function TimeLineSideBar({
   pinCards,
@@ -165,7 +164,6 @@ function TimeLineSideBar({
                   <GridLayout
                     layout={layoutState}
                     onLayoutChange={(layout) => onLayoutChange(layout)} // grid의 레이아웃이 변했을 때 동작.
-
                     style={{ zIndex: '9999', left: '35px' }} // 이거없으면 사라집니다.
                     {...{
                       isDraggable: true,
@@ -274,14 +272,6 @@ function TimeLineSideBar({
               </div>
             </div>
           </div>
-          {/* <div
-            className={isSidebarOpen ? 'show-layer' : ''}
-            id="pinControllTower-overlay"
-            onClick={handleSidebar}
-            onKeyPress={handleSidebar}
-            role="button"
-            tabIndex={0}
-          ></div> */}
         </div>
       </div>
     </>

@@ -1,3 +1,8 @@
+.nav-gridContainer-fix-fix {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+}
 .nav-gridContainer {
   position: fixed;
   width: 100%;
@@ -7,7 +12,8 @@
   text-align: center;
   display: grid;
   grid-template-columns: 2fr 1fr 0.5fr 1fr;
-  grid-template-rows: 60px;
+  grid-template-rows: 50px;
+  background-color:  white;
 }
 .nav-RemoveGridContainer {
   display: none;
@@ -30,10 +36,14 @@
 .nav-loginfont {
   /* border: 2px solid black; */
   width: 100px;
-  line-height: 400%;
+  line-height: 300%;
   cursor: pointer;
   font-size: 16px;
+  font-weight: 600;
   text-decoration: none;
+}
+.nav-loginfont:hover {
+  background-color: #91ba9f82;
 }
 
 .nav-mobile {
@@ -56,6 +66,8 @@
     width: 180px;
   }
   .nav-gridContainer {
+    /* position: absolute; */
+    /* z-index: 5; */
     box-shadow: 2px 3px 5px #d6e0e5;
     text-align: center;
     display: grid;

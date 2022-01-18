@@ -1,0 +1,42 @@
+/*페이지네이션*/
+.myRouteStore-paginations-prev-btn,
+.myRouteStore-paginations-next-btn {
+  width: 20px;
+  height: 20px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.myRouteStore-paginations-prev-btn {
+  background: url('http://127.0.0.1:5500/client/public/img/prev_button.png') no-repeat center;
+  background-size: 17px;
+  opacity: 0.5;
+}
+.myRouteStore-paginations-prev-btn:hover {
+  opacity: 0.8;
+}
+
+.myRouteStore-paginations-next-btn {
+  background: url('http://127.0.0.1:5500/client/public/img/next_button.png') no-repeat center;
+  background-size: 17px;
+  opacity: 0.5;
+}
+.myRouteStore-paginations-next-btn:hover {
+  opacity: 0.8;
+}
+
+.myRouteStore-paginations-page-btn { /*page nums*/
+  border: 2px solid rgb(232, 232, 232);
+  border-radius: 8px;
+  outline: none;
+  margin: 0 4px;
+  font-size: 0.8em;
+  font-weight: 800;
+  color: rgb(72, 72, 72);
+  background: transparent;
+  cursor: pointer;
+}
+.myRouteStore-paginations-page-btn:hover {
+  background-color: rgb(232, 232, 232);
+}

@@ -1,6 +1,15 @@
+.login-modal-align-center-fix {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+}
 .login-LoginBorder {
   position: fixed;
-  top: 7em;
+  /* top: 7em; */
   background-color: white;
   border: 2px solid white;
   border-radius: 10px;

@@ -123,90 +123,92 @@ function LoginModal({ url }: any) {
       <div>
         <Mist />
       </div>
-      <div className="login-LoginBorder">
-        <div className="login-center login-titleLogin">로그인</div>
-        <input
-          className="login-input"
-          maxLength={20}
-          onChange={InputEmail}
-          placeholder="이메일"
-          type="text"
-        ></input>
-        <br />
-        <input
-          className="login-input"
-          maxLength={16}
-          onChange={InputPassword}
-          placeholder="비밀번호"
-          type="password"
-        ></input>
-        <div className="login-ErrorMessage">{errorMessage}</div>
-        <div className="login-center">
-          <button
-            className="login-Button userModalPointer"
-            onClick={LoginHandler}
-          >
-            로그인
-          </button>
-        </div>
-        <div className="login-center">
-          <hr className="login-linebottom"></hr>
-        </div>
-        <div className="login-OauthButton">
-          <div
-            onClick={GoogleLoginHandler}
-            onKeyDown={GoogleLoginHandler}
-            role="button"
-            tabIndex={0}
-          >
-            <img
-              alt="googleLoginButton"
-              className="login-GoogleButton login-pointer"
-              src="http://127.0.0.1:5500/client/public/img/google_btn.png"
-            />
+      <div className="login-modal-align-center-fix">
+        <div className="login-LoginBorder">
+          <div className="login-center login-titleLogin">로그인</div>
+          <input
+            className="login-input"
+            maxLength={20}
+            onChange={InputEmail}
+            placeholder="이메일"
+            type="text"
+          ></input>
+          <br />
+          <input
+            className="login-input"
+            maxLength={16}
+            onChange={InputPassword}
+            placeholder="비밀번호"
+            type="password"
+          ></input>
+          <div className="login-ErrorMessage">{errorMessage}</div>
+          <div className="login-center">
+            <button
+              className="login-Button userModalPointer"
+              onClick={LoginHandler}
+            >
+              로그인
+            </button>
           </div>
-          <div
-            onClick={NaverLoginHandler}
-            onKeyDown={NaverLoginHandler}
-            role="button"
-            tabIndex={0}
-          >
-            <img
-              alt="naverLoginButton"
-              className="login-NaverButton login-pointer"
-              src="http://127.0.0.1:5500/client/public/img/naver_btn.png"
-            />
+          <div className="login-center">
+            <hr className="login-linebottom"></hr>
           </div>
-          <div
-            onClick={KakaoLoginHandler}
-            onKeyDown={KakaoLoginHandler}
-            role="button"
-            tabIndex={0}
-          >
-            <img
-              alt="kakoLoginButton"
-              className="login-kakaoButton login-pointer"
-              src="http://127.0.0.1:5500/client/public/img/kakao_btn.png"
-            />
+          <div className="login-OauthButton">
+            <div
+              onClick={GoogleLoginHandler}
+              onKeyDown={GoogleLoginHandler}
+              role="button"
+              tabIndex={0}
+            >
+              <img
+                alt="googleLoginButton"
+                className="login-GoogleButton login-pointer"
+                src="http://127.0.0.1:5500/client/public/img/google_btn.png"
+              />
+            </div>
+            <div
+              onClick={NaverLoginHandler}
+              onKeyDown={NaverLoginHandler}
+              role="button"
+              tabIndex={0}
+            >
+              <img
+                alt="naverLoginButton"
+                className="login-NaverButton login-pointer"
+                src="http://127.0.0.1:5500/client/public/img/naver_btn.png"
+              />
+            </div>
+            <div
+              onClick={KakaoLoginHandler}
+              onKeyDown={KakaoLoginHandler}
+              role="button"
+              tabIndex={0}
+            >
+              <img
+                alt="kakoLoginButton"
+                className="login-kakaoButton login-pointer"
+                src="http://127.0.0.1:5500/client/public/img/kakao_btn.png"
+              />
+            </div>
           </div>
-        </div>
-        <div className="login-center login-TotheSignup">
-          혹시 회원이 아니신가요?{' '}
-          <b
-            className="login-pointer"
-            onClick={() => {
-              dispatch(loginModal(false)); // 로그인 모달창을 닫고
-              dispatch(signupModal(true)); // 회원가입 모달창을 연다
-            }}
-            onKeyDown={() => {
-              dispatch(loginModal(false));
-              dispatch(signupModal(true));
-            }}
-            role="menu"
-            tabIndex={0}
-          >
-            회원가입
-          </b>
+          <div className="login-center login-TotheSignup">
+            혹시 회원이 아니신가요?{' '}
+            <b
+              className="login-pointer"
+              onClick={() => {
+                dispatch(loginModal(false)); // 로그인 모달창을 닫고
+                dispatch(signupModal(true)); // 회원가입 모달창을 연다
+              }}
+              onKeyDown={() => {
+                dispatch(loginModal(false));
+                dispatch(signupModal(true));
+              }}
+              role="menu"
+              tabIndex={0}
+            >
+              회원가입
+            </b>
+          </div>
         </div>
       </div>
     </div>

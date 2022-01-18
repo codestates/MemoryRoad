@@ -1,0 +1,283 @@
+/*전체 틀*/
+.storyCardMainModal-background {
+  position: fixed;
+  z-index: 6; /*navigation bar 오작동 막음 5 -> 6*/
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  background: rgba(41, 41, 41, 0.413);
+}
+.storyCardMainModal-entire-container {
+  position: fixed;
+  z-index: 10;
+  width: 1000px;
+  height: 90%;
+  background-color: white;
+  border-radius: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.storyCardMainModal-entire-container::-webkit-scrollbar { /*scrollBar*/
+  width: 7px;
+}
+.storyCardMainModal-entire-container::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: transparent /*rgb(169, 169, 169);*/
+}
+.storyCardMainModal-entire-container::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: transparent /*rgba(255, 255, 255, 0.3);*/
+}
+
+.storyCardMainModal-container {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  /* overflow-y: visible; */
+  /* overflow-x: hidden; */
+  /* background-color: pink; */
+}
+
+.storyCardMainModal-headerBox {
+  width: 95%;
+  height: auto;
+  position: sticky;
+  z-index: 9;
+  top: 0px;
+  background-color: white;
+}
+/*close*/
+.storyCardMainModal-close-btn-wrapper {
+  position: relative;
+  height: 30px;
+}
+.storyCardMainModal-close-btn {
+  position: absolute; /*위치 고정시키고싶은디*/
+  top: 20px;
+  right: 6px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  outline: none;
+  background: url('http://127.0.0.1:5500/client/public/img/close_icon.png') no-repeat center;
+  background-size: 33px;
+  cursor: pointer;
+}
+
+/*title*/
+.storyCardMainModal-title {
+  font-size: 1.7em;
+  font-weight: 800;
+  color: rgb(53, 53, 53);
+  margin-left: 4%;
+}
+/*2 buttons*/
+.storyCardMainModal-btns {
+  position: relative;
+  right: 0px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-flow: nowrap;
+  justify-content: flex-end;
+}
+.storyCardMainModal-modify-btn {
+  border: none;
+  outline: none;
+  padding: 6px 11px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  font-weight: 800;
+  color: white;
+  background-color: #91BA9F;
+  margin: 5px 3px;
+  cursor: pointer;
+}
+.storyCardMainModal-delete-btn {
+  border: none;
+  outline: none;
+  padding: 6px 11px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  font-weight: 800;
+  color: white;
+  background-color: #e45151;
+  margin: 5px 3px;
+  cursor: pointer;
+}
+
+/*divide-line*/
+.storyCardMainModal-divide-line {
+  height: 2px;
+  border: none;
+  background-color: rgb(234, 234, 234);
+}
+
+/*----------------------------------------*/
+/*content*/
+.storyCardMainModal-main-content {
+  position: relative; /*test*/
+  width: 95%;
+  height: 100%; /*높이 제한해서 테스트해야됌.*/
+}
+/*----------------------------------------*/
+
+/*description*/
+.storyCardMainModal-description {
+  margin: 5% 4%;
+  font-size: 0.9em;
+  font-weight: 500;
+  line-height: 1.6em;
+  text-align: justify;
+  word-wrap: break-word;
+  color: rgb(92, 92, 92);
+}
+
+/*map*/
+.storyCardMainModal-map-wrapper {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  margin: 6.5% 0;
+}
+.storyCardMainModal-map {
+  position: relative;
+  width: 91%;
+  padding-top: 55%;
+  /* height: 90%; */
+}
+#storyCard-map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
+}
+
+/*route*/
+.storyCardMainModal-route-wrapper {
+  /*line을 위해*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.storyCardMainModal-route {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  /* margin-bottom: 10%; */
+}
+.storyCardMainModal-pin {
+  position: relative; /*이미지 위에 text얹기*/
+  width: 100px;
+  height: 150px;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+}
+.storyCardMainModal-pin-picture-count { /*picture btn*/
+  /* display: block; */
+  /* text-align: center; */
+  width: 45px;
+  height: 45px;
+  border: none;
+  outline: none;
+  background: transparent;
+  background: url('http://127.0.0.1:5500/client/public/img/chat_bubble.png') no-repeat center; /*숫자표시창이나까 고정 괜춘*/
+  background-size: cover;
+  opacity: 0.5;
+  padding-bottom: 5px; /*text 정렬*/
+  font-size: 1em;
+  font-weight: 600;
+  color: #333e32;
+  cursor: pointer;
+}
+.storyCardMainModal-pin-map-dot { /*dot btn*/
+  width: 13px;
+  height: 13px;
+  border: none;
+  outline: none;
+  margin: 15% 0;
+  cursor: pointer;
+}
+.storyCardMainModal-pin-time {
+  font-size: 0.8em;
+  font-weight: 300;
+  color: rgb(108, 108, 108);
+  margin-bottom: 15%;
+}
+.storyCardMainModal-pin-title {
+  font-size: 0.95em;
+  font-weight: 600;
+  color: rgb(60, 60, 60);
+}
+.storyCardMainModal-pin-color-line {
+  position: absolute;
+  width: 88%;
+  height: 3px;
+  border: none;
+  border-radius: 30px;
+}
+
+/*picture 와 사진정렬 어렵다*/
+/*사진 정렬하는 법 알아두고 정리해놓기 -> 아주 유용한 방법.*/
+.storyCardMainModal-pin-pictures {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  /* justify-content: center; */
+  margin: 4% 0;
+  margin-left: 5.5%;
+}
+.storyCardMainModal-pin-photo-wrapper {
+  width: 22%;
+  margin: 2px;
+}
+.storyCardMainModal-pin-photo-container {
+  position: relative;
+  padding-top: 100%; /*1:1 ratio*/
+  overflow: hidden;
+}
+.storyCardMainModal-pin-photo-center {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  -webkit-transform: translate(50%,50%); 
+  -ms-transform: translate(50%,50%); 
+  transform: translate(50%,50%);
+}
+.storyCardMainModal-pin-photo-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 100%;
+  height: auto;
+  -webkit-transform: translate(-50%,-50%); 
+  -ms-transform: translate(-50%,-50%); 
+  transform: translate(-50%,-50%);
+}
+
+
+
+/*너비*/
+@media screen and (max-width: 1420px){
+  .storyCardMainModal-entire-container {
+    width: 70%;
+  }
+}
