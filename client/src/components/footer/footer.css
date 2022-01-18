@@ -6,11 +6,7 @@
   background-color: rgb(128, 128, 128);
   padding: 20px;
 }
-.footer-footerImg {
-  filter: grayscale(100%);
-  opacity: 0.9;
-  width: 200px;
-}
+
 .footer-MemoryRoad {
   font-family: 'Allan', cursive;
   font-size: 26px;
@@ -33,12 +29,8 @@
 }
 
 @media (max-width: 840px) {
-  .footer-footerImg {
-    width: 150px;
-    filter: grayscale(100%);
-  }
   .footer-footerText {
-    margin-left: 180px;
+    margin-left: 140px;
     text-align: right;
     color: white;
     font-weight: bold;
@@ -47,6 +39,7 @@
   .footer-name {
     margin: 0px;
   }
+
   .footer-MemoryRoad {
     font-family: 'Allan', cursive;
     font-size: 20px;
@@ -60,10 +53,6 @@
 }
 
 @media (max-width: 500px) {
-  .footer-footerImg {
-    width: 120px;
-    filter: grayscale(100%);
-  }
   .footer-footerText {
     margin-left: 50px;
     text-align: right;

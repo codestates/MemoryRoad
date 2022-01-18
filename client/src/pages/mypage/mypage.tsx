@@ -114,8 +114,8 @@ function Mypage() {
                 </div>
                 <div
                   className="mypage-content userModalPointer"
-                  onClick={() => navigate('/Mypage/AllRoutesInMap')}
-                  onKeyDown={() => navigate('/Mypage/AllRoutesInMap')}
+                  onClick={() => navigate('/AllRoutesInMap')}
+                  onKeyDown={() => navigate('/AllRoutesInMap')}
                   role="menu"
                   tabIndex={0}
                 >
