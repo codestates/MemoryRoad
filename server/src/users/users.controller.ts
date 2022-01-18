@@ -160,6 +160,7 @@ export class UsersController {
     @Res() res: Response,
     @Req() req: Request,
   ) {
+    console.log('들어오긴 하니');
     if (!req.cookies || !req.cookies.accessToken) {
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }

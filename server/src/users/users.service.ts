@@ -17,6 +17,8 @@ import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import * as jwt from 'jsonwebtoken';
 import requestPromise from 'request-promise';
+import fs from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class UsersService {
@@ -242,12 +244,21 @@ export class UsersService {
     return decoded;
   }
 
-  //회원 정보 업데이트 닉네임. 비밀번호, 프로필이미지.
+  //회원 정보 업데이트 프로필이미지
   async updateProfile(accessToken: string, file: Express.Multer.File) {
     console.log(file);
     console.log(file.path);
     const decoded = await this.verifyAccessToken(accessToken);
-    decoded['profileImage'] = file.filename;
+    const deleteFile: UserEntity = await this.usersRepository.findOne({
+      id: decoded['id'],
+    });
+    console.log(__dirname);
+    fs.unlinkSync(
+      `${join(__dirname, '..', '..', '..')}/${deleteFile['profileImage']}`,
+    );
+    // deleteFile.profileImage;
+
+    decoded['profileImage'] = file.path;
     const user: UserEntity = {
       id: decoded['id'],
       email: decoded['email'],
@@ -255,8 +266,9 @@ export class UsersService {
       profileImage: decoded['profileImage'],
     };
     await this.usersRepository.save(user);
-    return file.filename;
+    return file.path;
   }
+  //회원 정보 업데이트 닉네임
   async updateUserName(accessToken: string, userName: string) {
     const decoded = await this.verifyAccessToken(accessToken);
     decoded['nickName'] = userName;
@@ -268,6 +280,7 @@ export class UsersService {
     };
     await this.usersRepository.save(user);
   }
+  //회원 정보 업데이트 비밀번호
   async updatePassword(accessToken: string, password: string) {
     const decoded = await this.verifyAccessToken(accessToken);
     const salt = await bcrypt.genSalt();
