@@ -28,7 +28,6 @@ export class UserExceptionFilter implements ExceptionFilter {
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),
-      message: '오류가 났습니다',
       path: request.url,
     });
   }

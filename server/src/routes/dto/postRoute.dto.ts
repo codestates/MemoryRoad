@@ -1,5 +1,11 @@
 import { plainToClass, Transform } from 'class-transformer';
-import { IsBoolean, IsNumber, IsObject, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDate,
+  IsNumber,
+  IsObject,
+  IsString,
+} from 'class-validator';
 
 import { PatchPinDto } from './patchPin.dto';
 
@@ -20,6 +26,12 @@ export class PostRouteDto {
 
   @IsNumber()
   readonly time: number;
+
+  @Transform(({ value }) => {
+    return new Date(value);
+  })
+  @IsDate()
+  readonly date: Date;
 
   //pins배열에는 일반 객체가 들어있는데, 이 객체를 'PatchRouteDto'클래스로 만든다. (타입 안정성을 보장하기 위해)
   @Transform(({ value }) => {

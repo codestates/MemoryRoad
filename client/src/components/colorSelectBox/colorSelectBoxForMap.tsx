@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../redux/reducer';
-import './colorSelectBoxForStore.css';
+import './colorSelectBox.css';
 
-function ColorSelectBox() {
+type Props = {
+  setColorIdx: React.Dispatch<React.SetStateAction<string>>;
+};
+
+function ColorSelectBox({ setColorIdx }: Props) {
   const [clickedColorSelect, setClickedColorSelect] = useState(false);
   const [selectedColorId, setSelectedCorlorId] = useState('0');
   const handleColorSelect = () => {
@@ -12,45 +14,50 @@ function ColorSelectBox() {
   const selectColor = (event: any) => {
     setSelectedCorlorId(event.target.id);
   };
-  const colorUrls: any = useSelector(
-    (state: RootState) => state.createRouteReducer.colorDotUrl,
-  );
+  const colors = [
+    'http://127.0.0.1:5500/client/public/img/red_dot.png',
+    'http://127.0.0.1:5500/client/public/img/orange_dot.png',
+    'http://127.0.0.1:5500/client/public/img/yellow_dot.png',
+    'http://127.0.0.1:5500/client/public/img/yellowGreen_dot.png',
+    'http://127.0.0.1:5500/client/public/img/green_dot.png',
+    'http://127.0.0.1:5500/client/public/img/sky_dot.png',
+    'http://127.0.0.1:5500/client/public/img/blue_dot.png',
+    'http://127.0.0.1:5500/client/public/img/purple_dot.png',
+    'http://127.0.0.1:5500/client/public/img/pink_dot.png',
+  ];
   return (
     <>
       <div
         className={
-          'saveRouteModal-selectbox-color ' +
-          (clickedColorSelect ? 'btn-active' : null)
+          'selectbox-color ' + (clickedColorSelect ? 'btn-active' : null)
         }
       >
-        <button
-          className="saveRouteModal-selectbox-color-label"
-          onClick={handleColorSelect}
-        >
+        <button className="selectbox-color-label" onClick={handleColorSelect}>
           <img
             alt="selected-dot"
-            className="saveRouteModal-selectbox-color-selected-option"
-            src={colorUrls[Number(selectedColorId)]}
+            className="selectbox-color-selected-option"
+            src={colors[Number(selectedColorId)]}
           />
         </button>
-        <ul className="saveRouteModal-selectbox-color-optionList">
-          {colorUrls.map((color: any, idx: number) => {
+        <ul className="selectbox-color-optionList">
+          {colors.map((color, idx) => {
             const strArr = color.split('/');
             return (
               <li
-                className="saveRouteModal-selectbox-color-option"
+                className="selectbox-color-option"
                 id={String(idx)}
                 key={idx}
                 onClick={(event) => {
                   selectColor(event);
                   handleColorSelect();
+                  setColorIdx(String(idx));
                 }}
                 onKeyPress={selectColor}
                 role="tab"
               >
                 <img
                   alt={strArr[6]}
-                  className="saveRouteModal-selectbox-color-img"
+                  className="selectbox-color-img"
                   id={String(idx)}
                   src={color}
                 />

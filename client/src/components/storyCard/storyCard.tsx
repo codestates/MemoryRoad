@@ -12,13 +12,19 @@ type Props = {
 };
 
 function StoryCard({ routeInfo, setSelectedRoute, selectedRoute }: Props) {
-  const imageUrl = `https://server.memory-road.tk/${routeInfo.thumbnail}`; /* 카드 대표 이미지 url (서버에서 받아온 것)*/
-
-  const colorNames: any = useSelector(
-    (state: RootState) => state.createRouteReducer.colorName,
-  );
-
-  const colorIdx = colorNames.indexOf(routeInfo.color);
+  const imageUrl = `https://server.memory-road.net/${routeInfo.thumbnail}`; /* 카드 대표 이미지 url (서버에서 받아온 것)*/
+  const colorsName = [
+    'red',
+    'orange',
+    'yellow',
+    'yellowGreen',
+    'green',
+    'sky',
+    'blue',
+    'purple',
+    'pink',
+  ]; /* 컬러 이름 서버에서 온 컬러이름과 비교해서 인덱스값 추출해낼 것 */
+  const colorIdx = colorsName.indexOf(routeInfo.color);
   const pinTitles = routeInfo.Pins.map((pin) => pin.locationName);
 
   function formatDate(date: Date) {
@@ -72,9 +78,9 @@ function StoryCard({ routeInfo, setSelectedRoute, selectedRoute }: Props) {
               시간
             </div>
           </div>
-          <div className="myRouteStore-card-date-search">
+          {/* <div className="myRouteStore-card-date-search">
             {formatDate(routeInfo.createdAt)}
-          </div>
+          </div> */}
           <div className="myRouteStore-card-route-search">
             <StoryCardRoute colorIdx={colorIdx} pinTitles={pinTitles} />
             {/* colorName에서 인덱스값 뽑아서 내려주기 */}

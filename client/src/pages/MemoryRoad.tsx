@@ -1,19 +1,9 @@
 import * as React from 'react';
 import Nav from '../components/Navigation';
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Link,
-  useNavigate,
-} from 'react-router-dom';
+import Home from './home';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Mypage from './Mypage';
 import SignUp from '../modals/signup/Signup';
-import CheckingPassword from '../modals/editUserInfo/checkingPassword';
-import EditUserInfo from '../modals/editUserInfo/editUserInfo';
-import Withdrawal from '../modals/editUserInfo/withdrawal';
 import './MemoryRoad.css';
 import { RootState } from '../redux/reducer';
 import { setUserInfo } from '../redux/actions/index';
@@ -25,10 +15,7 @@ const MemoryRoad = () => {
   const state = useSelector((state: RootState) => state.modalReducer);
   const modalLogin = state.isLoginModal; // 로그인 모달창
   const modalSignup = state.isSigninModal; // 회원가입 모달창
-  const modalCheckPassword = state.isCheckingPasswordModal; // 회원정보 수정하기 전 비밀번호 확인 모달창
-  const modalEditUserInfo = state.isEditUserInfoModal; // 회원정보 수정 모달창
-  const modalWithdrawal = state.iswithdrawalModal; // 회원탈퇴 모달창
-  const url = 'http://localhost80';
+  const url = 'http://localhost';
   const dispatch = useDispatch();
 
   // 유효성 검사
@@ -53,8 +40,6 @@ const MemoryRoad = () => {
     }
   };
 
-  // const url = new URL(window.location.href);
-  // const [authorizationCode, setAuthorizationCode] = useState('');
   // OAuth2.0
   const socialLogin = window.localStorage.getItem('socialLogin');
   useEffect(() => {
@@ -120,20 +105,13 @@ const MemoryRoad = () => {
       }
     }
   }, [socialLogin]);
+
   return (
     <div>
       <div>
         {modalLogin ? <LoginModal url={url} /> : null}
         {modalSignup ? <SignUp isvalid={isvalid} url={url} /> : null}
-        {modalCheckPassword ? <CheckingPassword url={url} /> : null}
-        {modalEditUserInfo ? (
-          <EditUserInfo isvalid={isvalid} url={url} />
-        ) : null}
-        {modalWithdrawal ? <Withdrawal url={url} /> : null}
-        <Nav url={url} />
-        <Routes>
-          <Route element={<Mypage />} path="/Mypage" />
-        </Routes>
+        <Home />
       </div>
     </div>
   );

@@ -104,6 +104,10 @@ function EditUserInfo({ isvalid, url }: any) {
               ),
             );
           }
+        })
+        .catch((error) => {
+          console.log(error);
+          alert('입력한 정보로 수정할 수  없습니다.');
         });
     } else {
       alert('입력한 정보로 수정할 수 없습니다.');

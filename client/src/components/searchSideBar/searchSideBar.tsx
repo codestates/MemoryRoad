@@ -1,51 +1,96 @@
-import React, { useState } from 'react';
-import PageBtn from '../pageBtn/pageBtn';
-import RouteCard from '../routeCard/routeCard';
+import React, { useEffect, useState, useRef } from 'react';
 import StoryCard from '../storyCard/storyCard';
 import './searchSideBar.css';
 import { Route } from './../../types/searchRoutesTypes';
 import Pagination from '../pagination/pagination';
+import axios from 'axios';
+import WardSelectBox from '../wardSelectBox/wardSelectBoxForMap';
+import SeoulSelectBox from '../seoulSelectBox/seoulSelectBoxForMap';
+import TimeSelectBox from '../timeSelectBox/timeSelectBox';
 
 type Props = {
   searchResult: Route[];
   routeCount: number;
-  searchKeyword: string;
   isSidebarOpen: boolean;
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedRoute: React.Dispatch<React.SetStateAction<Route | null>>;
   selectedRoute: Route | null;
+  setRouteCount: React.Dispatch<React.SetStateAction<number>>;
+  setSearchResult: React.Dispatch<React.SetStateAction<Route[]>>;
+  setSearchQuery: React.Dispatch<
+    React.SetStateAction<{
+      rq?: string | undefined;
+      lq?: string | undefined;
+      location?: string | undefined;
+      time?: number | undefined;
+      page: number;
+    }>
+  >;
+  searchQuery: {
+    rq?: string | undefined;
+    lq?: string | undefined;
+    location?: string | undefined;
+    time?: number | undefined;
+    page: number;
+  };
+  curPage: number;
+  setCurPage: React.Dispatch<React.SetStateAction<number>>;
 };
 
 function SearchSideBar({
   searchResult,
   routeCount,
-  searchKeyword,
   isSidebarOpen,
   setIsSidebarOpen,
   setSelectedRoute,
   selectedRoute,
+  setRouteCount,
+  setSearchResult,
+  setSearchQuery,
+  searchQuery,
 }: Props) {
-  const wardsStr = [
-    '강남구',
-    '강동구',
-    '강북구',
-    '강서구',
-    '관악구',
-    '광진구',
-    '구로구',
-    '금천구',
-  ];
-
-  //state들
-  // const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  //현재 페이지
-  const [curPage, setCurPage] = useState(1);
-
   const handleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
     // setCurPage(1);
   };
+
+  //쿼리 객체를 쿼리 스트링으로 변환하는 메소드
+  const getQueryStr = (searchQuery: {
+    rq?: string | undefined;
+    lq?: string | undefined;
+    location?: string | undefined;
+    time?: number | undefined;
+    page?: number | undefined;
+  }) =>
+    Object.entries(searchQuery)
+      .map((e) => e.join('='))
+      .join('&');
+
+  //첫 랜더링 시 useEffect실행을 막기 위한 변수
+  const didMount = useRef(false);
+
+  //현재 페이지가 바뀌면, 페이지에 해당하는 루트들을 요청한다.
+  useEffect(() => {
+    if (didMount.current) {
+      axios
+        .get(
+          `https://server.memory-road.net/routes?search=true&${getQueryStr(
+            searchQuery,
+          )}`,
+          { withCredentials: true },
+        )
+        .then((result) => {
+          setRouteCount(result.data.count);
+          setSearchResult(result.data.routes);
+          setIsSidebarOpen(true);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      didMount.current = true;
+    }
+  }, [searchQuery]);
 
   return (
     <>
@@ -68,31 +113,15 @@ function SearchSideBar({
               id="pinControllTower-sidebar"
             >
               <div className="pinControllTower-filter-container">
-                <div className="ward-location-container">
-                  <select className="ward-location-select">
-                    {wardsStr.map((ward, idx) => (
-                      <option key={idx} value={ward}>
-                        {ward}
-                      </option>
-                    ))}
-                  </select>
+                <div className="seoul-select-container">
+                  <SeoulSelectBox />
                 </div>
+                <div className="ward-select-container">
+                  <WardSelectBox setSearchQuery={setSearchQuery} />
+                </div>
+
                 <div className="time-select-container">
-                  <select className="time-select left">
-                    {new Array(25).fill(null).map((_, idx) => (
-                      <option key={idx} value={idx}>
-                        {`${idx}시`}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="wave-container">~</div>
-                  <select className="time-select right">
-                    {new Array(25).fill(null).map((_, idx) => (
-                      <option key={idx} value={idx}>
-                        {`${idx}시`}
-                      </option>
-                    ))}
-                  </select>
+                  <TimeSelectBox setSearchQuery={setSearchQuery} />
                 </div>
               </div>
               <div className="pinControllTower-content">
@@ -105,18 +134,12 @@ function SearchSideBar({
                   />
                 ))}
                 {routeCount > 5 ? (
-                  // <PageBtn
-                  //   cardCount={routeCount}
-                  //   curPage={curPage}
-                  //   limit={5}
-                  //   setCurPage={setCurPage}
-                  // />
                   <div className="pagination-button">
                     <Pagination
                       cardCount={routeCount}
-                      curPage={curPage}
                       limit={5}
-                      setCurPage={setCurPage}
+                      searchQuery={searchQuery}
+                      setSearchQuery={setSearchQuery}
                     />
                   </div>
                 ) : null}

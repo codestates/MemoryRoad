@@ -8,6 +8,6 @@ export interface Pin {
   roadAddress: string;
   ward: string;
   tooClose?: boolean; //서버에서 직접 계산해야 한다.
-  startTime: number;
-  endTime: number;
+  startTime: string;
+  endTime: string;
 }
