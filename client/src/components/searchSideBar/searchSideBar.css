@@ -118,12 +118,13 @@
 
   /* 필터를 전부 감싸는 div */
   .pinControllTower-filter-container {
-    width: 260px;
-    height: 100px;
+    width: 95%;
+    height: 70px;
     margin-bottom: 5%;
     border-bottom:solid 0.1rem gray;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
   }
 
   .ward-location-container{
@@ -147,12 +148,13 @@
 .time-select-container {
   display: flex;
   align-items: center;
-  padding: 0 3% 0 3%;
-  flex-shrink: 1;
+  width: 75px;
+  /* padding: 0 3% 0 3%; */
+  /* flex-shrink: 1; */
 }
 
 /* time-select-container내부 요소 */
-.time-select.left {
+/* .time-select.left {
   border: 0;
   border-radius: 5px;
   height: 34px;
@@ -160,24 +162,8 @@
   background: grey;
   flex-grow: 3;
   text-align:center;
-}
+} */
 
-/* time-select-container내부 요소 */
-.time-select.right {
-  border: 0;
-  border-radius: 5px;
-  height: 34px;
-  box-shadow: 0px 0px 5px rgba(70, 70, 70, 0.2);
-  background: grey;
-  flex-grow: 3;
-  text-align:center;
-}
-
-/* time-select-container내부 요소 */
-.wave-container{
-  flex-grow: 1;
-  text-align: center;
-}
 
 /* 페이지 버튼 */
 .pagination-button {
@@ -185,3 +171,16 @@
   justify-content: center;
 }
 
+/* 서울특별시 선택 버튼 */
+.seoul-select-container {
+  display: flex;
+  align-items: center;
+  flex-shrink: 1;
+}
+
+/* 구 선택 버튼 */
+.ward-select-container {
+  display: flex;
+  align-items: center;
+  flex-shrink: 1;
+}

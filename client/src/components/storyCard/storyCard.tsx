@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/reducer';
 import './storyCardForSearch.css';
 import StoryCardRoute from './storyCardRoute';
 import { Route } from './../../types/searchRoutesTypes';
@@ -10,7 +12,7 @@ type Props = {
 };
 
 function StoryCard({ routeInfo, setSelectedRoute, selectedRoute }: Props) {
-  const imageUrl = `https://server.memory-road.tk/${routeInfo.thumbnail}`; /* 카드 대표 이미지 url (서버에서 받아온 것)*/
+  const imageUrl = `https://server.memory-road.net/${routeInfo.thumbnail}`; /* 카드 대표 이미지 url (서버에서 받아온 것)*/
   const colorsName = [
     'red',
     'orange',

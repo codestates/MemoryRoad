@@ -3,23 +3,41 @@ import './paginationSearch.css';
 
 type Props = {
   cardCount: number;
-  curPage: number;
+
   limit: number;
-  setCurPage: React.Dispatch<React.SetStateAction<number>>;
+  searchQuery: {
+    rq?: string | undefined;
+    lq?: string | undefined;
+    location?: string | undefined;
+    time?: number | undefined;
+    page: number;
+  };
+  setSearchQuery: React.Dispatch<
+    React.SetStateAction<{
+      rq?: string | undefined;
+      lq?: string | undefined;
+      location?: string | undefined;
+      time?: number | undefined;
+      page: number;
+    }>
+  >;
 };
 
-function Pagination({ cardCount, curPage, limit, setCurPage }: Props) {
+function Pagination({ cardCount, limit, searchQuery, setSearchQuery }: Props) {
   //버튼의 수
   const buttonNum = Math.ceil(cardCount / limit);
 
   const handlepageButton = (clickedNum: number) => {
-    setCurPage(clickedNum);
+    setSearchQuery((prevObj) => {
+      prevObj.page = clickedNum;
+      return { ...prevObj };
+    });
   };
 
   //랜더링할 버튼의 배열을 반환한다.
   function getButtons(): number[] {
     //그려야 하는 페이지 묶음
-    const pageBundle = Math.floor((curPage - 1) / 5) + 1;
+    const pageBundle = Math.floor((searchQuery.page - 1) / 5) + 1;
 
     const buttonAry: number[] = [];
     for (
@@ -36,7 +54,7 @@ function Pagination({ cardCount, curPage, limit, setCurPage }: Props) {
   const nextBtnImageUrl =
     'http://127.0.0.1:5500/client/public/img/next_button.png';
   const prevBtnImageUrl =
-    'http://127.0.0.1:5500/client/public/img/prev_button .png';
+    'http://127.0.0.1:5500/client/public/img/prev_button.png';
   return (
     <>
       {/* 받아온 핀 카드를 나눠 페이지 네이션 구현. 최대 5장, 이상은 버튼을 눌러 다음 페이지로 이동하게해야한다. */}
@@ -48,12 +66,15 @@ function Pagination({ cardCount, curPage, limit, setCurPage }: Props) {
       {/* 버튼을 클릭하면 그 id 에 해당하는 값으로 axios 요청을 보내 card 를 받아온다. 전체 카드 수는 언제나 요청에 담겨져 온다. */}
       <div
         className={
-          curPage === 1
+          searchQuery.page === 1
             ? 'myRouteStore-paginations-prev-btn-search unactive'
             : 'myRouteStore-paginations-prev-btn-search'
         }
         onClick={() => {
-          setCurPage((prevPage) => prevPage - 1);
+          setSearchQuery((prevObj) => {
+            prevObj.page--;
+            return { ...prevObj };
+          });
         }}
         onKeyDown={() => null}
         role="button"
@@ -68,7 +89,7 @@ function Pagination({ cardCount, curPage, limit, setCurPage }: Props) {
       {getButtons().map((btn) => (
         <button
           className={
-            btn === curPage
+            btn === searchQuery.page
               ? 'myRouteStore-paginations-page-btn-search active'
               : 'myRouteStore-paginations-page-btn-search'
           }
@@ -80,12 +101,15 @@ function Pagination({ cardCount, curPage, limit, setCurPage }: Props) {
       ))}
       <div
         className={
-          curPage === buttonNum
+          searchQuery.page === buttonNum
             ? 'myRouteStore-paginations-next-btn-search unactive'
             : 'myRouteStore-paginations-next-btn-search'
         }
         onClick={() => {
-          setCurPage((prevPage) => prevPage + 1);
+          setSearchQuery((prevObj) => {
+            prevObj.page++;
+            return { ...prevObj };
+          });
         }}
         onKeyDown={() => null}
         role="button"

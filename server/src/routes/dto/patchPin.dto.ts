@@ -28,11 +28,11 @@ export class PatchPinDto implements Pin {
   @IsNumber()
   readonly longitude: number;
 
-  @IsNumber()
-  readonly startTime: number;
+  @IsString()
+  readonly startTime: string;
 
-  @IsNumber()
-  readonly endTime: number;
+  @IsString()
+  readonly endTime: string;
 
   @IsString({ each: true })
   keywords: string[];

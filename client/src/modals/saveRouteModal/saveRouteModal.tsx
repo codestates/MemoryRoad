@@ -3,35 +3,22 @@ import { useSelector } from 'react-redux';
 import type { RootState } from './../../redux/reducer/index';
 import axios from 'axios';
 import './saveRouteModal.css';
+import { addPinImageFiles } from '../../redux/actions';
 
-function SaveRouteModal({ handleSidebarSaveBtn }: any) {
-  const routeState: any = useSelector(
-    (state: RootState) => state.createRouteReducer,
+function SaveRouteModal({
+  handleSidebarSaveBtn,
+  pins,
+  totalTime,
+  pinImage,
+}: any) {
+  console.log(pinImage);
+  const colorUrls: any = useSelector(
+    (state: RootState) => state.createRouteReducer.colorDotUrl,
   );
-  const { pins, route } = routeState;
-  /*select-box 처리*/
-  const colors = [
-    'http://127.0.0.1:5500/client/public/img/red_dot.png',
-    'http://127.0.0.1:5500/client/public/img/orange_dot.png',
-    'http://127.0.0.1:5500/client/public/img/yellow_dot.png',
-    'http://127.0.0.1:5500/client/public/img/yellowGreen_dot.png',
-    'http://127.0.0.1:5500/client/public/img/green_dot.png',
-    'http://127.0.0.1:5500/client/public/img/sky_dot.png',
-    'http://127.0.0.1:5500/client/public/img/blue_dot.png',
-    'http://127.0.0.1:5500/client/public/img/purple_dot.png',
-    'http://127.0.0.1:5500/client/public/img/pink_dot.png',
-  ];
-  const colorsName = [
-    'red',
-    'orange',
-    'yellow',
-    'yellowGreen',
-    'green',
-    'sky',
-    'blue',
-    'purple',
-    'pink',
-  ];
+  const colorNames: any = useSelector(
+    (state: RootState) => state.createRouteReducer.colorName,
+  );
+
   const [clickedColorSelect, setClickedColorSelect] = useState(false);
   const [clickedDaySelect, setClickedDaySelect] = useState(false);
   const [clickedMonthSelect, setClickedMonthSelect] = useState(false);
@@ -95,7 +82,8 @@ function SaveRouteModal({ handleSidebarSaveBtn }: any) {
   const saveAllPinAndRouteInfo = () => {
     const translatedPins = pins.slice();
     translatedPins.forEach((el: any) => {
-      delete el.pinID;
+      // delete el.pinID; 내가 지워서 자꾸 오류를 일으켰구나 ..
+      el.keywords = [];
     });
     if (
       routeTitle.length &&
@@ -104,23 +92,27 @@ function SaveRouteModal({ handleSidebarSaveBtn }: any) {
       Number(selectedMonth) &&
       Number(selectedDay)
     ) {
-      /* 이제 axios 요청 보내기. 모든 값이 다 있어야 가능 ㅇㅇ*/
-      console.log({
+      const data = {
         routeName: routeTitle,
         description: routeDesc,
         public: !isOpenRoute,
-        color: colorsName[Number(selectedColorId)],
-        time: route.time,
-        date: `${Number(selectedYear)}-${Number(selectedMonth) + 1}-${
-          Number(selectedDay) + 1
-        }`,
+        time: totalTime,
         pins: translatedPins,
+      };
+
+      const formData = new FormData();
+      formData.append('route', JSON.stringify(data));
+      pinImage.forEach((el: any) => {
+        formData.append(`${el.ranking}`, el.files);
       });
 
-      // axios({
-
-      // })
-      // axios 요청 성공적으로 보내면 창 닫기 로직 구현. handleSidebarSaveBtn(false) -> then메서드 이후에 처리할것.
+      axios({
+        url: 'https://server.memory-road.net/routes',
+        method: 'post',
+        data: formData,
+      })
+        .then((data) => console.log(data), handleSidebarSaveBtn(false))
+        .catch((err) => console.log(err));
     }
   };
   return (
@@ -245,11 +237,11 @@ function SaveRouteModal({ handleSidebarSaveBtn }: any) {
                   <img
                     alt="selected-dot"
                     className="saveRouteModal-selectbox-color-selected-option"
-                    src={colors[Number(selectedColorId)]}
+                    src={colorUrls[Number(selectedColorId)]}
                   />
                 </button>
                 <ul className="saveRouteModal-selectbox-color-optionList">
-                  {colors.map((color, idx) => {
+                  {colorUrls.map((color: any, idx: any) => {
                     const strArr = color.split('/');
                     return (
                       <li
@@ -294,7 +286,7 @@ function SaveRouteModal({ handleSidebarSaveBtn }: any) {
             </div>
             <button
               className="saveRouteModal-save-btn"
-              onClick={saveAllPinAndRouteInfo}
+              onClick={() => saveAllPinAndRouteInfo()}
             >
               루트 저장
             </button>
