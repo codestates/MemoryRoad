@@ -246,18 +246,13 @@ export class UsersService {
 
   //회원 정보 업데이트 프로필이미지
   async updateProfile(accessToken: string, file: Express.Multer.File) {
-    console.log(file);
-    console.log(file.path);
     const decoded = await this.verifyAccessToken(accessToken);
     const deleteFile: UserEntity = await this.usersRepository.findOne({
       id: decoded['id'],
     });
-    console.log(__dirname);
     fs.unlinkSync(
       `${join(__dirname, '..', '..', '..')}/${deleteFile['profileImage']}`,
     );
-    // deleteFile.profileImage;
-
     decoded['profileImage'] = file.path;
     const user: UserEntity = {
       id: decoded['id'],
@@ -340,6 +335,7 @@ export class UsersService {
       this.configService.get<string>('ACCESS_SECRET'),
       { expiresIn: '6h' },
     );
+    console.log(this.configService.get<string>('ACCESS_SECRET'));
     return accessToken;
   }
 }
