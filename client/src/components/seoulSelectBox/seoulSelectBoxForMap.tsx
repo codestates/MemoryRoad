@@ -14,7 +14,7 @@ function SeoulSelectBox() {
     <>
       <div
         className={
-          'selectbox-seoul ' + (clickedSeoulSelect ? 'btn-active' : null)
+          'selectbox-seoul map ' + (clickedSeoulSelect ? 'btn-active' : null)
         }
       >
         <button className="selectbox-seoul-label" onClick={handleSeoulSelect}>

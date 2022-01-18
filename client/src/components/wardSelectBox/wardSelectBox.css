@@ -8,6 +8,10 @@
   padding-left: 3px;
 }
 
+.selectbox-ward.map {
+  width: 136px;
+}
+
 /*select-box 옆 삼각형 버튼 디자인*/
 .selectbox-ward-label {
   display: flex;

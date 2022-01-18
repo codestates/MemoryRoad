@@ -9,7 +9,6 @@ import Mypage from './pages/mypage/mypage';
 import AllRoutesInMap from './pages/mypage/allRoutesInMap';
 import CreatePinMap from './pages/createPinMap/createPinMap';
 import SearchRoutes from './pages/searchRoutes/searchRoutes';
-import AllRoutesInMap from './pages/mypage/allRoutesInMap';
 
 // redux
 import { Provider } from 'react-redux';
@@ -33,6 +32,7 @@ ReactDOM.render(
           <Route element={<CreatePinMap />} path="map/createRoute"></Route>
           <Route element={<MyRouteStore />} path="myRouteStore"></Route>
           <Route element={<AllRoutesInMap />} path="allRoutesInMap"></Route>
+          <Route element={<SearchRoutes />} path="searchRoutes"></Route>
         </Routes>
       </BrowserRouter>
     </PersistGate>

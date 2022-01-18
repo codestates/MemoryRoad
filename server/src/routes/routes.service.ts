@@ -152,13 +152,45 @@ export class RoutesService {
       //위도, 경도 조건에 해당되는 핀들을 전부 가져온다.
       //rq, lq가 주어지지 않는 경우는 검색이 아니므로, 화면의 모든 루트를 보여줘야 한다. 페이지네이션을 하지 않는다.
       //공개된 루트 중 사진을 제외한 정보를 보내준다.
-      const routes = await this.routesRepository
+      const routeIds = await this.routesRepository
         .createQueryBuilder('Routes')
-        .leftJoinAndSelect('Routes.Pins', 'Pins')
+        .select(['Routes.id'])
+        .leftJoin('Routes.Pins', 'Pins')
         .where(
-          'Routes.public = 1 AND Pins.latitude BETWEEN :nwLat AND :seLat AND Pins.longitude BETWEEN :nwLng AND :seLng',
+          'Routes.public = 1 AND Pins.latitude BETWEEN :nwLat AND :seLat AND Pins.longitude BETWEEN :seLng AND :nwLng',
           { nwLat: nwLat, seLat: seLat, nwLng: nwLng, seLng: seLng },
         )
+        .orderBy('Routes.createdAt')
+        .addOrderBy('Pins.ranking')
+        .getMany();
+
+      //조회할 루트의 id가 든 배열
+      const idAry = routeIds.map((e) => e.id);
+      console.log(idAry);
+      const routes = await this.routesRepository
+        .createQueryBuilder('Routes')
+        .select([
+          'Routes.id',
+          'Routes.routeName',
+          'Routes.description',
+          'Routes.createdAt',
+          'Routes.updatedAt',
+          'Routes.public',
+          'Routes.color',
+          'Routes.time',
+          'Pins.id',
+          'Pins.routesId',
+          'Pins.ranking',
+          'Pins.locationName',
+          'Pins.lotAddress',
+          'Pins.roadAddress',
+          'Pins.ward',
+          'Pins.tooClose',
+          'Pins.latitude',
+          'Pins.longitude',
+        ])
+        .leftJoin('Routes.Pins', 'Pins')
+        .where('Routes.id IN (:id)', { id: idAry })
         .orderBy('Routes.createdAt')
         .addOrderBy('Pins.ranking')
         .getMany();
@@ -945,7 +977,7 @@ export class RoutesService {
       }
 
       //public은 예약어이다
-      const { routeName, description, color, time } = routePins;
+      const { routeName, description, color, time, date } = routePins;
       const { pins } = routePins;
       const newRoute = await this.routesRepository.save({
         userId: decode['id'],
@@ -954,6 +986,7 @@ export class RoutesService {
         public: routePins.public,
         color: color,
         time: time,
+        createdAt: date,
       });
 
       //주어진 핀들간의 거리를 계산해 tooClose프로퍼티를 추가한다.
@@ -1154,10 +1187,7 @@ export class RoutesService {
     }
   }
 
-  async getPins(
-    routeId: number,
-    accessToken: string | undefined,
-  ): Promise<PinEntity[]> {
+  async getPins(routeId: number, accessToken: string | undefined) {
     try {
       const decode = jwt.verify(
         accessToken,
@@ -1165,19 +1195,44 @@ export class RoutesService {
       );
 
       //빈 배열이 나오는 경우 -> 없는 루트를 조회하거나, 자기가 저장하지 않은 루트를 조회 또는 핀이 저장되지 않은 루트를 저장하는 경우 -> 응답방식 생각해 보기
-      const pins = await this.pinsRepository
-        .createQueryBuilder('Pins') //alias -> SELECT Pins as Pins
+      const routeInfo = await this.routesRepository
+        .createQueryBuilder('Routes') //alias -> SELECT Routes as Routes
+        .leftJoinAndSelect('Routes.Pins', 'Pins')
         .leftJoinAndSelect('Pins.Pictures', 'Pictures')
-        .leftJoin('Pins.Routes', 'Routes')
-        .where('Pins.routesId = :id AND Routes.userId = :userId', {
-          id: routeId,
+        .select([
+          'Routes.id',
+          'Routes.routeName',
+          'Routes.description',
+          'Routes.createdAt',
+          'Routes.updatedAt',
+          'Routes.public',
+          'Routes.color',
+          'Routes.time',
+          'Pins.id',
+          'Pins.routesId',
+          'Pins.ranking',
+          'Pins.locationName',
+          'Pins.lotAddress',
+          'Pins.roadAddress',
+          'Pins.ward',
+          'Pins.tooClose',
+          'Pins.startTime',
+          'Pins.endTime',
+          'Pins.latitude',
+          'Pins.longitude',
+          'Pictures.id',
+          'Pictures.pinId',
+          'Pictures.fileName',
+        ])
+        .where('Routes.userId = :userId AND Routes.id = :id', {
           userId: decode['id'],
+          id: routeId,
         })
-        .orderBy('Pins.ranking')
+        .addOrderBy('Pins.ranking')
         .addOrderBy('Pictures.id')
-        .getMany(); //여러 개의 결과를 가져온다. entity를 반환한다. getRawMany등으로 raw data를 가져올 수 있다.
+        .getMany();
 
-      return pins;
+      return routeInfo;
     } catch (err) {
       throw err;
     }
