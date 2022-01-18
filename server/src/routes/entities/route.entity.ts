@@ -32,7 +32,8 @@ export class RouteEntity {
   @Column({ length: 45 })
   description: string;
 
-  @CreateDateColumn()
+  // @CreateDateColumn()
+  @Column()
   createdAt: Date;
 
   @UpdateDateColumn()

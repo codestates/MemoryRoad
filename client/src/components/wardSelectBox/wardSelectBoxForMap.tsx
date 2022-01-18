@@ -1,7 +1,20 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import './wardSelectBox.css';
 
-function WardSelectBox() {
+type Props = {
+  setSearchQuery: React.Dispatch<
+    React.SetStateAction<{
+      rq?: string | undefined;
+      lq?: string | undefined;
+      location?: string | undefined;
+      time?: number | undefined;
+      page: number;
+    }>
+  >;
+};
+
+function WardSelectBox({ setSearchQuery }: Props) {
   const wards = [
     '강남구',
     '강동구',
@@ -34,14 +47,22 @@ function WardSelectBox() {
   const handleWardSelect = () => {
     setClickedWardSelect(!clickedWardSelect);
   };
-  const selectWard = (event: any) => {
-    setSelectedWard(event.target.id);
+  const selectWard = (event: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+    //형변환
+    const target = event.target as HTMLElement;
+    setSelectedWard(target.id);
+    setSearchQuery((prev) => {
+      prev.page = 1;
+      prev.location = target.id;
+      return { ...prev };
+    });
   };
+
   return (
     <>
       <div
         className={
-          'selectbox-ward ' + (clickedWardSelect ? 'btn-active' : null)
+          'selectbox-ward map ' + (clickedWardSelect ? 'btn-active' : null)
         }
       >
         <button className="selectbox-ward-label" onClick={handleWardSelect}>
@@ -59,7 +80,7 @@ function WardSelectBox() {
                 selectWard(event);
                 handleWardSelect();
               }}
-              onKeyPress={selectWard}
+              onKeyPress={() => null}
               role="tab"
             >
               {el}

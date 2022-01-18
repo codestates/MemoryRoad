@@ -143,20 +143,20 @@ export class RoutesController {
     });
   }
 
-  //해당 루트의 핀들 조회
-  @Get('/:routeId/pins')
+  //해당 루트의 정보와 핀들 조회
+  @Get('/:routeId')
   async getPins(
     @Param('routeId') routeId: number,
     @Res() res: Response,
     @Req() request: Request,
   ) {
-    const pins = await this.routesService.getPins(
+    const route = await this.routesService.getPins(
       routeId,
       request.cookies['accessToken'],
     );
     return res.status(200).json({
       code: 200,
-      pins,
+      route,
     });
   }
 

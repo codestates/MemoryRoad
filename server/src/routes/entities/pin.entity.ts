@@ -53,11 +53,11 @@ export class PinEntity {
   @Column()
   tooClose: boolean;
 
-  @Column()
-  startTime: number;
+  @Column({ length: 10 })
+  startTime: string;
 
-  @Column()
-  endTime: number;
+  @Column({ length: 10 })
+  endTime: string;
 
   @OneToMany(() => PictureEntity, (Pictures) => Pictures.Pins, {
     cascade: true,
