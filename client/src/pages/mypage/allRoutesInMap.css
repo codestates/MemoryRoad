@@ -1,0 +1,14 @@
+.allRoutesInMap-menu {
+  margin: 50px;
+
+  position: absolute;
+  z-index: 999;
+}
+.allRoutesInMap-select {
+  font-size: 30px;
+  background-color: silver;
+  width: 70px;
+  border: none;
+  border-radius: 10px;
+  appearance: none;
+}

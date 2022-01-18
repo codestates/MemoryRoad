@@ -1,13 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/reducer';
-import './Mypage.css';
-import Login from '../modals/login/Login';
+import { RootState } from '../../redux/reducer';
+import './mypage.css';
 import {
   checkingPasswordModal,
   editUserInfoModal,
-} from '../redux/actions/index';
-import '../modals/userModalPointer.css';
+} from '../../redux/actions/index';
+import '../../modals/userModalPointer.css';
+import { useNavigate } from 'react-router-dom';
 
 function Mypage() {
   const modalCheckPassword = useSelector(
@@ -18,7 +18,7 @@ function Mypage() {
   ); // 유저의 정보
 
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   return (
     <div>
       {userinfo.isLogin ? (
@@ -79,7 +79,13 @@ function Mypage() {
                   />
                   <div className="mypage-imageExplain ">루트 보관함</div>
                 </div>
-                <div className="mypage-content userModalPointer">
+                <div
+                  className="mypage-content userModalPointer"
+                  onClick={() => navigate('/Mypage/AllRoutesInMap')}
+                  onKeyDown={() => navigate('/Mypage/AllRoutesInMap')}
+                  role="menu"
+                  tabIndex={0}
+                >
                   <img
                     alt="storeRoute"
                     className="mypage-image"
