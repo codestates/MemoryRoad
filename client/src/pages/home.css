@@ -54,10 +54,19 @@
   background-color: white;
   text-align: center;
   font-size: 1vw;
-  border-radius: 15px;
+  border-radius: 20px;
   margin-bottom: 20%;
-  animation: fadeInText 2s 1.2s ease-out forwards;
-  opacity: 0;
+  animation: fadeIn 2s ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    /* transform: none; */
+  }
 }
 .Home-MemoryRoadcontent {
   padding-top: 10%;
@@ -92,9 +101,10 @@
   background-color: white;
   text-align: center;
   font-size: 1vw;
-  border-radius: 15px;
+  border-radius: 20px;
   margin-bottom: 20%;
 }
+
 .Home-guide2 {
   font-size: 250%;
   font-weight: bold;
@@ -150,26 +160,30 @@
   font-weight: bold;
   font-size: 18px;
   border: 2px solid white;
-  border-radius: 10px;
+  border-radius: 15px;
   padding: 2%;
   margin: 2%;
-  margin-bottom: 20px;
+  margin-bottom: 1px;
   opacity: 0;
 }
 .Home-button > span {
   color: #626262;
 }
+
 .Home-button2 {
   margin-bottom: 15%;
 }
 .Home-ButtonEffect {
   opacity: 0;
   animation: fadeInText 3s 1s ease-out forwards;
+  transition: 800ms ease all;
 }
 .Home-ButtonEffect:hover {
-  background-color: #f8f7f7;
+  border: 2px solid #91ba9f;
+  background-color: white;
   color: #91ba9f;
 }
+
 .Home-topdownButtonPosition {
   position: fixed;
   bottom: 50px;
@@ -227,6 +241,13 @@
   }
   .Home-guide {
     font-size: 20px;
+  }
+  .Home-guide2 {
+    font-size: 20px;
+    font-weight: bold;
+    padding-top: 10%;
+    padding-bottom: 5%;
+    opacity: 0;
   }
   .Home-button {
     font-size: 10px;
@@ -291,6 +312,13 @@
     position: fixed;
     bottom: 20px;
     right: 25px;
+  }
+  .Home-guide2 {
+    font-size: 20px;
+    font-weight: bold;
+    padding-top: 10%;
+    padding-bottom: 5%;
+    opacity: 0;
   }
 
   .Home-topdownButton {

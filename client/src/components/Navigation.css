@@ -13,7 +13,7 @@
   display: grid;
   grid-template-columns: 2fr 1fr 0.5fr 1fr;
   grid-template-rows: 50px;
-  background-color:  white;
+  background-color: white;
 }
 .nav-RemoveGridContainer {
   display: none;
@@ -44,6 +44,7 @@
 }
 .nav-loginfont:hover {
   background-color: #91ba9f82;
+  color: white;
 }
 
 .nav-mobile {
