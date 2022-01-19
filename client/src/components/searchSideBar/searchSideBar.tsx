@@ -84,9 +84,7 @@ function SearchSideBar({
           setSearchResult(result.data.routes);
           setIsSidebarOpen(true);
         })
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => null);
     } else {
       didMount.current = true;
     }
