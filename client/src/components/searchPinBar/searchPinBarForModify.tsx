@@ -37,7 +37,7 @@ function SearchPinBarForModify({
             <img
               alt="blue_marker"
               id="searchPin-my-blue-marker-img"
-              src="http://127.0.0.1:5500/client/public/img/blue_marker.png"
+              src="https://server.memory-road.net/upload/blue_marker.png"
             ></img>
           </button>
           <div id="searchPin-container">

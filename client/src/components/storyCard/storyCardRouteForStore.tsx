@@ -13,7 +13,7 @@ function StoryCardRoute({ colorIndex, pins }: any) {
   return (
     <>
       {/* 서버에서 받아온 pins 데이터 map돌려서 pin '점' 정렬 */}
-      {pins.slice(0, 4).map((el: any, idx: any) => (
+      {pins.map((el: any, idx: any) => (
         <div className="myRouteStore-card-pin" key={idx}>
           <img
             alt="tt"

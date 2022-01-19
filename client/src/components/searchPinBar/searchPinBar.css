@@ -29,11 +29,11 @@
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
-  margin-top: 2.2%;
+  margin-top: 2.5%;
 }
 /*검색창 요소들을 담은 내부 컨테이너*/
-#searchPin-container {
-  width: inherit;
+#searchPin-container-sy {
+  width: 275px;
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;

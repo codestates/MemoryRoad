@@ -84,132 +84,7 @@ function ModifyPinMap() {
       ward: null, // 핀 지역'구'
       startTime: '00:00', // 핀 시작 시간
       endTime: '01:00', // 핀 끝나는 시간
-    },
-    {
-      id: '1',
-      ranking: 1,
-      locationName: '맛있다',
-      startTime: '03:30',
-      endTime: '05:30',
-      latitude: 37.583736,
-      longitude: 127.0203789,
-      lotAddress: '1번 지번 주소',
-      roadAddress: '1번 도로명 주소',
-      ward: '중구',
-      Pictures: [
-        {
-          id: '1',
-          pinId: '1',
-          fileName: 'AllRouteMap.jpg',
-        },
-        {
-          id: '2',
-          pinId: '1',
-          fileName: 'AllRouteMap.jpg',
-        },
-        {
-          id: '3',
-          pinId: '1',
-          fileName: 'AllRouteMap.jpg',
-        },
-        {
-          id: '4',
-          pinId: '1',
-          fileName: 'AllRouteMap.jpg',
-        },
-      ],
-    },
-    {
-      id: '2',
-      ranking: 2,
-      locationName: '배고프다',
-      startTime: '11:30',
-      endTime: '12:00',
-      latitude: 37.582655,
-      longitude: 127.0153971,
-      lotAddress: '2번 지번 주소',
-      roadAddress: '2번 도로명 주소',
-      ward: '용산구',
-      Pictures: [
-        {
-          id: '1',
-          pinId: '2',
-          fileName: 'AllRouteMap.jpg',
-        },
-        {
-          id: '2',
-          pinId: '2',
-          fileName: 'AllRouteMap.jpg',
-        },
-        {
-          id: '3',
-          pinId: '2',
-          fileName: 'AllRouteMap.jpg',
-        },
-        {
-          id: '4',
-          pinId: '2',
-          fileName: 'AllRouteMap.jpg',
-        },
-        {
-          id: '5',
-          pinId: '2',
-          fileName: 'AllRouteMap.jpg',
-        },
-      ],
-    },
-    {
-      id: '3',
-      ranking: 3,
-      locationName: '놀고싶다',
-      startTime: '14:30',
-      endTime: '17:00',
-      latitude: 37.583736,
-      longitude: 127.0153971,
-      lotAddress: '3번 지번 주소',
-      roadAddress: '3번 도로명 주소',
-      ward: '노원구',
-      Pictures: [
-        {
-          id: '1',
-          pinId: '3',
-          fileName: 'AllRouteMap.jpg',
-        },
-        {
-          id: '2',
-          pinId: '3',
-          fileName: 'AllRouteMap.jpg',
-        },
-        {
-          id: '3',
-          pinId: '3',
-          fileName: 'AllRouteMap.jpg',
-        },
-        {
-          id: '4',
-          pinId: '3',
-          fileName: 'AllRouteMap.jpg',
-        },
-      ],
-    },
-    {
-      id: '4',
-      ranking: 4,
-      locationName: '우왕우왕4번',
-      startTime: '18:00',
-      endTime: '20:00',
-      latitude: 37.582655,
-      longitude: 127.0203789,
-      lotAddress: '4번 지번 주소',
-      roadAddress: '4번 도로명 주소',
-      ward: '강남구',
-      Pictures: [
-        {
-          id: '1',
-          pinId: '4',
-          fileName: 'AllRouteMap.jpg',
-        },
-      ],
+      Pictures: [],
     },
   ]);
   const initialPins = pins
@@ -254,7 +129,7 @@ function ModifyPinMap() {
 
     const newTimePins: any = pins?.map((pin: any, idx: any) => {
       layout.forEach((el: any) => {
-        if (el.i === pin.id) {
+        if (el.i === String(pin.id)) {
           const sh = parseInt(el.y) * 0.5;
           const eh = parseInt(el.y + el.h) * 0.5;
           const getHour = (hour: any) =>
@@ -287,7 +162,7 @@ function ModifyPinMap() {
     const i = el.add ? '+' : el.i;
     const { id, locationName, startTime, endTime } = pins
       ?.slice(1)
-      ?.filter((pin: any) => pin.id === el.i)[0];
+      ?.filter((pin: any) => String(pin.id) === el.i)[0];
     const sh = Number(startTime?.split(':')[0]);
     const eh = Number(endTime?.split(':')[0]);
     const sm = Number(startTime?.split(':')[1]);
@@ -338,7 +213,7 @@ function ModifyPinMap() {
     );
   };
   const onRemoveItem = (i: any) => {
-    const updatedPins = pins.filter((el) => el.id !== i);
+    const updatedPins = pins.filter((el) => String(el.id) !== i);
     setItemState(_.reject(itemState, { i: i }));
     setPins(updatedPins);
   };
@@ -375,10 +250,9 @@ function ModifyPinMap() {
     setIsClickSaveBtn(true);
   };
 
-  const onUpdateItem = (pinId: any, pinTitle: any, pinImages: any) => {
+  const onUpdateItem = (pinId: string, pinTitle: any, pinImages: any) => {
     const updatedPins = pins.map((el) => {
-      console.log(el.id, pinId);
-      if (el.id === pinId) {
+      if (String(el.id) === pinId) {
         el.locationName = pinTitle; // 타이틀 교체
         el.Pictures = pinImages; // 사진 교체
       }
@@ -394,8 +268,14 @@ function ModifyPinMap() {
       method: 'delete',
       withCredentials: true,
     })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(res);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   let map: any = [];
@@ -464,7 +344,7 @@ function ModifyPinMap() {
   }
 
   // *마커 이미지 생성
-  const imageSrc = 'http://127.0.0.1:5500/client/public/img/blue_marker.png';
+  const imageSrc = 'https://server.memory-road.net/upload/blue_marker.png';
   const imageSize = new kakao.maps.Size(33, 54);
   const imageOption = { offset: new kakao.maps.Point(16, 55) };
   const markerImage = new kakao.maps.MarkerImage(
@@ -480,7 +360,7 @@ function ModifyPinMap() {
   });
   // *마커 이미지 생성 - 검색용 마커
   const imageSrcForSearch =
-    'http://127.0.0.1:5500/client/public/img/gray_marker.png';
+    'https://server.memory-road.net/upload/gray_marker.png';
   const imageSizeForSearch = new kakao.maps.Size(33, 54);
   const imageOptionForSearch = { offset: new kakao.maps.Point(16, 55) };
   const markerImageForSearch = new kakao.maps.MarkerImage(
@@ -490,7 +370,7 @@ function ModifyPinMap() {
   );
   /* 핀 이미지 마커 */
   const savedMarkerImageSrc =
-    'http://127.0.0.1:5500/client/public/img/red_pin.png';
+    'https://server.memory-road.net/upload/red_pin.png';
   const savedMarkerImageSize = new kakao.maps.Size(55, 54);
   const savedMarkerImage = new kakao.maps.MarkerImage(
     savedMarkerImageSrc,
@@ -515,10 +395,20 @@ function ModifyPinMap() {
   }
 
   useEffect(() => {
-    // axios({
-    //   url: `https://server.memory-road.net/routes/${id}`,
-    //   method: 'get',
-    // }).then((data) => console.log(data));
+    axios({
+      url: `https://server.memory-road.net/routes/${id}`,
+      method: 'get',
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(res);
+          const pins = res.data.routes.Pins;
+          setPins(pins.concat(...pins));
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   useEffect(() => {
@@ -546,7 +436,7 @@ function ModifyPinMap() {
       .map((el: any) => el.i)
       .map((el) => {
         for (let i = 0; i < pins.length; i++) {
-          if (pins[i].id === el) {
+          if (String(pins[i].id) === el) {
             return pins[i];
           }
         }

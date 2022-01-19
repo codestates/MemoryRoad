@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
 import './seoulSelectBox.css';
 
-function SeoulSelectBox() {
-  const [clickedSeoulSelect, setClickedSeoulSelect] = useState(false);
-  const [selectedSeoul, setSelectedSeoul] = useState('0');
-  const handleSeoulSelect = () => {
-    setClickedSeoulSelect(!clickedSeoulSelect);
-  };
-  const selectSeoul = (event: any) => {
-    setSelectedSeoul(event.target.id);
-  };
+function SeoulSelectBox({
+  clickedSeoulSelect,
+  handleSeoulSelect,
+  selectSeoul,
+}: any) {
   return (
     <>
       <div
