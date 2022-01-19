@@ -227,8 +227,7 @@ function AllRoutesInMap() {
         polyline.setMap(map);
       }
     }
-    setPrevAllRoutes(allRoutes);
-  });
+  }, [allRoutes]);
 
   return (
     <div>
