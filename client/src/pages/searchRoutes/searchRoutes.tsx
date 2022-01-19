@@ -53,6 +53,7 @@ function SearchRoutes() {
   const [curPage, setCurPage] = useState(1);
   //현재 지도의 중심 위도, 경도
   const [centerLatLng, setCenterLatLng] = useState([37.566826, 126.9786567]);
+  // console.log(selectedRoute);
 
   //회색 핀 이미지 생성
   const pinImgSrc = 'https://server.memory-road.net/upload/gray_marker.png';
@@ -158,6 +159,8 @@ function SearchRoutes() {
     return wardCount.data.result;
   }
 
+  //map객체를 받아 폴리곤을 그리는 함수
+
   useEffect(() => {
     if (searchResult.length !== 0) {
       //검색 결과가 있는 경우, 폴리곤을 없애고 검색 결과들을 보여준다.
@@ -226,7 +229,7 @@ function SearchRoutes() {
           let routeCount = 0; // 지역별 루트 개수
           const path: any = [];
           const points = [];
-
+          // console.log(coordinates[0].length);
           coordinates[0].forEach((coordinate: any) => {
             const point: any = {};
             point.x = coordinate[1];
@@ -366,6 +369,7 @@ function SearchRoutes() {
 
   //검색 결과가 없으면서(검색 버튼을 누르지 않은 경우), 지도가 일정 레벨 이하이면, 꼭지점의 위도, 경도를 이용해 루트들을 조회한다.
   useEffect(() => {
+    const controller = new AbortController();
     if (searchResult.length === 0 && currLevel <= 6) {
       //지도 영역정보
       const bounds = map.getBounds();
@@ -410,6 +414,9 @@ function SearchRoutes() {
         .catch((err) => {
           alert('서버 에러');
         });
+      return () => {
+        controller.abort(); //DOM요청이 완료되기 전에 취소한다. fetch요청 등을 취소한다.
+      };
     }
   }, [currLevel, centerLatLng]);
 
