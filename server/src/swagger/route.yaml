@@ -130,14 +130,152 @@
                 route:
                   type: string
                   description: 루트, 핀들의 정보
-                  example: {"routeName":"루트 제목","description":"루트 설명","public":false,"color":"red","time":5,"pins":[{"ranking":0,"locationName":"경치 좋은 곳","latitude":33,"longitude":126,"lotAddress":"서울특별시 성북구","roadAddress":"서울특별시 성북구 종암로","ward":"성북구","startTime":12,"endTime":13},{"ranking":1,"locationName":"경치 좋은 곳","latitude":33,"longitude":126.123,"lotAddress":"서울특별시 구로구","roadAddress":"서울특별시 구로구","ward":"구로구","startTime":22,"endTime":23}]}
+                  example: {"routeName": "국밥 탐방",  "description": "시청 근처 국밥",  "public": true,  "color": "red",  "time": 3, "date": "2020-3-4", "pins": [    {      "ranking": 0,      "locationName": " 뼈다귀 국밥",      "latitude": 37.56266863212559,      "longitude": 126.97777432627802,      "lotAddress": "시청앞 지번1",      "roadAddress": "시청앞 도로명1",      "ward": "성북구",      "startTime": "12:00",      "endTime": "13:00", "keywords":["음식점"]    },    {      "ranking": 1,      "locationName": "국밥2",      "latitude": 37.56260929984292,      "longitude": 126.98148873516526,      "lotAddress": "지번2",      "roadAddress": "도로명2",      "ward": "중구",      "startTime": "13:00",      "endTime": "15:00" , "keywords": ["국밥"]   } ]}
                 0:
                   type: file
                   description: ranking이 0인 핀의 사진들
                 1:
                   type: file
-                  description: rankingdl 1인 핀의 사진들
+                  description: ranking이 1인 핀의 사진들
 '/routes/{routesId}':
+  get:
+    tags:
+    - routes
+    summary: 해당 루트의 정보와 핀들 조회
+    description: 해당 루트의 정보와 핀들 조회
+    parameters:
+        - name: routeId
+          in: path
+          description: 루트의 아이디
+          required: true
+          schema:
+            type: integer
+    responses:
+      '200':
+       description: 조회 성공
+       content:
+        application/json:
+          schema:
+            properties:
+              code:
+                type: integer
+                example: 200
+              route:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: 루트의 아이디
+                    example: 1
+                  userId:
+                    type: integer
+                    description: 루트를 생성한 유저의 아이디
+                    example: 2
+                  routeName:
+                    type: string
+                    description: 루트의 이름
+                    example: 강원도 여행 기록
+                  description:
+                    type: string
+                    description: 루트 설명
+                    example: 오늘은 친구들이랑 놀았다.
+                  createdAt:
+                    type: string
+                    format: date-time
+                    description: 생성일자
+                    example: 2021-12-16 13:28:26
+                  updatedAt:
+                    type: string
+                    format: date-time
+                    description: 갱신일자
+                    example: 2021-12-16 13:28:26
+                  public:
+                    type: boolean
+                    description: 루트의 공개 여부
+                    example: false
+                  color:
+                    type: string
+                    description: 루트의 색깔
+                    example: red
+                  time:
+                    type: integer
+                    description: 루트의 분 단위 시간
+                    example: 120
+                  Pins:
+                    type: array
+                    description: 핀의 간략한 정보
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: 핀의 아이디
+                          example: 1
+                        ranking:
+                          type: integer
+                          description: 루트의 순서
+                          example: 1
+                        locationName: 
+                          type: string
+                          description: 핀의 이름
+                          example: 경치 좋은 곳
+                        latitude:
+                          type: number
+                          description: 위도
+                          example: 33.0000000000
+                        longitude:
+                          type: number
+                          description: 경도
+                          example: 126.0000000000                
+                        lotAddress:
+                          type: string
+                          description: 핀의 지번 주소
+                          example: 지번 주소
+                        roadAddress:
+                          type: string
+                          description: 핀의 도로명 주소
+                          example: 도로명 주소
+                        ward:
+                          type: string
+                          description: 핀이 속한 구
+                          example: 성북구
+                        tooClose:
+                          type: boolean
+                          description: 다른 핀과 근접 여부
+                          example: false
+                        startTime:
+                          type: string
+                          description: 핀의 시작 시간
+                          example: '12:00'
+                        endTime:
+                          type: string
+                          description: 핀의 종료 시간
+                          example: '13:00'
+                        Pictures:
+                          type: array
+                          description: 핀의 사진 정보들
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: numner
+                                description: 사진의 아이디
+                                example: 60
+                              pinId:
+                                type: numner
+                                description: 사진이 속한 핀의 아이디
+                                example: 1
+                              fileName:
+                                type: string
+                                description: 사진 파일명
+                                example: pictureName.gif
+      '500':
+        description: 서버 오류
+        content: 
+            application/json:
+              schema:
+                type: object
+                $ref: './openapi.yaml#/components/responses/ServerErr'
   patch:
     tags:
     - routes
@@ -254,39 +392,6 @@
                 type: object
                 $ref: './openapi.yaml#/components/responses/ServerErr'
 '/routes/{routesId}/pins':
-  get:
-    tags:
-    - routes
-    summary: 해당 루트의 핀들 조회
-    description: 해당 루트의 핀들 조회
-    parameters:
-        - name: routeId
-          in: path
-          description: 루트의 아이디
-          required: true
-          schema:
-            type: integer
-    responses:
-      '200':
-       description: 조회 성공
-       content:
-        application/json:
-          schema:
-            properties:
-              code:
-                type: integer
-                example: 200
-              pins:
-                type: array
-                items:
-                  $ref: './openapi.yaml#/components/schemas/Pin'
-      '500':
-        description: 서버 오류
-        content: 
-            application/json:
-              schema:
-                type: object
-                $ref: './openapi.yaml#/components/responses/ServerErr'
   post:
     tags:
     - routes

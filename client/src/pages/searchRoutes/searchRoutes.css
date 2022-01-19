@@ -16,3 +16,15 @@
     width: 100vw;
     height: 100vh;
   }
+
+#overlay-area {
+  width: 70px;
+  height: 20px;
+  text-align: center;
+  border-radius: 6px;
+  font-weight: 550;
+  font-size: 1em;
+  background-color: #91BA9F;
+  border: none;
+  box-shadow: 0px 0px 5px rgba(70, 70, 70, 0.2);
+}
