@@ -227,12 +227,8 @@ function AllRoutesInMap() {
         polyline.setMap(map);
       }
     }
-<<<<<<< HEAD
-  }, [allRoutes]);
-=======
     setPrevAllRoutes(allRoutes);
   });
->>>>>>> bf07615 (fix)
 
   return (
     <div>
