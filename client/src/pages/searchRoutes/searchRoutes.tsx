@@ -9,6 +9,7 @@ import { Route } from './../../types/searchRoutesTypes';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
 import geojson from './memoryRoad.json';
 import axios from 'axios';
+import ReactDOM from 'react-dom';
 
 //declare : 변수 상수, 함수 또는 클래스가 어딘가에 선언되어 있음을 알린다.
 // declare global : 전역 참조가 가능
@@ -54,7 +55,7 @@ function SearchRoutes() {
   const [centerLatLng, setCenterLatLng] = useState([37.566826, 126.9786567]);
 
   //회색 핀 이미지 생성
-  const pinImgSrc = 'http://127.0.0.1:5500/client/public/img/gray_marker.png';
+  const pinImgSrc = 'https://server.memory-road.net/upload/gray_marker.png';
   const pinImgSize = new kakao.maps.Size(33, 54);
   const pinImgOpt = { offset: new kakao.maps.Point(16, 55) };
   const pinImgObj = new kakao.maps.MarkerImage(
@@ -65,7 +66,7 @@ function SearchRoutes() {
 
   //파랑 핀 이미지 생성
   const selectedPinImgSrc =
-    'http://127.0.0.1:5500/client/public/img/blue_marker.png';
+    'https://server.memory-road.net/upload/blue_marker.png';
   const selectedPinImgSize = new kakao.maps.Size(33, 54);
   const selectedPinImgOpt = { offset: new kakao.maps.Point(16, 55) };
   const selectedPinImgObj = new kakao.maps.MarkerImage(
@@ -200,7 +201,7 @@ function SearchRoutes() {
       }
     } else {
       //검색 결과가 없는 경우, 폴리곤을 보여주고, 위도, 경도에 따라 루트들을 검색해 불러온다.
-      if (currLevel >= 8) {
+      if (currLevel >= 7) {
         const data = geojson.features;
         let coordinates = []; //좌표 저장 배열
         let name = ''; //행정구 이름
@@ -211,7 +212,7 @@ function SearchRoutes() {
         const mapContainer = document.getElementById('map'); // 지도를 표시할 div
         const mapOption = {
           center: new kakao.maps.LatLng(centerLatLng[0], centerLatLng[1]), // 지도의 중심좌표
-          level: 9, // 지도의 확대 레벨
+          level: currLevel, // 지도의 확대 레벨
           draggable: true, // 마우스 드래그, 휠, 모바일 터치를 이용한 확대 및 축소 가능 여부
           scrollwheel: true, // 마우스 휠, 모바일 터치를 이용한 확대 및 축소 가능 여부
           disableDoubleClickZoom: true, // 마우스 더블 클릭으로 지도 확대 및 축소 불가능 여부
@@ -273,20 +274,26 @@ function SearchRoutes() {
 
               // 다각형에 mouseover 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 변경합니다
               // 지역명을 표시하는 커스텀오버레이를 지도위에 표시합니다
-              // kakao.maps.event.addListener(
-              //   polygon,
-              //   'mouseover',
-              //   function (mouseEvent: any) {
-              //     polygon.setOptions({ fillColor: '#1E90FF' });
+              kakao.maps.event.addListener(
+                polygon,
+                'mouseover',
+                function (mouseEvent: any) {
+                  polygon.setOptions({ fillColor: '#1E90FF' });
 
-              //     customOverlay.setContent(
-              //       '<div class="area" >' + name + '</div>',
-              //     );
+                  customOverlay.setContent(
+                    '<div id="overlay-area" >' + name + '</div>',
+                  );
 
-              //     customOverlay.setPosition(mouseEvent.latLng);
-              //     customOverlay.setMap(map);
-              //   },
-              // );
+                  const latLngObj = mouseEvent.latLng;
+                  const newLat = latLngObj.getLat() + 0.02;
+                  const newLng = latLngObj.getLng();
+
+                  customOverlay.setPosition(
+                    new kakao.maps.LatLng(newLat, newLng),
+                  );
+                  customOverlay.setMap(map);
+                },
+              );
 
               // 다각형에 mousemove 이벤트를 등록하고 이벤트가 발생하면 커스텀 오버레이의 위치를 변경합니다
               kakao.maps.event.addListener(
@@ -294,7 +301,13 @@ function SearchRoutes() {
                 'mousemove',
                 function (mouseEvent: any) {
                   polygon.setOptions({ fillColor: '#1E90FF' });
-                  // customOverlay.setPosition(mouseEvent.latLng);
+                  const latLngObj = mouseEvent.latLng;
+                  const newLat = latLngObj.getLat() + 0.02;
+                  const newLng = latLngObj.getLng();
+
+                  customOverlay.setPosition(
+                    new kakao.maps.LatLng(newLat, newLng),
+                  );
                 },
               );
 
@@ -302,7 +315,7 @@ function SearchRoutes() {
               // 커스텀 오버레이를 지도에서 제거합니다
               kakao.maps.event.addListener(polygon, 'mouseout', function () {
                 polygon.setOptions({ fillColor: PoligonColor });
-                // customOverlay.setMap(null);
+                customOverlay.setMap(null);
               });
             });
         };
@@ -318,7 +331,7 @@ function SearchRoutes() {
         kakao.maps.event.addListener(map, 'idle', function () {
           // 지도의 현재 레벨, 중심 좌표를 state로 관리한다.
           setCurrLevel((prev) => {
-            if (prev === 8 && map.getLevel() <= 7) {
+            if (prev >= 7 && map.getLevel() <= 6) {
               //지도 레벨이 낮아지면, 폴리곤을 지운다
               polygons.forEach((pol: any) => pol.setMap(null));
             }
@@ -353,7 +366,7 @@ function SearchRoutes() {
 
   //검색 결과가 없으면서(검색 버튼을 누르지 않은 경우), 지도가 일정 레벨 이하이면, 꼭지점의 위도, 경도를 이용해 루트들을 조회한다.
   useEffect(() => {
-    if (searchResult.length === 0 && currLevel <= 7) {
+    if (searchResult.length === 0 && currLevel <= 6) {
       //지도 영역정보
       const bounds = map.getBounds();
       //지도의 북동쪽 위도, 경도
@@ -367,7 +380,7 @@ function SearchRoutes() {
           `https://server.memory-road.net/routes?search=true&nwLat=${swLatLng.getLat()}&nwLng=${neLatLng.getLng()}&seLat=${neLatLng.getLat()}&seLng=${swLatLng.getLng()}`,
         )
         .then((result) => {
-          console.log(result.data);
+          // console.log(result.data);
           //검색 후 핀과 선 랜더링
           for (const route of result.data.routes) {
             generatePins(route, map);
