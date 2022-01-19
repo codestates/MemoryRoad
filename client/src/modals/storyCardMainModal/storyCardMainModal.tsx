@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/reducer';
 import './storyCardMainModal.css';
+import axios from 'axios';
 
 const { kakao }: any = window;
 
@@ -41,6 +42,20 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
     imageSize,
     imageOption,
   );
+
+  const requestForDelete = () => {
+    axios({
+      url: `https://server.memory-road.net/routes/${routeInfo.id}`,
+      method: 'delete',
+      withCredentials: true,
+    })
+      .then((res) => {
+        console.log(res);
+        // handleCardModalClose();
+      })
+      .catch((err) => console.log(err));
+  };
+
   useEffect(() => {
     const mapContainer = document.getElementById('storyCard-map');
     const mapOption = {
@@ -105,7 +120,13 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
                     루트 수정
                   </button>
                 </Link>
-                <button className="storyCardMainModal-delete-btn">
+                <button
+                  className="storyCardMainModal-delete-btn"
+                  onClick={() => {
+                    requestForDelete();
+                    handleCardModalClose();
+                  }}
+                >
                   루트 삭제
                 </button>
               </div>
@@ -172,7 +193,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
                     <div className="storyCardMainModal-pin-photo-container">
                       <div className="storyCardMainModal-pin-photo-center">
                         <img
-                          alt="testtest"
+                          alt={`${el.fileName}`}
                           className="storyCardMainModal-pin-photo-img"
                           src={`http://127.0.0.1:5500/client/public/img/${el.fileName}`}
                         />
