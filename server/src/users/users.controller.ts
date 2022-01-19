@@ -31,7 +31,7 @@ export class UsersController {
   @Post()
   async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
     const createUser = await this.usersService.create(createUserDto);
-    return res.status(201).send({ createUser, message: '회원 가입 성공' });
+    return res.status(201).send({ message: '회원 가입 성공' });
   }
 
   //oauth 카카오
@@ -130,7 +130,6 @@ export class UsersController {
   //중복된 이메일 여부 확인
   @Post('/auth/local/email')
   async checkEmail(@Body('email') email: string, @Res() res: Response) {
-    console.log('hello');
     const check = await this.usersService.checkEmail(email);
     return res.status(200).send({ check, message: '사용 가능한 이메일입니다' });
   }

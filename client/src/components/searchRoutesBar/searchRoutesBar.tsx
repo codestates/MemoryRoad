@@ -107,7 +107,12 @@ function SearchRoutesBar({
       <div id="searchPin-static-location">
         <div id="searchPin-background">
           <div id="searchPin-container">
-            <button className="all-route-button">전체 루트 보기</button>
+            <button
+              className="all-route-button"
+              onClick={() => window.location.reload()}
+            >
+              전체 루트 보기
+            </button>
             <select
               className="route-location-select"
               onChange={(e) => setRouteorLocation(e.target.value)}
