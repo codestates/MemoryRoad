@@ -6,23 +6,23 @@
     description: 법정동 코드로 구분
     responses:
       '200':
-        description: 구분하여 전달 성공
-        content:
-            application/json:
-              schema:
-                properties:
-                code:
-                  type: integer
-                  example: 200
-                wards:
-                  type: array
-                  items:
-                    properties:
-                      id:
-                        type: integer
-                        description: 법정동 코드
-                        example: 1150000000
-                      routesNumber:
-                        type: integer
-                        description: 해당 법정동에 포함되는 루트의 수
-                        example: 30
+       description: 각 구역별 루트 개수를 전달해준다.
+       content:
+        application/json:
+          schema:
+            properties:
+              wards:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: string
+                      description: 구 이름
+                      example: 성북구
+                    routesNumber:
+                      type: integer
+                      description: 해당 법정동에 포함되는 루트의 수
+                      example: 30
+              message:
+                type: string
+                example: 잘 전달되었습니다.

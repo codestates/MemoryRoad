@@ -20,21 +20,27 @@ paths:
             application/json:
               schema:
                 properties:
-                  code:
-                    type: integer
-                    example: 201
-        '409':
-          description: 이미 있는 유저
+                  message:
+                    type: string
+                    example: 회원 가입 성공
+        '400':
+          description: '이미 있는 이메일, 혹은 닉네임인 경우'
           content:
             application/json:
               schema:
                 properties:
-                  code:
-                    type: integer
-                    example: 409
                   error:
                     type: string
-                    example: user info already exists
+                    example: 사용중인 이메일입니다. / 사용중인 닉네임입니다.
+        '401':
+          description: 쿠키 전달 실패
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    type: string
+                    example: 쿠키 재요청이 필요합니다
         '500':
           description: 서버 오류
           content:
@@ -61,72 +67,6 @@ paths:
                   description: 닉네임
                   type: string
                   example: 김사과
-    patch:
-      tags:
-        - users
-      summary: 회원 정보 업데이트
-      responses:
-        '201':
-          description: 회원 정보 수정 성공
-          content:
-            application/json:
-              schema:
-                properties: null
-                code:
-                  type: integer
-                  example: 201
-                message:
-                  type: string
-                  example: modified
-        '401':
-          description: 토큰 유효 시간 경과
-          content:
-            application/json:
-              schema:
-                properties: null
-                code:
-                  type: integer
-                  example: 401
-                message:
-                  type: string
-                  example: expired token
-        '404':
-          description: 토큰의 정보로 사용자 정보를 찾지 못함
-          content:
-            application/json:
-              schema:
-                properties: null
-                code:
-                  type: integer
-                  example: 404
-                message:
-                  type: string
-                  example: user not found
-        '500':
-          description: 서버 오류
-          content:
-            application/json:
-              schema:
-                type: object
-                $ref: '#/components/responses/ServerErr'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                newNickName:
-                  description: 새로운 닉네임
-                  type: string
-                  example: 새닉네임
-                newEmail:
-                  description: 새로운 이메일
-                  type: string
-                  example: newemail@naver.com
-                newPassword:
-                  description: 새로운 비밀 번호
-                  type: string
-                  example: newpassword
     delete:
       tags:
         - users
@@ -137,37 +77,19 @@ paths:
           content:
             application/json:
               schema:
-                properties: null
-                code:
-                  type: integer
-                  example: 200
-                message:
-                  type: string
-                  example: 회원 탈퇴 되셨습니다.
+                properties:
+                  message:
+                    type: string
+                    example: 회원에서 탈퇴하셨습니다
         '401':
-          description: 토큰 유효 시간 경과
+          description: 쿠키 전달 실패
           content:
             application/json:
               schema:
-                properties: null
-                code:
-                  type: integer
-                  example: 401
-                message:
-                  type: string
-                  example: expired token
-        '404':
-          description: 토큰의 정보로 사용자 정보를 찾지 못함
-          content:
-            application/json:
-              schema:
-                properties: null
-                code:
-                  type: integer
-                  example: 404
-                message:
-                  type: string
-                  example: user not found
+                properties:
+                  error:
+                    type: string
+                    example: 쿠키 재요청이 필요합니다
         '500':
           description: 서버 오류
           content:
@@ -222,22 +144,29 @@ paths:
           content:
             application/json:
               schema:
-                properties: null
-                code:
-                  type: integer
-                  example: 200
-                userName:
-                  type: string
-                  example: 용가리
-                role:
-                  type: string
-                  example: general
-                email:
-                  type: string
-                  example: terrabattle@naver.com
-                profile:
-                  type: string
-                  example: 'http://k.kakaocdn.net/dn/crXJwu/btqUsRhQUx0/cH6CxkKCcteXkkcuRUulx1/img_110x110.jpg'
+                properties:
+                  id:
+                    type: integer
+                    example: 150
+                  userName:
+                    type: string
+                    example: 용가리
+                  profile:
+                    type: string
+                    example: 'http://k.kakaocdn.net/dn/crXJwu/btqUsRhQUx0/cH6CxkKCcteXkkcuRUulx1/img_110x110.jpg'
+                  email:
+                    type: string
+                    example: terrabattle@naver.com
+                  oauthLogin:
+                    type: string
+                    example: naver
+        '400':
+          description: 이미 사용중인 이메일인 경우
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 이미 사용중인 이메일입니다
         '500':
           description: 서버 오류
           content:
@@ -267,22 +196,29 @@ paths:
           content:
             application/json:
               schema:
-                properties: null
-                code:
-                  type: integer
-                  example: 200
-                userName:
-                  type: string
-                  example: 화염용
-                role:
-                  type: string
-                  example: general
-                email:
-                  type: string
-                  example: gqwrgadsf@gmail.com
-                profile:
-                  type: string
-                  example: 'https://lh3.googleusercontent.com/a/AATXAJwhegjEnASqnjidlgyYC7xzyu4U5jdCPpfV30MT=s96-c'
+                properties:
+                  id:
+                    type: integer
+                    example: 103
+                  userName:
+                    type: string
+                    example: 용가리
+                  profile:
+                    type: string
+                    example: 'https://lh3.googleusercontent.com/a/AATXAJwhegjEnASqnjidlgyYC7xzyu4U5jdCPpfV30MT=s96-c'
+                  email:
+                    type: string
+                    example: abc@naver.com
+                  oauthLogin:
+                    type: string
+                    example: google
+        '400':
+          description: 이미 사용중인 이메일인 경우
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 이미 사용중인 이메일입니다
         '500':
           description: 서버 오류
           content:
@@ -312,22 +248,29 @@ paths:
           content:
             application/json:
               schema:
-                properties: null
-                code:
-                  type: integer
-                  example: 200
-                userName:
-                  type: string
-                  example: 도롱뇽
-                role:
-                  type: string
-                  example: general
-                email:
-                  type: string
-                  example: yayww@naver.com
-                profile:
-                  type: string
-                  example: 'http://k.kakaocdn.net/dn/crXJwu/btqUsRhQUx0/cH6CxkKCcteXkkcuRUulx1/img_110x110.jpg'
+                properties:
+                  id:
+                    type: integer
+                    example: 111
+                  userName:
+                    type: string
+                    example: 도롱뇽
+                  profile:
+                    type: string
+                    example: 'http://k.kakaocdn.net/dn/crXJwu/btqUsRhQUx0/cH6CxkKCcteXkkcuRUulx1/img_110x110.jpg'
+                  email:
+                    type: string
+                    example: abc@naver.com
+                  oauthLogin:
+                    type: string
+                    example: naver
+        '400':
+          description: 이미 사용중인 이메일인 경우
+          content:
+            application/json:
+              schema:
+                type: string
+                example: 이미 사용중인 이메일입니다
         '500':
           description: 서버 오류
           content:
@@ -358,30 +301,30 @@ paths:
             application/json:
               schema:
                 properties:
-                  code:
+                  id:
                     type: integer
-                    example: 200
-                  nickName:
+                    example: 102
+                  userName:
                     type: string
                     example: 귤
+                  profile:
+                    type: string
+                    example: /upload/1235500011968711.png
                   email:
                     type: string
                     example: abc@naver.com
                   oauthLogin:
-                    type: integer
-                    example: google
+                    type: string
+                    example: null
         '401':
-          description: 잘못된 비밀번호를 입력받은 경우
+          description: 잘못된 비밀번호를 입력받은 경우 / 잘못된 이메일을 입력받은 경우
           content:
             application/json:
               schema:
                 properties:
-                  code:
-                    type: integer
-                    example: 401
                   error:
                     type: string
-                    example: unauthorized
+                    example: 유효하지 않은 이메일입니다 / 비밀번호가 일치하지 않습니다.
         '500':
           description: 서버 오류
           content:
@@ -404,6 +347,81 @@ paths:
                   description: 비밀 번호
                   type: string
                   example: '12345'
+  /users/profile:
+    patch:
+      tags:
+        - users
+      summary: 유저 프로필 이미지 변경
+      description: 유저 프로필 이미지 변경
+      responses:
+        '200':
+          description: 프로필 이미지 변경 성공
+          content:
+            application/json:
+              schema:
+                properties:
+                  profile:
+                    type: string
+                    example: /upload/11232145125.png
+        '401':
+          description: 쿠키 전달 실패
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    type: string
+                    example: 쿠키 재요청이 필요합니다
+  /users/user-name:
+    patch:
+      tags:
+        - users
+      summary: 유저 닉네임 변경
+      description: 유저 닉네임 변경
+      responses:
+        '200':
+          description: 닉네임 변경 성공
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: 닉네임이 변경되었습니다
+        '401':
+          description: 쿠키 전달 실패
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    type: string
+                    example: 쿠키 재요청이 필요합니다
+  /users/password:
+    patch:
+      tags:
+        - users
+      summary: 유저 비밀번호 변경
+      description: 유저 비밀번호 변경
+      responses:
+        '200':
+          description: 비밀번호 변경 성공
+          content:
+            application/json:
+              schema:
+                properties:
+                  message:
+                    type: string
+                    example: 비밀번호가 변경되었습니다
+        '401':
+          description: 쿠키 전달 실패
+          content:
+            application/json:
+              schema:
+                properties:
+                  error:
+                    type: string
+                    example: 쿠키 재요청이 필요합니다
   /users/auth/local/email:
     post:
       tags:
@@ -417,24 +435,18 @@ paths:
             application/json:
               schema:
                 properties:
-                  code:
-                    type: integer
-                    example: 200
                   message:
                     type: string
-                    example: ok
-        '409':
-          description: 이미 있는 유저
+                    example: 사용 가능한 이메일입니다
+        '400':
+          description: 사용중인 이메일
           content:
             application/json:
               schema:
                 properties:
-                  code:
-                    type: integer
-                    example: 409
                   error:
                     type: string
-                    example: user info already exists
+                    example: 사용중인 이메일입니다
         '500':
           description: 서버 오류
           content:
@@ -466,24 +478,18 @@ paths:
             application/json:
               schema:
                 properties:
-                  code:
-                    type: integer
-                    example: 200
                   message:
                     type: string
-                    example: ok
+                    example: 비밀번호가 일치합니다
         '401':
           description: 잘못된 비밀번호를 입력받거나 유효하지 않은 토큰을 받은 경우
           content:
             application/json:
               schema:
                 properties:
-                  code:
-                    type: integer
-                    example: 401
                   error:
                     type: string
-                    example: unauthorized
+                    example: 쿠키 재요청이 필요합니다 / 비밀번호가 일치하지 않습니다
         '500':
           description: 서버 오류
           content:
@@ -1083,26 +1089,26 @@ paths:
       description: 법정동 코드로 구분
       responses:
         '200':
-          description: 구분하여 전달 성공
+          description: 각 구역별 루트 개수를 전달해준다.
           content:
             application/json:
               schema:
-                properties: null
-                code:
-                  type: integer
-                  example: 200
-                wards:
-                  type: array
-                  items:
-                    properties:
-                      id:
-                        type: integer
-                        description: 법정동 코드
-                        example: 1150000000
-                      routesNumber:
-                        type: integer
-                        description: 해당 법정동에 포함되는 루트의 수
-                        example: 30
+                properties:
+                  wards:
+                    type: array
+                    items:
+                      properties:
+                        id:
+                          type: string
+                          description: 구 이름
+                          example: 성북구
+                        routesNumber:
+                          type: integer
+                          description: 해당 법정동에 포함되는 루트의 수
+                          example: 30
+                  message:
+                    type: string
+                    example: 잘 전달되었습니다.
 components:
   schemas:
     Route:
