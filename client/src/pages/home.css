@@ -1,8 +1,3 @@
-.Home-Container {
-  background-color: rgb(88, 123, 96, 21%);
-  position: absolute;
-}
-
 .Home-Contents {
   position: relative;
   display: grid;
@@ -25,20 +20,21 @@
 } */
 .Home-MemoryRoad {
   position: absolute;
+
   top: 30%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
   color: #e6e1e1;
   font-family: 'Oleo Script', cursive;
-  font-size: 5vw;
+  font-size: 6vw;
   animation: txt_blur 1s alternate ease-in;
 
   /* opacity: 0; */
 }
 .Home-MemoryRoadBorder {
   position: absolute;
-  top: 50%;
+  top: 55%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
@@ -111,10 +107,14 @@
   opacity: 0;
 }
 .Home-MemoryRoadBorder2 {
+  /* position: absolute; */
   background-color: white;
   text-align: center;
+  margin: 0 auto;
+  width: 40%;
   font-size: 1vw;
   border-radius: 20px;
+  margin-top: 20%;
   margin-bottom: 20%;
 }
 
@@ -163,8 +163,9 @@
   border: 1px solid white;
 }
 .Home-lastBorder {
+  grid-column: 1/4;
+  background-color: silver;
   margin-top: 20%;
-  margin-bottom: 20%;
 }
 .Home-button {
   background-color: #91ba9f;
@@ -203,22 +204,25 @@
   right: 50px;
 }
 .Home-topdownButton {
-  font-size: 40px;
-  color: silver;
+  margin-bottom: 10px;
+  font-size: 30px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  color: #91ba9f;
+  background: none;
+}
+.Home-topdownButton:hover {
 }
 
 @media (min-width: 840px) {
-  .Home-Container {
-    background-color: rgb(88, 123, 96, 21%);
-    position: absolute;
-    /* opacity: 21%; */
-  }
   .Home-Contents {
     position: relative;
     display: grid;
     grid-template-columns: 1fr 3fr 1fr;
     grid-template-rows: 6.5%;
   }
+
   .Home-content2 {
     margin-top: 10px;
     color: #a5a5a5;
@@ -230,6 +234,41 @@
   .Home-Container {
     background-color: rgb(88, 123, 96, 21%);
     position: absolute;
+  }
+  .Home-MemoryRoad {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #e6e1e1;
+    font-family: 'Oleo Script', cursive;
+    font-size: 7vw;
+    animation: txt_blur 1s alternate ease-in;
+    /* opacity: 0; */
+  }
+  .Home-MemoryRoadBorder {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    text-align: center;
+    font-size: 1vw;
+    border-radius: 20px;
+    margin: 0 auto;
+    width: 50%;
+    margin-bottom: 20%;
+    animation: fadeIn 2s ease-in-out;
+  }
+  #Home-message1 {
+    font-size: 8px;
+  }
+  #Home-message2 {
+    font-size: 8px;
+  }
+  #Home-message3 {
+    font-size: 10px;
   }
   .Home-Contents {
     position: relative;
@@ -253,10 +292,10 @@
     font-size: 10px;
   }
   .Home-guide {
-    font-size: 20px;
+    font-size: 15px;
   }
   .Home-guide2 {
-    font-size: 20px;
+    font-size: 15px;
     font-weight: bold;
     padding-top: 10%;
     padding-bottom: 5%;
@@ -278,24 +317,44 @@
 
 /* 모바일 */
 @media (max-width: 500px) {
-  .Home-Container {
-    background-color: rgb(88, 123, 96, 21%);
-    position: absolute;
-    /* opacity: 21%; */
-  }
   .Home-Contents {
     position: relative;
     display: grid;
     grid-template-columns: 1fr 25fr 1fr;
-    grid-template-rows: 9.5%;
+  }
+  .Home-HomeImage {
+    /* position: absolute; */
+    width: 100%;
+    height: 100%;
+    margin-bottom: 20%;
   }
   .Home-MemoryRoad {
-    margin-top: 40%;
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     text-align: center;
-    color: #adadad;
+    color: #e6e1e1;
     font-family: 'Oleo Script', cursive;
-    font-size: 46px;
+    font-size: 10vw;
+    animation: txt_blur 1s alternate ease-in;
+    /* opacity: 0; */
   }
+  .Home-MemoryRoadBorder {
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    text-align: center;
+    font-size: 10px;
+    border-radius: 20px;
+    margin: 0 auto;
+    width: 70%;
+    margin-bottom: 20%;
+    animation: fadeIn 2s ease-in-out;
+  }
+
   .Home-number {
     font-size: 46px;
   }
@@ -319,15 +378,27 @@
     border: 2px solid white;
     border-radius: 10px;
     padding: 2%;
-    margin: 2%;
+    margin: 1%;
   }
   .Home-topdownButtonPosition {
     position: fixed;
     bottom: 20px;
     right: 25px;
   }
+  .Home-MemoryRoadBorder2 {
+    /* position: absolute; */
+    background-color: white;
+    text-align: center;
+    margin: 0 auto;
+    width: 70%;
+    font-size: 1vw;
+    border-radius: 20px;
+    margin-top: 20%;
+    margin-bottom: 20%;
+    padding-bottom: 5%;
+  }
   .Home-guide2 {
-    font-size: 20px;
+    font-size: 10px;
     font-weight: bold;
     padding-top: 10%;
     padding-bottom: 5%;
@@ -335,7 +406,7 @@
   }
 
   .Home-topdownButton {
-    font-size: 25px;
+    font-size: 10px;
     color: silver;
   }
 }
