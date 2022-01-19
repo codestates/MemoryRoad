@@ -35,6 +35,16 @@ const colorsName = [
   'purple',
   'pink',
 ];
+// const mouseWheelEvt = function (event) {
+//   if (document.body.doScroll)
+//     document.body.doScroll(event.wheelDelta > 0 ? 'left' : 'right');
+//   else if ((event.wheelDelta || event.detail) > 0)
+//     document.body.scrollLeft -= 10;
+//   else document.body.scrollLeft += 10;
+
+//   return false;
+// };
+// document.body.addEventListener('mousewheel', mouseWheelEvt);
 
 function AllRoutesInMap() {
   const dispatch = useDispatch();
@@ -236,7 +246,7 @@ function AllRoutesInMap() {
   }, [allRoutes, pickPinsPictures]);
 
   return (
-    <div>
+    <div className="allRoutesInMap-whole">
       <div className="jyang-allRoutesInMap">
         <ColorSelectBox
           findAllRoute={findAllRoute}
@@ -244,18 +254,23 @@ function AllRoutesInMap() {
           setColorIdx={setColorIdx}
         />
       </div>
-      <div id="map" style={{ width: '100%', height: '100vh' }}>
-        <div className="allRoutesInMap-menu"></div>
-      </div>
-      {/* <div id="allRoutesInMap-images">
+      <div id="allRoutesInMap-images">
         {pickPinsPictures ? (
-          pickPinsPictures.map((el) => (
-            <img src={`http://localhost/${el.fileName}`}></img>
+          pickPinsPictures.map((el, index) => (
+            <img
+              alt="loadFail"
+              id="el-img"
+              key={index}
+              src={`http://localhost/${el.fileName}`}
+            ></img>
           ))
         ) : (
           <div></div>
         )}
-      </div> */}
+      </div>
+      <div id="map" style={{ width: '100%', height: '100vh' }}>
+        <div className="allRoutesInMap-menu"></div>
+      </div>
     </div>
   );
 }
