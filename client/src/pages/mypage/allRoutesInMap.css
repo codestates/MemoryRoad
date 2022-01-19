@@ -28,17 +28,6 @@
     text-align: center;
   }
 
-/* 
-  #allRoutesInMap-images-el {
-    grid-template-rows: 1fr 2fr 1fr;
-    align-items: center;
-    position: relative;
-    z-index: 99;
-    flex-direction: row;
-    justify-content: center;
-    margin: 0 auto;
-  } */
-
   #el-img {
     border: 5px solid #91BA9F;
     border-radius: 20px;
