@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, MouseEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/reducer';
 import ColorSelectBox from '../../components/colorSelectBox/colorSelectBoxForMap';
@@ -7,6 +7,8 @@ import axios from 'axios';
 import { Route, Picture } from '../../types/searchRoutesTypes';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
 import fakeData from './fakeData.json';
+
+type CustomMouseEvent = MouseEvent<HTMLElement>;
 
 // 루트를 받고, 루트의 핀 값을 받을 것 같음
 // 각 루트별로 핀 객체를 받고, 받은 핀 객체값을 For문, 혹은 ForEach를 통해 핀의 위치값을 받아서 핀을 그리고 선을 이어줘야 할 것 같음
@@ -35,16 +37,6 @@ const colorsName = [
   'purple',
   'pink',
 ];
-// const mouseWheelEvt = function (event) {
-//   if (document.body.doScroll)
-//     document.body.doScroll(event.wheelDelta > 0 ? 'left' : 'right');
-//   else if ((event.wheelDelta || event.detail) > 0)
-//     document.body.scrollLeft -= 10;
-//   else document.body.scrollLeft += 10;
-
-//   return false;
-// };
-// document.body.addEventListener('mousewheel', mouseWheelEvt);
 
 function AllRoutesInMap() {
   const dispatch = useDispatch();
@@ -58,7 +50,7 @@ function AllRoutesInMap() {
 
   //state
   //지도의 확대 정도
-  const [currLevel, setCurrLevel] = useState(5);
+  const [currLevel, setCurrLevel] = useState(6);
   //전체 루트의 정보
   const [allRoutes, setAllRoutes] = useState<Array<Route>>(findAllRoute);
 
@@ -93,9 +85,6 @@ function AllRoutesInMap() {
       pinImgOpt,
     );
     for (const pin of routeInfo.Pins) {
-      //핀 아이디를 받아와야한다.
-      // const pinId = pin.id;
-
       //루트의 색깔에 따라 핀의 이미지가 바뀌어야 한다.
       const pinObj = new kakao.maps.Marker({
         image: pinImgObj,
@@ -163,6 +152,43 @@ function AllRoutesInMap() {
     // );
     return { minLat, maxLat, minLng, maxLng };
   }
+
+  // const slider = document.querySelector('.allRoutesInMap-images');
+  // let isMouseDown = false;
+  // let startX: any, scrollLeft: any;
+  // const mouseDownEvent = (e: CustomMouseEvent) => {
+  //   if (slider !== null) {
+  //     isMouseDown = true;
+  //     slider.classList.add('active');
+
+  //     startX = e.pageX - slider.offsetLeft;
+  //     scrollLeft = slider.scrollLeft;
+  //   }
+  // };
+  // const mouseMoveEvent = (e: CustomMouseEvent) => {
+  //   if (slider !== null) {
+  //     if (!isMouseDown) return;
+  //     e.preventDefault();
+  //     const x = e.pageX - slider.offsetLeft;
+  //     const walk = (x - startX) * 1;
+  //     slider.scrollLeft = scrollLeft - walk;
+  //   }
+  // };
+  // if (slider !== null) {
+  //   slider.addEventListener('mousedown', mouseMoveEvent);
+
+  //   slider.addEventListener('mouseleave', () => {
+  //     isMouseDown = false;
+  //     slider.classList.remove('active');
+  //   });
+
+  //   slider.addEventListener('mouseup', () => {
+  //     isMouseDown = false;
+  //     slider.classList.remove('active');
+  //   });
+
+  //   slider.addEventListener('mousemove', mouseMoveEvent);
+  // }
 
   useEffect(() => {
     //colorIdx가 빈 문자열일 경우모든 루트 배열을 받아온다.
