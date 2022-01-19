@@ -20,8 +20,9 @@ import createPinModal from '../../modals/createPinModal/createPinModal';
 import modifyPinModal from '../../modals/modifyPinModal/modifyPinModal';
 import SearchPinBar from '../../components/searchPinBar/searchPinBarForModify';
 import ConfirmPinIsEmptyModal from '../../modals/confirmPinIsEmpty/confirmPinIsEmptyModal';
+import ConfirmMoveToMypage from '../../modals/confirmRouteSave/confirmMoveToMypage';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent';
-import Navigation from '../../components/Navigation';
+import Navigation from '../createPinMap/NavigationForMap';
 import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBarForModify';
 import SaveRouteModal from '../../modals/saveRouteModal/saveRouteModalForModify';
 import { testData } from './testData';
@@ -59,6 +60,7 @@ function ModifyPinMap() {
   const [isEmptyInfo, setIsEmptyInfo] = useState(false);
   const [isClickSaveBtn, setIsClickSaveBtn] = useState(false);
   const [isSidebarSaveBtnClicked, setIsSidebarSaveBtnClicked] = useState(false);
+  const [isMoveToMypage, setIsMoveToMypage] = useState(false);
 
   const handleSidebarSaveBtn = (bool: boolean) => {
     setIsSidebarSaveBtnClicked(bool);
@@ -667,6 +669,9 @@ function ModifyPinMap() {
   return (
     <>
       <div id="map-whole-container">
+        {isMoveToMypage ? (
+          <ConfirmMoveToMypage setIsMoveToMypage={setIsMoveToMypage} />
+        ) : null}
         {isEmptyInfo ? (
           <ConfirmPinIsEmptyModal setIsEmptyInfo={setIsEmptyInfo} />
         ) : null}
@@ -676,6 +681,7 @@ function ModifyPinMap() {
             pinImage={pinImage}
             pins={pins}
             routeId={id}
+            setIsMoveToMypage={setIsMoveToMypage}
             totalTime={totalTime}
           />
         ) : null}

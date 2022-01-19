@@ -1,3 +1,9 @@
+/*검색창 위치 고정*/
+#searchPin-static-location-sy {
+  position: relative; /*relative 와 fixed 최강 조합이다*/
+  display: flex;
+  justify-content: center;
+}
 /*블루 마커 추가 버튼*/
 #searchPin-my-blue-marker-btn {
   position: fixed;
@@ -13,11 +19,6 @@
   width: auto;
   height: 25px;
   padding: 4px 5px 2px 5px;
-}
-/*검색창 위치 고정*/
-#searchPin-static-location {
-  display: flex;
-  justify-content: center;
 }
 /*검색창 전체 컨테이너*/
 #searchPin-background {

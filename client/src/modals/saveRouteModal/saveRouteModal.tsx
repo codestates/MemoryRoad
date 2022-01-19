@@ -10,7 +10,13 @@ function SaveRouteModal({
   pins,
   totalTime,
   pinImage,
+  setIsMoveToMypage,
+  setIsNotUserSave,
 }: any) {
+  const rawData: any = localStorage.getItem('persist:root');
+  const parsedData = JSON.parse(rawData).setUserInfoReducer;
+  const userInfo = JSON.parse(parsedData).userInfo;
+  const { isLogin } = userInfo;
   console.log(pinImage);
   const colorUrls: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorDotUrl,
@@ -80,11 +86,6 @@ function SaveRouteModal({
 
   /* 저장 버튼 눌렀을 때 일어나는 이벤트 */
   const saveAllPinAndRouteInfo = () => {
-    const translatedPins = pins.slice(1);
-    translatedPins.forEach((el: any) => {
-      // delete el.pinID; 내가 지워서 자꾸 오류를 일으켰구나 ..
-      el.keywords = [];
-    });
     if (
       routeTitle.length &&
       routeDesc.length &&
@@ -92,35 +93,47 @@ function SaveRouteModal({
       Number(selectedMonth) &&
       Number(selectedDay)
     ) {
-      const data = {
-        routeName: routeTitle,
-        description: routeDesc,
-        public: !isOpenRoute,
-        time: totalTime,
-        pins: translatedPins,
-      };
-
-      const formData = new FormData();
-      formData.append('route', JSON.stringify(data));
-      pinImage.forEach((el: any) => {
-        formData.append(`${el.ranking}`, el.files);
-      });
-
-      axios({
-        url: 'https://server.memory-road.net/routes',
-        method: 'post',
-        data: formData,
-        withCredentials: true,
-      })
-        .then((res) => {
-          if (res.status === 200) {
-            console.log(res);
-            handleSidebarSaveBtn(false);
-          }
-        })
-        .catch((err) => {
-          console.log(err);
+      if (isLogin) {
+        const translatedPins = pins.slice(1);
+        translatedPins.forEach((el: any) => {
+          // delete el.pinID; 내가 지워서 자꾸 오류를 일으켰구나 ..
+          el.keywords = [];
         });
+
+        const data = {
+          routeName: routeTitle,
+          description: routeDesc,
+          public: !isOpenRoute,
+          time: totalTime,
+          pins: translatedPins,
+        };
+
+        const formData = new FormData();
+        formData.append('route', JSON.stringify(data));
+        pinImage.forEach((el: any) => {
+          formData.append(`${el.ranking}`, el.files);
+        });
+
+        axios({
+          url: 'https://server.memory-road.net/routes',
+          method: 'post',
+          data: formData,
+          withCredentials: true,
+        })
+          .then((res) => {
+            if (res.status === 200) {
+              console.log(res);
+              handleSidebarSaveBtn(false);
+              setIsMoveToMypage(true);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        handleSidebarSaveBtn(false);
+        setIsNotUserSave(true);
+      }
     }
   };
   return (
