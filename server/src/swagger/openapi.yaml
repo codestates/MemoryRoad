@@ -20,6 +20,12 @@ paths:
     $ref: './user.yaml#/~1users~1auth~1oauth~1naver'
   /users/auth/local:
     $ref: './user.yaml#/~1users~1auth~1local'
+  /users/profile:
+    $ref: './user.yaml#/~1users~1profile'
+  /users/user-name:
+    $ref: './user.yaml#/~1users~1user-name'
+  /users/password:
+    $ref: './user.yaml#/~1users~1password'
   /users/auth/local/email:
     $ref: './user.yaml#/~1users~1auth~1local~1email'
   /users/auth/local/password:

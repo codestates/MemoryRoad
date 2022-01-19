@@ -223,7 +223,7 @@ export class UsersService {
       oauthLogin: null,
     });
     if (!isExistUser) {
-      throw new NotFoundException(`유효하지 않은 이메일입니다`);
+      throw new UnauthorizedException(`유효하지 않은 이메일입니다`);
     }
     const isCorrectPassword = await bcrypt.compare(
       loginUserDto.password,
@@ -232,7 +232,7 @@ export class UsersService {
     console.log(isExistUser.saltedPassword);
     console.log(isCorrectPassword);
     if (!isCorrectPassword) {
-      throw new NotFoundException(`비밀번호가 일치하지 않습니다`);
+      throw new UnauthorizedException(`비밀번호가 일치하지 않습니다`);
     }
     console.log(isExistUser);
     return isExistUser;
@@ -304,7 +304,7 @@ export class UsersService {
       decoded['saltedPassword'],
     );
     if (!isExistPassword) {
-      throw new BadRequestException(`비밀번호가 일치하지 않습니다`);
+      throw new UnauthorizedException(`비밀번호가 일치하지 않습니다`);
     }
   }
 
