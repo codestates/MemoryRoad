@@ -24,50 +24,39 @@ function Home() {
     e.stopPropagation();
   };
 
-  // //MemoryRoad 타이핑 효과
-  // useEffect(() => {
-  //   const content = 'MEMORYROAD';
-  //   const text: any = document.querySelector('.Home-MemoryRoad');
-  //   let i = 0;
-  //   const typing = () => {
-  //     if (i < content.length) {
-  //       const txt = content.charAt(i);
-  //       text.innerHTML += txt;
-  //       i += 1;
-  //     }
-  //   };
-  //   setInterval(typing, 250);
-  // }, []);
-
   return (
     <div>
       <div className="Home-Container">
         <div className="Home-Contents">
-          <div className="Home-checking"></div>
-          <div className="Home-checking">
-            <div className="Home-MemoryRoad">MEMORYROAD</div>
-          </div>
-          <div className="Home-checking"></div>
-          <div className="Home-checking"></div>
-          <div>
-            <div className="Home-checking Home-MemoryRoadBorder">
-              <div className="Home-MemoryRoadcontent">
-                <div id="Home-message1">기억하고 싶은 하루가 있으신가요?</div>
-                <br />
-                <div id="Home-message2">
-                  오늘은 뭐하고 놀지 계획 세우기 귀찮으신가요?
+          <div className="Home-notgrid">
+            <img
+              alt="HomeImage"
+              className="Home-HomeImage"
+              src="http://127.0.0.1:5500/client/public/img/HomeImage.jpg"
+            />
+            <div className="Home-checking">
+              <div className="Home-MemoryRoad">MEMORYROAD</div>
+            </div>
+            <div>
+              <div className="Home-checking Home-MemoryRoadBorder">
+                <div className="Home-MemoryRoadcontent">
+                  <div id="Home-message1">기억하고 싶은 하루가 있으신가요?</div>
+                  <br />
+                  <div id="Home-message2">
+                    오늘은 뭐하고 놀지 계획 세우기 귀찮으신가요?
+                  </div>
+                  <br />
+                  <div id="Home-message3">
+                    옛날 사진을 찾아 갤러리를 헤매고 계신가요?
+                  </div>
                 </div>
                 <br />
-                <div id="Home-message3">
-                  옛날 사진을 찾아 갤러리를 헤매고 계신가요?
-                </div>
+                <div className="Home-guide">메모리로드가 도와드릴게요.</div>
               </div>
-              <br />
-              <div className="Home-guide">메모리로드가 도와드릴게요.</div>
             </div>
           </div>
           <div className="Home-checking"></div>
-          <div className="Home-checking"></div>
+
           <div>
             <div className="Home-checking Home-grid1">
               <div className="Home-number">1</div>
