@@ -10,6 +10,7 @@ function SaveRouteModal({
   pins,
   totalTime,
   pinImage,
+  routeId,
 }: any) {
   console.log(pinImage);
   const colorUrls: any = useSelector(
@@ -82,7 +83,7 @@ function SaveRouteModal({
   const saveAllPinAndRouteInfo = () => {
     const translatedPins = pins.slice(1);
     translatedPins.forEach((el: any) => {
-      // delete el.pinID; 내가 지워서 자꾸 오류를 일으켰구나 ..
+      // delete el.pinID; 내가 지워서 자꾸 오류를 일으켰구나 .. + 키워드 담기.
       el.keywords = [];
     });
     if (
@@ -92,24 +93,43 @@ function SaveRouteModal({
       Number(selectedMonth) &&
       Number(selectedDay)
     ) {
-      const data = {
-        routeName: routeTitle,
-        description: routeDesc,
-        public: !isOpenRoute,
-        time: totalTime,
-        pins: translatedPins,
-      };
+      // 핀 제목, 핀 사진 수정 endpoint
+      translatedPins.forEach((el: any) => {
+        const pinId = Number(el.id);
+        const formData = new FormData();
+        const data = {
+          locationName: el.locationName,
+          ranking: el.ranking,
+          startTime: el.startTime,
+          endTime: el.endTime,
+          keywords: el.kewords,
+        };
+        const newFiles = el.Pictures.filter(
+          (el: any) => (el.name ? true : false), // 기존에 있던 사진 거르기.
+        );
+        formData.append(`${el.id}`, JSON.stringify(data));
+        formData.append(`${el.ranking}`, newFiles);
 
-      const formData = new FormData();
-      formData.append('route', JSON.stringify(data));
-      pinImage.forEach((el: any) => {
-        formData.append(`${el.ranking}`, el.files);
+        axios({
+          url: `https://server.memory-road.net/routes/${routeId}/pins${pinId}`,
+          method: 'patch',
+          data: formData,
+          withCredentials: true,
+        })
+          .then((data) => console.log(data))
+          .catch((err) => console.log(err));
       });
 
+      // 루트 제목, 루트 내용 수정 endpoint
       axios({
-        url: 'https://server.memory-road.net/routes',
-        method: 'post',
-        data: formData,
+        url: `https://server.memory-road.net/routes/${routeId}`,
+        method: 'patch',
+        data: {
+          routeName: routeTitle,
+          description: routeDesc,
+          public: !isOpenRoute,
+          time: totalTime,
+        },
         withCredentials: true,
       })
         .then((data) => console.log(data), handleSidebarSaveBtn(false))

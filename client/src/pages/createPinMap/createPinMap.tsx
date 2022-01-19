@@ -20,8 +20,9 @@ import Navigation from '../../components/Navigation';
 import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBar';
 import _ from 'lodash';
 import '../../modals/createPinModal/createPinModal.css';
-import Element from './element';
-import ElementForSearch from './elementForSearch';
+import Element from '../../modals/createPinModal/element';
+import ElementCallBack from '../../modals/createPinModal/elemenCallBack';
+import modifyPinModal from '../../modals/modifyPinModal/modifyPinModal';
 
 const { kakao }: any = window;
 
@@ -44,6 +45,7 @@ function CreatePinMap() {
     37.566826, 126.9786567,
   ]); // 지도에 표시된 마커의 위도, 경도
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달창 오픈 여부
+  const [isModifyModalOpen, setIsModifyModalOpen] = useState(false); // 수정 모달창 오픈 여부
   const [searchText, setSearchText] = useState(''); // 검색창 단어
   const [isEmptyInfo, setIsEmptyInfo] = useState(false);
   const [isClickSaveBtn, setIsClickSaveBtn] = useState(false);
@@ -54,7 +56,12 @@ function CreatePinMap() {
   };
 
   /*------------------------------------------------------------------------------------------------------------------*/
-  const [pinImage, setPinImage] = useState([]);
+  const [currModifiedID, setCurrModifiedID] = useState('');
+  const selectCurrModifedID = (id: string) => {
+    setCurrModifiedID(id);
+  };
+
+  const [pinImage, setPinImage] = useState<any[]>([]);
   const [totalTime, setTotalTime] = useState(0);
   const [pins, setPins] = useState([
     {
@@ -82,16 +89,17 @@ function CreatePinMap() {
       };
     });
   const [itemState, setItemState] = useState(initialPins);
+  console.log('pins', pins);
   console.log('itemState', itemState);
+  console.log('pinImage', pinImage);
   const [newCounter, setNewCounter] = useState(itemState.length);
   const [isMouseOnCard, setIsMouseOnCard] = useState(false);
   const [currCardTitle, setCurrCardTitle] = useState(null);
   /* react-grid-layout */
-  const [layoutState, setLayoutState] = useState([]);
   const onLayoutChange = (layout: any) => {
     console.log('레이아웃이 변경되었습니다.');
     console.log(layout);
-    setLayoutState(layout);
+    setItemState(layout);
 
     const totalTime = pins
       ?.slice(1)
@@ -101,7 +109,6 @@ function CreatePinMap() {
         const currTimes = currEH - currSH;
         return prev + currTimes;
       }, 0);
-    console.log(totalTime); // 굳굳
     setTotalTime(totalTime);
 
     const newTimePins: any = pins?.map((pin: any, idx: any) => {
@@ -137,7 +144,6 @@ function CreatePinMap() {
 
   const createElement = (el: any) => {
     const i = el.add ? '+' : el.i;
-    console.log(pins);
     const { pinID, locationName, startTime, endTime } = pins
       ?.slice(1)
       ?.filter((pin: any) => pin.pinID === el.i)[0];
@@ -171,7 +177,14 @@ function CreatePinMap() {
             >
               삭제
             </button>
-            <button className="pinCard-modify-btn">수정</button>
+            <button
+              className="pinCard-modify-btn"
+              onClick={() => {
+                selectCurrModifedID(i);
+              }}
+            >
+              수정
+            </button>
           </div>
         ) : (
           <div className="pinCard-time-container">
@@ -182,7 +195,8 @@ function CreatePinMap() {
       </div>
     );
   };
-  const onRemoveItem = (i: any) => {
+  const onRemoveItem = (i: string) => {
+    console.log(i);
     const updatedPins = pins.filter((el) => el.pinID !== i);
     setItemState(_.reject(itemState, { i: i }));
     setPins(updatedPins);
@@ -218,6 +232,23 @@ function CreatePinMap() {
     setPinImage(pinImage.concat(newFile));
     setNewCounter(newCounter + 1);
     setIsClickSaveBtn(true);
+  };
+
+  const onUpdateItem = (pinId: any, pinTitle: any, pinImages: any) => {
+    const updatedPins = pins.map((el) => {
+      if (el.pinID === pinId) {
+        el.locationName = pinTitle; // 타이틀 교체
+      }
+      return el;
+    });
+    const updatedFiles = pinImage.map((el: any) => {
+      if (el.ranking === Number(pinId.slice(3))) {
+        el.files = pinImages;
+      }
+      return el;
+    });
+    setPins(updatedPins);
+    setPinImage(updatedFiles);
   };
 
   let map: any = [];
@@ -302,6 +333,14 @@ function CreatePinMap() {
       modalTag.remove();
     }
     setIsModalOpen(boolean);
+  };
+  // 핀 수정 모달창 open/close 핸들러
+  const handleIsModifyModalOpen = (boolean: boolean): void => {
+    const modifyModalTag = document.getElementById('modifyPinModal-background');
+    if (modifyModalTag) {
+      modifyModalTag.remove();
+    }
+    setIsModifyModalOpen(boolean);
   };
   const getSearchText = (text: string): void => {
     // 검색창 검색어 핸들러 함수
@@ -402,7 +441,7 @@ function CreatePinMap() {
     });
 
     /* 저장된 핀과 선을 지도에 표시 */
-    const arrangedArr: any = layoutState
+    const arrangedArr: any = itemState
       .sort((a: any, b: any) => a.y - b.y)
       .map((el: any) => el.i)
       .map((el) => {
@@ -413,10 +452,22 @@ function CreatePinMap() {
         }
       });
     console.log(arrangedArr);
+    // 범위 설정하는 건 좀 있다가.
+    const bounds = new kakao.maps.LatLngBounds();
+    pins
+      .slice(1)
+      .map((el) =>
+        bounds.extend(new kakao.maps.LatLng(el.latitude, el.longitude)),
+      );
     for (let i = 0; i < arrangedArr.length; i++) {
       if (arrangedArr[i]) {
         const currLat: any = arrangedArr[i].latitude;
         const currLng: any = arrangedArr[i].longitude;
+        const savedMarker = new kakao.maps.Marker({
+          image: savedMarkerImage,
+          position: new kakao.maps.LatLng(currLat, currLng), // 마커 생성
+          clickable: true,
+        });
         if (i >= 1) {
           const prevLat: any = arrangedArr[i - 1].latitude;
           const prevLng: any = arrangedArr[i - 1].longitude;
@@ -433,12 +484,35 @@ function CreatePinMap() {
           });
           polyline.setMap(map);
         }
-        const savedMarker = new kakao.maps.Marker({
-          image: savedMarkerImage,
-          position: new kakao.maps.LatLng(currLat, currLng), // 마커 생성
-          clickable: true,
-        });
         savedMarker.setMap(map);
+        /* pin 수정 모달창 띄우기 */
+        if (currModifiedID.length && arrangedArr[i].pinID === currModifiedID) {
+          map.setBounds(bounds); // 수정할 땐 bound 가까이에.
+          handleIsModifyModalOpen(true);
+          infoWindowModal.setContent(modifyPinModal);
+          infoWindowModal.open(map, savedMarker);
+          const infoWindowModalHTMLTag = document.querySelector(
+            '#modifyPinModal-background',
+          );
+          removeInfoWindowMoalStyleAndAddStyle(infoWindowModalHTMLTag);
+          const currInfoForModify = arrangedArr[i]; // 현재 pin의 개수와 layout 개수가 일치하지 않습니다.
+          const currFileForModify = pinImage[i];
+          console.log(currFileForModify);
+          console.log(currModifiedID);
+          console.log(currInfoForModify);
+
+          ReactDOM.render(
+            <ElementCallBack
+              currFileForModify={currFileForModify}
+              currInfoForModify={currInfoForModify}
+              handleIsModifyModalOpen={handleIsModifyModalOpen}
+              onUpdateItem={onUpdateItem}
+              selectCurrModifedID={selectCurrModifedID}
+            />,
+            document.getElementById('modifyPinModal-background'),
+          );
+        }
+        /* pin 수정 모달창 띄우기 */
       }
     }
     // *마커 생성
@@ -507,6 +581,7 @@ function CreatePinMap() {
       if (status === kakao.maps.services.Status.OK) {
         // const bounds = new kakao.maps.LatLngBounds();
         if (isModalOpen) infoWindowModal.close();
+        if (isModifyModalOpen) infoWindowModal.close();
 
         for (let i = 0; i < data.length; i++) {
           displayMarker(data[i]);
@@ -555,7 +630,7 @@ function CreatePinMap() {
         // setCurrMarkerInfo(grayMinfo);
 
         ReactDOM.render(
-          <ElementForSearch
+          <Element
             currMarkerInfo={grayMinfo}
             handleIsModalOpen={handleIsModalOpen}
             onAddItem={onAddItem}
@@ -591,8 +666,9 @@ function CreatePinMap() {
     blueMarker,
     grayMarker,
     currMarkerInfo,
-    layoutState,
     isClickSaveBtn,
+    currModifiedID,
+    itemState,
   ]); // -------------------------------------------------------------------------------------------> test
   return (
     <>
@@ -614,10 +690,8 @@ function CreatePinMap() {
             createElement={createElement}
             handleSidebarSaveBtn={handleSidebarSaveBtn}
             itemState={itemState}
-            layoutState={layoutState}
             onLayoutChange={onLayoutChange}
             // pinCards={pinCards}
-            setLayoutState={setLayoutState}
           />
           <SearchPinBar
             getSearchText={getSearchText}

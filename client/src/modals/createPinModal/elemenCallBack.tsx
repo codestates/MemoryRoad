@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-const ElementForSearch = ({
-  currMarkerInfo,
-  handleIsModalOpen,
-  onAddItem,
+const ElementForModify = ({
+  handleIsModifyModalOpen,
   setIsEmptyInfo,
+  currInfoForModify,
+  currFileForModify,
+  selectCurrModifedID,
+  onUpdateItem,
+  pins,
+  pinImage,
 }: any) => {
-  const [pinTitle, setPinTitle] = useState('');
-  const [pinImages, setPinImages] = useState<any[]>([]);
+  const { pinID, locationName } = currInfoForModify;
+  const { ranking, files } = currFileForModify;
+  const [pinTitle, setPinTitle] = useState(locationName);
+  const [pinImages, setPinImages] = useState<any[]>(files);
   // console.log(pinTitle);
-  // console.log(pinImages);
+  console.log(pinImages);
   const handleText = (event: any) => {
     // pin Title
     setPinTitle(event.target.value);
@@ -21,39 +29,39 @@ const ElementForSearch = ({
     for (let i = 0; i < fileList.length; i++) {
       imgArr.push(fileList[i]);
     }
-    setPinImages(imgArr);
+    setPinImages(pinImages.concat(...imgArr));
   };
   const deletePinImgFile = (event: any) => {
-    // pinImage delete
     // 사진 삭제 이벤트
     const fileName = event.target.title;
+    console.log(fileName);
     const updatedFiles = pinImages.filter((el) => {
       if (el.name === fileName) return false;
       else return true;
     });
     setPinImages(updatedFiles);
   };
-  const handleSavePin = () => {
+  const handleModifyPin = () => {
     // pinSave
     console.log('저장 버튼을 눌렀습니다. 창을 닫습니다');
-    const deleteTag: any = document.getElementById('createPinModal-background');
+    const deleteTag: any = document.getElementById('modifyPinModal-background');
     deleteTag.remove();
-    handleIsModalOpen(false);
-    onAddItem(pinTitle, pinImages, currMarkerInfo);
+    handleIsModifyModalOpen(false);
+    onUpdateItem(pinID, pinTitle, pinImages);
   };
   return (
-    <div id="createPinModal-container">
-      <div className="createPinModal-title">
+    <div id="modifyPinModal-container">
+      <div className="modifyPinModal-title">
         제목 <b className="text-highlight">*</b>
       </div>
       <input
-        className="createPinModal-input"
-        id="createPinModal-place-title"
+        className="modifyPinModal-input"
+        id="modifyPinModal-place-title"
         onChange={handleText}
-        placeholder="장소의 제목을 입력해주세요"
         type="text"
+        value={pinTitle}
       />
-      <div className="createPinModal-title">
+      <div className="modifyPinModal-title">
         사진 첨부
         <form
           encType="multipart/form-data"
@@ -62,7 +70,7 @@ const ElementForSearch = ({
           name="chooseImgFilesForm"
           onChange={handlePinImgFiles}
         >
-          <div className="createPinModal-input addImgFilesBtn">
+          <div className="modifyPinModal-input addImgFilesBtn">
             <label htmlFor="file-upload" id="file-upload-image">
               <img
                 alt="icon"
@@ -80,26 +88,26 @@ const ElementForSearch = ({
           />
         </form>
       </div>
-      <div id="createPinModal-pictures-background">
-        <div id="createPinModal-pictures-container">
-          {pinImages.map((el, idx) => (
-            <div className="createPinModal-picture-box" id={el.name} key={idx}>
+      <div id="modifyPinModal-pictures-background">
+        <div id="modifyPinModal-pictures-container">
+          {pinImages.map((el: any, idx: any) => (
+            <div className="modifyPinModal-picture-box" id={el.name} key={idx}>
               <button
-                className="createPinModal-delete-picture"
+                className="modifyPinModal-delete-picture"
                 name={el.name}
                 onClick={(event) => deletePinImgFile(event)}
                 type="button"
               >
                 <img
                   alt="closeImage"
-                  className="createPinModal-close-btn"
+                  className="modifyPinModal-close-btn"
                   src="http://127.0.0.1:5500/client/public/img/close_icon.png"
                   title={el.name}
                 ></img>
               </button>
               <img
                 alt="uploadPicture"
-                className="createPinModal-picture"
+                className="modifyPinModal-picture"
                 src={URL.createObjectURL(el)}
               ></img>
             </div>
@@ -107,15 +115,16 @@ const ElementForSearch = ({
         </div>
       </div>
       <button
-        id="createPinModal-save-btn"
+        id="modifyPinModal-save-btn"
         onClick={() => {
-          pinTitle.length === 0 ? setIsEmptyInfo(true) : handleSavePin();
+          pinTitle.length === 0 ? setIsEmptyInfo(true) : handleModifyPin();
+          selectCurrModifedID('');
         }}
       >
-        장소 저장
+        수정 완료
       </button>
     </div>
   );
 };
 
-export default ElementForSearch;
+export default ElementForModify;
