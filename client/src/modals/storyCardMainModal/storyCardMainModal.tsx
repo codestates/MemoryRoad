@@ -50,10 +50,14 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
       withCredentials: true,
     })
       .then((res) => {
-        console.log(res);
-        // handleCardModalClose();
+        if (res.status === 200) {
+          console.log(res);
+          handleCardModalClose();
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   useEffect(() => {
@@ -195,7 +199,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
                         <img
                           alt={`${el.fileName}`}
                           className="storyCardMainModal-pin-photo-img"
-                          src={`http://127.0.0.1:5500/client/public/img/${el.fileName}`}
+                          src={`https://server.memory-road.net/upload/${el.fileName}`}
                         />
                       </div>
                     </div>

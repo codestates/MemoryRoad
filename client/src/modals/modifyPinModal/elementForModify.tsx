@@ -40,11 +40,13 @@ const ElementForModify = ({
       })
         .then((res) => {
           console.log(res);
-          const updatedFiles = pinImages.filter((el) => {
-            if (el.pictureId === pictureId) return false;
-            else return true;
-          });
-          setPinImages(updatedFiles);
+          if (res.status === 200) {
+            const updatedFiles = pinImages.filter((el) => {
+              if (String(el.pictureId) === pictureId) return false;
+              else return true;
+            });
+            setPinImages(updatedFiles);
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -64,7 +66,7 @@ const ElementForModify = ({
     const deleteTag: any = document.getElementById('modifyPinModal-background');
     deleteTag.remove();
     handleIsModifyModalOpen(false);
-    onUpdateItem(id, pinTitle, pinImages);
+    onUpdateItem(String(id), pinTitle, pinImages);
     // onAddItem(pinTitle, pinImages, currMarkerInfo);
   };
   return (
@@ -92,7 +94,7 @@ const ElementForModify = ({
             <label htmlFor="file-upload" id="file-upload-image">
               <img
                 alt="icon"
-                src="http://127.0.0.1:5500/client/public/img/addPhoto_icon.png"
+                src="https://server.memory-road.net/upload/addPhoto_icon.png"
                 width="40"
               />
             </label>
@@ -120,7 +122,7 @@ const ElementForModify = ({
                   alt="closeImage"
                   className="modifyPinModal-close-btn"
                   id={`${el.id}&${el.pinId}` || '0'} // 기존에 있던 사진은 id값을 따로 부여한다.
-                  src="http://127.0.0.1:5500/client/public/img/close_icon.png"
+                  src="https://server.memory-road.net/upload/close_icon.png"
                   title={el.name || el.fileName}
                 ></img>
               </button>
@@ -130,7 +132,7 @@ const ElementForModify = ({
                 src={
                   el.name
                     ? URL.createObjectURL(el)
-                    : `http://127.0.0.1:5500/client/public/img/${el.fileName}`
+                    : `https://server.memory-road.net/upload/${el.fileName}`
                 }
               ></img>
             </div>

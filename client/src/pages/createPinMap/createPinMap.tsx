@@ -11,6 +11,7 @@ import type { RootState } from './../../redux/reducer/index';
 import { persistor } from '../../../src/index';
 // other Files
 import './createPinMap.css';
+import FakeHeader from '../../components/map-test/fakeHeader';
 import createPinModal from '../../modals/createPinModal/createPinModal'; // 핀 생성 모달창
 import SearchPinBar from '../../components/searchPinBar/searchPinBar'; // 핀 검색창
 import ConfirmPinIsEmptyModal from '../../modals/confirmPinIsEmpty/confirmPinIsEmptyModal'; // 핀 오류 모달창
@@ -371,7 +372,7 @@ function CreatePinMap() {
   }
 
   // *마커 이미지 생성
-  const imageSrc = 'http://127.0.0.1:5500/client/public/img/blue_marker.png';
+  const imageSrc = 'https://server.memory-road.net/upload/blue_marker.png';
   const imageSize = new kakao.maps.Size(33, 54);
   const imageOption = { offset: new kakao.maps.Point(16, 55) };
   const markerImage = new kakao.maps.MarkerImage(
@@ -387,7 +388,7 @@ function CreatePinMap() {
   });
   // *마커 이미지 생성 - 검색용 마커
   const imageSrcForSearch =
-    'http://127.0.0.1:5500/client/public/img/gray_marker.png';
+    'https://server.memory-road.net/upload/gray_marker.png';
   const imageSizeForSearch = new kakao.maps.Size(33, 54);
   const imageOptionForSearch = { offset: new kakao.maps.Point(16, 55) };
   const markerImageForSearch = new kakao.maps.MarkerImage(
@@ -397,7 +398,7 @@ function CreatePinMap() {
   );
   /* 핀 이미지 마커 */
   const savedMarkerImageSrc =
-    'http://127.0.0.1:5500/client/public/img/red_pin.png';
+    'https://server.memory-road.net/upload/red_pin.png';
   const savedMarkerImageSize = new kakao.maps.Size(55, 54);
   const savedMarkerImage = new kakao.maps.MarkerImage(
     savedMarkerImageSrc,
@@ -685,7 +686,7 @@ function CreatePinMap() {
           />
         ) : null}
         <div id="map-navigator-top">
-          <Navigation />
+          <FakeHeader />
           <TimeLineSideBar
             createElement={createElement}
             handleSidebarSaveBtn={handleSidebarSaveBtn}

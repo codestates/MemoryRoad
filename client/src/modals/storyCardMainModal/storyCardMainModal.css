@@ -65,7 +65,7 @@
   height: 30px;
   border: none;
   outline: none;
-  background: url('http://127.0.0.1:5500/client/public/img/close_icon.png') no-repeat center;
+  background: url('https://server.memory-road.net/upload/close_icon.png') no-repeat center;
   background-size: 33px;
   cursor: pointer;
 }
@@ -197,7 +197,7 @@
   border: none;
   outline: none;
   background: transparent;
-  background: url('http://127.0.0.1:5500/client/public/img/chat_bubble.png') no-repeat center; /*숫자표시창이나까 고정 괜춘*/
+  background: url('https://server.memory-road.net/upload/chat_bubble.png') no-repeat center; /*숫자표시창이나까 고정 괜춘*/
   background-size: cover;
   opacity: 0.5;
   padding-bottom: 5px; /*text 정렬*/

@@ -32,7 +32,7 @@ ReactDOM.render(
           <Route element={<MemoryRoad />} path="/"></Route>
           <Route element={<Mypage />} path="/Mypage" />
           <Route element={<AllRoutesInMap />} path="/AllRoutesInMap" />
-          <Route element={<CreatePinMap />} path="map/createRoute"></Route>
+          <Route element={<CreatePinMap />} path="createRoute"></Route>
           <Route element={<MyRouteStore />} path="myRouteStore"></Route>
           <Route
             element={<ModifyPinMap />}

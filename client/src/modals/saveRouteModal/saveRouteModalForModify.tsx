@@ -116,8 +116,14 @@ function SaveRouteModal({
           data: formData,
           withCredentials: true,
         })
-          .then((data) => console.log(data))
-          .catch((err) => console.log(err));
+          .then((res) => {
+            if (res.status === 200) {
+              console.log(data);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       });
 
       // 루트 제목, 루트 내용 수정 endpoint
@@ -132,8 +138,15 @@ function SaveRouteModal({
         },
         withCredentials: true,
       })
-        .then((data) => console.log(data), handleSidebarSaveBtn(false))
-        .catch((err) => console.log(err));
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+            handleSidebarSaveBtn(false);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
   return (
