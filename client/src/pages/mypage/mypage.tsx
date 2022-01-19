@@ -2,7 +2,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/reducer';
 import './mypage.css';
-import Login from '../../modals/login/Login';
 import {
   checkingPasswordModal,
   editUserInfoModal,
@@ -105,7 +104,17 @@ function Mypage() {
             <hr></hr>
             <div className="mypage-scroll">
               <div className="mypage-contents">
-                <div className="mypage-content userModalPointer">
+                <div
+                  className="mypage-content userModalPointer"
+                  onClick={() => {
+                    navigate('/myRouteStore');
+                  }}
+                  onKeyDown={() => {
+                    navigate('/myRouteStore');
+                  }}
+                  role="menu"
+                  tabIndex={0}
+                >
                   <img
                     alt="storeRoute"
                     className="mypage-image"
@@ -115,8 +124,8 @@ function Mypage() {
                 </div>
                 <div
                   className="mypage-content userModalPointer"
-                  onClick={() => navigate('/mypage/AllRoutesInMap')}
-                  onKeyDown={() => navigate('/mypage/AllRoutesInMap')}
+                  onClick={() => navigate('/allRoutesInMap')}
+                  onKeyDown={() => navigate('/allRoutesInMap')}
                   role="menu"
                   tabIndex={0}
                 >

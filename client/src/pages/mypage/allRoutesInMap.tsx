@@ -41,10 +41,10 @@ function AllRoutesInMap() {
   /* redux 전역 상태관리 */ // 왜 type 할당 : RootState는 되고 RootPersistState는 안되나요 ?
   const colorUrls: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorDotUrl,
-  );
+  ); // 색깔의 주소
   const colorChips: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorChip,
-  );
+  ); // 색깔
 
   //state
   //지도의 확대 정도
@@ -117,7 +117,7 @@ function AllRoutesInMap() {
       });
     }
   }
-
+  // 중앙값
   function getRouteCenter(routeInfo: Route | null) {
     //선택된 핀의 정보가 없는 경우 기본값 반환
     if (routeInfo === null || routeInfo.Pins.length === 0) {
@@ -151,7 +151,7 @@ function AllRoutesInMap() {
     //colorIdx가 빈 문자열일 경우모든 루트 배열을 받아온다.
     //colorIdx에 값이 있다면
     console.log(allRoutes);
-    console.log(colorIdx);
+    console.log(colorIdx); // 0 ~ 8까지
     // 지도 생성
     const mapContainer = document.getElementById('map');
 
@@ -210,7 +210,7 @@ function AllRoutesInMap() {
             route.Pins[i].longitude,
           ),
         ];
-        let polyColor = '';
+        let polyColor = ''; // 루트선 색깔
         for (let i = 0; i < colorsName.length; i++) {
           if (route.color === colorsName[i]) {
             polyColor = colorChips[i];
@@ -227,7 +227,8 @@ function AllRoutesInMap() {
         polyline.setMap(map);
       }
     }
-  }, [allRoutes]);
+    setPrevAllRoutes(allRoutes);
+  });
 
   return (
     <div>

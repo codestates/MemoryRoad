@@ -98,7 +98,7 @@ function EditUserInfo({ isvalid, url }: any) {
                 true,
                 userinfo.id,
                 userinfo.email,
-                res.data.username,
+                username,
                 userinfo.profile,
                 userinfo.OAuthLogin,
               ),
