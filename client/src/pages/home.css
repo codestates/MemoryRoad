@@ -301,6 +301,13 @@
     padding-bottom: 5%;
     opacity: 0;
   }
+  .Home-guide2 {
+    font-size: 20px;
+    font-weight: bold;
+    padding-top: 10%;
+    padding-bottom: 5%;
+    opacity: 0;
+  }
   .Home-button {
     font-size: 10px;
   }
