@@ -104,7 +104,17 @@ function Mypage() {
             <hr></hr>
             <div className="mypage-scroll">
               <div className="mypage-contents">
-                <div className="mypage-content userModalPointer">
+                <div
+                  className="mypage-content userModalPointer"
+                  onClick={() => {
+                    navigate('/myRouteStore');
+                  }}
+                  onKeyDown={() => {
+                    navigate('/myRouteStore');
+                  }}
+                  role="menu"
+                  tabIndex={0}
+                >
                   <img
                     alt="storeRoute"
                     className="mypage-image"
@@ -114,8 +124,8 @@ function Mypage() {
                 </div>
                 <div
                   className="mypage-content userModalPointer"
-                  onClick={() => navigate('/AllRoutesInMap')}
-                  onKeyDown={() => navigate('/AllRoutesInMap')}
+                  onClick={() => navigate('/allRoutesInMap')}
+                  onKeyDown={() => navigate('/allRoutesInMap')}
                   role="menu"
                   tabIndex={0}
                 >

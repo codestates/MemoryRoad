@@ -85,6 +85,7 @@ function ColorSelectBox({ setColorIdx, setAllRoutes, findAllRoute }: Props) {
                   setColorIdx(idx);
                   getAllRoute(idx);
                 }}
+                // 필터링을 거치는 함수를 onClick이벤트로 주게됨
                 onKeyPress={selectColor}
                 role="tab"
               >
