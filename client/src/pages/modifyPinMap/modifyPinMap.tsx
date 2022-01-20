@@ -89,27 +89,10 @@ function ModifyPinMap() {
       Pictures: [],
     },
   ]);
-  const initialPins = pins
-    ?.slice(1)
-    ?.map(function (pinInfo: any, idx: any, list: any) {
-      const sh = Number(pinInfo.startTime?.split(':')[0]);
-      const eh = Number(pinInfo.endTime?.split(':')[0]);
-      const sm = Number(pinInfo.startTime?.split(':')[1]);
-      const em = Number(pinInfo.endTime?.split(':')[1]);
-      const yStart = sh * 2 + (sm === 0 ? 0 : 1);
-      const yEnd = (eh - sh) * 2 + (em - sm < 0 ? -1 : 0);
-      return {
-        i: String(pinInfo.id),
-        x: 0,
-        y: yStart,
-        w: 1,
-        h: yEnd,
-      };
-    });
-  const [itemState, setItemState] = useState(initialPins);
+  const [itemState, setItemState] = useState<any[]>([]); // 야매 해결
   console.log('pins', pins);
   console.log('itemState', itemState);
-  const [newCounter, setNewCounter] = useState(itemState.length);
+  const [newCounter, setNewCounter] = useState(0);
   const [isMouseOnCard, setIsMouseOnCard] = useState(false);
   const [currCardTitle, setCurrCardTitle] = useState(null);
   /* react-grid-layout */
@@ -216,7 +199,8 @@ function ModifyPinMap() {
   };
   const onRemoveItem = (i: any) => {
     const updatedPins = pins.filter((el) => String(el.id) !== i);
-    setItemState(_.reject(itemState, { i: i }));
+    const newState: any = _.reject(itemState, { i: i });
+    setItemState(newState);
     setPins(updatedPins);
   };
   const newID = newCounter + 1; /* for ID */
@@ -407,7 +391,26 @@ function ModifyPinMap() {
           if (res.status === 200) {
             console.log(res);
             const pins = res.data.route[0].Pins;
-            setPins(pins.concat(...pins));
+            const initialPins = pins
+              ?.slice(1)
+              ?.map(function (pinInfo: any, idx: any, list: any) {
+                const sh = Number(pinInfo.startTime?.split(':')[0]);
+                const eh = Number(pinInfo.endTime?.split(':')[0]);
+                const sm = Number(pinInfo.startTime?.split(':')[1]);
+                const em = Number(pinInfo.endTime?.split(':')[1]);
+                const yStart = sh * 2 + (sm === 0 ? 0 : 1);
+                const yEnd = (eh - sh) * 2 + (em - sm < 0 ? -1 : 0);
+                return {
+                  i: String(pinInfo.id),
+                  x: 0,
+                  y: yStart,
+                  w: 1,
+                  h: yEnd,
+                };
+              });
+            setPins((prev) => prev.concat(pins));
+            setItemState(initialPins);
+            setNewCounter(initialPins.length);
           }
         })
         .catch((err) => {
