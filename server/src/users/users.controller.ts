@@ -63,8 +63,6 @@ export class UsersController {
     const accessToken: string = await this.usersService.getAccessToken(
       userInfo,
     );
-    console.log(accessToken);
-    console.log(userInfo);
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       maxAge: 5 * 60 * 60 * 1000,
@@ -83,7 +81,6 @@ export class UsersController {
   //oauth 구글
   @Post('/auth/oauth/google')
   async googleLogin(@Req() req: Request, @Res() res: Response) {
-    console.log(req.body);
     const userInfo = await this.usersService.google(req.body);
     const accessToken: string = await this.usersService.getAccessToken(
       userInfo,
@@ -110,8 +107,6 @@ export class UsersController {
     const accessToken: string = await this.usersService.getAccessToken(
       userInfo,
     );
-    console.log(accessToken);
-    console.log(userInfo);
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       maxAge: 5 * 60 * 60 * 1000,
@@ -161,7 +156,6 @@ export class UsersController {
       fs.unlinkSync(`${join(__dirname, '..', '..', '..')}/${file.path}`);
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
-    // console.log(req.cookies);
     const accessToken = req.cookies.accessToken;
     const profile = await this.usersService.updateProfile(accessToken, file);
     return res.status(200).json({ profile: profile });
@@ -177,7 +171,6 @@ export class UsersController {
     if (!req.cookies || !req.cookies.accessToken) {
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
-    console.log(req.cookies);
     const accessToken = req.cookies.accessToken;
     await this.usersService.updateUserName(accessToken, userName);
     return res.status(200).json({ message: '닉네임이 변경되었습니다' });
@@ -192,7 +185,6 @@ export class UsersController {
     if (!req.cookies || !req.cookies.accessToken) {
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
-    console.log(req.cookies);
     const accessToken = req.cookies.accessToken;
     await this.usersService.updatePassword(accessToken, password);
     return res.status(200).json({ message: '비밀번호가 변경되었습니다' });
