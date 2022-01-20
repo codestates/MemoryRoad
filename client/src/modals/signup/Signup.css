@@ -1,11 +1,21 @@
 .signup-modal-align-center-fix {
-  position: absolute;
+  /* position: absolute;
   width: 100vw;
   height: 100vh;
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
+  align-items: center; */
+  position: fixed;
+  /* top: 50%; */
+  background-color: rgba(128, 128, 128, 0.568);
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
   align-items: center;
+  z-index: 999;
 }
 .signup-center-fix-fix-fix {
   padding-top: 10px;

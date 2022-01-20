@@ -122,7 +122,7 @@ function Home() {
               <button
                 className="Home-button"
                 onClick={() => {
-                  navigate('map/createRoute');
+                  navigate('/createRoute');
                 }}
               >
                 메모리로드 <span>기록</span> 하러 가기

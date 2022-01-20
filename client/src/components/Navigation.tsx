@@ -49,7 +49,7 @@ function Nav({ url }: any) {
   const loginButtonHandler = () => {
     if (userinfo.isLogin) {
       // 로그아웃 API
-      axios.get(`${url}/users/auth`).then((res) => {
+      axios.get(`${url}/users/auth`, { withCredentials: true }).then((res) => {
         if (res.status === 200) {
           window.localStorage.clear(); // 로컬 스토리지를 비우고
           window.location.reload(); // 새로고침
@@ -131,13 +131,13 @@ function Nav({ url }: any) {
             className="nav-loginfont"
             onClick={() => {
               if (userinfo.isLogin) {
-                // navigate('/');
-                // window.localStorage.clear(); // 로컬 스토리지를 비우고
-                // window.location.reload(); // 새로고침
+                navigate('/');
+                window.localStorage.clear(); // 로컬 스토리지를 비우고
+                window.location.reload(); // 새로고침
                 // persistor.purge(); // 로그아웃 누르면 상태가 안바뀜 , 다시 새로고침 하면 상태가 로그아웃 상태가됨
                 // dispatch(setUserInfo(false, null, null, null, null, null));
                 // persist purge를 이용?
-                loginButtonHandler();
+                // loginButtonHandler();
               } else {
                 dispatch(loginModal(true));
               }

@@ -2,7 +2,7 @@ import React from 'react';
 import './Login.css';
 import { useState } from 'react';
 import axios from 'axios';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, batch } from 'react-redux';
 import Mist from '../../components/mist';
 import { RootState } from '../../redux/reducer';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,7 @@ import {
 import '../userModalPointer.css';
 import QueryString from 'qs';
 import SignUp from '../signup/Signup';
+import e from 'express';
 
 function LoginModal({ url }: any) {
   const dispatch = useDispatch();
@@ -73,9 +74,8 @@ function LoginModal({ url }: any) {
           `${url}/users/auth/local`,
           { email: Email, password: Password },
           {
-            headers: {
-              'Content-Type': `application/json`,
-            },
+            headers: { 'Content-Type': `application/json` },
+            withCredentials: true,
           },
         )
         .then((res) => {
@@ -142,10 +142,30 @@ function LoginModal({ url }: any) {
 
   return (
     <div>
-      <Mist />
-
-      <div className="login-modal-align-center-fix">
-        <div className="login-LoginBorder">
+      <div
+        className="login-modal-align-center-fix"
+        onClick={(e) => {
+          if (e.target !== e.currentTarget) return;
+          batch(() => {
+            dispatch(loginModal(false));
+          });
+        }}
+        onKeyDown={(e) => {
+          if (e.target !== e.currentTarget) return;
+          batch(() => {
+            dispatch(loginModal(false));
+          });
+        }}
+        role="menu"
+        tabIndex={0}
+      >
+        <div
+          className="login-LoginBorder"
+          onClick={() => null}
+          onKeyDown={() => null}
+          role="menu"
+          tabIndex={0}
+        >
           <div className="login-center login-titleLogin">로그인</div>
           <input
             className="login-input"

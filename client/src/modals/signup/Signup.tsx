@@ -1,7 +1,7 @@
 import React from 'react';
 import './Signup.css';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, batch } from 'react-redux';
 import axios from 'axios';
 import Mist from '../../components/mist';
 import { loginModal, signupModal } from '../../redux/actions/index';
@@ -82,8 +82,19 @@ function SignUp({ isvalid, url }: any) {
 
   return (
     <div>
-      <Mist />
-      <div className="signup-modal-align-center-fix">
+      <div
+        className="signup-modal-align-center-fix"
+        onClick={(e) => {
+          if (e.target !== e.currentTarget) return;
+          dispatch(signupModal(false));
+        }}
+        onKeyDown={(e) => {
+          if (e.target !== e.currentTarget) return;
+          dispatch(signupModal(false));
+        }}
+        role="menu"
+        tabIndex={0}
+      >
         <div className="signup-SignUpBorder">
           <div className="signup-center signup-titleSignup">회원가입</div>
           <div className="signup-center-fix-fix-fix">
