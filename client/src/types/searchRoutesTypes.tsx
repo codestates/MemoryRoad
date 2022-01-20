@@ -24,8 +24,8 @@ export interface Route {
   id: number;
   routeName: string;
   description: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
   public: boolean;
   color: string;
   time: number;
