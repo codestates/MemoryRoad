@@ -30,10 +30,11 @@ function AllRoutesInMap() {
   ); // 색깔의 주소
   const colorChips: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorChip,
-  );
+  ); // 색깔 css
   const colorsName: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorName,
-  );
+  ); // 색깔 이름
+
   //state
   //지도의 확대 정도
   const [currLevel, setCurrLevel] = useState(6);
@@ -267,7 +268,7 @@ function AllRoutesInMap() {
         polyline.setMap(map);
       }
     }
-  }, [allRoutes, pickPinsPictures]);
+  }, [findAllRoute, allRoutes, pickPinsPictures]);
 
   return (
     <div className="allRoutesInMap-whole">

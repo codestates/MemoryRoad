@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/reducer';
-import { Route1 } from '../../types/searchRoutesTypes';
+import { Route } from '../../types/searchRoutesTypes';
 import './colorSelectBox.css';
 
 type Props = {
   setColorIdx: React.Dispatch<React.SetStateAction<number>>;
-  setAllRoutes: React.Dispatch<React.SetStateAction<Array<Route1>>>;
-  findAllRoute: any;
+  setAllRoutes: React.Dispatch<React.SetStateAction<Route[] | null>>;
+  findAllRoute: Route[] | null;
 };
 
 function ColorSelectBox({ setColorIdx, setAllRoutes, findAllRoute }: Props) {
@@ -36,6 +36,9 @@ function ColorSelectBox({ setColorIdx, setAllRoutes, findAllRoute }: Props) {
     } else {
       const routeColor = colorsName[colorIdx];
       const colorFilterRoutes = [];
+      if (findAllRoute === null) {
+        return;
+      }
       for (let i = 0; i < findAllRoute.length; i++) {
         if (routeColor === findAllRoute[i].color) {
           colorFilterRoutes.push(findAllRoute[i]);
