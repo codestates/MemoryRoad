@@ -3,7 +3,7 @@ import './pagination.css';
 
 function Pagination({
   handleClickedPageNum,
-  pageArr,
+  dividedPages,
   paginationNum,
   handleNextPaginationNum,
   handlePrevPaginationNum,
@@ -23,18 +23,18 @@ function Pagination({
           onClick={handlePrevPaginationNum}
         ></button>
       )}
-      {pageArr[paginationNum].map((el: any, idx: any) => (
+      {dividedPages[paginationNum].map((el: any, idx: any) => (
         <button
           className="myRouteStore-paginations-page-btn"
           id={paginationNum * 5 + idx + 1}
           key={paginationNum * 5 + idx}
-          onClick={() => handleClickedPageNum(idx + 1)}
+          onClick={() => handleClickedPageNum(paginationNum * 5 + (idx + 1))}
         >
           {paginationNum * 5 + (idx + 1)}
         </button>
       ))}
       {/* div 태그 button 태그로 치환하기. */}
-      {pageArr[paginationNum + 1] === undefined ? null : (
+      {dividedPages[paginationNum + 1] === undefined ? null : (
         <button
           className="myRouteStore-paginations-next-btn"
           onClick={handleNextPaginationNum}

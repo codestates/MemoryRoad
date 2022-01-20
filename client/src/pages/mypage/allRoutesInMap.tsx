@@ -46,7 +46,7 @@ function AllRoutesInMap() {
 
   const colorUrls: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorDotUrl,
-  );
+  ); // 색깔의 주소
   const colorChips: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorChip,
   );
@@ -198,6 +198,7 @@ function AllRoutesInMap() {
     console.log(allRoutes);
     console.log(colorIdx);
     console.log(pickPinsPictures);
+    console.log(colorIdx); // 0 ~ 8까지
     // 지도 생성
     const mapContainer = document.getElementById('map');
 
@@ -256,7 +257,7 @@ function AllRoutesInMap() {
             route.Pins[i].longitude,
           ),
         ];
-        let polyColor = '';
+        let polyColor = ''; // 루트선 색깔
         for (let i = 0; i < colorsName.length; i++) {
           if (route.color === colorsName[i]) {
             polyColor = colorChips[i];
