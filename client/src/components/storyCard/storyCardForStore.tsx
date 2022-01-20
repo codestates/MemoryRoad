@@ -24,7 +24,7 @@ function StoryCard({ handleCardModalOpen, route }: any) {
           <img
             alt="testImg"
             className="myRouteStore-card-image"
-            src={`https://server.memory-road.net/upload/${route.thumbnail}`}
+            src={`https://server.memory-road.net/${route.thumbnail}`}
           ></img>
         </div>
         <div className="myRouteStore-card-bottom">
