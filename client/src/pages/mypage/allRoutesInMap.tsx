@@ -4,7 +4,7 @@ import { RootState } from '../../redux/reducer';
 import ColorSelectBox from '../../components/colorSelectBox/colorSelectBoxForMap';
 import './allRoutesInMap.css';
 import axios from 'axios';
-import { Route, Picture } from '../../types/searchRoutesTypes';
+import { Route1, Picture } from '../../types/searchRoutesTypes';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
 import fakeData from './fakeData.json';
 
@@ -21,7 +21,12 @@ declare global {
 }
 const kakao = window.kakao;
 
-// const findAllRoute = fakeData.routes;
+// const pickAllRoutes = async () => {
+//   const getArray: AllRoute = await axios.get('http://localhost/routes');
+//   return getArray.routes;
+// };
+// const findAllRoute = pickAllRoutes();
+const findAllRoute = fakeData.routes;
 
 const colorsName = [
   'red',
@@ -35,7 +40,7 @@ const colorsName = [
   'pink',
 ];
 
-async function AllRoutesInMap() {
+function AllRoutesInMap() {
   const dispatch = useDispatch();
   /* redux 전역 상태관리 */ // 왜 type 할당 : RootState는 되고 RootPersistState는 안되나요 ?
 
@@ -45,15 +50,11 @@ async function AllRoutesInMap() {
   const colorChips: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorChip,
   );
-  const findAllRoute = await axios
-    .get('http://localhost/routes')
-    .then((res) => res.data.routes);
-
   //state
   //지도의 확대 정도
   const [currLevel, setCurrLevel] = useState(6);
   //전체 루트의 정보
-  const [allRoutes, setAllRoutes] = useState<Array<Route>>(findAllRoute);
+  const [allRoutes, setAllRoutes] = useState<Route1[]>(findAllRoute);
 
   // 루트 색상 정보
   const [colorIdx, setColorIdx] = useState<number>(9);
@@ -72,7 +73,7 @@ async function AllRoutesInMap() {
   }
 
   //루트를 받아 핀 객체들을 만들고, 랜더링 한다.
-  function generatePins(routeInfo: Route, map: any) {
+  function generatePins(routeInfo: Route1, map: any) {
     let pinColorUrl = '';
     for (let i = 0; i < colorsName.length; i++) {
       if (routeInfo.color === colorsName[i]) {
@@ -125,7 +126,7 @@ async function AllRoutesInMap() {
     }
   }
 
-  function getRouteCenter(routeInfo: Route | null) {
+  function getRouteCenter(routeInfo: Route1 | null) {
     //선택된 핀의 정보가 없는 경우 기본값 반환
     if (routeInfo === null || routeInfo.Pins.length === 0) {
       return new kakao.maps.LatLng(37.566826, 126.9786567);
@@ -146,7 +147,7 @@ async function AllRoutesInMap() {
       (acc, cur) => Math.max(acc, Number(cur.longitude)),
       Number.MIN_SAFE_INTEGER,
     );
-    //소수 계산 문제를 해결하기 위해 toFixed함수를 사용해 16자리에서 반올림 해 평균을 계산한다
+    // 소수 계산 문제를 해결하기 위해 toFixed함수를 사용해 16자리에서 반올림 해 평균을 계산한다
     // return new kakao.maps.LatLng(
     //   Number(((minLat + maxLat) / 2).toFixed(15)),
     //   Number(((minLng + maxLng) / 2).toFixed(15)),
@@ -201,7 +202,7 @@ async function AllRoutesInMap() {
     const mapContainer = document.getElementById('map');
 
     //전체 루트 중의 전체 센터값을 가져와야할 듯.
-    const center = (routes: Route[] | null) => {
+    const center = (routes: Route1[] | null) => {
       let minLat = 90,
         maxLat = -90,
         minLng = 180,
