@@ -31,10 +31,13 @@ function Nav({ url, isvalid }: any) {
       // 로그아웃 API
       axios.get(`${url}/users/auth`, { withCredentials: true }).then((res) => {
         if (res.status === 200) {
-          window.localStorage.clear(); // 로컬 스토리지를 비우고
+          // window.localStorage.clear(); // 로컬 스토리지를 비우고
+          persistor.purge();
           window.location.reload(); // 새로고침
+
           // dispatch(setUserInfo(false, null, null, null, null, null)); // 유저의 정보를 모두 null 값으로 바꾸고 유저의 로그인 상태를 false로 바꿈
-          navigate('/'); // home으로 이동
+          // window.location.assign(`${url}:3000/`); // home으로 이동
+          navigate('/');
         }
       });
     } else {

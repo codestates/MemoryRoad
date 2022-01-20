@@ -1,11 +1,11 @@
 .mypage-gridMypage {
   display: grid;
-  grid-template-columns: 0.8fr 1fr 1.5fr 0.75fr;
-  grid-template-rows: 200px 170px 300px;
+  grid-template-columns: 0.7fr 1.5fr 1.5fr 0.7fr;
+  grid-template-rows: 100px 170px 300px;
 }
 .mypage-userProfile {
-  width: 150px;
-  height: 150px;
+  width: 130px;
+  height: 130px;
   border-radius: 80px;
 }
 /* .mypage-checking {
@@ -77,6 +77,11 @@
   border-radius: 5px;
   cursor: pointer;
 }
+.mypage-changeuserinfo:hover {
+  color: white;
+  background-color: silver;
+  transition: 800ms ease all;
+}
 
 /* 4K */
 @media (min-width: 2000px) {
@@ -88,7 +93,7 @@
 }
 
 /* 테블릿 */
-@media (max-width: 930px) {
+@media (max-width: 1095px) {
   .mypage-Profile {
     font-size: 130px;
     color: gray;
@@ -99,7 +104,7 @@
     margin-top: 10px;
   }
   .mypage-greetingTouser {
-    font-size: 15px;
+    font-size: 13px;
   }
   .mypage-image {
     width: 80%;
@@ -114,11 +119,11 @@
 }
 
 /* 모바일 */
-@media (max-width: 760px) {
+@media (max-width: 800px) {
   .mypage-gridMypage {
     display: grid;
-    grid-template-columns: 1fr 6fr 10fr 1fr;
-    grid-template-rows: 150px 120px 400px;
+    grid-template-columns: 1fr 5fr 10fr 1fr;
+    grid-template-rows: 100px 120px 400px;
   }
   .mypage-Profile {
     font-size: 80px;
@@ -126,8 +131,8 @@
     opacity: 0.8;
   }
   .mypage-userProfile {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 80px;
   }
   .mypage-greeting {
@@ -145,6 +150,11 @@
     border: 2px solid white;
     border-radius: 5px;
     cursor: pointer;
+  }
+  .mypage-line {
+    height: 2px;
+    border: none;
+    background-color: rgb(234, 234, 234);
   }
 
   .mypage-image {

@@ -69,7 +69,7 @@ function Mypage() {
               <img
                 alt="profileimg"
                 className="mypage-userProfile"
-                src={userinfo.profile}
+                src={`${url}/${userinfo.profile}`}
               />
             ) : (
               <i className="fas fa-user-circle mypage-Profile"></i>
@@ -104,7 +104,7 @@ function Mypage() {
           <div></div>
           <div></div>
           <div className="mypage-checking mypage-map">
-            <hr></hr>
+            <hr className="mypage-line"></hr>
             <div className="mypage-scroll">
               <div className="mypage-contents">
                 <div
