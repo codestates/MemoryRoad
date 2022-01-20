@@ -12,9 +12,13 @@
 .opendmenu-Menutext {
   text-align: center;
   font-size: 50%;
+  font-weight: bold;
   color: black;
   display: grid;
   grid-template-rows: 2fr 1fr;
+}
+.opendmenu-Menutext:hover {
+  color: silver;
 }
 #opendmenu-background {
   background-color: #b8e9d2;

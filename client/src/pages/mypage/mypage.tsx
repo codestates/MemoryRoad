@@ -25,7 +25,7 @@ function Mypage() {
   const modalWithdrawal = state.iswithdrawalModal; // 회원탈퇴 모달창
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const url = 'http://localhost';
+  const url = 'https://server.memory-road.net';
 
   // 유효성 검사
   const isvalid = (email: string, username: string, password: string) => {
@@ -118,7 +118,7 @@ function Mypage() {
                   <img
                     alt="storeRoute"
                     className="mypage-image"
-                    src="http://127.0.0.1:5500/client/public/img/notice-board.jpg"
+                    src="https://server.memory-road.net/client/public/img/notice-board.jpg"
                   />
                   <div className="mypage-imageExplain ">루트 보관함</div>
                 </div>
@@ -132,7 +132,7 @@ function Mypage() {
                   <img
                     alt="storeRoute"
                     className="mypage-image"
-                    src="http://127.0.0.1:5500/client/public/img/AllRouteMap.jpg"
+                    src="https://server.memory-road.net/client/public/img/AllRouteMap.jpg"
                   />
                   <div className="mypage-imageExplain ">루트 한눈에 보기</div>
                 </div>

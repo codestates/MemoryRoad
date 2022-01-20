@@ -1,6 +1,6 @@
 .login-modal-align-center-fix {
   position: absolute;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   display: flex;
   flex-flow: row wrap;
@@ -58,6 +58,12 @@
   font-weight: bold;
   border: 2px solid white;
 }
+.login-Button:hover {
+  border: 2px solid #91ba9f;
+  background-color: white;
+  color: #91ba9f;
+  transition: 800ms ease all;
+}
 .login-linebottom {
   width: 220px;
 }
@@ -83,4 +89,7 @@
 .login-TotheSignup {
   margin-top: 30px;
   font-size: 11px;
+}
+.login-pointer :hover {
+  color: silver;
 }
