@@ -4,7 +4,7 @@ import { RootState } from '../../redux/reducer';
 import ColorSelectBox from '../../components/colorSelectBox/colorSelectBoxForMap';
 import './allRoutesInMap.css';
 import axios from 'axios';
-import { Route } from '../../types/searchRoutesTypes';
+import { Route, Picture } from '../../types/searchRoutesTypes';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
 import fakeData from './fakeData.json';
 
@@ -51,10 +51,11 @@ function AllRoutesInMap() {
   const [currLevel, setCurrLevel] = useState(5);
   //전체 루트의 정보
   const [allRoutes, setAllRoutes] = useState<Array<Route>>(findAllRoute);
-  const [prevAllRoutes, setPrevAllRoutes] = useState<Array<Route> | null>(null);
 
   // 루트 색상 정보
   const [colorIdx, setColorIdx] = useState<number>(9);
+  // 선택된 핀의 사진 정보
+  const [pickPinsPictures, setPickPinsPictures] = useState<Picture[]>();
 
   //핀 이미지 생성
   const pinImgSize = new kakao.maps.Size(30, 30);
@@ -82,8 +83,10 @@ function AllRoutesInMap() {
       pinImgOpt,
     );
     for (const pin of routeInfo.Pins) {
-      //루트의 색깔에 따라 핀의 이미지가 바뀌어야 한다.
+      //핀 아이디를 받아와야한다.
+      // const pinId = pin.id;
 
+      //루트의 색깔에 따라 핀의 이미지가 바뀌어야 한다.
       const pinObj = new kakao.maps.Marker({
         image: pinImgObj,
         map: map,
@@ -114,6 +117,10 @@ function AllRoutesInMap() {
       // 마커 위에서 마우스를 뗐을 때 발생되는 이벤트
       kakao.maps.event.addListener(pinObj, 'mouseout', function () {
         infoWindow.close();
+      });
+      kakao.maps.event.addListener(pinObj, 'click', function () {
+        // 지도 아래에 핀이 가진 사진들이 나열되는 이벤트
+        setPickPinsPictures(pin.Pictures);
       });
     }
   }
@@ -151,7 +158,6 @@ function AllRoutesInMap() {
     //colorIdx가 빈 문자열일 경우모든 루트 배열을 받아온다.
     //colorIdx에 값이 있다면
     console.log(allRoutes);
-    console.log(colorIdx); // 0 ~ 8까지
     // 지도 생성
     const mapContainer = document.getElementById('map');
 
@@ -227,7 +233,7 @@ function AllRoutesInMap() {
         polyline.setMap(map);
       }
     }
-  }, [allRoutes]);
+  }, [allRoutes, pickPinsPictures]);
 
   return (
     <div>
@@ -241,6 +247,15 @@ function AllRoutesInMap() {
       <div id="map" style={{ width: '100%', height: '100vh' }}>
         <div className="allRoutesInMap-menu"></div>
       </div>
+      {/* <div id="allRoutesInMap-images">
+        {pickPinsPictures ? (
+          pickPinsPictures.map((el) => (
+            <img src={`http://localhost/${el.fileName}`}></img>
+          ))
+        ) : (
+          <div></div>
+        )}
+      </div> */}
     </div>
   );
 }
