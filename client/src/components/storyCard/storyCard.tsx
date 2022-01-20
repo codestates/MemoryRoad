@@ -4,6 +4,7 @@ import { RootState } from '../../redux/reducer';
 import './storyCardForSearch.css';
 import StoryCardRoute from './storyCardRoute';
 import { Route } from './../../types/searchRoutesTypes';
+import _ from 'lodash';
 
 type Props = {
   routeInfo: Route;
@@ -49,7 +50,7 @@ function StoryCard({ routeInfo, setSelectedRoute, selectedRoute }: Props) {
         }
         onClick={() => {
           //객체를 복사해 전달해, 같은 카드를 선택하더라도 state를 업데이트 한다.
-          setSelectedRoute({ ...routeInfo });
+          setSelectedRoute(_.cloneDeep(routeInfo));
         }}
         onKeyUp={() => null}
         role="button"
