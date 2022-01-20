@@ -8,6 +8,18 @@ function Pagination({
   handleNextPaginationNum,
   handlePrevPaginationNum,
 }: any) {
+  const pageElement: any = dividedPages[paginationNum]?.map(
+    (el: any, idx: any) => (
+      <button
+        className="myRouteStore-paginations-page-btn"
+        id={paginationNum * 5 + idx + 1}
+        key={paginationNum * 5 + idx}
+        onClick={() => handleClickedPageNum(paginationNum * 5 + (idx + 1))}
+      >
+        {paginationNum * 5 + (idx + 1)}
+      </button>
+    ),
+  );
   return (
     <>
       {/* 받아온 핀 카드를 나눠 페이지 네이션 구현. 최대 5장, 이상은 버튼을 눌러 다음 페이지로 이동하게해야한다. */}
@@ -23,17 +35,7 @@ function Pagination({
           onClick={handlePrevPaginationNum}
         ></button>
       )}
-      {dividedPages[paginationNum].map((el: any, idx: any) => (
-        <button
-          className="myRouteStore-paginations-page-btn"
-          id={paginationNum * 5 + idx + 1}
-          key={paginationNum * 5 + idx}
-          onClick={() => handleClickedPageNum(paginationNum * 5 + (idx + 1))}
-        >
-          {paginationNum * 5 + (idx + 1)}
-        </button>
-      ))}
-      {/* div 태그 button 태그로 치환하기. */}
+      {dividedPages.length === 0 ? null : pageElement}
       {dividedPages[paginationNum + 1] === undefined ? null : (
         <button
           className="myRouteStore-paginations-next-btn"
