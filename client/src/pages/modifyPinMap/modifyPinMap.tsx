@@ -401,6 +401,7 @@ function ModifyPinMap() {
       axios({
         url: `https://server.memory-road.net/routes/${id}`,
         method: 'get',
+        withCredentials: true,
       })
         .then((res) => {
           if (res.status === 200) {
