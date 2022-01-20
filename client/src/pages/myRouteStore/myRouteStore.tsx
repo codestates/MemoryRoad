@@ -30,7 +30,7 @@ function MyRouteStore() {
   const [selectedWard, setSelectedWard] = useState(0);
 
   const [paginationNum, setPaginationNum] = useState(0); // <, > 버튼 컨트롤
-  const [currPageNum, setCurrPageNum] = useState(0); // 페이지 넘버(1,2,3) 컨트롤
+  const [currPageNum, setCurrPageNum] = useState(1); // 페이지 넘버(1,2,3) 컨트롤
   const [dataCount, setdataCount] = useState(0); // 전체 루트 개수
   const [routeCards, setRouteCards] = useState([]); // server에서 받아온 데이터 모음
   const [originRouteCards, setOriginRouteCards] = useState([]); // 변경되지않는 기존값.
@@ -68,26 +68,6 @@ function MyRouteStore() {
   //   }
   // }
 
-  if (currPageNum === 0 && dataCount === 0 && routeCards.length === 0) {
-    axios({
-      url: 'https://server.memory-road.net/routes',
-      method: 'get',
-      withCredentials: true,
-      params: {
-        page: 1,
-      },
-    })
-      .then((res: any) => {
-        if (res.status === 200) {
-          console.log(res);
-          setCurrPageNum(1);
-          setdataCount(res.data.count);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
   const handleColorSelect = () => {
     setClickedColorSelect(!clickedColorSelect);
     setClickedSeoulSelect(false);

@@ -406,7 +406,7 @@ function ModifyPinMap() {
         .then((res) => {
           if (res.status === 200) {
             console.log(res);
-            const pins = res.data.routes.Pins;
+            const pins = res.data.route.Pins;
             setPins(pins.concat(...pins));
           }
         })
