@@ -1,6 +1,6 @@
 .mypage-gridMypage {
   display: grid;
-  grid-template-columns: 0.8fr 1.5fr 1.5fr 0.75fr;
+  grid-template-columns: 0.8fr 1fr 1.5fr 0.75fr;
   grid-template-rows: 200px 170px 300px;
 }
 .mypage-userProfile {
@@ -67,7 +67,7 @@
   margin-right: 20px;
 }
 .mypage-greetingTouser {
-  font-size: 30px;
+  font-size: 20px;
 }
 .mypage-changeuserinfo {
   margin-top: 20px;
@@ -99,7 +99,7 @@
     margin-top: 10px;
   }
   .mypage-greetingTouser {
-    font-size: 20px;
+    font-size: 15px;
   }
   .mypage-image {
     width: 80%;
@@ -117,7 +117,7 @@
 @media (max-width: 760px) {
   .mypage-gridMypage {
     display: grid;
-    grid-template-columns: 1fr 6fr 10fr 0.2fr;
+    grid-template-columns: 1fr 6fr 10fr 1fr;
     grid-template-rows: 150px 120px 400px;
   }
   .mypage-Profile {
@@ -135,7 +135,7 @@
     margin-top: 10px;
   }
   .mypage-greetingTouser {
-    font-size: 15px;
+    font-size: 10px;
   }
   .mypage-changeuserinfo {
     margin-top: 8px;

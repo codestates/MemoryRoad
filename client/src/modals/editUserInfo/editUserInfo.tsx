@@ -85,7 +85,8 @@ function EditUserInfo({ isvalid, url }: any) {
             ),
           );
         }
-      });
+      })
+      .catch((error) => console.log(error));
   }, [profile]);
 
   // 닉네임 수정버튼을 누를 때 API 요청

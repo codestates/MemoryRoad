@@ -26,7 +26,8 @@ function Mypage() {
   const modalWithdrawal = state.iswithdrawalModal; // 회원탈퇴 모달창
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const url = 'https://server.memory-road.net';
+  // const url = 'https://server.memory-road.net';
+  const url = 'http://localhost';
 
   // 유효성 검사
   const isvalid = (email: string, username: string, password: string) => {
