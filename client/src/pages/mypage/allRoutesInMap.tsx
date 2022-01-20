@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, MouseEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/reducer';
 import ColorSelectBox from '../../components/colorSelectBox/colorSelectBoxForMap';
 import './allRoutesInMap.css';
 import axios from 'axios';
-import { Route } from '../../types/searchRoutesTypes';
+import { Route, Picture } from '../../types/searchRoutesTypes';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
 import fakeData from './fakeData.json';
+
+type CustomMouseEvent = MouseEvent<HTMLElement>;
 
 // 루트를 받고, 루트의 핀 값을 받을 것 같음
 // 각 루트별로 핀 객체를 받고, 받은 핀 객체값을 For문, 혹은 ForEach를 통해 핀의 위치값을 받아서 핀을 그리고 선을 이어줘야 할 것 같음
@@ -19,10 +21,7 @@ declare global {
 }
 const kakao = window.kakao;
 
-// const findAllRoute = axios
-//   .get('http://localhost/routes')
-//   .then((res) => res.data.routes);
-const findAllRoute = fakeData.routes;
+// const findAllRoute = fakeData.routes;
 
 const colorsName = [
   'red',
@@ -36,25 +35,31 @@ const colorsName = [
   'pink',
 ];
 
-function AllRoutesInMap() {
+async function AllRoutesInMap() {
   const dispatch = useDispatch();
   /* redux 전역 상태관리 */ // 왜 type 할당 : RootState는 되고 RootPersistState는 안되나요 ?
+
   const colorUrls: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorDotUrl,
   ); // 색깔의 주소
   const colorChips: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorChip,
-  ); // 색깔
 
+  );
+  const findAllRoute = await axios
+    .get('http://localhost/routes')
+    .then((res) => res.data.routes);
+  
   //state
   //지도의 확대 정도
-  const [currLevel, setCurrLevel] = useState(5);
+  const [currLevel, setCurrLevel] = useState(6);
   //전체 루트의 정보
   const [allRoutes, setAllRoutes] = useState<Array<Route>>(findAllRoute);
-  const [prevAllRoutes, setPrevAllRoutes] = useState<Array<Route> | null>(null);
 
   // 루트 색상 정보
   const [colorIdx, setColorIdx] = useState<number>(9);
+  // 선택된 핀의 사진 정보
+  const [pickPinsPictures, setPickPinsPictures] = useState<Picture[]>();
 
   //핀 이미지 생성
   const pinImgSize = new kakao.maps.Size(30, 30);
@@ -83,7 +88,6 @@ function AllRoutesInMap() {
     );
     for (const pin of routeInfo.Pins) {
       //루트의 색깔에 따라 핀의 이미지가 바뀌어야 한다.
-
       const pinObj = new kakao.maps.Marker({
         image: pinImgObj,
         map: map,
@@ -114,6 +118,10 @@ function AllRoutesInMap() {
       // 마커 위에서 마우스를 뗐을 때 발생되는 이벤트
       kakao.maps.event.addListener(pinObj, 'mouseout', function () {
         infoWindow.close();
+      });
+      kakao.maps.event.addListener(pinObj, 'click', function () {
+        // 지도 아래에 핀이 가진 사진들이 나열되는 이벤트
+        setPickPinsPictures(pin.Pictures);
       });
     }
   }
@@ -147,10 +155,49 @@ function AllRoutesInMap() {
     return { minLat, maxLat, minLng, maxLng };
   }
 
+  // const slider = document.querySelector('.allRoutesInMap-images');
+  // let isMouseDown = false;
+  // let startX: any, scrollLeft: any;
+  // const mouseDownEvent = (e: CustomMouseEvent) => {
+  //   if (slider !== null) {
+  //     isMouseDown = true;
+  //     slider.classList.add('active');
+
+  //     startX = e.pageX - slider.offsetLeft;
+  //     scrollLeft = slider.scrollLeft;
+  //   }
+  // };
+  // const mouseMoveEvent = (e: CustomMouseEvent) => {
+  //   if (slider !== null) {
+  //     if (!isMouseDown) return;
+  //     e.preventDefault();
+  //     const x = e.pageX - slider.offsetLeft;
+  //     const walk = (x - startX) * 1;
+  //     slider.scrollLeft = scrollLeft - walk;
+  //   }
+  // };
+  // if (slider !== null) {
+  //   slider.addEventListener('mousedown', mouseMoveEvent);
+
+  //   slider.addEventListener('mouseleave', () => {
+  //     isMouseDown = false;
+  //     slider.classList.remove('active');
+  //   });
+
+  //   slider.addEventListener('mouseup', () => {
+  //     isMouseDown = false;
+  //     slider.classList.remove('active');
+  //   });
+
+  //   slider.addEventListener('mousemove', mouseMoveEvent);
+  // }
+
   useEffect(() => {
     //colorIdx가 빈 문자열일 경우모든 루트 배열을 받아온다.
     //colorIdx에 값이 있다면
     console.log(allRoutes);
+    console.log(colorIdx);
+    console.log(pickPinsPictures);
     console.log(colorIdx); // 0 ~ 8까지
     // 지도 생성
     const mapContainer = document.getElementById('map');
@@ -227,16 +274,30 @@ function AllRoutesInMap() {
         polyline.setMap(map);
       }
     }
-  }, [allRoutes]);
+  }, [allRoutes, pickPinsPictures]);
 
   return (
-    <div>
+    <div className="allRoutesInMap-whole">
       <div className="jyang-allRoutesInMap">
         <ColorSelectBox
           findAllRoute={findAllRoute}
           setAllRoutes={setAllRoutes}
           setColorIdx={setColorIdx}
         />
+      </div>
+      <div id="allRoutesInMap-images">
+        {pickPinsPictures ? (
+          pickPinsPictures.map((el, index) => (
+            <img
+              alt="loadFail"
+              id="el-img"
+              key={index}
+              src={`http://localhost/${el.fileName}`}
+            ></img>
+          ))
+        ) : (
+          <div></div>
+        )}
       </div>
       <div id="map" style={{ width: '100%', height: '100vh' }}>
         <div className="allRoutesInMap-menu"></div>

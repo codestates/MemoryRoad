@@ -78,9 +78,9 @@ function StoryCard({ routeInfo, setSelectedRoute, selectedRoute }: Props) {
               시간
             </div>
           </div>
-          {/* <div className="myRouteStore-card-date-search">
+          <div className="myRouteStore-card-date-search">
             {formatDate(routeInfo.createdAt)}
-          </div> */}
+          </div>
           <div className="myRouteStore-card-route-search">
             <StoryCardRoute colorIdx={colorIdx} pinTitles={pinTitles} />
             {/* colorName에서 인덱스값 뽑아서 내려주기 */}

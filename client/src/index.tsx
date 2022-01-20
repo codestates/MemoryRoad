@@ -27,12 +27,12 @@ ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
-        <Nav url={url} />
+        {/* <Nav url={url} />  네비게이션이 필요한 곳에만 넣어주세요 !! */}
         <Routes>
           <Route element={<MemoryRoad />} path="/"></Route>
           <Route element={<Mypage />} path="/Mypage" />
           <Route element={<AllRoutesInMap />} path="/AllRoutesInMap" />
-          <Route element={<CreatePinMap />} path="map/createRoute"></Route>
+          <Route element={<CreatePinMap />} path="createRoute"></Route>
           <Route element={<MyRouteStore />} path="myRouteStore"></Route>
           <Route
             element={<ModifyPinMap />}
