@@ -4,18 +4,18 @@ import { RootState } from '../../redux/reducer';
 import './storyCard.css';
 import StoryCardRoute from './storyCardRouteForStore';
 
-function StoryCard({ handleCardModalOpen, pin }: any) {
+function StoryCard({ handleCardModalOpen, route }: any) {
   const colorNames: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorName,
   );
-  const colorIndex = colorNames.indexOf(pin.color);
+  const colorIndex = colorNames.indexOf(route.color);
   return (
     <>
       <div
         className="myRouteStore-card-container"
-        id={pin.id}
-        onClick={() => handleCardModalOpen(pin.id - 1)} // 일단 여기때문에 오류생김 ok
-        onKeyPress={() => handleCardModalOpen(pin.id - 1)} // 일단 여기때문에 오류생김 ok
+        id={route.id}
+        onClick={() => handleCardModalOpen(route.id)} // 일단 여기때문에 오류생김 ok
+        onKeyPress={() => handleCardModalOpen(route.id)} // 일단 여기때문에 오류생김 ok
         role="button"
         tabIndex={0}
       >
@@ -23,20 +23,20 @@ function StoryCard({ handleCardModalOpen, pin }: any) {
           <img
             alt="testImg"
             className="myRouteStore-card-image"
-            src={`http://127.0.0.1:5500/client/public/img/${pin.thumbnail}`}
+            src={`https://server.memory-road.net/upload/${route.thumbnail}`}
           ></img>
         </div>
         <div className="myRouteStore-card-bottom">
           <div className="myRouteStore-card-title">
-            <p className="myRouteStore-card-text">{pin.routeName}</p>
+            <p className="myRouteStore-card-text">{route.routeName}</p>
             <div className="myRouteStore-card-time-container">
-              <div className="myRouteStore-card-time">{pin.time}</div>
+              <div className="myRouteStore-card-time">{route.time}</div>
               시간
             </div>
           </div>
-          <div className="myRouteStore-card-date">{pin.createdAt}</div>
+          <div className="myRouteStore-card-date">{route.createdAt}</div>
           <div className="myRouteStore-card-route">
-            <StoryCardRoute colorIndex={colorIndex} pins={pin.Pins} />
+            <StoryCardRoute colorIndex={colorIndex} pins={route.Pins} />
           </div>
         </div>
       </div>

@@ -84,9 +84,10 @@ export type State = {
   modifiedPinPosition: Array<UPTPosition> | null | undefined;
   modifiedMapPinPosition: Array<UPTPosition> | null | undefined;
   /* color관련 상태 불변 */
-  colorDotUrl: Array<string> | null | undefined;
-  colorChip: Array<string> | null | undefined;
-  colorName: Array<string> | null | undefined;
+  colorDotUrl: Array<string>;
+  colorChip: Array<string>;
+  colorName: Array<string>;
+  wards: Array<string>;
 };
 
 const initialState: State | any = {
@@ -186,15 +187,15 @@ const initialState: State | any = {
     },
   ],
   colorDotUrl: [
-    'http://127.0.0.1:5500/client/public/img/red_dot.png',
-    'http://127.0.0.1:5500/client/public/img/orange_dot.png',
-    'http://127.0.0.1:5500/client/public/img/yellow_dot.png',
-    'http://127.0.0.1:5500/client/public/img/yellowGreen_dot.png',
-    'http://127.0.0.1:5500/client/public/img/green_dot.png',
-    'http://127.0.0.1:5500/client/public/img/sky_dot.png',
-    'http://127.0.0.1:5500/client/public/img/blue_dot.png',
-    'http://127.0.0.1:5500/client/public/img/purple_dot.png',
-    'http://127.0.0.1:5500/client/public/img/pink_dot.png',
+    'https://server.memory-road.net/upload/red_dot.png',
+    'https://server.memory-road.net/upload/orange_dot.png',
+    'https://server.memory-road.net/upload/yellow_dot.png',
+    'https://server.memory-road.net/upload/yellowGreen_dot.png',
+    'https://server.memory-road.net/upload/green_dot.png',
+    'https://server.memory-road.net/upload/sky_dot.png',
+    'https://server.memory-road.net/upload/blue_dot.png',
+    'https://server.memory-road.net/upload/purple_dot.png',
+    'https://server.memory-road.net/upload/pink_dot.png',
   ],
   colorChip: [
     '#DC4B40' /* red */,
@@ -217,6 +218,34 @@ const initialState: State | any = {
     'blue',
     'purple',
     'pink',
+  ],
+  wards: [
+    '전체 구',
+    '강남구',
+    '강동구',
+    '강북구',
+    '강서구',
+    '관악구',
+    '광진구',
+    '구로구',
+    '금천구',
+    '노원구',
+    '도봉구',
+    '동대문구',
+    '동작구',
+    '마포구',
+    '서대문구',
+    '서초구',
+    '성동구',
+    '성북구',
+    '송파구',
+    '양천구',
+    '영등포구',
+    '용산구',
+    '은평구',
+    '종로구',
+    '중구',
+    '중랑구',
   ],
 };
 

@@ -12,3 +12,27 @@
     border-radius: 10px;
     appearance: none;
   }
+
+  #allRoutesInMap-images {
+    overflow: auto;
+    overflow-y: hidden;
+    border: 10px solid #91BA9F;
+    border-radius: 20px;
+    display: grid;
+    background-color: white;
+    width: ;
+    display: flex;
+    position: absolute;
+    bottom: 0;
+    z-index: 98;
+    text-align: center;
+  }
+
+  #el-img {
+    border: 5px solid #91BA9F;
+    border-radius: 20px;
+    max-width: 20%;
+    max-height: 100%;
+    margin: 10px;
+   }
+   

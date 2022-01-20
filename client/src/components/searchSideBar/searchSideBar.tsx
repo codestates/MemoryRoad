@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import StoryCard from '../storyCard/storyCard';
-import './searchSideBar.css';
+// import './searchSideBar.css';
 import { Route } from './../../types/searchRoutesTypes';
 import Pagination from '../pagination/pagination';
 import axios from 'axios';
@@ -92,25 +92,25 @@ function SearchSideBar({
 
   return (
     <>
-      <div id="pinControllTower-fix">
-        <div id="pinControllTower-background">
-          <div id="pinControllTower-container">
+      <div id="pinControllTower-fix-search">
+        <div id="pinControllTower-background-search">
+          <div id="pinControllTower-container-search">
             <button
-              className={isSidebarOpen ? 'active-btn' : ''}
-              id="pinControllTower-close-open-btn"
+              className={isSidebarOpen ? 'active-btn-search' : ''}
+              id="pinControllTower-close-open-btn-search"
               onClick={handleSidebar}
             >
               <img
                 alt="button"
-                id="pinControllTower-close-open-btn-img"
-                src="http://127.0.0.1:5500/client/public/img/triangle_icon.png"
+                id="pinControllTower-close-open-btn-img-search"
+                src="https://server.memory-road.net/upload/triangle_icon.png"
               ></img>
             </button>
             <div
-              className={isSidebarOpen ? 'active-bar' : ''}
-              id="pinControllTower-sidebar"
+              className={isSidebarOpen ? 'active-bar-search' : ''}
+              id="pinControllTower-sidebar-search"
             >
-              <div className="pinControllTower-filter-container">
+              <div className="pinControllTower-filter-container-search">
                 <div className="seoul-select-container">
                   <SeoulSelectBox />
                 </div>
@@ -122,7 +122,7 @@ function SearchSideBar({
                   <TimeSelectBox setSearchQuery={setSearchQuery} />
                 </div>
               </div>
-              <div className="pinControllTower-content">
+              <div className="pinControllTower-content-search">
                 {searchResult.map((routeInfo) => (
                   <StoryCard
                     key={routeInfo.id}

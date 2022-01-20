@@ -11,12 +11,15 @@ import type { RootState } from './../../redux/reducer/index';
 import { persistor } from '../../../src/index';
 // other Files
 import './createPinMap.css';
+import FakeHeader from '../../components/map-test/fakeHeader';
 import createPinModal from '../../modals/createPinModal/createPinModal'; // 핀 생성 모달창
 import SearchPinBar from '../../components/searchPinBar/searchPinBar'; // 핀 검색창
 import ConfirmPinIsEmptyModal from '../../modals/confirmPinIsEmpty/confirmPinIsEmptyModal'; // 핀 오류 모달창
+import ConfirmMoveToMypage from '../../modals/confirmRouteSave/confirmMoveToMypage'; // 마이페이지 이동 모달창
+import ConfirmIsUserSaveRoute from '../../modals/confirmIsUserSaveRoute/confirmIsUserSaveRoute'; // 로그인 여부 확인 모달창
 import SaveRouteModal from '../../modals/saveRouteModal/saveRouteModal'; // 루트 저장 모달창
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
-import Navigation from '../../components/Navigation';
+import Navigation from './NavigationForMap';
 import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBar';
 import _ from 'lodash';
 import '../../modals/createPinModal/createPinModal.css';
@@ -50,6 +53,8 @@ function CreatePinMap() {
   const [isEmptyInfo, setIsEmptyInfo] = useState(false);
   const [isClickSaveBtn, setIsClickSaveBtn] = useState(false);
   const [isSidebarSaveBtnClicked, setIsSidebarSaveBtnClicked] = useState(false);
+  const [isMoveToMypage, setIsMoveToMypage] = useState(false);
+  const [isNotUserSave, setIsNotUserSave] = useState(false);
 
   const handleSidebarSaveBtn = (bool: boolean) => {
     setIsSidebarSaveBtnClicked(bool);
@@ -371,7 +376,7 @@ function CreatePinMap() {
   }
 
   // *마커 이미지 생성
-  const imageSrc = 'http://127.0.0.1:5500/client/public/img/blue_marker.png';
+  const imageSrc = 'https://server.memory-road.net/upload/blue_marker.png';
   const imageSize = new kakao.maps.Size(33, 54);
   const imageOption = { offset: new kakao.maps.Point(16, 55) };
   const markerImage = new kakao.maps.MarkerImage(
@@ -387,7 +392,7 @@ function CreatePinMap() {
   });
   // *마커 이미지 생성 - 검색용 마커
   const imageSrcForSearch =
-    'http://127.0.0.1:5500/client/public/img/gray_marker.png';
+    'https://server.memory-road.net/upload/gray_marker.png';
   const imageSizeForSearch = new kakao.maps.Size(33, 54);
   const imageOptionForSearch = { offset: new kakao.maps.Point(16, 55) };
   const markerImageForSearch = new kakao.maps.MarkerImage(
@@ -397,7 +402,7 @@ function CreatePinMap() {
   );
   /* 핀 이미지 마커 */
   const savedMarkerImageSrc =
-    'http://127.0.0.1:5500/client/public/img/red_pin.png';
+    'https://server.memory-road.net/upload/red_pin.png';
   const savedMarkerImageSize = new kakao.maps.Size(55, 54);
   const savedMarkerImage = new kakao.maps.MarkerImage(
     savedMarkerImageSrc,
@@ -673,6 +678,12 @@ function CreatePinMap() {
   return (
     <>
       <div id="map-whole-container">
+        {isNotUserSave ? (
+          <ConfirmIsUserSaveRoute setIsNotUserSave={setIsNotUserSave} />
+        ) : null}
+        {isMoveToMypage ? (
+          <ConfirmMoveToMypage setIsMoveToMypage={setIsMoveToMypage} />
+        ) : null}
         {isEmptyInfo ? (
           <ConfirmPinIsEmptyModal setIsEmptyInfo={setIsEmptyInfo} />
         ) : null}
@@ -681,6 +692,8 @@ function CreatePinMap() {
             handleSidebarSaveBtn={handleSidebarSaveBtn}
             pinImage={pinImage}
             pins={pins}
+            setIsMoveToMypage={setIsMoveToMypage}
+            setIsNotUserSave={setIsNotUserSave}
             totalTime={totalTime}
           />
         ) : null}

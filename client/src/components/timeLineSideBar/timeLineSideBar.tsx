@@ -3,14 +3,6 @@ import { useDispatch, useSelector, batch } from 'react-redux';
 import GridLayout from 'react-grid-layout';
 import './gridLayout.css';
 import './timeLineSideBar.css';
-import {
-  updatePinTime,
-  updatePinRank,
-  updateFileRank,
-  updatePinPosition,
-  deletePin,
-  updateAllpinsTime,
-} from '../../redux/actions/index';
 import { RootState } from '../../redux/reducer/index';
 import _ from 'lodash';
 
@@ -48,7 +40,7 @@ function TimeLineSideBar({
               <img
                 alt="button"
                 id="pinControllTower-close-open-btn-img"
-                src="http://127.0.0.1:5500/client/public/img/triangle_icon.png"
+                src="https://server.memory-road.net/upload/triangle_icon.png"
               ></img>
             </button>
             <div

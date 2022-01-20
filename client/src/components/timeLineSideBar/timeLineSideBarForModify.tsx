@@ -4,20 +4,6 @@ import GridLayout from 'react-grid-layout';
 import _ from 'lodash';
 import './gridLayout.css';
 import './timeLineSideBar.css';
-import {
-  // updatePinTime,
-  // updatePinRank,
-  // updateFileRank,
-  // updatePinPosition,
-  // deletePin,
-  // updateAllpinsTime,
-  modifyPinTime,
-  modifyPinRank,
-  modifyFileRank,
-  modifyPinPosition,
-  modifyDeletePin,
-  modifyAllPinsTime,
-} from '../../redux/actions/index';
 
 function TimeLineSideBarForModify({
   pinCards,
@@ -45,7 +31,7 @@ function TimeLineSideBarForModify({
               <img
                 alt="button"
                 id="pinControllTower-close-open-btn-img"
-                src="http://127.0.0.1:5500/client/public/img/triangle_icon.png"
+                src="https://server.memory-road.net/upload/triangle_icon.png"
               ></img>
             </button>
             <div
