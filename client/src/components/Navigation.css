@@ -1,7 +1,8 @@
 .nav-gridContainer-fix-fix {
   position: relative;
-  z-index: 5;
+  z-index: 999;
   width: 100%;
+  height: 50px;
   overflow-x: hidden;
 }
 .nav-gridContainer {

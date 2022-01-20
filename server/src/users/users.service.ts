@@ -71,7 +71,7 @@ export class UsersService {
         grant_type: 'authorization_code',
         client_id: this.configService.get<string>('KAKAO_CLIENT_ID'),
         client_secret: this.configService.get<string>('KAKAO_CLIENT_SECRET'),
-        redirect_uri: 'http://localhost:3000',
+        redirect_uri: 'https://memory-road.net',
         code: body.authorizationCode,
       },
       headers: {
@@ -115,10 +115,11 @@ export class UsersService {
     return userInfo;
   }
   async naver(body: any): Promise<UserEntity> {
-    const redirectURI = encodeURI('https://localhost:3000');
+    const redirectURI = encodeURI('https://memory-road.net');
     const code = body.authorizationCode;
     const state = body.state;
-
+    console.log(code);
+    console.log(state);
     const apiUrl =
       'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=' +
       this.configService.get<string>('NAVER_CLIENT_ID') +
@@ -177,7 +178,7 @@ export class UsersService {
         client_secret: this.configService.get<string>('GOOGLE_CLIENT_SECRET'),
         code: body.authorizationCode,
         grant_type: 'authorization_code',
-        redirect_uri: 'http://localhost:3000',
+        redirect_uri: 'https://memory-road.net',
       })
       .then((resp) => {
         const idToken = resp.data.id_token;

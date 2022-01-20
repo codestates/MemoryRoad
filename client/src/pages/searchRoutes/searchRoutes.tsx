@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import FakeHeader from '../../components/map-test/fakeHeader';
 import SearchRoutesBar from '../../components/searchRoutesBar/searchRoutesBar';
@@ -9,7 +9,7 @@ import { Route } from './../../types/searchRoutesTypes';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
 import geojson from './memoryRoad.json';
 import axios from 'axios';
-import ReactDOM from 'react-dom';
+import _ from 'lodash';
 
 //declare : 변수 상수, 함수 또는 클래스가 어딘가에 선언되어 있음을 알린다.
 // declare global : 전역 참조가 가능
@@ -21,7 +21,7 @@ declare global {
 const kakao = window.kakao;
 
 //지도 인스턴스를 담을 변수
-let map: any = [];
+// let map: any = [];
 
 function SearchRoutes() {
   // const dispatch = useDispatch();
@@ -53,6 +53,21 @@ function SearchRoutes() {
   const [curPage, setCurPage] = useState(1);
   //현재 지도의 중심 위도, 경도
   const [centerLatLng, setCenterLatLng] = useState([37.566826, 126.9786567]);
+  // 카카오 맵 객체를 담는다
+  const [kakaoMap, setKakaoMap] = useState<any | null>(null);
+  //핀들
+  const [pins, setPins] = useState<any[]>([]);
+  //선들
+  const [lines, setLines] = useState<any[]>([]);
+  //구의 모양을 그리는 폴리곤(마우스 이벤트까지 추가되어 있다.)
+  const [wardPolygons, setWardPolygons] = useState<Promise<any>[]>([]);
+  //폴리곤을 다시 만들지 않기 위해 상태에 저장한다
+  // const [saveWardPolygons, setSaveWardPolygons] = useState<Promise<any>[]>([]);
+  //지도 폴리곤 위의 커스텀 오버레이
+  const [wardOverlay, setWardOverlay] = useState<any[]>([]);
+
+  // 카카오 맵이 담기는 DOM을 가리킨다.
+  const mapContainer = useRef<HTMLDivElement | null>(null);
 
   //회색 핀 이미지 생성
   const pinImgSrc = 'https://server.memory-road.net/upload/gray_marker.png';
@@ -84,11 +99,11 @@ function SearchRoutes() {
 
   //루트를 받아 핀 객체들을 만들고, 랜더링 한다.
   function generatePins(routeInfo: Route, map: any) {
+    const pinAry = [];
     for (const pin of routeInfo.Pins) {
       const pinObj = new kakao.maps.Marker({
         image:
           selectedRoute?.id === routeInfo.id ? selectedPinImgObj : pinImgObj,
-        map: map,
         position: new kakao.maps.LatLng(
           Number(pin.latitude),
           Number(pin.longitude),
@@ -117,14 +132,17 @@ function SearchRoutes() {
       kakao.maps.event.addListener(pinObj, 'mouseout', function () {
         infoWindow.close();
       });
+      pinObj.setMap(map);
+      pinAry.push(pinObj);
     }
+    return pinAry;
   }
 
   //루트의 핀 정보를 이용해 루트의 중심 좌표를 구한다
   function getRouteCenter(routeInfo: Route | null) {
     //선택된 핀의 정보가 없는 경우 기본값 반환
     if (routeInfo === null || routeInfo.Pins.length === 0) {
-      // setCurrLevel(8);
+      // setCurrLevel(9);
       return new kakao.maps.LatLng(37.566826, 126.9786567);
     }
     const minLat = routeInfo.Pins.reduce(
@@ -144,7 +162,7 @@ function SearchRoutes() {
       Number.MIN_SAFE_INTEGER,
     );
     //지도 레벨 변경(확대)
-    setCurrLevel(4);
+    // setCurrLevel(4);
     //소수 계산 문제를 해결하기 위해 toFixed함수를 사용해 16자리에서 반올림 해 평균을 계산한다
     return new kakao.maps.LatLng(
       Number(((minLat + maxLat) / 2).toFixed(15)),
@@ -158,27 +176,176 @@ function SearchRoutes() {
     return wardCount.data.result;
   }
 
+  const displayArea = async (coordinates: any, name: any, kakaoMap: any) => {
+    //루트의 개수를 엔드포인트에 요청해서 받아와야 한다.
+
+    const customOverlay = new kakao.maps.CustomOverlay({});
+
+    let PoligonColor = ''; //폴리곤 색상
+    let routeCount = 0; // 지역별 루트 개수
+    const path: any = [];
+    const points = [];
+    // console.log(coordinates[0].length);
+    coordinates[0].forEach((coordinate: any) => {
+      const point: any = {};
+      point.x = coordinate[1];
+      point.y = coordinate[0];
+
+      points.push(point);
+      path.push(new kakao.maps.LatLng(coordinate[1], coordinate[0]));
+    });
+
+    const newPol = await getWardCount() //루트 리스트
+      .then((routeList) => {
+        // console.log(routeList[0].id, routeList[0].routesNumber);
+
+        // 지역 이름이 같으면 루트 개수를 집어넣고 반복문 종료
+        for (let i = 0; i < routeList.length; i++) {
+          if (routeList[i].id === name) {
+            routeCount = routeList[i].routesNumber;
+            // console.log(routeList[i].routesNumber);
+            break;
+          }
+        }
+        // 루트의 개수가 0~10인 경우, 11~30, 30~100인 경우 설정
+        if (routeCount >= 0 && routeCount <= 30) {
+          PoligonColor = '#FFFFFF';
+        } else if (routeCount >= 31 && routeCount <= 80) {
+          PoligonColor = '#FEFBDA';
+        } else if (routeCount >= 81 && routeCount <= 100) {
+          PoligonColor = '#FFF47C';
+        } else if (routeCount >= 101) {
+          PoligonColor = '#FFED27';
+        }
+
+        const polygon = new kakao.maps.Polygon({
+          map: kakaoMap,
+          path: path, // 그려질 다각형의 좌표 배열입니다
+          strokeWeight: 1, // 선의 두께입니다
+          strokeColor: '#004c80', // 선의 색깔입니다
+          strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+          strokeStyle: 'solid', // 선의 스타일입니다
+          fillColor: PoligonColor, // 채우기 색깔입니다
+          fillOpacity: 0.7, // 채우기 불투명도 입니다
+        });
+
+        // polygons.push(polygon);
+
+        // 다각형에 mouseover 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 변경합니다
+        // 지역명을 표시하는 커스텀오버레이를 지도위에 표시합니다
+        kakao.maps.event.addListener(
+          polygon,
+          'mouseover',
+          function (mouseEvent: any) {
+            polygon.setOptions({ fillColor: '#1E90FF' });
+
+            customOverlay.setContent(
+              '<div id="overlay-area" >' + name + '</div>',
+            );
+
+            const latLngObj = mouseEvent.latLng;
+            const newLat = latLngObj.getLat() + 0.02;
+            const newLng = latLngObj.getLng();
+
+            customOverlay.setPosition(new kakao.maps.LatLng(newLat, newLng));
+            customOverlay.setMap(kakaoMap);
+          },
+        );
+
+        // 다각형에 mousemove 이벤트를 등록하고 이벤트가 발생하면 커스텀 오버레이의 위치를 변경합니다
+        kakao.maps.event.addListener(
+          polygon,
+          'mousemove',
+          function (mouseEvent: any) {
+            polygon.setOptions({ fillColor: '#1E90FF' });
+            const latLngObj = mouseEvent.latLng;
+            const newLat = latLngObj.getLat() + 0.02;
+            const newLng = latLngObj.getLng();
+
+            customOverlay.setPosition(new kakao.maps.LatLng(newLat, newLng));
+          },
+        );
+
+        // 다각형에 mouseout 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 원래색으로 변경합니다
+        // 커스텀 오버레이를 지도에서 제거합니다
+        kakao.maps.event.addListener(polygon, 'mouseout', function () {
+          polygon.setOptions({ fillColor: PoligonColor });
+          customOverlay.setMap(null);
+        });
+
+        return polygon;
+      });
+    setWardOverlay((prev) => [...prev, customOverlay]);
+    return newPol;
+  };
+
+  //지도 객체 생성. 초기 랜더링
   useEffect(() => {
+    const data = geojson.features;
+    let coordinates = []; //좌표 저장 배열
+    let name = ''; //행정구 이름
+
+    const mapOptions = {
+      center: new kakao.maps.LatLng(37.566826, 126.9786567),
+      level: currLevel,
+      draggable: true, // 마우스 드래그, 휠, 모바일 터치를 이용한 확대 및 축소 가능 여부
+      scrollwheel: true, // 마우스 휠, 모바일 터치를 이용한 확대 및 축소 가능 여부
+      disableDoubleClickZoom: true, // 마우스 더블 클릭으로 지도 확대 및 축소 불가능 여부
+    };
+    const map = new kakao.maps.Map(mapContainer.current, mapOptions);
+    kakao.maps.event.addListener(map, 'idle', function () {
+      // 지도의 현재 레벨, 중심 좌표를 state로 관리한다.
+      setCurrLevel(map.getLevel());
+      const latLngObj = map.getCenter();
+      setCenterLatLng([latLngObj.getLat(), latLngObj.getLng()]);
+    });
+
+    //폴리곤 객체 저장
+    const polygons: any = [];
+
+    data.forEach((val) => {
+      coordinates = val.geometry.coordinates;
+      name = val.properties.SIG_KOR_NM;
+
+      polygons.push(displayArea(coordinates, name, map));
+    });
+
+    setWardPolygons(polygons);
+
+    setKakaoMap(map);
+  }, []);
+
+  //선택한 루트가 바뀔 경우, 맵의 중심과 레벨 변경
+  useEffect(() => {
+    if (kakaoMap === null) {
+      return;
+    }
+
+    kakaoMap.setCenter(getRouteCenter(selectedRoute));
+    kakaoMap.setLevel(4);
+  }, [selectedRoute]);
+
+  useEffect(() => {
+    if (kakaoMap === null) return;
+
     if (searchResult.length !== 0) {
       //검색 결과가 있는 경우, 폴리곤을 없애고 검색 결과들을 보여준다.
-      // *지도를 표시할 div
-      const mapContainer = document.getElementById('map');
 
-      const mapOptions = {
-        center: getRouteCenter(selectedRoute),
-        level: currLevel,
-        draggable: true, // 마우스 드래그, 휠, 모바일 터치를 이용한 확대 및 축소 가능 여부
-        scrollwheel: true, // 마우스 휠, 모바일 터치를 이용한 확대 및 축소 가능 여부
-        disableDoubleClickZoom: true, // 마우스 더블 클릭으로 지도 확대 및 축소 불가능 여부
-      };
+      //폴리곤 삭제
+      wardPolygons.forEach((promise) => {
+        promise.then((pol) => pol.setMap(null));
+      });
 
-      // 지도를 생성
-      map = new kakao.maps.Map(mapContainer, mapOptions);
+      //폴리곤 위 오버레이 삭제
+      wardOverlay.forEach((e) => {
+        e.setMap(null);
+      });
 
+      const newLines: any[] = [];
+      let newPins: any[] = [];
       //검색 후 핀과 선 랜더링
       for (const route of searchResult) {
-        generatePins(route, map);
-
+        newPins = [...generatePins(route, kakaoMap), ...newPins];
         for (let i = 1; i < route.Pins.length; i++) {
           const prevLat = route.Pins[i - 1].latitude;
           const prevLng = route.Pins[i - 1].longitude;
@@ -196,179 +363,41 @@ function SearchRoutes() {
             strokeOpacity: 0.7,
             strokeStyle: 'dashed',
           });
-          polyline.setMap(map);
+          polyline.setMap(kakaoMap);
+          newLines.push(polyline);
         }
       }
-    } else {
-      //검색 결과가 없는 경우, 폴리곤을 보여주고, 위도, 경도에 따라 루트들을 검색해 불러온다.
-      if (currLevel >= 7) {
-        const data = geojson.features;
-        let coordinates = []; //좌표 저장 배열
-        let name = ''; //행정구 이름
+      //기존 선과 핀들 초기화
+      setPins((prev) => {
+        prev.forEach((pin) => pin.setMap(null));
 
-        //루트의 개수를 엔드포인트에 요청해서 받아와야 한다.
-        const polygons: any = [];
+        return newPins;
+      });
 
-        const mapContainer = document.getElementById('map'); // 지도를 표시할 div
-        const mapOption = {
-          center: new kakao.maps.LatLng(centerLatLng[0], centerLatLng[1]), // 지도의 중심좌표
-          level: currLevel, // 지도의 확대 레벨
-          draggable: true, // 마우스 드래그, 휠, 모바일 터치를 이용한 확대 및 축소 가능 여부
-          scrollwheel: true, // 마우스 휠, 모바일 터치를 이용한 확대 및 축소 가능 여부
-          disableDoubleClickZoom: true, // 마우스 더블 클릭으로 지도 확대 및 축소 불가능 여부
-        };
+      setLines((prev) => {
+        prev.forEach((line) => line.setMap(null));
 
-        map = new kakao.maps.Map(mapContainer, mapOption);
-        const customOverlay = new kakao.maps.CustomOverlay({});
-
-        const displayArea = (coordinates: any, name: any) => {
-          let PoligonColor = ''; //폴리곤 색상
-          let routeCount = 0; // 지역별 루트 개수
-          const path: any = [];
-          const points = [];
-
-          coordinates[0].forEach((coordinate: any) => {
-            const point: any = {};
-            point.x = coordinate[1];
-            point.y = coordinate[0];
-
-            points.push(point);
-            path.push(new kakao.maps.LatLng(coordinate[1], coordinate[0]));
-          });
-
-          getWardCount() //루트 리스트
-            .then((routeList) => {
-              // console.log(routeList[0].id, routeList[0].routesNumber);
-
-              // 지역 이름이 같으면 루트 개수를 집어넣고 반복문 종료
-              for (let i = 0; i < routeList.length; i++) {
-                if (routeList[i].id === name) {
-                  routeCount = routeList[i].routesNumber;
-                  // console.log(routeList[i].routesNumber);
-                  break;
-                }
-              }
-              // 루트의 개수가 0~10인 경우, 11~30, 30~100인 경우 설정
-              if (routeCount >= 0 && routeCount <= 30) {
-                PoligonColor = '#FFFFFF';
-              } else if (routeCount >= 31 && routeCount <= 80) {
-                PoligonColor = '#FEFBDA';
-              } else if (routeCount >= 81 && routeCount <= 100) {
-                PoligonColor = '#FFF47C';
-              } else if (routeCount >= 101) {
-                PoligonColor = '#FFED27';
-              }
-
-              const polygon = new kakao.maps.Polygon({
-                map: map,
-                path: path, // 그려질 다각형의 좌표 배열입니다
-                strokeWeight: 1, // 선의 두께입니다
-                strokeColor: '#004c80', // 선의 색깔입니다
-                strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-                strokeStyle: 'solid', // 선의 스타일입니다
-                fillColor: PoligonColor, // 채우기 색깔입니다
-                fillOpacity: 0.7, // 채우기 불투명도 입니다
-              });
-
-              polygons.push(polygon);
-
-              // 다각형에 mouseover 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 변경합니다
-              // 지역명을 표시하는 커스텀오버레이를 지도위에 표시합니다
-              kakao.maps.event.addListener(
-                polygon,
-                'mouseover',
-                function (mouseEvent: any) {
-                  polygon.setOptions({ fillColor: '#1E90FF' });
-
-                  customOverlay.setContent(
-                    '<div id="overlay-area" >' + name + '</div>',
-                  );
-
-                  const latLngObj = mouseEvent.latLng;
-                  const newLat = latLngObj.getLat() + 0.02;
-                  const newLng = latLngObj.getLng();
-
-                  customOverlay.setPosition(
-                    new kakao.maps.LatLng(newLat, newLng),
-                  );
-                  customOverlay.setMap(map);
-                },
-              );
-
-              // 다각형에 mousemove 이벤트를 등록하고 이벤트가 발생하면 커스텀 오버레이의 위치를 변경합니다
-              kakao.maps.event.addListener(
-                polygon,
-                'mousemove',
-                function (mouseEvent: any) {
-                  polygon.setOptions({ fillColor: '#1E90FF' });
-                  const latLngObj = mouseEvent.latLng;
-                  const newLat = latLngObj.getLat() + 0.02;
-                  const newLng = latLngObj.getLng();
-
-                  customOverlay.setPosition(
-                    new kakao.maps.LatLng(newLat, newLng),
-                  );
-                },
-              );
-
-              // 다각형에 mouseout 이벤트를 등록하고 이벤트가 발생하면 폴리곤의 채움색을 원래색으로 변경합니다
-              // 커스텀 오버레이를 지도에서 제거합니다
-              kakao.maps.event.addListener(polygon, 'mouseout', function () {
-                polygon.setOptions({ fillColor: PoligonColor });
-                customOverlay.setMap(null);
-              });
-            });
-        };
-
-        data.forEach((val) => {
-          coordinates = val.geometry.coordinates;
-          name = val.properties.SIG_KOR_NM;
-
-          displayArea(coordinates, name);
-        });
-
-        // 지도가 확대 또는 축소되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
-        kakao.maps.event.addListener(map, 'idle', function () {
-          // 지도의 현재 레벨, 중심 좌표를 state로 관리한다.
-          setCurrLevel((prev) => {
-            if (prev >= 7 && map.getLevel() <= 6) {
-              //지도 레벨이 낮아지면, 폴리곤을 지운다
-              polygons.forEach((pol: any) => pol.setMap(null));
-            }
-
-            return map.getLevel();
-          });
-          const latLngObj = map.getCenter();
-          setCenterLatLng([latLngObj.getLat(), latLngObj.getLng()]);
-        });
-      } else {
-        // 현재 레밸이 일정 레밸 이하면 폴리곤을 없앤다.
-        const mapContainer = document.getElementById('map'); // 지도를 표시할 div
-        const mapOption = {
-          center: new kakao.maps.LatLng(centerLatLng[0], centerLatLng[1]), // 지도의 중심좌표
-          level: currLevel, // 지도의 확대 레벨
-          draggable: true, // 마우스 드래그, 휠, 모바일 터치를 이용한 확대 및 축소 가능 여부
-          scrollwheel: true, // 마우스 휠, 모바일 터치를 이용한 확대 및 축소 가능 여부
-          disableDoubleClickZoom: true, // 마우스 더블 클릭으로 지도 확대 및 축소 불가능 여부
-        };
-
-        map = new kakao.maps.Map(mapContainer, mapOption);
-
-        kakao.maps.event.addListener(map, 'idle', function () {
-          // 지도의 현재 레벨, 중심 좌표를 state로 관리한다.
-          setCurrLevel(map.getLevel());
-          const latLngObj = map.getCenter();
-          setCenterLatLng([latLngObj.getLat(), latLngObj.getLng()]);
-        });
-      }
+        return newLines;
+      });
     }
-  }, [currLevel, searchResult, selectedRoute]);
+  }, [selectedRoute, searchResult]);
 
-  //검색 결과가 없으면서(검색 버튼을 누르지 않은 경우), 지도가 일정 레벨 이하이면, 꼭지점의 위도, 경도를 이용해 루트들을 조회한다.
+  // //검색 결과가 없으면서(검색 버튼을 누르지 않은 경우), 지도가 일정 레벨 이하이면, 꼭지점의 위도, 경도를 이용해 루트들을 조회한다.
   useEffect(() => {
+    if (kakaoMap === null) return;
     if (searchResult.length === 0 && currLevel <= 6) {
+      //폴리곤 삭제
+      wardPolygons.forEach((promise) => {
+        promise.then((pol) => pol.setMap(null));
+      });
+
+      //폴리곤 위 오버레이 삭제
+      wardOverlay.forEach((e) => {
+        e.setMap(null);
+      });
+
       //지도 영역정보
-      const bounds = map.getBounds();
+      const bounds = kakaoMap.getBounds();
       //지도의 북동쪽 위도, 경도
       const neLatLng = bounds.getNorthEast();
       //지도의 남서쪽 위도, 경도
@@ -380,10 +409,11 @@ function SearchRoutes() {
           `https://server.memory-road.net/routes?search=true&nwLat=${swLatLng.getLat()}&nwLng=${neLatLng.getLng()}&seLat=${neLatLng.getLat()}&seLng=${swLatLng.getLng()}`,
         )
         .then((result) => {
-          // console.log(result.data);
+          const newLines: any[] = [];
+          let newPins: any[] = [];
           //검색 후 핀과 선 랜더링
           for (const route of result.data.routes) {
-            generatePins(route, map);
+            newPins = [...generatePins(route, kakaoMap), ...newPins];
 
             for (let i = 1; i < route.Pins.length; i++) {
               const prevLat = route.Pins[i - 1].latitude;
@@ -403,13 +433,46 @@ function SearchRoutes() {
                 strokeOpacity: 0.7,
                 strokeStyle: 'dashed',
               });
-              polyline.setMap(map);
+              polyline.setMap(kakaoMap);
+              newLines.push(polyline);
             }
           }
+          //기존 선과 핀들 초기화
+          setPins((prev) => {
+            prev.forEach((pin) => pin.setMap(null));
+
+            return newPins;
+          });
+
+          setLines((prev) => {
+            prev.forEach((line) => line.setMap(null));
+
+            return newLines;
+          });
         })
         .catch((err) => {
           alert('서버 에러');
         });
+    } else if (searchResult.length === 0) {
+      //검색 결과가 없으면서 지도 레벨이 높아진 경우
+
+      //폴리곤을 그린다
+      //폴리곤 위 오버레이는 폴리곤에 저장되어 있기 때문에 그리지 않아도 된다.
+      wardPolygons.forEach((promise) => {
+        promise.then((pol) => {
+          pol.setMap(kakaoMap);
+        });
+      });
+
+      //기존 선과 핀들 초기화
+      setPins((prev) => {
+        prev.forEach((pin) => pin.setMap(null));
+        return [];
+      });
+      setLines((prev) => {
+        prev.forEach((line) => line.setMap(null));
+        return [];
+      });
     }
   }, [currLevel, centerLatLng]);
 
@@ -441,7 +504,7 @@ function SearchRoutes() {
             setSelectedRoute={setSelectedRoute}
           />
         </div>
-        <div id="map"></div>
+        <div id="mapContainer" ref={mapContainer}></div>
       </div>
     </>
   );

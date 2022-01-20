@@ -94,7 +94,7 @@ function SearchRoutesBar({
         setSelectedRoute(null);
       })
       .catch((err) => {
-        console.log('서버 에러');
+        alert('서버 에러');
       });
   };
 
@@ -105,7 +105,7 @@ function SearchRoutesBar({
   return (
     <>
       <div id="searchPin-static-location">
-        <div id="searchPin-background">
+        <div id="searchPin-background-dy">
           <div id="searchPin-container">
             <button
               className="all-route-button"
