@@ -106,6 +106,7 @@ function SaveRouteModal({
           public: !isOpenRoute,
           time: totalTime,
           color: colorNames[Number(selectedColorId)],
+          date: `${selectedYear}-${selectedMonth}-${selectedDay}`,
           pins: translatedPins,
         };
 
