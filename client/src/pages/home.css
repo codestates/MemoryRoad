@@ -198,6 +198,7 @@
   border: 2px solid #91ba9f;
   background-color: white;
   color: #91ba9f;
+  box-shadow: 0 80px 0 0 white inset, 0 -80px 0 0 #91ba9f inset;
 }
 
 .Home-topdownButtonPosition {
@@ -213,8 +214,10 @@
   cursor: pointer;
   color: #91ba9f;
   background: none;
+  transition: 800ms ease all;
 }
 .Home-topdownButton:hover {
+  color: black;
 }
 
 @media (max-width: 1000px) {

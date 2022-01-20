@@ -22,12 +22,11 @@ import { PersistGate } from 'redux-persist/integration/react';
 export const persistor = persistStore(store); // { manualPersist: true } -> redux-persist를 바로 시작하지 않을 수도 있습니다.
 
 // redux-persist 사용하면 로딩이 꽤 걸리기때문에 loading중에 띄울 창을 필요로 한다 ... 하
-const url = 'https://server.memory-road.net';
+
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
-        {/* <Nav url={url} />  네비게이션이 필요한 곳에만 넣어주세요 !! */}
         <Routes>
           <Route element={<MemoryRoad />} path="/"></Route>
           <Route element={<Mypage />} path="/Mypage" />
