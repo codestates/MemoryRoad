@@ -105,8 +105,11 @@ function SaveRouteModal({
           description: routeDesc,
           public: !isOpenRoute,
           time: totalTime,
+          color: colorNames[Number(selectedColorId)],
           pins: translatedPins,
         };
+
+        console.log(data);
 
         const formData = new FormData();
         formData.append('route', JSON.stringify(data));
