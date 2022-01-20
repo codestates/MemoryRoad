@@ -61,7 +61,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
     </div>
   ));
 
-  const firstRenderedPictures = pins[0].Picturesmap((el: any, idx: any) => (
+  const firstRenderedPictures = pins[0]?.Pictures.map((el: any, idx: any) => (
     <div className="storyCardMainModal-pin-photo-wrapper" key={idx}>
       <div className="storyCardMainModal-pin-photo-container">
         <div className="storyCardMainModal-pin-photo-center">
