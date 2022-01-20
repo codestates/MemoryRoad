@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Route } from '../../types/searchRoutesTypes';
+import { Route1 } from '../../types/searchRoutesTypes';
 import './colorSelectBox.css';
 
 type Props = {
   setColorIdx: React.Dispatch<React.SetStateAction<number>>;
-  setAllRoutes: React.Dispatch<React.SetStateAction<Array<Route>>>;
+  setAllRoutes: React.Dispatch<React.SetStateAction<Array<Route1>>>;
   findAllRoute: any;
 };
 

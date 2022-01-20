@@ -32,3 +32,16 @@ export interface Route {
   Pins: Pin[];
   thumbnail: string;
 }
+
+export interface Route1 {
+  id: number;
+  routeName: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  public: boolean;
+  color: string;
+  time: number;
+  Pins: Pin[];
+  thumbnail: string;
+}
