@@ -23,7 +23,7 @@ function ConfirmMoveToMypage({ setIsMoveToMypage }: any) {
               className="confirmPin-btn-mypage"
               onClick={() => {
                 setIsMoveToMypage(false);
-                navigate('myRouteStore');
+                navigate('/myRouteStore');
               }}
             >
               확인
