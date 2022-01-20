@@ -115,7 +115,10 @@ function SaveRouteModal({
         const formData = new FormData();
         formData.append('route', JSON.stringify(data));
         pinImage.forEach((el: any) => {
-          formData.append(`${el.ranking}`, el.files);
+          // formData.append(`${el.ranking}`, el.files);
+          el.files.forEach((file: any) => {
+            formData.append(`${el.ranking}`, file);
+          }); // 파일 한장한장 보내는 걸로 바꿈.
         });
 
         axios({
