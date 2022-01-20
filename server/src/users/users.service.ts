@@ -235,17 +235,17 @@ export class UsersService {
     const deleteFile: UserEntity = await this.usersRepository.findOne({
       id: decoded['id'],
     });
-    if (!decoded['profileImage']) {
+    if (!deleteFile['profileImage']) {
       fs.unlinkSync(
         `${join(__dirname, '..', '..', '..')}/${deleteFile['profileImage']}`,
       );
     }
-    decoded['profileImage'] = file.path;
+    deleteFile['profileImage'] = file.path;
     const user: UserEntity = {
-      id: decoded['id'],
-      email: decoded['email'],
-      nickName: decoded['nickName'],
-      profileImage: decoded['profileImage'],
+      id: deleteFile['id'],
+      email: deleteFile['email'],
+      nickName: deleteFile['nickName'],
+      profileImage: deleteFile['profileImage'],
     };
     await this.usersRepository.save(user);
     return file.path;
