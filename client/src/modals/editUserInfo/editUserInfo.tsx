@@ -69,6 +69,7 @@ function EditUserInfo({ isvalid, url }: any) {
     axios
       .patch(`${url}/users/profile`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
+        withCredentials: true,
       })
       .then((res) => {
         if (res.status === 200) {
@@ -90,7 +91,14 @@ function EditUserInfo({ isvalid, url }: any) {
   const editUsername = () => {
     if (isvalid('', username, '')) {
       axios
-        .patch(`${url}/users/user-name`, { userName: username })
+        .patch(
+          `${url}/users/user-name`,
+          { userName: username },
+          {
+            headers: { 'Content-Type': 'multipart/form-data' },
+            withCredentials: true,
+          },
+        )
         .then((res) => {
           if (res.status === 200) {
             dispatch(
@@ -117,7 +125,14 @@ function EditUserInfo({ isvalid, url }: any) {
   const editPassword = () => {
     if (isvalid('', '', Password) && Password === checkingPassword) {
       axios
-        .patch(`${url}/users/password`, { password: Password })
+        .patch(
+          `${url}/users/password`,
+          { password: Password },
+          {
+            headers: { 'Content-Type': 'multipart/form-data' },
+            withCredentials: true,
+          },
+        )
         .then((res) => {
           if (res.status === 200) {
             alert('비밀번호가 변경되었습니다.');
@@ -131,8 +146,19 @@ function EditUserInfo({ isvalid, url }: any) {
     }
   };
   return (
-    <div>
-      <Mist />
+    <div
+      className="edituserinfo-mist"
+      onClick={(e) => {
+        if (e.target !== e.currentTarget) return;
+        dispatch(editUserInfoModal(false));
+      }}
+      onKeyDown={(e) => {
+        if (e.target !== e.currentTarget) return;
+        dispatch(editUserInfoModal(false));
+      }}
+      role="menu"
+      tabIndex={0}
+    >
       <div className="edituserinfo-EditBorder ">
         <div className="edituserinfo-center edituserinfo-titleEdituserinfo ">
           회원정보 수정

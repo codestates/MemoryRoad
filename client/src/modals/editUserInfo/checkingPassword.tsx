@@ -24,6 +24,7 @@ function CheckingPassword({ url }: any) {
             headers: {
               'Content-Type': `application/json`,
             },
+            withCredentials: true,
           },
         )
         .then((res) => {
@@ -36,8 +37,21 @@ function CheckingPassword({ url }: any) {
     }
   };
   return (
-    <div>
-      <Mist />
+    <div
+      className="checkingpassword-mist"
+      onClick={(e) => {
+        if (e.target !== e.currentTarget) return;
+
+        dispatch(checkingPasswordModal(false));
+      }}
+      onKeyDown={(e) => {
+        if (e.target !== e.currentTarget) return;
+
+        dispatch(checkingPasswordModal(false));
+      }}
+      role="menu"
+      tabIndex={0}
+    >
       <div
         className="checkingpassword-checkingPasswordBorder"
         id="checingPasswordBorder"
