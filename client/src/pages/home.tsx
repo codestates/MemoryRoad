@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import './home.css';
 import Footer from '../components/footer/footer';
 import { contextType } from 'react-grid-layout';
+import { useNavigate } from 'react-router-dom';
 function Home() {
+  const navigate = useNavigate();
   // 스크롤 이벤트 발생
   window.onscroll = function (e) {
     const scrollheight = document.documentElement.scrollTop;
@@ -28,11 +30,6 @@ function Home() {
     <div>
       <div className="Home-Contents">
         <div className="Home-notgrid">
-          <img
-            alt="HomeImage"
-            className="Home-HomeImage"
-            src="http://127.0.0.1:5500/client/public/img/HomeImage.jpg"
-          />
           <div className="Home-checking">
             <div className="Home-MemoryRoad">MEMORYROAD</div>
           </div>
@@ -70,7 +67,7 @@ function Home() {
             <img
               alt="introduce"
               className="Home-introduce"
-              src="http://127.0.0.1:5500/client/public/img/AllRouteMap.jpg"
+              src="https://server.memory-road.net/upload/AllRouteMap.jpg"
             />
           </div>
           <hr className="Home-line" />
@@ -91,7 +88,7 @@ function Home() {
             <img
               alt="introduce"
               className="Home-introduce"
-              src="http://127.0.0.1:5500/client/public/img/AllRouteMap.jpg"
+              src="https://server.memory-road.net/upload/AllRouteMap.jpg"
             />
           </div>
           <hr className="Home-line" />
@@ -112,7 +109,7 @@ function Home() {
             <img
               alt="introduce"
               className="Home-introduce"
-              src="http://127.0.0.1:5500/client/public/img/AllRouteMap.jpg"
+              src="https://server.memory-road.net/upload/AllRouteMap.jpg"
             />
           </div>
         </div>
@@ -122,12 +119,22 @@ function Home() {
           <div className="Home-MemoryRoadBorder2">
             <div className="Home-guide2">체험할 준비가 되셨나요?</div>
             <div>
-              <button className="Home-button">
+              <button
+                className="Home-button"
+                onClick={() => {
+                  navigate('map/createRoute');
+                }}
+              >
                 메모리로드 <span>기록</span> 하러 가기
               </button>
             </div>
             <div>
-              <button className="Home-button Home-button2">
+              <button
+                className="Home-button Home-button2"
+                onClick={() => {
+                  navigate('/searchRoutes');
+                }}
+              >
                 메모리로드 <span>검색</span> 하러 가기
               </button>
             </div>

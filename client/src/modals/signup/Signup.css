@@ -7,7 +7,7 @@
   justify-content: center;
   align-items: center;
 }
-.signup-center-fix-fix-fix{
+.signup-center-fix-fix-fix {
   padding-top: 10px;
 }
 .signup-SignUpBorder {
@@ -85,6 +85,12 @@
   font-weight: bold;
   border: 2px solid white;
 }
+.signup-SignUpButton:hover {
+  border: 2px solid #91ba9f;
+  background-color: white;
+  color: #91ba9f;
+  transition: 800ms ease all;
+}
 .signup-center2 {
   position: relative;
   top: 38px;
@@ -98,6 +104,10 @@
   top: 518px;
   font-size: 11px;
 }
+
 .signup-pointer {
   cursor: pointer;
+}
+.signup-pointer:hover {
+  color: silver;
 }
