@@ -47,6 +47,34 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
     imageOption,
   );
 
+  const selectedPictures = currPinData[0]?.Pictures.map((el: any, idx: any) => (
+    <div className="storyCardMainModal-pin-photo-wrapper" key={idx}>
+      <div className="storyCardMainModal-pin-photo-container">
+        <div className="storyCardMainModal-pin-photo-center">
+          <img
+            alt={`${el.fileName}`}
+            className="storyCardMainModal-pin-photo-img"
+            src={`https://server.memory-road.net/${el.fileName}`}
+          />
+        </div>
+      </div>
+    </div>
+  ));
+
+  const firstRenderedPictures = pins[0].Picturesmap((el: any, idx: any) => (
+    <div className="storyCardMainModal-pin-photo-wrapper" key={idx}>
+      <div className="storyCardMainModal-pin-photo-container">
+        <div className="storyCardMainModal-pin-photo-center">
+          <img
+            alt={`${el.fileName}`}
+            className="storyCardMainModal-pin-photo-img"
+            src={`https://server.memory-road.net/${el.fileName}`}
+          />
+        </div>
+      </div>
+    </div>
+  ));
+
   const requestForDelete = () => {
     axios({
       url: `https://server.memory-road.net/routes/${routeInfo[0].id}`,
@@ -129,7 +157,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
                 <button
                   className="storyCardMainModal-modify-btn"
                   onClick={() =>
-                    navigate(`myRouteStore/route/${routeInfo[0].id}`)
+                    navigate(`/myRouteStore/route/${routeInfo[0].id}`)
                   }
                 >
                   루트 수정
@@ -209,22 +237,9 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
               </div>
 
               <div className="storyCardMainModal-pin-pictures">
-                {currPinData[0]?.Pictures.map((el: any, idx: any) => (
-                  <div
-                    className="storyCardMainModal-pin-photo-wrapper"
-                    key={idx}
-                  >
-                    <div className="storyCardMainModal-pin-photo-container">
-                      <div className="storyCardMainModal-pin-photo-center">
-                        <img
-                          alt={`${el.fileName}`}
-                          className="storyCardMainModal-pin-photo-img"
-                          src={`https://server.memory-road.net/upload/${el.fileName}`}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                {currPinData.length === 0
+                  ? firstRenderedPictures
+                  : selectedPictures}
               </div>
             </div>
           </div>

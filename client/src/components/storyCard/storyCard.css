@@ -35,6 +35,10 @@
   justify-content: space-between;
 }
 .myRouteStore-card-text { /*text*/
+  width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   margin: none;
   margin: 10px 0 0 5px;
   font-size: 1.1em;
