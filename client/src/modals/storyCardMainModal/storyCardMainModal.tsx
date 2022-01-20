@@ -20,7 +20,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
   const colorChips: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorChip,
   );
-  const colorIdx = colorNames.indexOf(routeInfo.color);
+  const colorIdx = colorNames.indexOf(routeInfo[0].color);
   const [currPinData, setCurrPinData] = useState<any[]>([]); // 야매 ..
   const [isResizing, setIsResizing] = useState(false);
   const handlePinId = (currPinId: number) => {
@@ -49,7 +49,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
 
   const requestForDelete = () => {
     axios({
-      url: `https://server.memory-road.net/routes/${routeInfo.id}`,
+      url: `https://server.memory-road.net/routes/${routeInfo[0].id}`,
       method: 'delete',
       withCredentials: true,
     })
@@ -70,7 +70,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
     const mapOption = {
       center: new kakao.maps.LatLng(33.450701, 126.570667),
       level: 3,
-      maxLevel: 7,
+      maxLevel: 10,
       // draggable: false,
       // zoomable: false,
     };
@@ -122,11 +122,15 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
                   onClick={handleCardModalClose}
                 ></button>
               </div>
-              <p className="storyCardMainModal-title">{routeInfo.routeName}</p>
+              <p className="storyCardMainModal-title">
+                {routeInfo[0].routeName}
+              </p>
               <div className="storyCardMainModal-btns">
                 <button
                   className="storyCardMainModal-modify-btn"
-                  onClick={() => navigate(`myRouteStore/route/${routeInfo.id}`)}
+                  onClick={() =>
+                    navigate(`myRouteStore/route/${routeInfo[0].id}`)
+                  }
                 >
                   루트 수정
                 </button>
@@ -145,7 +149,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
             </div>
             <div className="storyCardMainModal-main-content">
               <p className="storyCardMainModal-description">
-                {routeInfo.description}
+                {routeInfo[0].description}
               </p>
               <hr className="storyCardMainModal-divide-line" />
               <div className="storyCardMainModal-map-wrapper">
@@ -156,42 +160,52 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
                 </div>
               </div>
 
-              <div className="storyCardMainModal-route-wrapper">
-                <div className="storyCardMainModal-route">
-                  {pins.map((el: any, idx: any) => (
-                    <div
-                      className="storyCardMainModal-pin"
-                      id={el.id}
-                      key={idx}
-                    >
-                      <button
-                        className="storyCardMainModal-pin-picture-count"
-                        onClick={() => handlePinId(el.id)}
+              <div id="storyCardMainModal-for-align-sy">
+                <div className="storyCardMainModal-route-wrapper">
+                  <div
+                    className="storyCardMainModal-route"
+                    style={{
+                      width: `${100 * (pins.length / 5 + 1)}%`,
+                    }}
+                  >
+                    {pins.map((el: any, idx: any) => (
+                      <div
+                        className="storyCardMainModal-pin"
+                        id={el.id}
+                        key={idx}
                       >
-                        {el.Pictures.length}
-                      </button>
-                      <button
-                        className="storyCardMainModal-pin-map-dot"
-                        onClick={() => handlePinId(el.id)}
-                        style={{
-                          background: `url(${colorUrls[colorIdx]}) no-repeat center`,
-                          backgroundSize: 'cover',
-                        }}
-                      ></button>
+                        <button
+                          className="storyCardMainModal-pin-picture-count"
+                          onClick={() => handlePinId(el.id)}
+                        >
+                          {el.Pictures.length}
+                        </button>
+                        <button
+                          className="storyCardMainModal-pin-map-dot"
+                          onClick={() => handlePinId(el.id)}
+                          style={{
+                            background: `url(${colorUrls[colorIdx]}) no-repeat center`,
+                            backgroundSize: 'cover',
+                          }}
+                        ></button>
 
-                      <div className="storyCardMainModal-pin-time">
-                        {el.startTime} ~ {el.endTime}
+                        <div className="storyCardMainModal-pin-time">
+                          {el.startTime} ~ {el.endTime}
+                        </div>
+                        <div className="storyCardMainModal-pin-title">
+                          {el.locationName}
+                        </div>
                       </div>
-                      <div className="storyCardMainModal-pin-title">
-                        {el.locationName}
-                      </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                  <hr
+                    className="storyCardMainModal-pin-color-line"
+                    style={{
+                      backgroundColor: `${colorChips[colorIdx]}`,
+                      width: `${100 * (pins.length / 5 + 1)}%`,
+                    }}
+                  />
                 </div>
-                <hr
-                  className="storyCardMainModal-pin-color-line"
-                  style={{ backgroundColor: `${colorChips[colorIdx]}` }}
-                />
               </div>
 
               <div className="storyCardMainModal-pin-pictures">

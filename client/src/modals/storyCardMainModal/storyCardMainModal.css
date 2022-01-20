@@ -1,7 +1,7 @@
 /*전체 틀*/
 .storyCardMainModal-background {
   position: fixed;
-  z-index: 6; /*navigation bar 오작동 막음 5 -> 6*/
+  z-index: 9999999999999; /*navigation bar 오작동 막음 5 -> 6*/
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -166,15 +166,31 @@
 }
 
 /*route*/
-.storyCardMainModal-route-wrapper {
-  /*line을 위해*/
+#storyCardMainModal-for-align-sy { /*new*/
+  width: 100%;
   display: flex;
+  flex-flow: wrap nowrap;
   justify-content: center;
   align-items: center;
 }
+.storyCardMainModal-route-wrapper {
+  width: 90%;
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.storyCardMainModal-route-wrapper::-webkit-scrollbar { /*scrollBar*/
+  height: 7px;
+}
+.storyCardMainModal-route-wrapper::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: rgb(169, 169, 169);
+}
+.storyCardMainModal-route-wrapper::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: rgba(192, 192, 192, 0.3);
+}
 .storyCardMainModal-route {
-  width: 100%;
-  height: auto;
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-around;
@@ -182,11 +198,10 @@
 }
 .storyCardMainModal-pin {
   position: relative; /*이미지 위에 text얹기*/
-  width: 100px;
-  height: 150px;
+  width: 150px;
+  height: 200px;
   display: flex;
-  flex-flow: column wrap;
-  justify-content: center;
+  flex-flow: column nowrap;
   align-items: center;
 }
 .storyCardMainModal-pin-picture-count { /*picture btn*/
@@ -227,10 +242,42 @@
 }
 .storyCardMainModal-pin-color-line {
   position: absolute;
-  width: 88%;
+  bottom: 59%;
   height: 3px;
   border: none;
   border-radius: 30px;
+}
+
+/*야매 핸들링*/
+@media screen and (max-width: 910px){
+  .storyCardMainModal-pin-color-line {
+    bottom: 62%;
+  }
+}
+@media screen and (max-width: 890px){
+  .storyCardMainModal-pin-color-line {
+    bottom: 60%;
+  }
+}
+@media screen and (max-width: 725px){
+  .storyCardMainModal-pin-color-line {
+    bottom: 63%;
+  }
+}
+@media screen and (max-width: 610px){
+  .storyCardMainModal-pin-color-line {
+    bottom: 64%;
+  }
+}
+@media screen and (max-width: 470px){
+  .storyCardMainModal-pin-color-line {
+    bottom: 65%;
+  }
+}
+@media screen and (max-width: 370px){
+  .storyCardMainModal-pin-color-line {
+    bottom: 66%;
+  }
 }
 
 /*picture 와 사진정렬 어렵다*/

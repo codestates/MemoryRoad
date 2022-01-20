@@ -109,7 +109,10 @@ function SaveRouteModal({
           (el: any) => (el.name ? true : false), // 기존에 있던 사진 거르기.
         );
         formData.append(`${el.id}`, JSON.stringify(data));
-        formData.append(`${el.ranking}`, newFiles);
+        // formData.append(`${el.ranking}`, newFiles);
+        newFiles.forEach((file: any) => {
+          formData.append(`${el.ranking}`, file);
+        }); // 여러장 append 시키는 형식으로 변경.
 
         axios({
           url: `https://server.memory-road.net/routes/${routeId}/pins${pinId}`,

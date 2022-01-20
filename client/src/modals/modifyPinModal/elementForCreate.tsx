@@ -73,6 +73,7 @@ const ElementForCreate = ({
       <input
         className="createPinModal-input"
         id="createPinModal-place-title"
+        max-length="13"
         onChange={handleText}
         placeholder="장소의 제목을 입력해주세요"
         type="text"

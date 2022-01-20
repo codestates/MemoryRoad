@@ -77,6 +77,7 @@ const ElementForModify = ({
       <input
         className="modifyPinModal-input"
         id="modifyPinModal-place-title"
+        max-length="13"
         onChange={handleText}
         type="text"
         value={pinTitle}
