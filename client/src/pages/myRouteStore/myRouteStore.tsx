@@ -219,7 +219,7 @@ function MyRouteStore() {
                     ></img>
                   </button>
                   {/* 카드 나열 */}
-                  {routeCards.map((el, idx) => (
+                  {routeCards?.map((el, idx) => (
                     <StoryCard
                       handleCardModalOpen={handleCardModalOpen}
                       key={idx}
