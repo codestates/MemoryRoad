@@ -13,7 +13,10 @@ type Props = {
 };
 
 function StoryCard({ routeInfo, setSelectedRoute, selectedRoute }: Props) {
-  const imageUrl = `https://server.memory-road.net/${routeInfo.thumbnail}`; /* 카드 대표 이미지 url (서버에서 받아온 것)*/
+  const imageUrl =
+    routeInfo.thumbnail === null
+      ? `https://server.memory-road.net/upload/camera-6183287_1280.png`
+      : `https://server.memory-road.net/${routeInfo.thumbnail}`; /* 카드 대표 이미지 url (서버에서 받아온 것)*/
   const colorsName = [
     'red',
     'orange',
@@ -59,7 +62,11 @@ function StoryCard({ routeInfo, setSelectedRoute, selectedRoute }: Props) {
         <div className="myRouteStore-card-top-search">
           <img
             alt="testImg"
-            className="myRouteStore-card-image-search"
+            className={
+              routeInfo.thumbnail === null
+                ? 'myRouteStore-card-image-search null'
+                : 'myRouteStore-card-image-search'
+            }
             src={imageUrl}
           >
             {/* image */}
