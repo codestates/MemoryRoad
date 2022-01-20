@@ -135,6 +135,7 @@ function SaveRouteModal({
           routeName: routeTitle,
           description: routeDesc,
           public: !isOpenRoute,
+          color: colorNames[Number(selectedColorId)],
           time: totalTime,
         },
         withCredentials: true,

@@ -60,6 +60,41 @@ function MyRouteStore() {
   //   setRouteCards(originRouteCards);
   // }
 
+  if (currPageNum === 0) {
+    axios({
+      url: 'https://server.memory-road.net/routes',
+      method: 'get',
+      withCredentials: true,
+      params: {
+        page: 1,
+      },
+    })
+      .then((res: any) => {
+        console.log(res);
+        setdataCount(res.count);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    axios({
+      url: 'https://server.memory-road.net/routes',
+      method: 'get',
+      withCredentials: true,
+      params: {
+        page: currPageNum,
+      },
+    })
+      .then((res: any) => {
+        console.log(res);
+        setRouteCards(res.routes); // 배열값
+        setOriginRouteCards(res.routes);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   const handleColorSelect = () => {
     setClickedColorSelect(!clickedColorSelect);
     setClickedSeoulSelect(false);
@@ -116,40 +151,40 @@ function MyRouteStore() {
   };
   const addImageUrl = 'https://server.memory-road.net/upload/plus_button.png';
   useEffect(() => {
-    if (currPageNum === 0) {
-      axios({
-        url: 'https://server.memory-road.net/routes',
-        method: 'get',
-        withCredentials: true,
-        params: {
-          page: 1,
-        },
-      })
-        .then((res: any) => {
-          console.log(res);
-          setdataCount(res.count);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } else {
-      axios({
-        url: 'https://server.memory-road.net/routes',
-        method: 'get',
-        withCredentials: true,
-        params: {
-          page: currPageNum,
-        },
-      })
-        .then((res: any) => {
-          console.log(res);
-          setRouteCards(res.routes); // 배열값
-          setOriginRouteCards(res.routes);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    // if (currPageNum === 0) {
+    //   axios({
+    //     url: 'https://server.memory-road.net/routes',
+    //     method: 'get',
+    //     withCredentials: true,
+    //     params: {
+    //       page: 1,
+    //     },
+    //   })
+    //     .then((res: any) => {
+    //       console.log(res);
+    //       setdataCount(res.count);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // } else {
+    //   axios({
+    //     url: 'https://server.memory-road.net/routes',
+    //     method: 'get',
+    //     withCredentials: true,
+    //     params: {
+    //       page: currPageNum,
+    //     },
+    //   })
+    //     .then((res: any) => {
+    //       console.log(res);
+    //       setRouteCards(res.routes); // 배열값
+    //       setOriginRouteCards(res.routes);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // }
   }, [currPageNum]);
   return (
     <>
