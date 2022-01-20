@@ -184,7 +184,7 @@ function LoginModal({ url }: any) {
               <img
                 alt="googleLoginButton"
                 className="login-GoogleButton login-pointer"
-                src="https://server.memory-road.net/client/public/img/google_btn.png"
+                src="https://server.memory-road.net/upload/google_btn.png"
               />
             </div>
             <div
@@ -196,7 +196,7 @@ function LoginModal({ url }: any) {
               <img
                 alt="naverLoginButton"
                 className="login-NaverButton login-pointer"
-                src="https://server.memory-road.net/client/public/img/naver_btn.png"
+                src="https://server.memory-road.net/upload/naver_btn.png"
               />
             </div>
             <div
@@ -208,7 +208,7 @@ function LoginModal({ url }: any) {
               <img
                 alt="kakoLoginButton"
                 className="login-kakaoButton login-pointer"
-                src="https://server.memory-road.net/client/public/img/kakao_btn.png"
+                src="https://server.memory-road.net/upload/kakao_btn.png"
               />
             </div>
           </div>
