@@ -80,9 +80,8 @@ function MyRouteStore() {
       .then((res: any) => {
         if (res.status === 200) {
           console.log(res);
-          console.log(res.data.count);
-          setdataCount(res.data.count);
           setCurrPageNum(1);
+          setdataCount(res.data.count);
         }
       })
       .catch((err) => {

@@ -133,7 +133,7 @@ const ElementForModify = ({
                 src={
                   el.name
                     ? URL.createObjectURL(el)
-                    : `https://server.memory-road.net/upload/${el.fileName}`
+                    : `https://server.memory-road.net/${el.fileName}`
                 }
               ></img>
             </div>

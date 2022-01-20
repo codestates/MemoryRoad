@@ -8,7 +8,7 @@ type Props = {
   pinTitles: string[];
 };
 
-function StoryCardRoute({ colorIdx, pinTitles }: Props) {
+function storyCardRouteForSearch({ colorIdx, pinTitles }: Props) {
   const colorUrls: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorDotUrl,
   );
@@ -41,4 +41,4 @@ function StoryCardRoute({ colorIdx, pinTitles }: Props) {
   );
 }
 
-export default StoryCardRoute;
+export default storyCardRouteForSearch;

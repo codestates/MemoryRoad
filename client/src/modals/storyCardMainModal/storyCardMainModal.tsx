@@ -129,7 +129,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
                 <button
                   className="storyCardMainModal-modify-btn"
                   onClick={() =>
-                    navigate(`myRouteStore/route/${routeInfo[0].id}`)
+                    navigate(`/myRouteStore/route/${routeInfo[0].id}`)
                   }
                 >
                   루트 수정
@@ -219,7 +219,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
                         <img
                           alt={`${el.fileName}`}
                           className="storyCardMainModal-pin-photo-img"
-                          src={`https://server.memory-road.net/upload/${el.fileName}`}
+                          src={`https://server.memory-road.net/${el.fileName}`}
                         />
                       </div>
                     </div>
