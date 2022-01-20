@@ -23,9 +23,13 @@ const MemoryRoad = () => {
     if (authorizationCode) {
       if (socialLogin === 'kakao') {
         axios
-          .post(`https://server.memory-road.net/users/auth/oauth/kakao`, {
-            authorizationCode: authorizationCode,
-          })
+          .post(
+            `https://server.memory-road.net/users/auth/oauth/kakao`,
+            {
+              authorizationCode: authorizationCode,
+            },
+            { withCredentials: true },
+          )
           .then((res) => {
             dispatch(
               setUserInfo(
@@ -42,9 +46,13 @@ const MemoryRoad = () => {
       if (socialLogin === 'naver') {
         console.log(authorizationCode);
         axios
-          .post(`https://server.memory-road.net/users/auth/oauth/naver`, {
-            authorizationCode: authorizationCode,
-          })
+          .post(
+            `https://server.memory-road.net/users/auth/oauth/naver`,
+            {
+              authorizationCode: authorizationCode,
+            },
+            { withCredentials: true },
+          )
           .then((res) => {
             dispatch(
               setUserInfo(
@@ -61,9 +69,13 @@ const MemoryRoad = () => {
       if (socialLogin === 'google') {
         console.log(authorizationCode);
         axios
-          .post(`https://server.memory-road.net/users/auth/oauth/google`, {
-            authorizationCode: authorizationCode,
-          })
+          .post(
+            `https://server.memory-road.net/users/auth/oauth/google`,
+            {
+              authorizationCode: authorizationCode,
+            },
+            { withCredentials: true },
+          )
           .then((res) => {
             dispatch(
               setUserInfo(

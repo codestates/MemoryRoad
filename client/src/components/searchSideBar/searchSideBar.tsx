@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import StoryCard from '../storyCard/storyCard';
-// import './searchSideBar.css';
+import './searchSideBar.css';
 import { Route } from './../../types/searchRoutesTypes';
 import Pagination from '../pagination/pagination';
 import axios from 'axios';
