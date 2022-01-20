@@ -42,7 +42,7 @@ const { kakao }: any = window;
 // 지도 핀 직접 찍는 메서드랑 검색 메서드 나누기 가능 ...? 루트 연결 가능 ??? 하 ..
 
 function ModifyPinMap() {
-  const { id } = useParams();
+  const { id } = useParams(); // 루트의 id 받아옴.
   /* redux 전역 상태관리 */ // 왜 type 할당 : RootState는 되고 RootPersistState는 안되나요 ?
   const routeState: any = useSelector(
     (state: RootState) => state.createRouteReducer,
@@ -397,20 +397,22 @@ function ModifyPinMap() {
   }
 
   useEffect(() => {
-    axios({
-      url: `https://server.memory-road.net/routes/${id}`,
-      method: 'get',
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          console.log(res);
-          const pins = res.data.routes.Pins;
-          setPins(pins.concat(...pins));
-        }
+    if (pins.length <= 1) {
+      axios({
+        url: `https://server.memory-road.net/routes/${id}`,
+        method: 'get',
       })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+            const pins = res.data.routes.Pins;
+            setPins(pins.concat(...pins));
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }, []);
 
   useEffect(() => {
