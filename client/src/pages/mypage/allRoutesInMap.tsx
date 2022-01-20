@@ -21,10 +21,7 @@ declare global {
 }
 const kakao = window.kakao;
 
-// const findAllRoute = axios
-//   .get('http://localhost/routes')
-//   .then((res) => res.data.routes);
-const findAllRoute = fakeData.routes;
+// const findAllRoute = fakeData.routes;
 
 const colorsName = [
   'red',
@@ -38,15 +35,19 @@ const colorsName = [
   'pink',
 ];
 
-function AllRoutesInMap() {
+async function AllRoutesInMap() {
   const dispatch = useDispatch();
   /* redux 전역 상태관리 */ // 왜 type 할당 : RootState는 되고 RootPersistState는 안되나요 ?
+
   const colorUrls: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorDotUrl,
   );
   const colorChips: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorChip,
   );
+  const findAllRoute = await axios
+    .get('http://localhost/routes')
+    .then((res) => res.data.routes);
 
   //state
   //지도의 확대 정도
