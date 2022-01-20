@@ -94,7 +94,7 @@ function SearchRoutesBar({
         setSelectedRoute(null);
       })
       .catch((err) => {
-        console.log('서버 에러');
+        alert('서버 에러');
       });
   };
 
