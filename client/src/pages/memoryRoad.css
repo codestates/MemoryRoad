@@ -1,6 +1,9 @@
-.memoryRoad-background {
-  background-color: rgb(80, 80, 80);
+.memoryRoad-scroll {
+  overflow: hidden;
+  /* height: 580vh; */
+  /* width: 200px; */
 }
+
 .memoryRoad-nav {
   display: none;
 }

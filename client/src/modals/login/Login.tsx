@@ -13,12 +13,14 @@ import {
 } from '../../redux/actions/index';
 import '../userModalPointer.css';
 import QueryString from 'qs';
+import SignUp from '../signup/Signup';
 
 function LoginModal({ url }: any) {
   const dispatch = useDispatch();
   const userinfo = useSelector(
     (state: RootState) => state.setUserInfoReducer.userInfo,
   ); // 유저 정보
+
   const navigate = useNavigate();
   const [Email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -30,7 +32,27 @@ function LoginModal({ url }: any) {
   const InputPassword = (e: any) => {
     setPassword(e.target.value);
   };
-
+  // 유효성 검사
+  const isvalid = (email: string, username: string, password: string) => {
+    const character = /^[ A-Za-z0-9_@./#&+-]*$/; // 영문,숫자,특정 특수문자만 허용
+    const regexpassword = /[0-9a-zA-Z.;\-]/;
+    if (
+      character.test(email) &&
+      5 <= email.length &&
+      !email.includes(' ') &&
+      email.includes('@')
+    ) {
+      return 'Email'; // 이메일은 영문,숫자,특정 특수문자만 허용, 5글자 이상, 공백이 있으면 안되고, @를 포함해야함
+    }
+    if (!username.includes(' ') && username.length >= 2) {
+      return 'Username'; // 닉네임은 공백을 포함해서는 안되고 2글자 이상
+    }
+    if (8 <= password.length && regexpassword.test(password)) {
+      return 'Password'; // 비밀번호는 8자 이상이어야하고 영문,숫자,특수문자를 포함
+    } else {
+      return false;
+    }
+  };
   // 로그인 요청 API
   const LoginHandler = () => {
     if (Email === '' || Password === '') {
@@ -79,7 +101,7 @@ function LoginModal({ url }: any) {
     }
   };
 
-  const redirect_uri = 'http://localhost:3000';
+  const redirect_uri = 'https://memory-road.net';
   // 카카오 로그인 API
   const KakaoLoginHandler = () => {
     //  카카오에서 Authorization code를 받아오고
@@ -109,7 +131,7 @@ function LoginModal({ url }: any) {
     const queryStr = QueryString.stringify({
       client_id:
         '721113525638-iqgb0cig5l1vd2gvndncagbpq161sdde.apps.googleusercontent.com',
-      redirect_uri: 'http://localhost:3000',
+      redirect_uri: 'https://memory-road.net',
       response_type: 'code',
       scope: 'openid profile email',
       access_type: 'offline',
@@ -120,9 +142,8 @@ function LoginModal({ url }: any) {
 
   return (
     <div>
-      <div>
-        <Mist />
-      </div>
+      <Mist />
+
       <div className="login-modal-align-center-fix">
         <div className="login-LoginBorder">
           <div className="login-center login-titleLogin">로그인</div>
@@ -163,7 +184,7 @@ function LoginModal({ url }: any) {
               <img
                 alt="googleLoginButton"
                 className="login-GoogleButton login-pointer"
-                src="http://127.0.0.1:5500/client/public/img/google_btn.png"
+                src="https://server.memory-road.net/client/public/img/google_btn.png"
               />
             </div>
             <div
@@ -175,7 +196,7 @@ function LoginModal({ url }: any) {
               <img
                 alt="naverLoginButton"
                 className="login-NaverButton login-pointer"
-                src="http://127.0.0.1:5500/client/public/img/naver_btn.png"
+                src="https://server.memory-road.net/client/public/img/naver_btn.png"
               />
             </div>
             <div
@@ -187,7 +208,7 @@ function LoginModal({ url }: any) {
               <img
                 alt="kakoLoginButton"
                 className="login-kakaoButton login-pointer"
-                src="http://127.0.0.1:5500/client/public/img/kakao_btn.png"
+                src="https://server.memory-road.net/client/public/img/kakao_btn.png"
               />
             </div>
           </div>

@@ -1,8 +1,7 @@
 .Home-Contents {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
-  grid-template-rows: 6.5%;
+  grid-template-columns: 1fr 4fr 1fr;
 }
 .Home-notgrid {
   grid-column: 1/4;
@@ -10,18 +9,21 @@
   position: relative;
   text-align: center;
   margin-bottom: 5%;
-}
-.Home-HomeImage {
-  /* position: absolute; */
+  background-image: url('https://server.memory-road.net/client/public/img/HomeImage.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
   width: 100%;
+  height: 100vh;
 }
+
 /* .Home-checking {
   border: 2px solid black;
 } */
 .Home-MemoryRoad {
   position: absolute;
 
-  top: 30%;
+  top: 20vh;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
@@ -34,7 +36,7 @@
 }
 .Home-MemoryRoadBorder {
   position: absolute;
-  top: 55%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
@@ -106,25 +108,7 @@
   animation: fadeInText 3s 3.5s ease-out forwards;
   opacity: 0;
 }
-.Home-MemoryRoadBorder2 {
-  /* position: absolute; */
-  background-color: white;
-  text-align: center;
-  margin: 0 auto;
-  width: 40%;
-  font-size: 1vw;
-  border-radius: 20px;
-  margin-top: 20%;
-  margin-bottom: 20%;
-}
 
-.Home-guide2 {
-  font-size: 250%;
-  font-weight: bold;
-  padding-top: 10%;
-  padding-bottom: 5%;
-  opacity: 0;
-}
 .Home-guideEffect {
   animation: fadeInText 3s 0.5s ease-out forwards;
   opacity: 0;
@@ -148,6 +132,8 @@
 }
 .Home-content2 {
   color: #a5a5a5;
+  margin-top: 5%;
+
   font-size: 1vw;
 }
 .Home-introduce {
@@ -156,8 +142,8 @@
   border-radius: 20px;
 }
 .Home-line {
-  margin-top: 20%;
-  margin-bottom: 20%;
+  margin-top: 10%;
+  margin-bottom: 10%;
   color: white;
   background-color: white;
   border: 1px solid white;
@@ -166,6 +152,24 @@
   grid-column: 1/4;
   background-color: silver;
   margin-top: 20%;
+  height: 100vh;
+}
+.Home-MemoryRoadBorder2 {
+  background-color: white;
+  text-align: center;
+  margin: 0 auto;
+  height: 50vh;
+  margin-top: 25vh;
+  margin-bottom: 25vh;
+  width: 40%;
+  font-size: 13px;
+  border-radius: 20px;
+}
+.Home-guide2 {
+  font-size: 25px;
+  font-weight: bold;
+  line-height: 25vh;
+  opacity: 0;
 }
 .Home-button {
   background-color: #91ba9f;
@@ -176,8 +180,6 @@
   border: 2px solid white;
   border-radius: 15px;
   padding: 2%;
-  margin: 2%;
-  margin-bottom: 1px;
   opacity: 0;
 }
 .Home-button > span {
@@ -185,7 +187,7 @@
 }
 
 .Home-button2 {
-  margin-bottom: 15%;
+  margin: 2%;
 }
 .Home-ButtonEffect {
   opacity: 0;
@@ -215,26 +217,7 @@
 .Home-topdownButton:hover {
 }
 
-@media (min-width: 840px) {
-  .Home-Contents {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
-    grid-template-rows: 6.5%;
-  }
-
-  .Home-content2 {
-    margin-top: 10px;
-    color: #a5a5a5;
-    font-size: 18px;
-  }
-}
-
-@media (max-width: 840px) {
-  .Home-Container {
-    background-color: rgb(88, 123, 96, 21%);
-    position: absolute;
-  }
+@media (max-width: 1000px) {
   .Home-MemoryRoad {
     position: absolute;
     top: 30%;
@@ -249,7 +232,40 @@
   }
   .Home-MemoryRoadBorder {
     position: absolute;
-    top: 60%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    text-align: center;
+    font-size: 1vw;
+    border-radius: 20px;
+    margin: 0 auto;
+    width: 50%;
+    margin-bottom: 20%;
+    animation: fadeIn 2s ease-in-out;
+  }
+}
+
+@media (max-width: 840px) {
+  .Home-Container {
+    background-color: rgb(88, 123, 96, 21%);
+    position: absolute;
+  }
+  .Home-MemoryRoad {
+    position: absolute;
+    top: 33%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #e6e1e1;
+    font-family: 'Oleo Script', cursive;
+    font-size: 7vw;
+    animation: txt_blur 1s alternate ease-in;
+    /* opacity: 0; */
+  }
+  .Home-MemoryRoadBorder {
+    position: absolute;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
@@ -273,7 +289,7 @@
   .Home-Contents {
     position: relative;
     display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
+    grid-template-columns: 1fr 8fr 1fr;
     grid-template-rows: 6.3%;
   }
   .Home-number {
@@ -289,34 +305,40 @@
   }
   .Home-content2 {
     color: #a5a5a5;
+    margin-top: 0%;
     font-size: 10px;
   }
   .Home-guide {
     font-size: 15px;
   }
+
+  .Home-lastBorder {
+    grid-column: 1/4;
+    background-color: silver;
+    margin-top: 20%;
+    height: 50vh;
+  }
+  .Home-MemoryRoadBorder2 {
+    background-color: white;
+    text-align: center;
+    margin: 0 auto;
+    height: 30vh;
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+    width: 40%;
+    font-size: 13px;
+    border-radius: 20px;
+  }
   .Home-guide2 {
     font-size: 15px;
     font-weight: bold;
-    padding-top: 10%;
-    padding-bottom: 5%;
+    line-height: 15vh;
     opacity: 0;
   }
-  .Home-guide2 {
-    font-size: 20px;
-    font-weight: bold;
-    padding-top: 10%;
-    padding-bottom: 5%;
-    opacity: 0;
-  }
-  .Home-guide2 {
-    font-size: 20px;
-    font-weight: bold;
-    padding-top: 10%;
-    padding-bottom: 5%;
-    opacity: 0;
-  }
+
   .Home-button {
     font-size: 10px;
+    margin: 2%;
   }
   .Home-topdownButtonPosition {
     position: fixed;
@@ -336,15 +358,10 @@
     display: grid;
     grid-template-columns: 1fr 25fr 1fr;
   }
-  .Home-HomeImage {
-    /* position: absolute; */
-    width: 100%;
-    height: 100%;
-    margin-bottom: 20%;
-  }
+
   .Home-MemoryRoad {
     position: absolute;
-    top: 30%;
+    top: 35%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
@@ -356,7 +373,7 @@
   }
   .Home-MemoryRoadBorder {
     position: absolute;
-    top: 65%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: white;
@@ -392,12 +409,18 @@
     border: 2px solid white;
     border-radius: 10px;
     padding: 2%;
-    margin: 1%;
+    margin: 2%;
   }
   .Home-topdownButtonPosition {
     position: fixed;
     bottom: 20px;
     right: 25px;
+  }
+  .Home-lastBorder {
+    grid-column: 1/4;
+    background-color: silver;
+    margin-top: 20%;
+    height: 50vh;
   }
   .Home-MemoryRoadBorder2 {
     /* position: absolute; */
@@ -405,17 +428,17 @@
     text-align: center;
     margin: 0 auto;
     width: 70%;
+    height: 20vh;
+    margin-top: 15vh;
+    margin-bottom: 15vh;
     font-size: 1vw;
     border-radius: 20px;
-    margin-top: 20%;
-    margin-bottom: 20%;
     padding-bottom: 5%;
   }
   .Home-guide2 {
-    font-size: 10px;
+    font-size: 15px;
     font-weight: bold;
-    padding-top: 10%;
-    padding-bottom: 5%;
+    line-height: 10vh;
     opacity: 0;
   }
 

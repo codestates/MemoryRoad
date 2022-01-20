@@ -31,9 +31,10 @@ function OpenedMenu({ SetOpen }: Props) {
         >
           &times;
         </span>
-        <div className="opendmenu-Menutext">
+        <div>
           {userinfo.isLogin ? (
             <div
+              className="opendmenu-Menutext"
               onClick={() => {
                 navigate('/');
                 dispatch(setUserInfo(false, null, null, null, null, null));
@@ -49,6 +50,7 @@ function OpenedMenu({ SetOpen }: Props) {
             </div>
           ) : (
             <div
+              className="opendmenu-Menutext"
               onClick={() => {
                 dispatch(loginModal(true));
                 SetOpen(false);
@@ -64,6 +66,7 @@ function OpenedMenu({ SetOpen }: Props) {
           )}
           {userinfo.isLogin ? (
             <div
+              className="opendmenu-Menutext"
               onClick={() => {
                 navigate('/Mypage');
                 SetOpen(false);
@@ -79,7 +82,21 @@ function OpenedMenu({ SetOpen }: Props) {
             </div>
           ) : null}
           <br />
-          <div>루트 검색하기</div>
+          <div
+            className="opendmenu-Menutext"
+            onClick={() => {
+              navigate('/searchRoutes');
+              SetOpen(false);
+            }}
+            onKeyDown={() => {
+              navigate('/searchRoutes');
+              SetOpen(false);
+            }}
+            role="menu"
+            tabIndex={0}
+          >
+            루트 검색하기
+          </div>
         </div>
       </div>
     </div>

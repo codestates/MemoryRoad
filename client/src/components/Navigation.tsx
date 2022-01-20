@@ -6,6 +6,8 @@ import OpenedMenu from './openedmenu';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/reducer';
 import { loginModal, setUserInfo } from '../redux/actions/index';
+import LoginModal from '../modals/login/Login';
+import SignUp from '../modals/signup/Signup';
 import axios from 'axios';
 import { persistor } from '../index';
 
@@ -15,11 +17,34 @@ function Nav({ url }: any) {
   const modalLogin = useSelector(
     (state: RootState) => state.modalReducer.isLoginModal, // test중입니다.
   ); // 로그인 모달창
+  const modalSignup = useSelector(
+    (state: RootState) => state.modalReducer.isSigninModal,
+  ); // 회원가입 모달창
   const userinfo = useSelector(
     (state: RootState) => state.setUserInfoReducer.userInfo,
   ); // 유저의 정보
   const dispatch = useDispatch();
 
+  const isvalid = (email: string, username: string, password: string) => {
+    const character = /^[ A-Za-z0-9_@./#&+-]*$/; // 영문,숫자,특정 특수문자만 허용
+    const regexpassword = /[0-9a-zA-Z.;\-]/;
+    if (
+      character.test(email) &&
+      5 <= email.length &&
+      !email.includes(' ') &&
+      email.includes('@')
+    ) {
+      return 'Email'; // 이메일은 영문,숫자,특정 특수문자만 허용, 5글자 이상, 공백이 있으면 안되고, @를 포함해야함
+    }
+    if (!username.includes(' ') && username.length >= 2) {
+      return 'Username'; // 닉네임은 공백을 포함해서는 안되고 2글자 이상
+    }
+    if (8 <= password.length && regexpassword.test(password)) {
+      return 'Password'; // 비밀번호는 8자 이상이어야하고 영문,숫자,특수문자를 포함
+    } else {
+      return false;
+    }
+  };
   // 로그인,로그아웃 버튼 클릭시 작동하는 함수
   const loginButtonHandler = () => {
     if (userinfo.isLogin) {
@@ -69,6 +94,8 @@ function Nav({ url }: any) {
 
   return (
     <div>
+      {modalLogin ? <LoginModal url={url} /> : null}
+      {modalSignup ? <SignUp isvalid={isvalid} url={url} /> : null}
       <div className="nav-gridContainer-fix-fix">
         <div className="nav-gridContainer">
           <div
