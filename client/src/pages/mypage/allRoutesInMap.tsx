@@ -41,14 +41,15 @@ async function AllRoutesInMap() {
 
   const colorUrls: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorDotUrl,
-  );
+  ); // 색깔의 주소
   const colorChips: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorChip,
+
   );
   const findAllRoute = await axios
     .get('http://localhost/routes')
     .then((res) => res.data.routes);
-
+  
   //state
   //지도의 확대 정도
   const [currLevel, setCurrLevel] = useState(6);
@@ -124,7 +125,7 @@ async function AllRoutesInMap() {
       });
     }
   }
-
+  // 중앙값
   function getRouteCenter(routeInfo: Route | null) {
     //선택된 핀의 정보가 없는 경우 기본값 반환
     if (routeInfo === null || routeInfo.Pins.length === 0) {
@@ -197,6 +198,7 @@ async function AllRoutesInMap() {
     console.log(allRoutes);
     console.log(colorIdx);
     console.log(pickPinsPictures);
+    console.log(colorIdx); // 0 ~ 8까지
     // 지도 생성
     const mapContainer = document.getElementById('map');
 
@@ -255,7 +257,7 @@ async function AllRoutesInMap() {
             route.Pins[i].longitude,
           ),
         ];
-        let polyColor = '';
+        let polyColor = ''; // 루트선 색깔
         for (let i = 0; i < colorsName.length; i++) {
           if (route.color === colorsName[i]) {
             polyColor = colorChips[i];

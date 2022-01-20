@@ -6,11 +6,6 @@ function Footer() {
     <div>
       <div className="footer-backgroundcolor">
         <footer className="footer-footer">
-          {/* <img
-            alt="footerLogo"
-            className="footer-footerImg"
-            src="http://127.0.0.1:5500/client/public/img/footerLogo.png"
-          /> */}
           <span className="footer-MemoryRoad">
             MeMo<span className="footer-ryRoad">ryRoad</span>
           </span>

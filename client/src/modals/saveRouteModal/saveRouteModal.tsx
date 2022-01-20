@@ -80,7 +80,7 @@ function SaveRouteModal({
 
   /* 저장 버튼 눌렀을 때 일어나는 이벤트 */
   const saveAllPinAndRouteInfo = () => {
-    const translatedPins = pins.slice();
+    const translatedPins = pins.slice(1);
     translatedPins.forEach((el: any) => {
       // delete el.pinID; 내가 지워서 자꾸 오류를 일으켰구나 ..
       el.keywords = [];
@@ -110,9 +110,17 @@ function SaveRouteModal({
         url: 'https://server.memory-road.net/routes',
         method: 'post',
         data: formData,
+        withCredentials: true,
       })
-        .then((data) => console.log(data), handleSidebarSaveBtn(false))
-        .catch((err) => console.log(err));
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+            handleSidebarSaveBtn(false);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   };
   return (

@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/reducer/index';
 import Navigation from '../../components/Navigation';
 import ColorSelectBox from '../../components/colorSelectBox/colorSelectBoxForStore';
 import SeoulSelectBox from '../../components/seoulSelectBox/seoulSelectBoxForStore';
@@ -8,44 +11,101 @@ import Pagination from '../../components/pagination/paginationForStore';
 import StoryCardMainModal from '../../modals/storyCardMainModal/storyCardMainModal';
 import './myRouteStore.css';
 import { testData } from './textData';
+import _ from 'lodash';
 import axios from 'axios';
 
 function MyRouteStore() {
+  const navigate = useNavigate();
+  const colorNames = useSelector(
+    (state: RootState): Array<string> => state.createRouteReducer.colorName,
+  );
+  const wardNames = useSelector(
+    (state: RootState): Array<string> => state.createRouteReducer.wards,
+  );
+  const [clickedColorSelect, setClickedColorSelect] = useState(false);
+  const [clickedSeoulSelect, setClickedSeoulSelect] = useState(false);
+  const [clickedWardSelect, setClickedWardSelect] = useState(false);
+  const [selectedColorId, setSelectedCorlorId] = useState(0);
+  const [selectedSeoul, setSelectedSeoul] = useState(0);
+  const [selectedWard, setSelectedWard] = useState(0);
+
+  const [paginationNum, setPaginationNum] = useState(0); // <, > 버튼 컨트롤
+  const [currPageNum, setCurrPageNum] = useState(1); // 페이지 넘버(1,2,3) 컨트롤
+  const [dataCount, setdataCount] = useState(50); // 전체 루트 개수
+  const [routeCards, setRouteCards] = useState([]); // server에서 받아온 데이터 모음
+  const [originRouteCards, setOriginRouteCards] = useState([]); // 변경되지않는 기존값.
+
+  if (selectedColorId !== 0 && selectedWard !== 0) {
+    const filteredRouteCards = originRouteCards
+      .filter((el: any) =>
+        el.color === colorNames[selectedColorId] ? true : false,
+      )
+      .filter((el: any) => {
+        const pinsWards = el.Pins.map((pin: any) => pin.ward);
+        return pinsWards.indexOf(selectedWard) !== -1 ? true : false;
+      });
+    setRouteCards(originRouteCards);
+  } else if (selectedColorId !== 0) {
+    const filteredRouteCards = originRouteCards.filter((el: any) =>
+      el.color === colorNames[selectedColorId] ? true : false,
+    );
+    setRouteCards(filteredRouteCards); // 색상이 선택되었을 때 상태 업데이트
+  } else if (selectedWard !== 0) {
+    const filteredRouteCards = originRouteCards.filter((el: any) => {
+      const pinsWards = el.Pins.map((pin: any) => pin.ward);
+      return pinsWards.indexOf(selectedWard) !== -1 ? true : false;
+    });
+    setRouteCards(filteredRouteCards); // 구 이름이 선택되었을 때 상태 업데이트
+  } else {
+    setRouteCards(originRouteCards);
+  }
+
+  const handleColorSelect = () => {
+    setClickedColorSelect(!clickedColorSelect);
+    setClickedSeoulSelect(false);
+    setClickedWardSelect(false);
+  };
+  const handleSeoulSelect = () => {
+    setClickedSeoulSelect(!clickedSeoulSelect);
+    setClickedColorSelect(false);
+    setClickedWardSelect(false);
+  };
+  const handleWardSelect = () => {
+    setClickedWardSelect(!clickedWardSelect);
+    setClickedColorSelect(false);
+    setClickedSeoulSelect(false);
+  };
+  const selectColor = (event: any) => {
+    setSelectedCorlorId(event.target.id);
+  };
+  const selectSeoul = (event: any) => {
+    setSelectedSeoul(event.target.id);
+  };
+  const selectWard = (event: any) => {
+    setSelectedWard(event.target.id);
+  };
+
   /* pagination */
-  const routes = testData.routes;
-  const len = routes.length;
-  const count8 = Math.floor(len / 8) + (Math.floor(len % 8) > 0 ? 1 : 0);
-  const count40 = Math.floor(len / 40) + Math.floor(len % 40 > 0 ? 1 : 0);
-  const dividedRoutes = [];
-  const dividedPages = [];
-  for (let i = 0; i < count8; i++) {
-    dividedRoutes.push(routes.slice(i * 8, (i + 1) * 8));
+  const count8 =
+    Math.floor(dataCount / 8) + (Math.floor(dataCount % 8) > 0 ? 1 : 0);
+  const pages = [];
+  for (let i = 1; i <= count8; i++) {
+    pages.push(i);
   }
-  for (let i = 0; i < count40; i++) {
-    dividedPages.push(dividedRoutes.slice(i * 5, (i + 1) * 5));
-  }
-  const pageArr = dividedPages.map((el, idx) => {
-    const page: any = [];
-    el.forEach((el) => page.push(el.length));
-    return page;
-  });
-  console.log(pageArr);
-  /* pageNumber는 갱신되고있습니다 */
-  const [paginationNum, setPaginationNum] = useState(0);
-  const [clickedPageNum, setClickedPageNum] = useState(0);
+  const dividedPages = _.chunk(pages, 5); // 예쁘게 5개로 묶기.
   const handleClickedPageNum = (pageNum: number): void => {
-    setClickedPageNum(pageNum - 1); /* 페이지네이션 업데이트 */
+    setCurrPageNum(pageNum); /* 페이지네이션 업데이트 */
   };
   const handlePrevPaginationNum = () => {
     setPaginationNum(paginationNum - 1);
-    setClickedPageNum(0); /* 다음버튼 누름과 동시에 페이지 상태 초기화 */
+    setCurrPageNum((paginationNum - 1) * 5 + 1); // 이전페이지 맨 첫 장
   };
   const handleNextPaginationNum = () => {
     setPaginationNum(paginationNum + 1);
-    setClickedPageNum(0); /* 다음버튼 누름과 동시에 페이지 상태 초기화 */
+    setCurrPageNum((paginationNum + 1) * 5 + 1); // 이후페이지 맨 첫 장
   };
   console.log(paginationNum);
-  console.log(clickedPageNum);
+  console.log(currPageNum);
   /* card modal */
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
   const [cardModalId, setCardModalId] = useState(1);
@@ -56,25 +116,49 @@ function MyRouteStore() {
   const handleCardModalClose = () => {
     setIsCardModalOpen(false);
   };
-  const addImageUrl = 'http://127.0.0.1:5500/client/public/img/plus_button.png';
+  const addImageUrl = 'https://server.memory-road.net/upload/plus_button.png';
   useEffect(() => {
-    axios({
-      url: 'https://server.memory-road.tk/routes',
-      method: 'get',
-      withCredentials: true,
-      // params: {
-      //   page: 1,
-      // },
-    }).then((data) => {
-      console.log(data);
-    });
-  });
+    if (currPageNum === 0) {
+      axios({
+        url: 'https://server.memory-road.net/routes',
+        method: 'get',
+        withCredentials: true,
+        params: {
+          page: 1,
+        },
+      })
+        .then((res: any) => {
+          console.log(res);
+          setdataCount(res.count);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } else {
+      axios({
+        url: 'https://server.memory-road.net/routes',
+        method: 'get',
+        withCredentials: true,
+        params: {
+          page: currPageNum,
+        },
+      })
+        .then((res: any) => {
+          console.log(res);
+          setRouteCards(res.routes); // 배열값
+          setOriginRouteCards(res.routes);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [currPageNum]);
   return (
     <>
       {isCardModalOpen ? (
         <StoryCardMainModal
           handleCardModalClose={handleCardModalClose}
-          routeInfo={dividedPages[paginationNum][clickedPageNum][cardModalId]}
+          routeInfo={routeCards[cardModalId]}
         />
       ) : null}
       <div className="myRouteStore-wrapper">
@@ -85,9 +169,23 @@ function MyRouteStore() {
             <hr className="myRouteStore-divide-line"></hr>
             <div className="myRouteStore-selectZone">
               <div className="myRouteStore-selectBoxZone">
-                <ColorSelectBox />
-                <SeoulSelectBox />
-                <WardSelectBox />
+                <ColorSelectBox
+                  clickedColorSelect={clickedColorSelect}
+                  handleColorSelect={handleColorSelect}
+                  selectColor={selectColor}
+                  selectedColorId={selectedColorId}
+                />
+                <SeoulSelectBox
+                  clickedSeoulSelect={clickedSeoulSelect}
+                  handleSeoulSelect={handleSeoulSelect}
+                  selectSeoul={selectSeoul}
+                />
+                <WardSelectBox
+                  clickedWardSelect={clickedWardSelect}
+                  handleWardSelect={handleWardSelect}
+                  selectWard={selectWard}
+                  selectedWard={selectedWard}
+                />
               </div>
               <div className="myRouteStore-searchBoxZone">
                 <input
@@ -102,7 +200,12 @@ function MyRouteStore() {
               <div className="myRouteStore-contentBox">
                 {/* 여기서 중앙정렬 ?~! */}
                 <div className="myRouteStore-contents">
-                  <button className="myRouteStore-createRouteBox-btn">
+                  <button
+                    className="myRouteStore-createRouteBox-btn"
+                    onClick={() => {
+                      navigate('/createRoute');
+                    }}
+                  >
                     <img
                       alt="addButton"
                       className="myRouteStore-createRouteBox-add-image"
@@ -110,23 +213,21 @@ function MyRouteStore() {
                     ></img>
                   </button>
                   {/* 카드 나열 */}
-                  {dividedPages[paginationNum][clickedPageNum].map(
-                    (el, idx) => (
-                      <StoryCard
-                        handleCardModalOpen={handleCardModalOpen}
-                        key={idx}
-                        pin={el}
-                      />
-                    ),
-                  )}
+                  {routeCards.map((el, idx) => (
+                    <StoryCard
+                      handleCardModalOpen={handleCardModalOpen}
+                      key={idx}
+                      route={el}
+                    />
+                  ))}
                 </div>
                 <div className="myRouteStore-paginations-wrapper">
                   <div className="myRouteStore-paginations">
                     <Pagination
+                      dividedPages={dividedPages}
                       handleClickedPageNum={handleClickedPageNum}
                       handleNextPaginationNum={handleNextPaginationNum}
                       handlePrevPaginationNum={handlePrevPaginationNum}
-                      pageArr={pageArr}
                       paginationNum={paginationNum}
                     />
                   </div>
