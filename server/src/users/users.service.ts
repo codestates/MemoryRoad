@@ -36,7 +36,6 @@ export class UsersService {
     const isExistNick: UserEntity = await this.usersRepository.findOne({
       nickName: createUserDto.nickName,
     });
-    console.log('이게 콘솔임', isExistemail);
     if (isExistemail) {
       throw new BadRequestException(`사용중인 이메일입니다.`);
     }
@@ -53,7 +52,6 @@ export class UsersService {
       createUserDto.password,
       salt,
     );
-    console.log(createUserDto.saltedPassword);
     try {
       const user: UserEntity = await this.usersRepository.create(createUserDto);
       await this.usersRepository.save(user);
@@ -111,15 +109,12 @@ export class UsersService {
         profileImage: profile,
       });
     }
-    console.log(userInfo);
     return userInfo;
   }
   async naver(body: any): Promise<UserEntity> {
     const redirectURI = encodeURI('https://memory-road.net');
     const code = body.authorizationCode;
     const state = body.state;
-    console.log(code);
-    console.log(state);
     const apiUrl =
       'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=' +
       this.configService.get<string>('NAVER_CLIENT_ID') +
@@ -146,7 +141,6 @@ export class UsersService {
 
     const result = naverInfo.data.response;
     const profile = result.profile_image; //프로필 사진은 전달 안 해주고 있음
-    console.log(result);
     // 여기까지가 데이터 가져오는 코드
     let userInfo: UserEntity = await this.usersRepository.findOne({
       email: result.email,
@@ -168,7 +162,6 @@ export class UsersService {
         profileImage: profile,
       });
     }
-    console.log(userInfo);
     return userInfo;
   }
   async google(body: any): Promise<UserEntity> {
@@ -183,12 +176,9 @@ export class UsersService {
       .then((resp) => {
         const idToken = resp.data.id_token;
         const info = jwtDecode(idToken);
-        console.log(idToken);
-        console.log(info);
         return info;
       })
       .catch((err) => {
-        console.log(err);
         return err;
       });
     const { email, name, picture } = decode; // picture 아직 전달 안 해줬음.
@@ -196,7 +186,6 @@ export class UsersService {
       email: email,
       oauthLogin: 'google',
     });
-    console.log(userInfo);
     if (!userInfo) {
       const sameEmail: UserEntity = await this.usersRepository.findOne({
         email: email,
@@ -204,7 +193,6 @@ export class UsersService {
       if (sameEmail) {
         throw new BadRequestException('이미 사용중인 이메일입니다');
       }
-      console.log(name, email, picture);
       userInfo = await this.usersRepository.save({
         nickName: name,
         email: email,
@@ -214,7 +202,6 @@ export class UsersService {
         profileImage: picture,
       });
     }
-    console.log(userInfo);
     return userInfo;
   }
   //로컬 로그인 이메일, 비밀번호
@@ -230,12 +217,9 @@ export class UsersService {
       loginUserDto.password,
       isExistUser.saltedPassword,
     );
-    console.log(isExistUser.saltedPassword);
-    console.log(isCorrectPassword);
     if (!isCorrectPassword) {
       throw new UnauthorizedException(`비밀번호가 일치하지 않습니다`);
     }
-    console.log(isExistUser);
     return isExistUser;
   }
 
@@ -251,10 +235,11 @@ export class UsersService {
     const deleteFile: UserEntity = await this.usersRepository.findOne({
       id: decoded['id'],
     });
-    fs.unlinkSync(
-      `${join(__dirname, '..', '..', '..')}/${deleteFile['profileImage']}`,
-    );
-
+    if (!decoded['profileImage']) {
+      fs.unlinkSync(
+        `${join(__dirname, '..', '..', '..')}/${deleteFile['profileImage']}`,
+      );
+    }
     decoded['profileImage'] = file.path;
     const user: UserEntity = {
       id: decoded['id'],
@@ -269,7 +254,6 @@ export class UsersService {
   async updateUserName(accessToken: string, userName: string) {
     const decoded = await this.verifyAccessToken(accessToken);
     decoded['nickName'] = userName;
-    console.log(decoded['nickName']);
     const user: UserEntity = {
       id: decoded['id'],
       email: decoded['email'],
@@ -314,7 +298,6 @@ export class UsersService {
     const isExistEmail: UserEntity = await this.usersRepository.findOne({
       email: email,
     });
-    console.log(isExistEmail);
     if (isExistEmail) {
       throw new BadRequestException('사용중인 이메일입니다');
     }
@@ -337,7 +320,6 @@ export class UsersService {
       this.configService.get<string>('ACCESS_SECRET'),
       { expiresIn: '6h' },
     );
-    console.log(this.configService.get<string>('ACCESS_SECRET'));
     return accessToken;
   }
 }
