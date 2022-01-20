@@ -72,6 +72,7 @@ function SearchSideBar({
   //현재 페이지가 바뀌면, 페이지에 해당하는 루트들을 요청한다.
   useEffect(() => {
     if (didMount.current) {
+      const controller = new AbortController();
       axios
         .get(
           `https://server.memory-road.net/routes?search=true&${getQueryStr(
@@ -84,7 +85,16 @@ function SearchSideBar({
           setSearchResult(result.data.routes);
           setIsSidebarOpen(true);
         })
-        .catch((err) => null);
+        .catch((err) => {
+          //abort 에러는 경고창에 표시하지 않는다
+          if (err.name === 'AbortError') {
+            throw 'AbortError';
+          }
+        });
+
+      //응답을 받기 전에 요청이 가면 이전 요청을 취소한다
+      //https://axios-http.com/docs/cancellation
+      controller.abort();
     } else {
       didMount.current = true;
     }

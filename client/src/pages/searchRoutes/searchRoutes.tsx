@@ -61,10 +61,10 @@ function SearchRoutes() {
   const [lines, setLines] = useState<any[]>([]);
   //구의 모양을 그리는 폴리곤(마우스 이벤트까지 추가되어 있다.)
   const [wardPolygons, setWardPolygons] = useState<Promise<any>[]>([]);
-  //폴리곤을 다시 만들지 않기 위해 상태에 저장한다
-  // const [saveWardPolygons, setSaveWardPolygons] = useState<Promise<any>[]>([]);
   //지도 폴리곤 위의 커스텀 오버레이
   const [wardOverlay, setWardOverlay] = useState<any[]>([]);
+  //핀위에 마우스를 올렸을 때 나타나는 인포윈도우. 윈도우를 추적해 제거하는데 사용한다.
+  const [_, setInfoWindows] = useState<any[]>([]);
 
   // 카카오 맵이 담기는 DOM을 가리킨다.
   const mapContainer = useRef<HTMLDivElement | null>(null);
@@ -100,6 +100,7 @@ function SearchRoutes() {
   //루트를 받아 핀 객체들을 만들고, 랜더링 한다.
   function generatePins(routeInfo: Route, map: any) {
     const pinAry = [];
+    const infoWindowAry: any[] = [];
     for (const pin of routeInfo.Pins) {
       const pinObj = new kakao.maps.Marker({
         image:
@@ -134,7 +135,9 @@ function SearchRoutes() {
       });
       pinObj.setMap(map);
       pinAry.push(pinObj);
+      infoWindowAry.push(infoWindow);
     }
+    setInfoWindows((prev) => [...prev, ...infoWindowAry]);
     return pinAry;
   }
 
@@ -171,7 +174,9 @@ function SearchRoutes() {
   }
 
   async function getWardCount() {
+    const controller = new AbortController();
     const wardCount = await axios.get('https://server.memory-road.net/wards');
+    controller.abort();
     // console.log(wardCount.data.result);
     return wardCount.data.result;
   }
@@ -341,6 +346,14 @@ function SearchRoutes() {
         e.setMap(null);
       });
 
+      //기존 핀의 인포윈도우 제거
+      setInfoWindows((prev) => {
+        prev.forEach((e) => {
+          e.setMap(null);
+        });
+        return [];
+      });
+
       const newLines: any[] = [];
       let newPins: any[] = [];
       //검색 후 핀과 선 랜더링
@@ -403,12 +416,21 @@ function SearchRoutes() {
       //지도의 남서쪽 위도, 경도
       const swLatLng = bounds.getSouthWest();
 
+      const controller = new AbortController();
       //북서, 남동쪽 정보를 보내야 한다.
       axios
         .get(
           `https://server.memory-road.net/routes?search=true&nwLat=${swLatLng.getLat()}&nwLng=${neLatLng.getLng()}&seLat=${neLatLng.getLat()}&seLng=${swLatLng.getLng()}`,
         )
         .then((result) => {
+          //기존 핀의 인포윈도우 제거
+          setInfoWindows((prev) => {
+            prev.forEach((e) => {
+              e.setMap(null);
+            });
+            return [];
+          });
+
           const newLines: any[] = [];
           let newPins: any[] = [];
           //검색 후 핀과 선 랜더링
@@ -451,10 +473,26 @@ function SearchRoutes() {
           });
         })
         .catch((err) => {
-          alert('서버 에러');
+          //abort 에러는 경고창에 표시하지 않는다
+          if (err.name === 'AbortError') {
+            throw 'AbortError';
+          }
         });
+
+      //state hook같은 경우는 아래 방법이 의도한 대로 동작해, 한 변의 요청이 가지만, 지도 이동 같은 경우는 slow3g로 요청을 보내면 계속 요청이 간다. lodash의 throttle 사용해 보기
+      //응답을 받기 전에 요청이 가면 이전 요청을 취소한다
+      //https://axios-http.com/docs/cancellation
+      controller.abort();
     } else if (searchResult.length === 0) {
       //검색 결과가 없으면서 지도 레벨이 높아진 경우
+
+      //기존 핀의 인포윈도우 제거
+      setInfoWindows((prev) => {
+        prev.forEach((e) => {
+          e.setMap(null);
+        });
+        return [];
+      });
 
       //폴리곤을 그린다
       //폴리곤 위 오버레이는 폴리곤에 저장되어 있기 때문에 그리지 않아도 된다.
