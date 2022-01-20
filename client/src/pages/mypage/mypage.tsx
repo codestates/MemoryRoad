@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import CheckingPassword from '../../modals/editUserInfo/checkingPassword';
 import EditUserInfo from '../../modals/editUserInfo/editUserInfo';
 import Withdrawal from '../../modals/editUserInfo/withdrawal';
+import Nav from '../../components/Navigation';
 
 function Mypage() {
   // const modalCheckPassword = useSelector(
@@ -51,6 +52,7 @@ function Mypage() {
 
   return (
     <div>
+      <Nav url={url} />
       {modalCheckPassword ? <CheckingPassword url={url} /> : null}
       {modalEditUserInfo ? <EditUserInfo isvalid={isvalid} url={url} /> : null}
       {modalWithdrawal ? <Withdrawal url={url} /> : null}

@@ -79,9 +79,10 @@ const MemoryRoad = () => {
       }
     }
   }, [socialLogin]);
-
+  const url = 'https://server.memory-road.net';
   return (
     <div className="memoryRoad-scroll">
+      <Nav url={url} />
       <Home />
     </div>
   );
