@@ -23,6 +23,7 @@ function SignUp({ isvalid, url }: any) {
             setEmailChecking(true);
           } else {
             alert('이미 사용하고 있는 이메일 입니다.');
+            setEmailChecking(false);
           }
         });
     }
@@ -52,7 +53,8 @@ function SignUp({ isvalid, url }: any) {
               dispatch(signupModal(false)); // 회원가입 모달창을 닫고
               dispatch(loginModal(true)); // 로그인 모달창을 연다
             }
-          });
+          })
+          .catch((error) => setErrorMessage('중복된 닉네임 입니다.'));
       }
     } else {
       setErrorMessage('모든 항목을 작성해주세요');

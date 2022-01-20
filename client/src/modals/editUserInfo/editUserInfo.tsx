@@ -32,11 +32,12 @@ function EditUserInfo({ isvalid, url }: any) {
   };
   const [showProfile, setShowProfile] = useState(false); // 프로필사진을 가져오면 true로 바뀐다
   const [profile, setprofile] = useState(userinfo.profile); // 바뀐 프로필 사진
+
   // 프로필 사진을 가져옴
   const readProfile = (image: any) => {
     // readProfile(e.target);
-
     if (image.files && image.files[0]) {
+      // 바뀐 프로필 사진
       const reader = new FileReader();
       reader.onload = (e: any) => {
         const previewImage: any = document.getElementById(
@@ -44,7 +45,6 @@ function EditUserInfo({ isvalid, url }: any) {
         );
         previewImage.src = e.target.result;
       };
-      // console.log(image.files[0]);
       setprofile(image.files[0]);
       reader.readAsDataURL(image.files[0]);
       return true;
@@ -57,10 +57,11 @@ function EditUserInfo({ isvalid, url }: any) {
   useEffect(() => {
     const getelement: any = document.getElementById('ProfileImg');
     const profileImg = getelement.files[0];
-    console.log(profileImg);
+    // console.log(profileImg);
+
     const formData = new FormData(); // 폼데이터 형식으로 보냄
     formData.append('profile', profileImg);
-    console.log(formData.get('profile'));
+    // console.log(formData.get('profile'));
     // blob : 사진을 저장할 때 사용함
     const blob = new Blob([JSON.stringify(profileImg)], {
       type: 'application/json',

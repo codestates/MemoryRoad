@@ -36,7 +36,7 @@ function CheckingPassword({ url }: any) {
         })
         .catch((error) => {
           console.log(error);
-          setErrorMessage('회원 정보 변경 권한이 없습니다.');
+          setErrorMessage('비밀번호가 다릅니다.');
         });
     }
   };
