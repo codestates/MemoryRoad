@@ -7,10 +7,9 @@
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
     flex: 0 0 auto;
     margin-left: 4px;
-    border:solid 0.2rem rgb(233, 233, 233);
   }
   .myRouteStore-card-container-search:hover {
-    border:solid 0.2rem rgb(166, 211, 188);
+    box-shadow: 0rem 0rem 0.1rem 0.3rem rgb(166, 211, 188) ;
   }
 
   /* 활성화된 카드 */
@@ -19,10 +18,9 @@
     height: 180px;
     margin: 12px;
     border-radius: 15px;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    box-shadow: 0rem 0rem 0.1rem 0.3rem rgb(127, 177, 151) ;
     flex: 0 0 auto;
     margin-left: 4px;
-    border:solid 0.2rem rgb(127, 177, 151);
   }
   .myRouteStore-card-top-search {
     width: 100%;
@@ -34,6 +32,15 @@
     object-fit: cover;
     opacity: 0.75;
     border-radius: 15px 15px 0 0;
+  }
+
+  .myRouteStore-card-image-search.null { /*image*/
+    width: 100%;
+    height: 100%;
+    object-fit: scale-down;
+    opacity: 0.75;
+    border-radius: 15px 15px 0 0;
+    background-color: #FFB788;
   }
   .myRouteStore-card-bottom-search {
     width: 100%;

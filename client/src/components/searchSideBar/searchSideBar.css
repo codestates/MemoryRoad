@@ -20,7 +20,7 @@
     z-index: 99;
     width: 330px;
     height: calc(100vh - 45px);
-    background-color: rgb(233, 233, 233);
+    background-color: white;
     transition: right 0.3s;
     display: flex;
     flex-flow: column nowrap;
