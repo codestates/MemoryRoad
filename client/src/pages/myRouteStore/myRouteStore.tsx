@@ -35,30 +35,30 @@ function MyRouteStore() {
   const [routeCards, setRouteCards] = useState([]); // server에서 받아온 데이터 모음
   const [originRouteCards, setOriginRouteCards] = useState([]); // 변경되지않는 기존값.
 
-  if (selectedColorId !== 0 && selectedWard !== 0) {
-    const filteredRouteCards = originRouteCards
-      .filter((el: any) =>
-        el.color === colorNames[selectedColorId] ? true : false,
-      )
-      .filter((el: any) => {
-        const pinsWards = el.Pins.map((pin: any) => pin.ward);
-        return pinsWards.indexOf(selectedWard) !== -1 ? true : false;
-      });
-    setRouteCards(originRouteCards);
-  } else if (selectedColorId !== 0) {
-    const filteredRouteCards = originRouteCards.filter((el: any) =>
-      el.color === colorNames[selectedColorId] ? true : false,
-    );
-    setRouteCards(filteredRouteCards); // 색상이 선택되었을 때 상태 업데이트
-  } else if (selectedWard !== 0) {
-    const filteredRouteCards = originRouteCards.filter((el: any) => {
-      const pinsWards = el.Pins.map((pin: any) => pin.ward);
-      return pinsWards.indexOf(selectedWard) !== -1 ? true : false;
-    });
-    setRouteCards(filteredRouteCards); // 구 이름이 선택되었을 때 상태 업데이트
-  } else {
-    setRouteCards(originRouteCards);
-  }
+  // if (selectedColorId !== 0 && selectedWard !== 0) {
+  //   const filteredRouteCards = originRouteCards
+  //     .filter((el: any) =>
+  //       el.color === colorNames[selectedColorId] ? true : false,
+  //     )
+  //     .filter((el: any) => {
+  //       const pinsWards = el.Pins.map((pin: any) => pin.ward);
+  //       return pinsWards.indexOf(selectedWard) !== -1 ? true : false;
+  //     });
+  //   setRouteCards(originRouteCards);
+  // } else if (selectedColorId !== 0) {
+  //   const filteredRouteCards = originRouteCards.filter((el: any) =>
+  //     el.color === colorNames[selectedColorId] ? true : false,
+  //   );
+  //   setRouteCards(filteredRouteCards); // 색상이 선택되었을 때 상태 업데이트
+  // } else if (selectedWard !== 0) {
+  //   const filteredRouteCards = originRouteCards.filter((el: any) => {
+  //     const pinsWards = el.Pins.map((pin: any) => pin.ward);
+  //     return pinsWards.indexOf(selectedWard) !== -1 ? true : false;
+  //   });
+  //   setRouteCards(filteredRouteCards); // 구 이름이 선택되었을 때 상태 업데이트
+  // } else {
+  //   setRouteCards(originRouteCards);
+  // }
 
   const handleColorSelect = () => {
     setClickedColorSelect(!clickedColorSelect);
@@ -104,8 +104,6 @@ function MyRouteStore() {
     setPaginationNum(paginationNum + 1);
     setCurrPageNum((paginationNum + 1) * 5 + 1); // 이후페이지 맨 첫 장
   };
-  console.log(paginationNum);
-  console.log(currPageNum);
   /* card modal */
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
   const [cardModalId, setCardModalId] = useState(1);

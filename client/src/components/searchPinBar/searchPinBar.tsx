@@ -23,7 +23,7 @@ function SearchPinBar({
   };
   return (
     <>
-      <div id="searchPin-static-location">
+      <div id="searchPin-static-location-sy">
         <div id="searchPin-background">
           <button
             id="searchPin-my-blue-marker-btn"

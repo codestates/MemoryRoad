@@ -27,7 +27,7 @@ ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
-        <Nav url={url} />
+        {/* <Nav url={url} />  네비게이션이 필요한 곳에만 넣어주세요 !! */}
         <Routes>
           <Route element={<MemoryRoad />} path="/"></Route>
           <Route element={<Mypage />} path="/Mypage" />

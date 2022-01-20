@@ -5,7 +5,7 @@
     justify-content: center;
   }
   /*검색창 전체 컨테이너*/
-  #searchPin-background {
+  #searchPin-background-dy {
     position: fixed;
     z-index: 995;
     width: 430px;
