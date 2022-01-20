@@ -72,6 +72,7 @@ function EditUserInfo({ isvalid, url }: any) {
         withCredentials: true,
       })
       .then((res) => {
+        console.log(res.data);
         if (res.status === 200) {
           dispatch(
             setUserInfo(
@@ -95,7 +96,7 @@ function EditUserInfo({ isvalid, url }: any) {
           `${url}/users/user-name`,
           { userName: username },
           {
-            headers: { 'Content-Type': 'multipart/form-data' },
+            headers: { 'Content-Type': 'application/json' },
             withCredentials: true,
           },
         )
@@ -129,7 +130,7 @@ function EditUserInfo({ isvalid, url }: any) {
           `${url}/users/password`,
           { password: Password },
           {
-            headers: { 'Content-Type': 'multipart/form-data' },
+            headers: { 'Content-Type': 'application/json' },
             withCredentials: true,
           },
         )
