@@ -3,15 +3,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/reducer';
 import './colorSelectBox.css';
 
-function ColorSelectBox() {
-  const [clickedColorSelect, setClickedColorSelect] = useState(false);
-  const [selectedColorId, setSelectedCorlorId] = useState('0');
-  const handleColorSelect = () => {
-    setClickedColorSelect(!clickedColorSelect);
-  };
-  const selectColor = (event: any) => {
-    setSelectedCorlorId(event.target.id);
-  };
+function ColorSelectBox({
+  clickedColorSelect,
+  handleColorSelect,
+  selectedColorId,
+  selectColor,
+}: any) {
   const colorUrls: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorDotUrl,
   );
@@ -23,6 +20,7 @@ function ColorSelectBox() {
         }
       >
         <button className="selectbox-color-label" onClick={handleColorSelect}>
+          {/* 기본값으로 회색 이미지 넣기 */}
           <img
             alt="selected-dot"
             className="selectbox-color-selected-option"

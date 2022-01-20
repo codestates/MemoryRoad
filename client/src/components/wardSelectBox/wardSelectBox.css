@@ -21,7 +21,7 @@
   border: none;
   outline: none;
   padding-left: 5px;
-  background: url('http://127.0.0.1:5500/client/public/img/black_triangle.png') calc(100% - 13px) center no-repeat;
+  background: url('https://server.memory-road.net/upload/black_triangle.png') calc(100% - 13px) center no-repeat;
   background-size: 11px;
   cursor: pointer;
   font-size: 0.9em;

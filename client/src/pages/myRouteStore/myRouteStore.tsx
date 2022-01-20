@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/reducer/index';
 import Navigation from '../../components/Navigation';
 import ColorSelectBox from '../../components/colorSelectBox/colorSelectBoxForStore';
 import SeoulSelectBox from '../../components/seoulSelectBox/seoulSelectBoxForStore';
@@ -12,10 +15,76 @@ import _ from 'lodash';
 import axios from 'axios';
 
 function MyRouteStore() {
+  const navigate = useNavigate();
+  const colorNames = useSelector(
+    (state: RootState): Array<string> => state.createRouteReducer.colorName,
+  );
+  const wardNames = useSelector(
+    (state: RootState): Array<string> => state.createRouteReducer.wards,
+  );
+  const [clickedColorSelect, setClickedColorSelect] = useState(false);
+  const [clickedSeoulSelect, setClickedSeoulSelect] = useState(false);
+  const [clickedWardSelect, setClickedWardSelect] = useState(false);
+  const [selectedColorId, setSelectedCorlorId] = useState(0);
+  const [selectedSeoul, setSelectedSeoul] = useState(0);
+  const [selectedWard, setSelectedWard] = useState(0);
+
   const [paginationNum, setPaginationNum] = useState(0); // <, > 버튼 컨트롤
   const [currPageNum, setCurrPageNum] = useState(1); // 페이지 넘버(1,2,3) 컨트롤
   const [dataCount, setdataCount] = useState(50); // 전체 루트 개수
-  const [routeCards, setRouteCards] = useState([]);
+  const [routeCards, setRouteCards] = useState([]); // server에서 받아온 데이터 모음
+  const [originRouteCards, setOriginRouteCards] = useState([]); // 변경되지않는 기존값.
+
+  if (selectedColorId !== 0 && selectedWard !== 0) {
+    const filteredRouteCards = originRouteCards
+      .filter((el: any) =>
+        el.color === colorNames[selectedColorId] ? true : false,
+      )
+      .filter((el: any) => {
+        const pinsWards = el.Pins.map((pin: any) => pin.ward);
+        return pinsWards.indexOf(selectedWard) !== -1 ? true : false;
+      });
+    setRouteCards(originRouteCards);
+  } else if (selectedColorId !== 0) {
+    const filteredRouteCards = originRouteCards.filter((el: any) =>
+      el.color === colorNames[selectedColorId] ? true : false,
+    );
+    setRouteCards(filteredRouteCards); // 색상이 선택되었을 때 상태 업데이트
+  } else if (selectedWard !== 0) {
+    const filteredRouteCards = originRouteCards.filter((el: any) => {
+      const pinsWards = el.Pins.map((pin: any) => pin.ward);
+      return pinsWards.indexOf(selectedWard) !== -1 ? true : false;
+    });
+    setRouteCards(filteredRouteCards); // 구 이름이 선택되었을 때 상태 업데이트
+  } else {
+    setRouteCards(originRouteCards);
+  }
+
+  const handleColorSelect = () => {
+    setClickedColorSelect(!clickedColorSelect);
+    setClickedSeoulSelect(false);
+    setClickedWardSelect(false);
+  };
+  const handleSeoulSelect = () => {
+    setClickedSeoulSelect(!clickedSeoulSelect);
+    setClickedColorSelect(false);
+    setClickedWardSelect(false);
+  };
+  const handleWardSelect = () => {
+    setClickedWardSelect(!clickedWardSelect);
+    setClickedColorSelect(false);
+    setClickedSeoulSelect(false);
+  };
+  const selectColor = (event: any) => {
+    setSelectedCorlorId(event.target.id);
+  };
+  const selectSeoul = (event: any) => {
+    setSelectedSeoul(event.target.id);
+  };
+  const selectWard = (event: any) => {
+    setSelectedWard(event.target.id);
+  };
+
   /* pagination */
   const count8 =
     Math.floor(dataCount / 8) + (Math.floor(dataCount % 8) > 0 ? 1 : 0);
@@ -47,38 +116,37 @@ function MyRouteStore() {
   const handleCardModalClose = () => {
     setIsCardModalOpen(false);
   };
-  const addImageUrl = 'http://127.0.0.1:5500/client/public/img/plus_button.png';
+  const addImageUrl = 'https://server.memory-road.net/upload/plus_button.png';
   useEffect(() => {
     if (currPageNum === 0) {
       axios({
-        url: 'https://server.memory-road.tk/routes',
+        url: 'https://server.memory-road.net/routes',
         method: 'get',
         withCredentials: true,
         params: {
           page: 1,
         },
       })
-        .then((data) => {
-          console.log(data);
-          // 여기서 count 값이 갱신됌.
-          // setdataCount(data.count)
+        .then((res: any) => {
+          console.log(res);
+          setdataCount(res.count);
         })
         .catch((err) => {
           console.log(err);
         });
     } else {
       axios({
-        url: 'https://server.memory-road.tk/routes',
+        url: 'https://server.memory-road.net/routes',
         method: 'get',
         withCredentials: true,
         params: {
           page: currPageNum,
         },
       })
-        .then((data) => {
-          console.log(data);
-          // 여기서 전체 루트 정보들을 받아옴. (최대 8개)
-          // setRouteCards(data,route);
+        .then((res: any) => {
+          console.log(res);
+          setRouteCards(res.routes); // 배열값
+          setOriginRouteCards(res.routes);
         })
         .catch((err) => {
           console.log(err);
@@ -101,9 +169,23 @@ function MyRouteStore() {
             <hr className="myRouteStore-divide-line"></hr>
             <div className="myRouteStore-selectZone">
               <div className="myRouteStore-selectBoxZone">
-                <ColorSelectBox />
-                <SeoulSelectBox />
-                <WardSelectBox />
+                <ColorSelectBox
+                  clickedColorSelect={clickedColorSelect}
+                  handleColorSelect={handleColorSelect}
+                  selectColor={selectColor}
+                  selectedColorId={selectedColorId}
+                />
+                <SeoulSelectBox
+                  clickedSeoulSelect={clickedSeoulSelect}
+                  handleSeoulSelect={handleSeoulSelect}
+                  selectSeoul={selectSeoul}
+                />
+                <WardSelectBox
+                  clickedWardSelect={clickedWardSelect}
+                  handleWardSelect={handleWardSelect}
+                  selectWard={selectWard}
+                  selectedWard={selectedWard}
+                />
               </div>
               <div className="myRouteStore-searchBoxZone">
                 <input
@@ -118,7 +200,12 @@ function MyRouteStore() {
               <div className="myRouteStore-contentBox">
                 {/* 여기서 중앙정렬 ?~! */}
                 <div className="myRouteStore-contents">
-                  <button className="myRouteStore-createRouteBox-btn">
+                  <button
+                    className="myRouteStore-createRouteBox-btn"
+                    onClick={() => {
+                      navigate('/createRoute');
+                    }}
+                  >
                     <img
                       alt="addButton"
                       className="myRouteStore-createRouteBox-add-image"
@@ -130,7 +217,7 @@ function MyRouteStore() {
                     <StoryCard
                       handleCardModalOpen={handleCardModalOpen}
                       key={idx}
-                      pin={el}
+                      route={el}
                     />
                   ))}
                 </div>

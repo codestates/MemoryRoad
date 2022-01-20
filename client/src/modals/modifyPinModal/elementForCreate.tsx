@@ -90,7 +90,7 @@ const ElementForCreate = ({
             <label htmlFor="file-upload" id="file-upload-image">
               <img
                 alt="icon"
-                src="http://127.0.0.1:5500/client/public/img/addPhoto_icon.png"
+                src="https://server.memory-road.net/upload/addPhoto_icon.png"
                 width="40"
               />
             </label>
@@ -117,7 +117,7 @@ const ElementForCreate = ({
                 <img
                   alt="closeImage"
                   className="createPinModal-close-btn"
-                  src="http://127.0.0.1:5500/client/public/img/close_icon.png"
+                  src="https://server.memory-road.net/upload/close_icon.png"
                   title={el.name}
                 ></img>
               </button>
