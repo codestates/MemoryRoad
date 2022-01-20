@@ -144,13 +144,9 @@ export class UsersController {
     if (!req.cookies || !req.cookies.accessToken) {
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
-    try {
-      const accessToken = req.cookies.accessToken;
-      await this.usersService.checkPassword(accessToken, password);
-      return res.status(200).json({ message: '비밀번호가 일치합니다' });
-    } catch (err) {
-      return err;
-    }
+    const accessToken = req.cookies.accessToken;
+    await this.usersService.checkPassword(accessToken, password);
+    return res.status(200).json({ message: '비밀번호가 일치합니다' });
   }
 
   // 프로필 회원 정보 수정
@@ -165,14 +161,10 @@ export class UsersController {
       fs.unlinkSync(`${join(__dirname, '..', '..', '..')}/${file.path}`);
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
-    try {
-      // console.log(req.cookies);
-      const accessToken = req.cookies.accessToken;
-      const profile = await this.usersService.updateProfile(accessToken, file);
-      return res.status(200).json({ profile: profile });
-    } catch (err) {
-      return err;
-    }
+    // console.log(req.cookies);
+    const accessToken = req.cookies.accessToken;
+    const profile = await this.usersService.updateProfile(accessToken, file);
+    return res.status(200).json({ profile: profile });
   }
 
   // 유저네임 회원 정보 수정
@@ -185,14 +177,10 @@ export class UsersController {
     if (!req.cookies || !req.cookies.accessToken) {
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
-    try {
-      console.log(req.cookies);
-      const accessToken = req.cookies.accessToken;
-      await this.usersService.updateUserName(accessToken, userName);
-      return res.status(200).json({ message: '닉네임이 변경되었습니다' });
-    } catch (err) {
-      return err;
-    }
+    console.log(req.cookies);
+    const accessToken = req.cookies.accessToken;
+    await this.usersService.updateUserName(accessToken, userName);
+    return res.status(200).json({ message: '닉네임이 변경되었습니다' });
   }
   // 비밀번호 정보 수정
   @Patch('/password')
@@ -204,14 +192,10 @@ export class UsersController {
     if (!req.cookies || !req.cookies.accessToken) {
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
-    try {
-      console.log(req.cookies);
-      const accessToken = req.cookies.accessToken;
-      await this.usersService.updatePassword(accessToken, password);
-      return res.status(200).json({ message: '비밀번호가 변경되었습니다' });
-    } catch (err) {
-      return err;
-    }
+    console.log(req.cookies);
+    const accessToken = req.cookies.accessToken;
+    await this.usersService.updatePassword(accessToken, password);
+    return res.status(200).json({ message: '비밀번호가 변경되었습니다' });
   }
 
   // 회원 탈퇴
@@ -220,19 +204,15 @@ export class UsersController {
     if (!req.cookies || !req.cookies.accessToken) {
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
-    try {
-      const accessToken = req.cookies.accessToken;
-      await this.usersService.remove(accessToken);
-      res.cookie('accessToken', 'success', {
-        httpOnly: true,
-        maxAge: 5 * 60 * 60 * 1000,
-        sameSite: 'none',
-        secure: true,
-      });
-      return res.status(200).send({ message: '회원에서 탈퇴하셨습니다' });
-    } catch (err) {
-      return err;
-    }
+    const accessToken = req.cookies.accessToken;
+    await this.usersService.remove(accessToken);
+    res.cookie('accessToken', 'success', {
+      httpOnly: true,
+      maxAge: 5 * 60 * 60 * 1000,
+      sameSite: 'none',
+      secure: true,
+    });
+    return res.status(200).send({ message: '회원에서 탈퇴하셨습니다' });
   }
 
   // 로그 아웃
@@ -241,19 +221,15 @@ export class UsersController {
     if (!req.cookies || !req.cookies.accessToken) {
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
-    try {
-      const accessToken = req.cookies.accessToken;
-      await this.usersService.logOut(accessToken);
-      //아무것도 없는 쿠키 전달
-      res.cookie('accessToken', 'success', {
-        httpOnly: true,
-        maxAge: 5 * 60 * 60 * 1000,
-        sameSite: 'none',
-        secure: true,
-      });
-      return res.status(200).send({ message: '로그아웃 하셨습니다' });
-    } catch (err) {
-      return err;
-    }
+    const accessToken = req.cookies.accessToken;
+    await this.usersService.logOut(accessToken);
+    //아무것도 없는 쿠키 전달
+    res.cookie('accessToken', 'success', {
+      httpOnly: true,
+      maxAge: 5 * 60 * 60 * 1000,
+      sameSite: 'none',
+      secure: true,
+    });
+    return res.status(200).send({ message: '로그아웃 하셨습니다' });
   }
 }

@@ -62,7 +62,7 @@ function AllRoutesInMap() {
   const [pickPinsPictures, setPickPinsPictures] = useState<Picture[]>();
 
   //핀 이미지 생성
-  const pinImgSize = new kakao.maps.Size(30, 30);
+  const pinImgSize = new kakao.maps.Size(25, 25);
   const pinImgOpt = { offset: new kakao.maps.Point(14, 14) };
 
   // *infoWindow 기본 css 없애는 함수
@@ -78,6 +78,7 @@ function AllRoutesInMap() {
     for (let i = 0; i < colorsName.length; i++) {
       if (routeInfo.color === colorsName[i]) {
         pinColorUrl = colorUrls[i];
+        console.log(colorUrls[i]);
       }
     }
     const pinImgSrc = pinColorUrl;
