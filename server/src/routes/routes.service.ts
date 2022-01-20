@@ -166,34 +166,37 @@ export class RoutesService {
 
       //조회할 루트의 id가 든 배열
       const idAry = routeIds.map((e) => e.id);
-      console.log(idAry);
-      const routes = await this.routesRepository
-        .createQueryBuilder('Routes')
-        .select([
-          'Routes.id',
-          'Routes.routeName',
-          'Routes.description',
-          'Routes.createdAt',
-          'Routes.updatedAt',
-          'Routes.public',
-          'Routes.color',
-          'Routes.time',
-          'Pins.id',
-          'Pins.routesId',
-          'Pins.ranking',
-          'Pins.locationName',
-          'Pins.lotAddress',
-          'Pins.roadAddress',
-          'Pins.ward',
-          'Pins.tooClose',
-          'Pins.latitude',
-          'Pins.longitude',
-        ])
-        .leftJoin('Routes.Pins', 'Pins')
-        .where('Routes.id IN (:id)', { id: idAry })
-        .orderBy('Routes.createdAt')
-        .addOrderBy('Pins.ranking')
-        .getMany();
+      // 결과 반환용 배열
+      let routes = [];
+      if (idAry.length !== 0) {
+        routes = await this.routesRepository
+          .createQueryBuilder('Routes')
+          .select([
+            'Routes.id',
+            'Routes.routeName',
+            'Routes.description',
+            'Routes.createdAt',
+            'Routes.updatedAt',
+            'Routes.public',
+            'Routes.color',
+            'Routes.time',
+            'Pins.id',
+            'Pins.routesId',
+            'Pins.ranking',
+            'Pins.locationName',
+            'Pins.lotAddress',
+            'Pins.roadAddress',
+            'Pins.ward',
+            'Pins.tooClose',
+            'Pins.latitude',
+            'Pins.longitude',
+          ])
+          .leftJoin('Routes.Pins', 'Pins')
+          .where('Routes.id IN (:id)', { id: idAry })
+          .orderBy('Routes.createdAt')
+          .addOrderBy('Pins.ranking')
+          .getMany();
+      }
 
       const response = {
         code: 200,
