@@ -11,6 +11,7 @@ function SaveRouteModal({
   totalTime,
   pinImage,
   routeId,
+  setIsMoveToMypage,
 }: any) {
   console.log(pinImage);
   const colorUrls: any = useSelector(
@@ -142,6 +143,7 @@ function SaveRouteModal({
           if (res.status === 200) {
             console.log(res);
             handleSidebarSaveBtn(false);
+            setIsMoveToMypage(true);
           }
         })
         .catch((err) => {

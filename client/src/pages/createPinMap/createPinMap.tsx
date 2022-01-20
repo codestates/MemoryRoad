@@ -15,9 +15,11 @@ import FakeHeader from '../../components/map-test/fakeHeader';
 import createPinModal from '../../modals/createPinModal/createPinModal'; // 핀 생성 모달창
 import SearchPinBar from '../../components/searchPinBar/searchPinBar'; // 핀 검색창
 import ConfirmPinIsEmptyModal from '../../modals/confirmPinIsEmpty/confirmPinIsEmptyModal'; // 핀 오류 모달창
+import ConfirmMoveToMypage from '../../modals/confirmRouteSave/confirmMoveToMypage'; // 마이페이지 이동 모달창
+import ConfirmIsUserSaveRoute from '../../modals/confirmIsUserSaveRoute/confirmIsUserSaveRoute'; // 로그인 여부 확인 모달창
 import SaveRouteModal from '../../modals/saveRouteModal/saveRouteModal'; // 루트 저장 모달창
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
-import Navigation from '../../components/Navigation';
+import Navigation from './NavigationForMap';
 import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBar';
 import _ from 'lodash';
 import '../../modals/createPinModal/createPinModal.css';
@@ -51,6 +53,8 @@ function CreatePinMap() {
   const [isEmptyInfo, setIsEmptyInfo] = useState(false);
   const [isClickSaveBtn, setIsClickSaveBtn] = useState(false);
   const [isSidebarSaveBtnClicked, setIsSidebarSaveBtnClicked] = useState(false);
+  const [isMoveToMypage, setIsMoveToMypage] = useState(false);
+  const [isNotUserSave, setIsNotUserSave] = useState(false);
 
   const handleSidebarSaveBtn = (bool: boolean) => {
     setIsSidebarSaveBtnClicked(bool);
@@ -674,6 +678,12 @@ function CreatePinMap() {
   return (
     <>
       <div id="map-whole-container">
+        {isNotUserSave ? (
+          <ConfirmIsUserSaveRoute setIsNotUserSave={setIsNotUserSave} />
+        ) : null}
+        {isMoveToMypage ? (
+          <ConfirmMoveToMypage setIsMoveToMypage={setIsMoveToMypage} />
+        ) : null}
         {isEmptyInfo ? (
           <ConfirmPinIsEmptyModal setIsEmptyInfo={setIsEmptyInfo} />
         ) : null}
@@ -682,11 +692,13 @@ function CreatePinMap() {
             handleSidebarSaveBtn={handleSidebarSaveBtn}
             pinImage={pinImage}
             pins={pins}
+            setIsMoveToMypage={setIsMoveToMypage}
+            setIsNotUserSave={setIsNotUserSave}
             totalTime={totalTime}
           />
         ) : null}
         <div id="map-navigator-top">
-          <FakeHeader />
+          <Navigation />
           <TimeLineSideBar
             createElement={createElement}
             handleSidebarSaveBtn={handleSidebarSaveBtn}
