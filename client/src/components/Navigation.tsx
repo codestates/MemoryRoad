@@ -49,7 +49,7 @@ function Nav({ url }: any) {
   const loginButtonHandler = () => {
     if (userinfo.isLogin) {
       // 로그아웃 API
-      axios.get(`${url}/users/auth`).then((res) => {
+      axios.get(`${url}/users/auth`, { withCredentials: true }).then((res) => {
         if (res.status === 200) {
           window.localStorage.clear(); // 로컬 스토리지를 비우고
           window.location.reload(); // 새로고침

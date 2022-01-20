@@ -118,7 +118,8 @@ export class UsersService {
     const redirectURI = encodeURI('https://memory-road.net');
     const code = body.authorizationCode;
     const state = body.state;
-
+    console.log(code);
+    console.log(state);
     const apiUrl =
       'https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=' +
       this.configService.get<string>('NAVER_CLIENT_ID') +
