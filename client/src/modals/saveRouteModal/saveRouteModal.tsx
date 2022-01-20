@@ -125,7 +125,7 @@ function SaveRouteModal({
           withCredentials: true,
         })
           .then((res) => {
-            if (res.status === 200) {
+            if (res.status === 201) {
               console.log(res);
               handleSidebarSaveBtn(false);
               setIsMoveToMypage(true);
