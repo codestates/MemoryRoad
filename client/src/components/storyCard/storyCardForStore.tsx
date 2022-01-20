@@ -9,6 +9,7 @@ function StoryCard({ handleCardModalOpen, route }: any) {
     (state: RootState) => state.createRouteReducer.colorName,
   );
   const colorIndex = colorNames.indexOf(route.color);
+  const createdAt = route.createdAt.slice(0, 10);
   return (
     <>
       <div
@@ -34,7 +35,7 @@ function StoryCard({ handleCardModalOpen, route }: any) {
               시간
             </div>
           </div>
-          <div className="myRouteStore-card-date">{route.createdAt}</div>
+          <div className="myRouteStore-card-date">{createdAt}</div>
           <div className="myRouteStore-card-route">
             <StoryCardRoute colorIndex={colorIndex} pins={route.Pins} />
           </div>

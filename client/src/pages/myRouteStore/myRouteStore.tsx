@@ -35,38 +35,38 @@ function MyRouteStore() {
   const [routeCards, setRouteCards] = useState([]); // server에서 받아온 데이터 모음
   const [originRouteCards, setOriginRouteCards] = useState([]); // 변경되지않는 기존값.
 
-  if (clickedColorSelect || clickedWardSelect) {
-    if (selectedColorId !== 0 && selectedWard !== 0) {
-      const filteredRouteCards = originRouteCards
-        .filter((el: any) =>
-          el.color === colorNames[selectedColorId] ? true : false,
-        )
-        .filter((el: any) => {
-          const pinsWards = el.Pins.map((pin: any) => pin.ward);
-          return pinsWards.indexOf(selectedWard) !== -1 ? true : false;
-        });
-      setRouteCards(filteredRouteCards);
-      setClickedColorSelect(false);
-      setClickedWardSelect(false);
-    } else if (selectedColorId !== 0) {
-      const filteredRouteCards = originRouteCards.filter((el: any) =>
-        el.color === colorNames[selectedColorId] ? true : false,
-      );
-      setRouteCards(filteredRouteCards); // 색상이 선택되었을 때 상태 업데이트
-      setClickedColorSelect(false);
-      setClickedWardSelect(false);
-    } else if (selectedWard !== 0) {
-      const filteredRouteCards = originRouteCards.filter((el: any) => {
-        const pinsWards = el.Pins.map((pin: any) => pin.ward);
-        return pinsWards.indexOf(selectedWard) !== -1 ? true : false;
-      });
-      setRouteCards(filteredRouteCards); // 구 이름이 선택되었을 때 상태 업데이트
-      setClickedColorSelect(false);
-      setClickedWardSelect(false);
-    } else {
-      setRouteCards(originRouteCards);
-    }
-  }
+  // if (clickedColorSelect || clickedWardSelect) {
+  //   if (selectedColorId !== 0 && selectedWard !== 0) {
+  //     const filteredRouteCards = originRouteCards
+  //       .filter((el: any) =>
+  //         el.color === colorNames[selectedColorId] ? true : false,
+  //       )
+  //       .filter((el: any) => {
+  //         const pinsWards = el.Pins.map((pin: any) => pin.ward);
+  //         return pinsWards.indexOf(selectedWard) !== -1 ? true : false;
+  //       });
+  //     setRouteCards(filteredRouteCards);
+  //     setClickedColorSelect(false);
+  //     setClickedWardSelect(false);
+  //   } else if (selectedColorId !== 0) {
+  //     const filteredRouteCards = originRouteCards.filter((el: any) =>
+  //       el.color === colorNames[selectedColorId] ? true : false,
+  //     );
+  //     setRouteCards(filteredRouteCards); // 색상이 선택되었을 때 상태 업데이트
+  //     setClickedColorSelect(false);
+  //     setClickedWardSelect(false);
+  //   } else if (selectedWard !== 0) {
+  //     const filteredRouteCards = originRouteCards.filter((el: any) => {
+  //       const pinsWards = el.Pins.map((pin: any) => pin.ward);
+  //       return pinsWards.indexOf(selectedWard) !== -1 ? true : false;
+  //     });
+  //     setRouteCards(filteredRouteCards); // 구 이름이 선택되었을 때 상태 업데이트
+  //     setClickedColorSelect(false);
+  //     setClickedWardSelect(false);
+  //   } else {
+  //     setRouteCards(originRouteCards);
+  //   }
+  // }
 
   if (currPageNum === 0 && dataCount === 0 && routeCards.length === 0) {
     axios({
@@ -78,32 +78,17 @@ function MyRouteStore() {
       },
     })
       .then((res: any) => {
-        console.log(res);
-        setdataCount(res.count);
-        setCurrPageNum(1);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  } else {
-    axios({
-      url: 'https://server.memory-road.net/routes',
-      method: 'get',
-      withCredentials: true,
-      params: {
-        page: currPageNum,
-      },
-    })
-      .then((res: any) => {
-        console.log(res);
-        setRouteCards(res.routes); // 배열값
-        setOriginRouteCards(res.routes);
+        if (res.status === 200) {
+          console.log(res);
+          console.log(res.data.count);
+          setdataCount(res.data.count);
+          setCurrPageNum(1);
+        }
       })
       .catch((err) => {
         console.log(err);
       });
   }
-
   const handleColorSelect = () => {
     setClickedColorSelect(!clickedColorSelect);
     setClickedSeoulSelect(false);
@@ -150,21 +135,49 @@ function MyRouteStore() {
   };
   /* card modal */
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
-  const [cardModalId, setCardModalId] = useState(1);
-  const handleCardModalOpen = (pinId: number) => {
-    setCardModalId(Number(pinId));
+  const [currModalData, setCurrModalData] = useState([]);
+  const handleCardModalOpen = (routeId: number) => {
+    const currRouteCardData = routeCards.filter((el: any) =>
+      el.id === routeId ? true : false,
+    );
+    setCurrModalData(currRouteCardData);
     setIsCardModalOpen(true);
   };
   const handleCardModalClose = () => {
     setIsCardModalOpen(false);
   };
   const addImageUrl = 'https://server.memory-road.net/upload/plus_button.png';
+
+  useEffect(() => {
+    if (currPageNum !== 0) {
+      axios({
+        url: 'https://server.memory-road.net/routes',
+        method: 'get',
+        withCredentials: true,
+        params: {
+          page: currPageNum,
+        },
+      })
+        .then((res: any) => {
+          if (res.status === 200) {
+            console.log(res);
+            setRouteCards(res.data.routes); // 배열값
+            setOriginRouteCards(res.data.routes);
+            setCurrPageNum(0);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [currPageNum]);
+
   return (
     <>
       {isCardModalOpen ? (
         <StoryCardMainModal
           handleCardModalClose={handleCardModalClose}
-          routeInfo={routeCards[cardModalId]}
+          routeInfo={currModalData}
         />
       ) : null}
       <div className="myRouteStore-wrapper">

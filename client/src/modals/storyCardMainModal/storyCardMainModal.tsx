@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/reducer';
 import './storyCardMainModal.css';
@@ -8,8 +8,9 @@ import axios from 'axios';
 const { kakao }: any = window;
 
 function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
+  const navigate = useNavigate();
   console.log(routeInfo);
-  const pins = routeInfo.Pins;
+  const pins = routeInfo[0]?.Pins;
   const colorUrls: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorDotUrl,
   );
@@ -20,10 +21,13 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
     (state: RootState) => state.createRouteReducer.colorChip,
   );
   const colorIdx = colorNames.indexOf(routeInfo.color);
-  const [pinId, setPinId] = useState(1);
+  const [currPinData, setCurrPinData] = useState<any[]>([]); // 야매 ..
   const [isResizing, setIsResizing] = useState(false);
   const handlePinId = (currPinId: number) => {
-    setPinId(Number(currPinId));
+    const newCurrPinData = pins.filter((el: any) =>
+      el.id === currPinId ? true : false,
+    );
+    setCurrPinData(newCurrPinData);
   };
   /* resize이벤트 속도 조절 */
   let timer: any = null;
@@ -53,6 +57,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
         if (res.status === 200) {
           console.log(res);
           handleCardModalClose();
+          navigate('/myRouteStore');
         }
       })
       .catch((err) => {
@@ -119,11 +124,12 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
               </div>
               <p className="storyCardMainModal-title">{routeInfo.routeName}</p>
               <div className="storyCardMainModal-btns">
-                <Link to={`route/${routeInfo.id}`}>
-                  <button className="storyCardMainModal-modify-btn">
-                    루트 수정
-                  </button>
-                </Link>
+                <button
+                  className="storyCardMainModal-modify-btn"
+                  onClick={() => navigate(`myRouteStore/route/${routeInfo.id}`)}
+                >
+                  루트 수정
+                </button>
                 <button
                   className="storyCardMainModal-delete-btn"
                   onClick={() => {
@@ -155,7 +161,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
                   {pins.map((el: any, idx: any) => (
                     <div
                       className="storyCardMainModal-pin"
-                      id={String(el.id)}
+                      id={el.id}
                       key={idx}
                     >
                       <button
@@ -189,7 +195,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
               </div>
 
               <div className="storyCardMainModal-pin-pictures">
-                {pins[pinId - 1].Pictures.map((el: any, idx: any) => (
+                {currPinData[0]?.Pictures.map((el: any, idx: any) => (
                   <div
                     className="storyCardMainModal-pin-photo-wrapper"
                     key={idx}
