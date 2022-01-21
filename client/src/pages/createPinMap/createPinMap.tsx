@@ -104,8 +104,8 @@ function CreatePinMap() {
       }, 0);
     setTotalTime(totalTime);
 
-    const newTimePins: any = pins?.map((pin: any, idx: any) => {
-      layout.forEach((el: any) => {
+    const newTimePins: any = pins?.map((pin: any) => {
+      layout.forEach((el: any, num: number) => {
         if (el.i === pin.pinID) {
           const sh = parseInt(el.y) * 0.5;
           const eh = parseInt(el.y + el.h) * 0.5;
@@ -119,7 +119,7 @@ function CreatePinMap() {
               : (hour * 60) % 60;
           pin.startTime = getHour(sh) + ':' + getMinute(sh);
           pin.endTime = getHour(eh) + ':' + getMinute(eh); // 핀 시간 업데이트
-          pin.ranking = idx; // 핀 랭킹 업데이트
+          pin.ranking = num; // 핀 랭킹 업데이트
         }
       });
       return pin;
