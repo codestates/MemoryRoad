@@ -119,7 +119,8 @@ function CreatePinMap() {
               ? '0' + ((hour * 60) % 60)
               : (hour * 60) % 60;
           pin.startTime = getHour(sh) + ':' + getMinute(sh);
-          pin.endTime = getHour(eh) + ':' + getMinute(eh);
+          pin.endTime = getHour(eh) + ':' + getMinute(eh); // 핀 시간 업데이트
+          pin.ranking = idx; // 핀 랭킹 업데이트
         }
       });
       return pin;

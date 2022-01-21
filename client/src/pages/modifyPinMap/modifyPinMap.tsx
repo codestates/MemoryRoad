@@ -24,7 +24,7 @@ import ConfirmMoveToMypage from '../../modals/confirmRouteSave/confirmMoveToMypa
 import { InfoWindowContent } from '../../modals/pinContent/pinContent';
 import Navigation from '../createPinMap/NavigationForMap';
 import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBarForModify';
-import SaveRouteModal from '../../modals/saveRouteModal/saveRouteModalForModify';
+import SaveRouteModalForModify from '../../modals/saveRouteModal/saveRouteModalForModify';
 import { testData } from './testData';
 
 import _ from 'lodash';
@@ -99,7 +99,7 @@ function ModifyPinMap() {
   const onLayoutChange = (layout: any) => {
     console.log('레이아웃이 변경되었습니다.');
     console.log(layout);
-    setItemState(layout); // 수정된 핀 레이아웃 업데이트 -----------------------------------
+    setItemState(layout); // 수정된 핀 레이아웃 업데이트 ----------------------------------
 
     const totalTime = layout.reduce((prev: any, curr: any) => {
       const currSH = curr.y * 0.5;
@@ -124,7 +124,8 @@ function ModifyPinMap() {
               ? '0' + ((hour * 60) % 60)
               : (hour * 60) % 60;
           pin.startTime = getHour(sh) + ':' + getMinute(sh);
-          pin.endTime = getHour(eh) + ':' + getMinute(eh);
+          pin.endTime = getHour(eh) + ':' + getMinute(eh); // 핀 시간 업데이트
+          pin.ranking = idx; // 핀 랭킹 업데이트
         }
       });
       return pin;
@@ -685,7 +686,7 @@ function ModifyPinMap() {
           <ConfirmPinIsEmptyModal setIsEmptyInfo={setIsEmptyInfo} />
         ) : null}
         {isSidebarSaveBtnClicked ? (
-          <SaveRouteModal
+          <SaveRouteModalForModify
             handleSidebarSaveBtn={handleSidebarSaveBtn}
             pinImage={pinImage}
             pins={pins}
