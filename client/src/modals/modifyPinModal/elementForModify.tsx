@@ -37,6 +37,7 @@ const ElementForModify = ({
       axios({
         url: `https://server.memory-road.net/routes/${routeId}/pins/${pinId}/pictures/${pictureId}`,
         method: 'delete',
+        withCredentials: true,
       })
         .then((res) => {
           console.log(res);

@@ -68,9 +68,9 @@ function ModifyPinMap() {
 
   /*------------------------------------------------------------------------------------------------------------------*/
 
-  const [currModifiedIndex, setCurrModifiedIndex] = useState(-1);
+  const [currModifiedID, setCurrModifiedID] = useState(-1);
   const selectCurrModifedIndex = (index: number) => {
-    setCurrModifiedIndex(index);
+    setCurrModifiedID(index);
   };
   const [pinImage, setPinImage] = useState([]);
   const [totalTime, setTotalTime] = useState(0);
@@ -101,15 +101,6 @@ function ModifyPinMap() {
     console.log(layout);
     setItemState(layout); // 수정된 핀 레이아웃 업데이트 -----------------------------------
 
-    // const totalTime = pins
-    //   ?.slice(1)
-    //   .reduce((prev: any, curr: any, currIdx: number) => {
-    //     // 오류 발생 지점
-    //     const currSH = parseInt(layout[currIdx].y) * 0.5;
-    //     const currEH = parseInt(layout[currIdx].y + layout[currIdx].h) * 0.5;
-    //     const currTimes = currEH - currSH;
-    //     return prev + currTimes;
-    //   }, 0);
     const totalTime = layout.reduce((prev: any, curr: any) => {
       const currSH = curr.y * 0.5;
       const currEH = (curr.y + curr.h) * 0.5;
@@ -207,8 +198,14 @@ function ModifyPinMap() {
   const onRemoveItem = (i: any) => {
     const updatedPins = pins.filter((el) => String(el.id) !== i);
     const newState: any = _.reject(itemState, { i: i });
+    const updatedRank = updatedPins.map((pin: any) => {
+      newState.forEach((item: any, idx: number) => {
+        if (Number(item.i) === pin.id) pin.ranking = idx;
+      });
+      return pin; // 랭킹값 업데이트 ...?!!
+    });
     setItemState(newState);
-    setPins(updatedPins);
+    setPins(updatedRank);
   };
   const newID = newCounter + 1; /* for ID */
 
@@ -494,10 +491,7 @@ function ModifyPinMap() {
         }
         savedMarker.setMap(map);
         /* pin 수정 모달창 띄우기 */
-        if (
-          currModifiedIndex &&
-          Number(arrangedArr[i].id) === currModifiedIndex
-        ) {
+        if (currModifiedID && Number(arrangedArr[i].id) === currModifiedID) {
           map.setBounds(bounds); // 수정할 땐 bound 가까이에.
           handleIsModifyModalOpen(true);
           infoWindowModal.setContent(modifyPinModal);
@@ -506,8 +500,8 @@ function ModifyPinMap() {
             '#modifyPinModal-background',
           );
           removeInfoWindowMoalStyleAndAddStyle(infoWindowModalHTMLTag);
-          const currInfoForModify = pins.slice(1)[i]; // 현재 pin의 개수와 layout 개수가 일치하지 않습니다.
-          console.log(currModifiedIndex);
+          const currInfoForModify = arrangedArr[i]; // 현재 pin의 개수와 layout 개수가 일치하지 않습니다.
+          console.log(currModifiedID);
           console.log(currInfoForModify);
 
           ReactDOM.render(
@@ -678,7 +672,7 @@ function ModifyPinMap() {
     grayMarker,
     currMarkerInfo,
     isClickSaveBtn,
-    currModifiedIndex,
+    currModifiedID,
     itemState,
   ]); // -------------------------------------------------------------------------------------------> test
   return (
