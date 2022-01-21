@@ -1,4 +1,5 @@
-import { IsBoolean, IsNumber, IsString } from 'class-validator';
+import { Transform } from 'class-transformer';
+import { IsBoolean, IsDate, IsNumber, IsString } from 'class-validator';
 
 export class PatchRouteDto {
   @IsString()
@@ -15,4 +16,10 @@ export class PatchRouteDto {
 
   @IsNumber()
   readonly time: number;
+
+  @Transform(({ value }) => {
+    return new Date(value);
+  })
+  @IsDate()
+  readonly date: Date;
 }
