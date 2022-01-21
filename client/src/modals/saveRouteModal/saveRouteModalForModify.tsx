@@ -112,11 +112,13 @@ function SaveRouteModalForModify({
         // console.log('el.Pictures', el.Pictures);
         formData.append('pin', JSON.stringify(data));
         // formData.append(`${el.ranking}`, newFiles);
-        el.Pictures.forEach((file: any) => {
-          if (file.name) {
-            formData.append('files', file);
-          }
-        });
+        if (el.Pictures.length !== 0) {
+          el.Pictures.forEach((file: any) => {
+            if (file.name) {
+              formData.append('files', file);
+            }
+          });
+        }
 
         axios({
           url: `https://server.memory-road.net/routes/${routeId}/pins/${pinId}`,
