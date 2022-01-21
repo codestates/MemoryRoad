@@ -1418,13 +1418,13 @@ export class RoutesService {
 
       console.log(result);
 
-      // 와드 변경 시점
-      await this.updateWardTablePinCD(result, 'delete');
-
       //없는 핀, 또는 다른 유저가 작성한 핀을 삭제 하려는 경우
-      if (!result.length) {
+      if (!result) {
         throw new UnauthorizedException();
       }
+
+      // 와드 변경 시점
+      await this.updateWardTablePinCD(result, 'delete');
 
       //사진 파일 삭제
       for (let i = 0; i < picturesInfo.length; i++) {
@@ -1689,35 +1689,22 @@ export class RoutesService {
   // 핀을 만들거나 제거할 경우, 그 핀이 속한 루트, 구로 정리하여 가져와보고, 그 값이 만약 1이라면 ward테이블에 그 값을 추가한다.
   // 가져와야 하는 값 : 그 핀이 속한 구.(ward.id)
   async updateWardTablePinCD(pin: object, action: string) {
-    // 같은 루트의 핀들 중 같은 구의 핀들의 배열을 받아온다
-    const data = await this.pinsRepository
-      .createQueryBuilder('Pins')
-      .leftJoinAndSelect('Pins.Routes', 'Routes')
-      .select(['Pins.ward'])
-      .where('Pins.routesId = :pinRoutes And Pins.ward = :pinWard', {
-        pinRoutes: pin['routesId'],
-        pinWard: pin['ward'],
-      })
-      .getMany();
-    console.log(data[0].ward);
     // 배열의 길이가 1인 경우(그 구역의 핀이 얘 하나 밖에 없는 경우)에만 발동
-    if (data.length === 1) {
-      // action이 create인 경우엔 + 1, delete인 경우엔 -1
-      if (action === 'create') {
-        await this.wardsRepository
-          .createQueryBuilder('Wards')
-          .update()
-          .whereInIds(data[0].ward)
-          .set({ routesNumber: () => 'routesNumber + 1' })
-          .execute();
-      } else if (action === 'delete') {
-        await this.wardsRepository
-          .createQueryBuilder('Wards')
-          .update()
-          .whereInIds(data[0].ward)
-          .set({ routesNumber: () => 'routesNumber - 1' })
-          .execute();
-      }
+    // action이 create인 경우엔 + 1, delete인 경우엔 -1
+    if (action === 'create') {
+      await this.wardsRepository
+        .createQueryBuilder('Wards')
+        .update()
+        .whereInIds(pin['ward'])
+        .set({ routesNumber: () => 'routesNumber + 1' })
+        .execute();
+    } else if (action === 'delete') {
+      await this.wardsRepository
+        .createQueryBuilder('Wards')
+        .update()
+        .whereInIds(pin['ward'])
+        .set({ routesNumber: () => 'routesNumber - 1' })
+        .execute();
     }
   }
 
