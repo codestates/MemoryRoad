@@ -45,6 +45,8 @@ function AllRoutesInMap() {
   // 선택된 핀의 사진 정보
   const [pickPinsPictures, setPickPinsPictures] = useState<Picture[]>();
 
+  //사진 클릭시 사진 인덱스 정보
+  const [pictureIdx, setPictureIdx] = useState<number>(0);
   //사진 드래그
   // onMouseMove는 왼쪽 버튼을 떼도 발생합니다. 드래그 효과를 주기 위해 isDrag변수가 true 일 때 발생하도록 설정했습니다
   const [isDrag, setIsDrag] = useState(false);
@@ -99,7 +101,6 @@ function AllRoutesInMap() {
     for (let i = 0; i < colorsName.length; i++) {
       if (routeInfo.color === colorsName[i]) {
         pinColorUrl = colorUrls[i];
-        console.log(colorUrls[i]);
       }
     }
     const pinImgSrc = pinColorUrl;
@@ -183,9 +184,6 @@ function AllRoutesInMap() {
         });
     }
 
-    console.log(allRoutes);
-    console.log(colorIdx);
-    console.log(pickPinsPictures);
     // 지도 생성
     const mapContainer = document.getElementById('map');
 
@@ -267,7 +265,14 @@ function AllRoutesInMap() {
 
   return (
     <div>
-      {bigImage ? <ClickImage /> : null}
+      {bigImage ? (
+        <ClickImage
+          pickPinsPictures={pickPinsPictures}
+          pictureIdx={pictureIdx}
+          setBigImage={setBigImage}
+          setPictureIdx={setPictureIdx}
+        />
+      ) : null}
       <div className="allRoutesInMap-whole">
         <div className="jyang-allRoutesInMap">
           <ColorSelectBox
@@ -291,7 +296,10 @@ function AllRoutesInMap() {
               <div
                 id="el-img-div"
                 key={index}
-                onClick={() => setBigImage(true)}
+                onClick={() => {
+                  setBigImage(true);
+                  setPictureIdx(index);
+                }}
                 onKeyPress={() => setBigImage(true)}
                 role="button"
                 tabIndex={0}
