@@ -82,18 +82,7 @@ function CreatePinMap() {
       endTime: '01:00', // 핀 끝나는 시간
     },
   ]);
-  const initialPins = pins
-    ?.slice(1)
-    ?.map(function (pinInfo: any, idx: any, list: any) {
-      return {
-        i: pinInfo.pinID,
-        x: 0,
-        y: 2,
-        w: 1,
-        h: 2,
-      };
-    });
-  const [itemState, setItemState] = useState(initialPins);
+  const [itemState, setItemState] = useState<any[]>([]);
   console.log('pins', pins);
   console.log('itemState', itemState);
   console.log('pinImage', pinImage);
@@ -203,8 +192,15 @@ function CreatePinMap() {
   const onRemoveItem = (i: string) => {
     console.log(i);
     const updatedPins = pins.filter((el) => el.pinID !== i);
-    setItemState(_.reject(itemState, { i: i }));
-    setPins(updatedPins);
+    const newState: any = _.reject(itemState, { i: i });
+    const updatedRank = updatedPins.map((pin: any) => {
+      newState.forEach((item: any, idx: number) => {
+        if (item.i === pin.pinID) pin.ranking = idx;
+      });
+      return pin; // 랭킹값 업데이트 ...?!!
+    });
+    setItemState(newState);
+    setPins(updatedRank);
   };
   const newID = 'pin' + newCounter; /* for ID */
 
