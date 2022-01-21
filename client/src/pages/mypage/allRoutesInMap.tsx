@@ -186,6 +186,7 @@ function AllRoutesInMap() {
       axios.get('https://server.memory-road.net/routes').then((res) => {
         const routeArray: Route[] = res.data['routes'];
         setFindAllRoute(routeArray);
+        setAllRoutes(routeArray);
       });
     }
 
