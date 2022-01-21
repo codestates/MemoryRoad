@@ -22,7 +22,7 @@ import SearchPinBar from '../../components/searchPinBar/searchPinBarForModify';
 import ConfirmPinIsEmptyModal from '../../modals/confirmPinIsEmpty/confirmPinIsEmptyModal';
 import ConfirmMoveToMypage from '../../modals/confirmRouteSave/confirmMoveToMypageForModify';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent';
-import Navigation from '../../components/Navigation';
+import Navigation from '../../components/navigation/Navigation';
 import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBarForModify';
 import SaveRouteModalForModify from '../../modals/saveRouteModal/saveRouteModalForModify';
 import { testData } from './testData';
