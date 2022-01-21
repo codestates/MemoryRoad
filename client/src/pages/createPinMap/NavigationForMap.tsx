@@ -8,13 +8,18 @@ import { RootState } from '../../redux/reducer';
 import { loginModal, setUserInfo } from '../../redux/actions/index';
 import axios from 'axios';
 import { persistor } from '../../index';
-
-function Nav({ url }: any) {
+import LoginModal from '../../modals/login/Login';
+import SignUp from '../../modals/signup/Signup';
+function Nav() {
+  const url = 'https://server.memory-road.net';
   const [isOpen, SetOpen] = useState(false);
   const navigate = useNavigate();
   const modalLogin = useSelector(
     (state: RootState) => state.modalReducer.isLoginModal, // test중입니다.
   ); // 로그인 모달창
+  const modalSignup = useSelector(
+    (state: RootState) => state.modalReducer.isSigninModal,
+  ); // 회원가입 모달창
   const userinfo = useSelector(
     (state: RootState) => state.setUserInfoReducer.userInfo,
   ); // 유저의 정보
@@ -34,6 +39,26 @@ function Nav({ url }: any) {
       });
     } else {
       dispatch(loginModal(true)); // 로그인 버튼을 누르면 로그인 모달창이 나옴
+    }
+  };
+  const isvalid = (email: string, username: string, password: string) => {
+    const character = /^[ A-Za-z0-9_@./#&+-]*$/; // 영문,숫자,특정 특수문자만 허용
+    const regexpassword = /[0-9a-zA-Z.;\-]/;
+    if (
+      character.test(email) &&
+      5 <= email.length &&
+      !email.includes(' ') &&
+      email.includes('@')
+    ) {
+      return 'Email'; // 이메일은 영문,숫자,특정 특수문자만 허용, 5글자 이상, 공백이 있으면 안되고, @를 포함해야함
+    }
+    if (!username.includes(' ') && username.length >= 2) {
+      return 'Username'; // 닉네임은 공백을 포함해서는 안되고 2글자 이상
+    }
+    if (8 <= password.length && regexpassword.test(password)) {
+      return 'Password'; // 비밀번호는 8자 이상이어야하고 영문,숫자,특수문자를 포함
+    } else {
+      return false;
     }
   };
 
@@ -69,6 +94,8 @@ function Nav({ url }: any) {
 
   return (
     <div>
+      {modalLogin ? <LoginModal url={url} /> : null}
+      {modalSignup ? <SignUp isvalid={isvalid} url={url} /> : null}
       <div className="nav-gridContainer-fix-fix-sy">
         <div className="nav-gridContainer-sy">
           <div
@@ -81,7 +108,7 @@ function Nav({ url }: any) {
             <img
               alt="Logo"
               className="nav-logo"
-              src="http://127.0.0.1:5500/client/public/img/LOGO.png"
+              src="https://server.memory-road.net/upload/LOGO.png"
             />
           </div>
           <div></div>
@@ -104,13 +131,13 @@ function Nav({ url }: any) {
             className="nav-loginfont"
             onClick={() => {
               if (userinfo.isLogin) {
-                navigate('/');
-                window.localStorage.clear(); // 로컬 스토리지를 비우고
-                window.location.reload(); // 새로고침
+                // navigate('/');
+                // window.localStorage.clear(); // 로컬 스토리지를 비우고
+                // window.location.reload(); // 새로고침
                 // persistor.purge(); // 로그아웃 누르면 상태가 안바뀜 , 다시 새로고침 하면 상태가 로그아웃 상태가됨
                 // dispatch(setUserInfo(false, null, null, null, null, null));
                 // persist purge를 이용?
-                // loginButtonHandler();
+                loginButtonHandler();
               } else {
                 dispatch(loginModal(true));
               }

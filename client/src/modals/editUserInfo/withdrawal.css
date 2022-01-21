@@ -47,6 +47,12 @@
   font-weight: bold;
   border: 2px solid white;
 }
+.withdrawal-Button:hover {
+  border: 2px solid #91ba9f;
+  background-color: white;
+  color: #91ba9f;
+  transition: 800ms ease all;
+}
 .withdrawal-Button2 {
   width: 80%;
   padding: 10px;
@@ -57,4 +63,10 @@
   font-size: 15px;
   font-weight: bold;
   border: 2px solid white;
+}
+.withdrawal-Button2:hover {
+  border: 2px solid red;
+  color: red;
+  background-color: white;
+  transition: 800ms ease all;
 }

@@ -27,6 +27,7 @@ function Mypage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const url = 'https://server.memory-road.net';
+  // const url = 'http://localhost';
 
   // 유효성 검사
   const isvalid = (email: string, username: string, password: string) => {
@@ -68,7 +69,7 @@ function Mypage() {
               <img
                 alt="profileimg"
                 className="mypage-userProfile"
-                src={userinfo.profile}
+                src={`${url}/${userinfo.profile}`}
               />
             ) : (
               <i className="fas fa-user-circle mypage-Profile"></i>
@@ -103,7 +104,7 @@ function Mypage() {
           <div></div>
           <div></div>
           <div className="mypage-checking mypage-map">
-            <hr></hr>
+            <hr className="mypage-line" />
             <div className="mypage-scroll">
               <div className="mypage-contents">
                 <div
