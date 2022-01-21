@@ -244,44 +244,48 @@ function EditUserInfo({ isvalid, url }: any) {
               </button>
             </div>
           </div>
-
-          <div className="edituserinfo-textOninput">비밀번호</div>
-          <input
-            className="edituserinfo-input2"
-            maxLength={16}
-            onChange={InputPassword}
-            placeholder="비밀번호를 입력해주세요."
-            type="password"
-          ></input>
-          <div className="edituserinfo-ErrorMessage2">
-            {/* {isvalid('', '', Password) === 'Password'
+          {userinfo.OAuthLogin ? null : (
+            <div>
+              <div className="edituserinfo-textOninput">비밀번호</div>
+              <input
+                className="edituserinfo-input2"
+                maxLength={16}
+                onChange={InputPassword}
+                placeholder="비밀번호를 입력해주세요."
+                type="password"
+              ></input>
+              <div className="edituserinfo-ErrorMessage2">
+                {/* {isvalid('', '', Password) === 'Password'
               ? null
               : '8~16자의 영문,숫자,특수문자를 사용하세요'} */}
-            {passwordErrorMessage}
-          </div>
-          <input
-            className="edituserinfo-input2"
-            maxLength={16}
-            onChange={InputCheckingPassword}
-            placeholder="비밀번호을 다시 한번 입력해주세요."
-            type="password"
-          ></input>
-          <div
-            className="edituserinfo-ErrorMessage2"
-            style={{ marginBottom: '15px' }}
-          >
-            <div className="edituserinfo-successMessage">
-              {passwordSuccessMessage}
+                {passwordErrorMessage}
+              </div>
+              <input
+                className="edituserinfo-input2"
+                maxLength={16}
+                onChange={InputCheckingPassword}
+                placeholder="비밀번호을 다시 한번 입력해주세요."
+                type="password"
+              ></input>
+              <div
+                className="edituserinfo-ErrorMessage2"
+                style={{ marginBottom: '15px' }}
+              >
+                <div className="edituserinfo-successMessage">
+                  {passwordSuccessMessage}
+                </div>
+              </div>
+              <div id="edituserinfo-EditProfileButtonRight">
+                <button
+                  className="edituserinfo-EditNickname edituserinfo-EditButtonColor"
+                  onClick={editPassword}
+                >
+                  비밀번호 수정
+                </button>
+              </div>
             </div>
-          </div>
-          <div id="edituserinfo-EditProfileButtonRight">
-            <button
-              className="edituserinfo-EditNickname edituserinfo-EditButtonColor"
-              onClick={editPassword}
-            >
-              비밀번호 수정
-            </button>
-          </div>
+          )}
+
           <div className="edituserinfo-textOninput">회원 탈퇴</div>
           <div id="edituserinfo-EditProfileButtonRight">
             <button

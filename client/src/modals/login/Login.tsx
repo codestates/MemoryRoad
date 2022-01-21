@@ -102,6 +102,7 @@ function LoginModal({ url }: any) {
   };
 
   const redirect_uri = 'https://memory-road.net';
+  // const redirect_uri = 'http://localhost';
   // 카카오 로그인 API
   const KakaoLoginHandler = () => {
     //  카카오에서 Authorization code를 받아오고

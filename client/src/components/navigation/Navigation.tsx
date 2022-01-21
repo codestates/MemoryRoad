@@ -2,14 +2,14 @@ import React from 'react';
 import './Navigation.css';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import OpenedMenu from './openedmenu';
+import OpenedMenu from '../openedmenu/openedmenu';
 import { useNavigate } from 'react-router-dom';
-import { RootState } from '../redux/reducer';
-import { loginModal, setUserInfo } from '../redux/actions/index';
-import LoginModal from '../modals/login/Login';
-import SignUp from '../modals/signup/Signup';
+import { RootState } from '../../redux/reducer';
+import { loginModal, setUserInfo } from '../../redux/actions/index';
+import LoginModal from '../../modals/login/Login';
+import SignUp from '../../modals/signup/Signup';
 import axios from 'axios';
-import { persistor } from '../index';
+import { persistor } from '../../index';
 
 function Nav({ url, isvalid }: any) {
   const [isOpen, SetOpen] = useState(false);
