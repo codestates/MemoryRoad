@@ -5,7 +5,7 @@ import axios from 'axios';
 import './saveRouteModal.css';
 import { addPinImageFiles } from '../../redux/actions';
 
-function SaveRouteModal({
+function SaveRouteModalForModify({
   handleSidebarSaveBtn,
   pins,
   route,
@@ -357,4 +357,4 @@ function SaveRouteModal({
   );
 }
 
-export default SaveRouteModal;
+export default SaveRouteModalForModify;
