@@ -64,6 +64,7 @@ function OpenedMenu({ SetOpen }: Props) {
               로그인
             </div>
           )}
+          <br />
           {userinfo.isLogin ? (
             <div
               className="opendmenu-Menutext"

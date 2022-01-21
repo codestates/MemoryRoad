@@ -108,7 +108,7 @@ function Nav() {
             <img
               alt="Logo"
               className="nav-logo"
-              src="http://127.0.0.1:5500/client/public/img/LOGO.png"
+              src="https://server.memory-road.net/upload/LOGO.png"
             />
           </div>
           <div></div>

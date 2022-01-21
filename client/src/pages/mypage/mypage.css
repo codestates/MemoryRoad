@@ -1,11 +1,11 @@
 .mypage-gridMypage {
   display: grid;
-  grid-template-columns: 0.7fr 1.5fr 1.5fr 0.7fr;
+  grid-template-columns: 2fr 2fr 5fr 2fr;
   grid-template-rows: 100px 170px 300px;
 }
 .mypage-userProfile {
-  width: 130px;
-  height: 130px;
+  width: 120px;
+  height: 120px;
   border-radius: 80px;
 }
 /* .mypage-checking {
@@ -21,13 +21,16 @@
   overflow-x: hidden;
 }
 .mypage-scroll::-webkit-scrollbar {
-  width: 5px;
+  width: 7px;
   background-color: white;
 }
 .mypage-scroll::-webkit-scrollbar-thumb {
-  width: 5px;
-  background-color: silver;
   border-radius: 10px;
+  background-color: rgb(148, 148, 148);
+}
+.mypage-scroll::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.3);
 }
 .mypage-contents {
   /* border: 2px solid black; */
@@ -63,7 +66,7 @@
 }
 .mypage-greeting {
   text-align: right;
-  margin-top: 30px;
+  margin-top: 20px;
   margin-right: 20px;
 }
 .mypage-greetingTouser {
@@ -82,6 +85,11 @@
   background-color: silver;
   transition: 800ms ease all;
 }
+.mypage-line {
+  height: 2px;
+  border: none;
+  background-color: rgb(234, 234, 234);
+}
 
 /* 4K */
 @media (min-width: 2000px) {
@@ -93,7 +101,16 @@
 }
 
 /* 테블릿 */
-@media (max-width: 1095px) {
+@media (max-width: 800px) {
+  .mypage-gridMypage {
+    display: grid;
+    grid-template-columns: 1fr 5fr 10fr 1fr;
+    grid-template-rows: 100px 120px 400px;
+  }
+  .mypage-userProfile {
+    width: 100px;
+    height: 100px;
+  }
   .mypage-Profile {
     font-size: 130px;
     color: gray;
@@ -119,7 +136,7 @@
 }
 
 /* 모바일 */
-@media (max-width: 800px) {
+@media (max-width: 500px) {
   .mypage-gridMypage {
     display: grid;
     grid-template-columns: 1fr 5fr 10fr 1fr;
@@ -150,11 +167,6 @@
     border: 2px solid white;
     border-radius: 5px;
     cursor: pointer;
-  }
-  .mypage-line {
-    height: 2px;
-    border: none;
-    background-color: rgb(234, 234, 234);
   }
 
   .mypage-image {

@@ -47,6 +47,7 @@
 }
 
 .nav-mobile {
+  text-align: right;
   color: #b1bcb7;
   cursor: pointer;
 }
@@ -74,7 +75,6 @@
     grid-template-columns: 1fr 3fr 1fr 0.3fr;
   }
   .nav-mobile {
-    margin: 13px;
     font-size: 30px;
   }
 }

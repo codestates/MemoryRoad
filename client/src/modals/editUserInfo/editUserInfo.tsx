@@ -9,7 +9,7 @@ import {
 } from '../../redux/actions/index';
 import { RootState } from '../../redux/reducer';
 import axios from 'axios';
-import { blob } from 'node:stream/consumers';
+
 function EditUserInfo({ isvalid, url }: any) {
   const dispatch = useDispatch();
   const userinfo = useSelector(
@@ -32,7 +32,10 @@ function EditUserInfo({ isvalid, url }: any) {
   };
   const [showProfile, setShowProfile] = useState(false); // 프로필사진을 가져오면 true로 바뀐다
   const [profile, setprofile] = useState(userinfo.profile); // 바뀐 프로필 사진
-
+  const [nameErrorMessage, setnameErrorMessage] = useState(''); // 닉네임 변경 에러메시지
+  const [passwordErrorMessage, setpasswordErrorMessage] = useState(''); // 비밀번호 변경 에러메시지
+  const [nameSuccessMessage, setnameSuccessMessage] = useState(''); // 닉네임 변경 성공메시지
+  const [passwordSuccessMessage, setpasswordSuccessMessage] = useState('');
   // 프로필 사진을 가져옴
   const readProfile = (image: any) => {
     // readProfile(e.target);
@@ -66,28 +69,29 @@ function EditUserInfo({ isvalid, url }: any) {
     const blob = new Blob([JSON.stringify(profileImg)], {
       type: 'application/json',
     });
-
-    axios
-      .patch(`${url}/users/profile`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res.data);
-        if (res.status === 200) {
-          dispatch(
-            setUserInfo(
-              true,
-              userinfo.id,
-              userinfo.email,
-              userinfo.username,
-              res.data.profile,
-              userinfo.OAuthLogin,
-            ),
-          );
-        }
-      })
-      .catch((error) => console.log(error));
+    if (profile !== null) {
+      axios
+        .patch(`${url}/users/profile`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true,
+        })
+        .then((res) => {
+          console.log(res.data);
+          if (res.status === 200) {
+            dispatch(
+              setUserInfo(
+                true,
+                userinfo.id,
+                userinfo.email,
+                userinfo.username,
+                res.data.profile,
+                userinfo.OAuthLogin,
+              ),
+            );
+          }
+        })
+        .catch((error) => console.log(error));
+    }
   }, [profile]);
 
   // 닉네임 수정버튼을 누를 때 API 요청
@@ -114,14 +118,22 @@ function EditUserInfo({ isvalid, url }: any) {
                 userinfo.OAuthLogin,
               ),
             );
+            setnameErrorMessage('');
+            setnameSuccessMessage('닉네임이 수정되었습니다.');
           }
         })
         .catch((error) => {
           console.log(error);
-          alert('입력한 정보로 수정할 수  없습니다.');
+          setnameErrorMessage('입력한 정보로 수정할 수  없습니다.');
+          setnameSuccessMessage('');
         });
+    }
+    if (isvalid('', username, '') !== 'Username') {
+      setnameErrorMessage('2자 이상 그리고 공백이 들어갈 수 없습니다.');
+      setnameSuccessMessage('');
     } else {
-      alert('입력한 정보로 수정할 수 없습니다.');
+      setnameErrorMessage('입력한 정보로 수정할 수 없습니다.');
+      setnameSuccessMessage('');
     }
   };
   // 비밀번호 변경버튼을 누를 때 API 요청
@@ -138,14 +150,17 @@ function EditUserInfo({ isvalid, url }: any) {
         )
         .then((res) => {
           if (res.status === 200) {
-            alert('비밀번호가 변경되었습니다.');
+            setpasswordErrorMessage('');
+            setpasswordSuccessMessage('비밀번호가 변경되었습니다.');
           }
         });
     }
     if (!isvalid('', '', Password)) {
-      alert('입력하신 정보로 수정할 수 없습니다.');
+      setpasswordErrorMessage('8~16자의 영문,숫자,특수문자를 사용하세요');
+      setpasswordSuccessMessage('');
     } else if (Password !== checkingPassword) {
-      alert('비밀번호를 다시 확인해주세요');
+      setpasswordErrorMessage('비밀번호가 일치하지 않습니다.');
+      setpasswordSuccessMessage('');
     }
   };
   return (
@@ -216,9 +231,10 @@ function EditUserInfo({ isvalid, url }: any) {
             className="edituserinfo-ErrorMessage2"
             style={{ marginBottom: '30px' }}
           >
-            {isvalid('', username, '') === 'Username'
-              ? null
-              : '공백이 들어갈 수 없고 2자이상이어야 합니다'}
+            {nameErrorMessage}
+            <div className="edituserinfo-successMessage">
+              {nameSuccessMessage}
+            </div>
             <div id="edituserinfo-EditProfileButtonRight">
               <button
                 className="edituserinfo-EditNickname edituserinfo-EditButtonColor"
@@ -238,9 +254,10 @@ function EditUserInfo({ isvalid, url }: any) {
             type="password"
           ></input>
           <div className="edituserinfo-ErrorMessage2">
-            {isvalid('', '', Password) === 'Password'
+            {/* {isvalid('', '', Password) === 'Password'
               ? null
-              : '8~16자의 영문,숫자,특수문자를 사용하세요'}
+              : '8~16자의 영문,숫자,특수문자를 사용하세요'} */}
+            {passwordErrorMessage}
           </div>
           <input
             className="edituserinfo-input2"
@@ -253,9 +270,9 @@ function EditUserInfo({ isvalid, url }: any) {
             className="edituserinfo-ErrorMessage2"
             style={{ marginBottom: '15px' }}
           >
-            {Password === checkingPassword
-              ? null
-              : '비밀번호가 일치하지 않습니다.'}
+            <div className="edituserinfo-successMessage">
+              {passwordSuccessMessage}
+            </div>
           </div>
           <div id="edituserinfo-EditProfileButtonRight">
             <button
