@@ -276,12 +276,14 @@ function ModifyPinMap() {
       withCredentials: true,
     })
       .then((res) => {
-        console.log(res);
-        setPins(pins.concat(newPin));
-        setItemState(newItems);
-        setPinImage(pinImage.concat(newFile));
-        setNewCounter(newCounter + 1);
-        setIsClickSaveBtn(true);
+        if (res.status === 201) {
+          console.log(res);
+          setPins(pins.concat(newPin));
+          setItemState(newItems);
+          setPinImage(pinImage.concat(newFile));
+          setNewCounter(newCounter + 1);
+          setIsClickSaveBtn(true);
+        }
       })
       .catch((err) => {
         console.log(err);

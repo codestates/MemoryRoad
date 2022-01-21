@@ -100,8 +100,8 @@ function SaveRouteModalForModify({
         const data = {
           locationName: el.locationName,
           ranking: el.ranking,
-          latitude: el.latitude,
-          longitude: el.longitude,
+          latitude: Number(el.latitude),
+          longitude: Number(el.longitude),
           lotAddress: el.lotAddress,
           roadAddress: el.roadAddress,
           startTime: el.startTime,
@@ -114,9 +114,11 @@ function SaveRouteModalForModify({
         );
         formData.append('pin', JSON.stringify(data));
         // formData.append(`${el.ranking}`, newFiles);
-        newFiles.forEach((file: any) => {
-          formData.append('files', file);
-        }); // 여러장 append 시키는 형식으로 변경.
+        if (newFiles.length !== 0) {
+          newFiles.forEach((file: any) => {
+            formData.append('files', file);
+          }); // 여러장 append 시키는 형식으로 변경.
+        }
 
         axios({
           url: `https://server.memory-road.net/routes/${routeId}/pins/${pinId}`,
