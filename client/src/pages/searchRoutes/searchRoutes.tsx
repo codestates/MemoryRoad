@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Navigation from '../../components/Navigation';
+import Navigation from '../../components/navigation/Navigation';
 import SearchRoutesBar from '../../components/searchRoutesBar/searchRoutesBar';
 import SearchSideBar from '../../components/searchSideBar/searchSideBar';
 import { RootState } from '../../redux/reducer';
