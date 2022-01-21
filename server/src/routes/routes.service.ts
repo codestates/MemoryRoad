@@ -1102,11 +1102,22 @@ export class RoutesService {
         accessToken,
         this.configService.get<string>('ACCESS_SECRET'),
       );
+
+      //업데이트를 위한 객체
+      const newInfo = {
+        routeName: route.routeName,
+        description: route.description,
+        public: route.public,
+        color: route.color,
+        time: route.time,
+        createdAt: route.date,
+      };
+
       //루트 아이디와 일치하는 요소 업데이트
       const result = await this.routesRepository
         .createQueryBuilder()
         .update('Routes')
-        .set(route)
+        .set(newInfo)
         .where('id = :id AND userId = :userId', {
           id: routeId,
           userId: decode['id'],
