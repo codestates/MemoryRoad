@@ -187,6 +187,17 @@ const initialState: State | any = {
     },
   ],
   colorDotUrl: [
+    'https://server.memory-road.net/upload/red_dot.png',
+    'https://server.memory-road.net/upload/orange_dot.png',
+    'https://server.memory-road.net/upload/yellow_dot.png',
+    'https://server.memory-road.net/upload/yellowGreen_dot.png',
+    'https://server.memory-road.net/upload/green_dot.png',
+    'https://server.memory-road.net/upload/sky_dot.png',
+    'https://server.memory-road.net/upload/blue_dot.png',
+    'https://server.memory-road.net/upload/purple_dot.png',
+    'https://server.memory-road.net/upload/pink_dot.png',
+  ],
+  whiteColorUrl: [
     'https://server.memory-road.net/upload/white_red.png',
     'https://server.memory-road.net/upload/white_orange.png',
     'https://server.memory-road.net/upload/white_yellow.png',

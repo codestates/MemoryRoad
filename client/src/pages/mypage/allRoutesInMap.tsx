@@ -4,7 +4,7 @@ import { RootState } from '../../redux/reducer';
 import ColorSelectBox from '../../components/colorSelectBox/colorSelectBoxForMap';
 import './allRoutesInMap.css';
 import axios from 'axios';
-import { Route1, Picture } from '../../types/searchRoutesTypes';
+import { Picture, Route } from '../../types/searchRoutesTypes';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
 import fakeData from './fakeData.json';
 
@@ -21,40 +21,26 @@ declare global {
 }
 const kakao = window.kakao;
 
-// const pickAllRoutes = async () => {
-//   const getArray: AllRoute = await axios.get('http://localhost/routes');
-//   return getArray.routes;
-// };
-// const findAllRoute = pickAllRoutes();
-const findAllRoute = fakeData.routes;
-
-const colorsName = [
-  'red',
-  'orange',
-  'yellow',
-  'yellowGreen',
-  'green',
-  'sky',
-  'blue',
-  'purple',
-  'pink',
-];
-
 function AllRoutesInMap() {
   const dispatch = useDispatch();
   /* redux 전역 상태관리 */ // 왜 type 할당 : RootState는 되고 RootPersistState는 안되나요 ?
 
   const colorUrls: any = useSelector(
-    (state: RootState) => state.createRouteReducer.colorDotUrl,
+    (state: RootState) => state.createRouteReducer.whiteColorUrl,
   ); // 색깔의 주소
   const colorChips: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorChip,
-  );
+  ); // 색깔 css
+  const colorsName: any = useSelector(
+    (state: RootState) => state.createRouteReducer.colorName,
+  ); // 색깔 이름
+
   //state
   //지도의 확대 정도
   const [currLevel, setCurrLevel] = useState(6);
   //전체 루트의 정보
-  const [allRoutes, setAllRoutes] = useState<Route1[]>(findAllRoute);
+  const [findAllRoute, setFindAllRoute] = useState<Route[] | null>(null);
+  const [allRoutes, setAllRoutes] = useState<Route[] | null>(null);
 
   // 루트 색상 정보
   const [colorIdx, setColorIdx] = useState<number>(9);
@@ -73,7 +59,7 @@ function AllRoutesInMap() {
   }
 
   //루트를 받아 핀 객체들을 만들고, 랜더링 한다.
-  function generatePins(routeInfo: Route1, map: any) {
+  function generatePins(routeInfo: Route, map: any) {
     let pinColorUrl = '';
     for (let i = 0; i < colorsName.length; i++) {
       if (routeInfo.color === colorsName[i]) {
@@ -127,7 +113,7 @@ function AllRoutesInMap() {
     }
   }
 
-  function getRouteCenter(routeInfo: Route1 | null) {
+  function getRouteCenter(routeInfo: Route | null) {
     //선택된 핀의 정보가 없는 경우 기본값 반환
     if (routeInfo === null || routeInfo.Pins.length === 0) {
       return new kakao.maps.LatLng(37.566826, 126.9786567);
@@ -196,6 +182,14 @@ function AllRoutesInMap() {
   useEffect(() => {
     //colorIdx가 빈 문자열일 경우모든 루트 배열을 받아온다.
     //colorIdx에 값이 있다면
+    if (findAllRoute === null) {
+      axios.get('https://server.memory-road.net/routes').then((res) => {
+        const routeArray: Route[] = res.data['routes'];
+        setFindAllRoute(routeArray);
+        setAllRoutes(routeArray);
+      });
+    }
+
     console.log(allRoutes);
     console.log(colorIdx);
     console.log(pickPinsPictures);
@@ -204,7 +198,7 @@ function AllRoutesInMap() {
     const mapContainer = document.getElementById('map');
 
     //전체 루트 중의 전체 센터값을 가져와야할 듯.
-    const center = (routes: Route1[] | null) => {
+    const center = (routes: Route[] | null) => {
       let minLat = 90,
         maxLat = -90,
         minLng = 180,
@@ -275,7 +269,7 @@ function AllRoutesInMap() {
         polyline.setMap(map);
       }
     }
-  }, [allRoutes, pickPinsPictures]);
+  }, [findAllRoute, allRoutes, pickPinsPictures]);
 
   return (
     <div className="allRoutesInMap-whole">
@@ -293,7 +287,7 @@ function AllRoutesInMap() {
               alt="loadFail"
               id="el-img"
               key={index}
-              src={`http://localhost/${el.fileName}`}
+              src={`https://server.memory-road.net/${el.fileName}`}
             ></img>
           ))
         ) : (
