@@ -27,7 +27,7 @@ function MyRouteStore() {
   const [clickedWardSelect, setClickedWardSelect] = useState(false);
   const [selectedColorId, setSelectedCorlorId] = useState(0);
   const [selectedSeoul, setSelectedSeoul] = useState(0);
-  const [selectedWard, setSelectedWard] = useState(0);
+  const [selectedWard, setSelectedWard] = useState('');
 
   const [paginationNum, setPaginationNum] = useState(0); // <, > 버튼 컨트롤
   const [currPageNum, setCurrPageNum] = useState(1); // 페이지 넘버(1,2,3) 컨트롤
@@ -84,13 +84,85 @@ function MyRouteStore() {
     setClickedSeoulSelect(false);
   };
   const selectColor = (event: any) => {
-    setSelectedCorlorId(event.target.id);
+    const idx = Number(event.target.id);
+    setSelectedCorlorId(idx);
+    console.log(idx);
+    setRouteCards((prev) => {
+      if (idx === 0 && selectedWard === '전체 구') {
+        // 모두 초기화
+        return originRouteCards;
+      } else if (idx === 0 && selectedWard !== '전체 구') {
+        // 와드 값이 남아있는데 색 초기화
+        const newData = originRouteCards.filter((el: any) => {
+          for (const pin of el.Pins) {
+            if (pin.ward === selectedWard) return true;
+          }
+          return false;
+        });
+        return newData;
+      } else if (selectedWard !== '전체 구') {
+        // color와 ward 조합
+        const newData = originRouteCards
+          .filter((el: any) =>
+            el.color === colorNames[selectedColorId] ? true : false,
+          )
+          .filter((el: any) => {
+            for (const pin of el.Pins) {
+              if (pin.ward === selectedWard) return true;
+            }
+            return false;
+          });
+        return newData;
+      } else {
+        // color만 검색
+        const newData = originRouteCards.filter((el: any) =>
+          el.color === colorNames[idx] ? true : false,
+        );
+        return newData;
+      }
+    });
   };
   const selectSeoul = (event: any) => {
     setSelectedSeoul(event.target.id);
   };
   const selectWard = (event: any) => {
-    setSelectedWard(event.target.id);
+    const wardName = event.target.id;
+    console.log(wardName);
+    setSelectedWard(wardName);
+    setRouteCards((prev) => {
+      if (wardName === '전체 구' && selectedColorId === 0) {
+        // 모두 초기화
+        return originRouteCards;
+      } else if (wardName === '전체 구' && selectedColorId !== 0) {
+        // 색 남아있는데 전체 구 선택
+        const newData = originRouteCards.filter((el: any) =>
+          el.color === colorNames[selectedColorId] ? true : false,
+        );
+        return newData;
+      } else if (selectedColorId !== 0) {
+        // color와 ward 조합
+        const newData = originRouteCards
+          .filter((el: any) =>
+            el.color === colorNames[selectedColorId] ? true : false,
+          )
+          .filter((el: any) => {
+            for (const pin of el.Pins) {
+              if (pin.ward === wardName) return true;
+            }
+            return false;
+          });
+        return newData;
+      } else {
+        // ward만 검색
+        const newData = originRouteCards.filter((el: any) => {
+          for (const pin of el.Pins) {
+            if (pin.ward === wardName) return true;
+          }
+          return false;
+        });
+        return newData;
+      }
+    });
   };
 
   /* pagination */

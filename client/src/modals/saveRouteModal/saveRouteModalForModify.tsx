@@ -109,7 +109,8 @@ function SaveRouteModalForModify({
           ward: el.ward,
           keywords: el.kewords,
         };
-        const newFiles = el.Pictures.filter(
+        // console.log('el.Pictures', el.Pictures);
+        const newFiles: any = el.Pictures?.filter(
           (el: any) => (el.name !== undefined ? true : false), // 기존에 있던 사진 거르기.
         );
         formData.append('pin', JSON.stringify(data));
@@ -333,7 +334,7 @@ function SaveRouteModalForModify({
               <label className="saveRouteModal-switch">
                 <input
                   checked={!isOpenRoute}
-                  onClick={handleRouteOpenOrUnopen}
+                  onChange={handleRouteOpenOrUnopen}
                   type="checkbox"
                 />
                 <span className="saveRouteModal-slider-circle"></span>
