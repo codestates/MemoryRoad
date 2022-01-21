@@ -20,7 +20,7 @@ function SaveRouteModalForModify({
     (state: RootState) => state.createRouteReducer.colorName,
   );
 
-  const [initialYear, initialMonth, initialDate] = route.date
+  const [initialYear, initialMonth, initialDate] = route.createdAt
     .slice(0, 10)
     .split('-');
   const initialColorIdx = colorNames.indexOf(route.color);
