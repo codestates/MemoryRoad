@@ -20,7 +20,7 @@ import createPinModal from '../../modals/createPinModal/createPinModal';
 import modifyPinModal from '../../modals/modifyPinModal/modifyPinModal';
 import SearchPinBar from '../../components/searchPinBar/searchPinBarForModify';
 import ConfirmPinIsEmptyModal from '../../modals/confirmPinIsEmpty/confirmPinIsEmptyModal';
-import ConfirmMoveToMypage from '../../modals/confirmRouteSave/confirmMoveToMypage';
+import ConfirmMoveToMypage from '../../modals/confirmRouteSave/confirmMoveToMypageForModify';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent';
 import Navigation from '../../components/Navigation';
 import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBarForModify';
@@ -72,6 +72,7 @@ function ModifyPinMap() {
   const selectCurrModifedIndex = (index: number) => {
     setCurrModifiedID(index);
   };
+  const [route, setRoute] = useState(null);
   const [pinImage, setPinImage] = useState([]);
   const [totalTime, setTotalTime] = useState(0);
   const [pins, setPins] = useState([
@@ -429,12 +430,9 @@ function ModifyPinMap() {
         .then((res) => {
           if (res.status === 200) {
             console.log(res);
+            const route = res.data.route[0]; // 루트 정보.
             const pins = res.data.route[0].Pins;
-            const initialPins = pins?.map(function (
-              pinInfo: any,
-              idx: any,
-              list: any,
-            ) {
+            const initialPins = pins?.map(function (pinInfo: any) {
               const sh = Number(pinInfo.startTime?.split(':')[0]);
               const eh = Number(pinInfo.endTime?.split(':')[0]);
               const sm = Number(pinInfo.startTime?.split(':')[1]);
@@ -449,9 +447,10 @@ function ModifyPinMap() {
                 h: yEnd,
               };
             });
+            setRoute(route); // 루트 정보 받아오기.
             setPins((prev) => prev.concat(pins));
             setItemState(initialPins);
-            setNewCounter(initialPins.length);
+            setNewCounter(initialPins.length - 1);
           }
         })
         .catch((err) => {
@@ -724,6 +723,7 @@ function ModifyPinMap() {
             handleSidebarSaveBtn={handleSidebarSaveBtn}
             pinImage={pinImage}
             pins={pins}
+            route={route}
             routeId={id}
             setIsMoveToMypage={setIsMoveToMypage}
             totalTime={totalTime}
