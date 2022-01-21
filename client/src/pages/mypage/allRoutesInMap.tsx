@@ -101,7 +101,6 @@ function AllRoutesInMap() {
     for (let i = 0; i < colorsName.length; i++) {
       if (routeInfo.color === colorsName[i]) {
         pinColorUrl = colorUrls[i];
-        console.log(colorUrls[i]);
       }
     }
     const pinImgSrc = pinColorUrl;
@@ -185,9 +184,6 @@ function AllRoutesInMap() {
         });
     }
 
-    console.log(allRoutes);
-    console.log(colorIdx);
-    console.log(pickPinsPictures);
     // 지도 생성
     const mapContainer = document.getElementById('map');
 
@@ -274,6 +270,7 @@ function AllRoutesInMap() {
           pickPinsPictures={pickPinsPictures}
           pictureIdx={pictureIdx}
           setBigImage={setBigImage}
+          setPictureIdx={setPictureIdx}
         />
       ) : null}
       <div className="allRoutesInMap-whole">
