@@ -110,7 +110,7 @@ function SaveRouteModalForModify({
           keywords: el.kewords,
         };
         const newFiles = el.Pictures.filter(
-          (el: any) => (el.name ? true : false), // 기존에 있던 사진 거르기.
+          (el: any) => (el.name !== undefined ? true : false), // 기존에 있던 사진 거르기.
         );
         formData.append('pin', JSON.stringify(data));
         // formData.append(`${el.ranking}`, newFiles);
