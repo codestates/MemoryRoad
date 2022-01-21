@@ -80,11 +80,6 @@ function SaveRouteModal({
 
   /* 저장 버튼 눌렀을 때 일어나는 이벤트 */
   const saveAllPinAndRouteInfo = () => {
-    const translatedPins = pins.slice(1);
-    translatedPins.forEach((el: any) => {
-      // delete el.pinID; 내가 지워서 자꾸 오류를 일으켰구나 .. + 키워드 담기.
-      el.keywords = [];
-    });
     if (
       routeTitle.length &&
       routeDesc.length &&
@@ -93,7 +88,7 @@ function SaveRouteModal({
       Number(selectedDay)
     ) {
       // 핀 제목, 핀 사진 수정 endpoint
-      translatedPins.forEach((el: any) => {
+      pins.slice(1).forEach((el: any) => {
         const pinId = Number(el.id);
         const formData = new FormData();
         const data = {
