@@ -70,7 +70,11 @@ function Home() {
                 <button
                   className="Home-button3"
                   onClick={() =>
-                    window.scrollTo(0, document.documentElement.scrollHeight)
+                    // window.scrollTo(0, document.documentElement.scrollHeight)
+                    window.scrollTo({
+                      top: document.documentElement.scrollHeight,
+                      behavior: 'smooth',
+                    })
                   }
                 >
                   메모리로드 <span>체험</span> 하러 가기
