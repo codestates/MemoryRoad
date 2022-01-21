@@ -724,6 +724,7 @@ function ModifyPinMap() {
             handleSidebarSaveBtn={handleSidebarSaveBtn}
             pinImage={pinImage}
             pins={pins}
+            routeId={id}
             setIsMoveToMypage={setIsMoveToMypage}
             totalTime={totalTime}
           />
