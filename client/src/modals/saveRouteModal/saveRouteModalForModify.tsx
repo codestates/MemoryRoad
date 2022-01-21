@@ -110,15 +110,14 @@ function SaveRouteModalForModify({
           keywords: el.kewords,
         };
         // console.log('el.Pictures', el.Pictures);
-        const newFiles: any = el.Pictures?.filter(
-          (el: any) => (el.name !== undefined ? true : false), // 기존에 있던 사진 거르기.
-        );
         formData.append('pin', JSON.stringify(data));
         // formData.append(`${el.ranking}`, newFiles);
-        if (newFiles.length !== 0) {
-          newFiles.forEach((file: any) => {
-            formData.append('files', file);
-          }); // 여러장 append 시키는 형식으로 변경.
+        if (el.Pictures.length !== 0) {
+          el.Pictures.forEach((file: any) => {
+            if (file.name) {
+              formData.append('files', file);
+            }
+          });
         }
 
         axios({
