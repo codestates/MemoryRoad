@@ -4,10 +4,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import MyRouteStore from './pages/myRouteStore/myRouteStore';
 import Mypage from './pages/mypage/mypage';
-import Nav from './components/Navigation';
 
 import ModifyPinMap from './pages/modifyPinMap/modifyPinMap';
-import MemoryRoad from './pages/memoryRoad';
+import MemoryRoad from './pages/memoryRoad/memoryRoad';
 
 import AllRoutesInMap from './pages/mypage/allRoutesInMap';
 import CreatePinMap from './pages/createPinMap/createPinMap';

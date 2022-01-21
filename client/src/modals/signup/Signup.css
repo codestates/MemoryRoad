@@ -121,3 +121,6 @@
 .signup-pointer:hover {
   color: silver;
 }
+.signup-successMessage {
+  color: #216638;
+}

@@ -2,7 +2,7 @@ import React from 'react';
 import './NavigationForMap.css';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import OpenedMenu from '../../components/openedmenu';
+import OpenedMenu from '../../components/openedmenu/openedmenu';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../redux/reducer';
 import { loginModal, setUserInfo } from '../../redux/actions/index';

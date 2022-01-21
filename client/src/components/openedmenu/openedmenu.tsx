@@ -2,8 +2,8 @@ import React from 'react';
 import './openedmenu.css';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../redux/reducer';
-import { loginModal, setUserInfo } from '../redux/actions/index';
+import { RootState } from '../../redux/reducer';
+import { loginModal, setUserInfo } from '../../redux/actions/index';
 interface Props {
   SetOpen: any;
 }

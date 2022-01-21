@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import './home.css';
-import Footer from '../components/footer/footer';
+import Footer from '../../components/footer/footer';
 import { contextType } from 'react-grid-layout';
 import { useNavigate } from 'react-router-dom';
 function Home() {
@@ -33,12 +33,19 @@ function Home() {
       `${url}/upload/Andong.jpg`,
       `${url}/upload/streetImage.jpg`,
       `${url}/upload/HomeImage.jpg`,
+      `${url}/upload/namsan.jpg`,
+      `${url}/upload/city.jpg`,
     ];
-    const number = Math.floor(Math.random() * 3) + 1;
-    document.querySelector('.Home-notgrid');
-
+    const number = Math.floor(Math.random() * 5);
+    // console.log(number);
+    const background = document.querySelector('.Home-notgrid');
+    background?.setAttribute(
+      'style',
+      `background-image : url(${imageArr[number]})`,
+    );
     // notgrid?.setAttribute('background-image', url(imageArr[number]);
   };
+  useEffect(HomeImage, []);
 
   return (
     <div>
@@ -59,6 +66,15 @@ function Home() {
                 <div id="Home-message3">
                   옛날 사진을 찾아 갤러리를 헤매고 계신가요?
                 </div>
+                <br />
+                <button
+                  className="Home-button3"
+                  onClick={() =>
+                    window.scrollTo(0, document.documentElement.scrollHeight)
+                  }
+                >
+                  메모리로드 <span>체험</span> 하러 가기
+                </button>
               </div>
               <br />
               <div className="Home-guide">메모리로드가 도와드릴게요.</div>

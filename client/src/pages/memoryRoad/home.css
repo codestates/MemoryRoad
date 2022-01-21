@@ -81,17 +81,18 @@
 }
 .Home-MemoryRoadcontent {
   padding-top: 10%;
+  font-size: 13px;
 }
 #Home-message1 {
-  animation: fadeInText 3s 2s ease-out forwards;
+  animation: fadeInText 3s 1.5s ease-out forwards;
   opacity: 0;
 }
 #Home-message2 {
-  animation: fadeInText 3s 2.5s ease-out forwards;
+  animation: fadeInText 3s 2s ease-out forwards;
   opacity: 0;
 }
 #Home-message3 {
-  animation: fadeInText 3s 3s ease-out forwards;
+  animation: fadeInText 3s 2.5s ease-out forwards;
   opacity: 0;
 }
 @keyframes fadeInText {
@@ -99,13 +100,34 @@
     opacity: 1;
   }
 }
-
-.Home-guide {
-  font-size: 250%;
+.Home-button3 {
+  background-color: #91ba9f;
+  cursor: pointer;
+  color: white;
   font-weight: bold;
-  padding-top: 10%;
+  font-size: 18px;
+  border: 2px solid white;
+  border-radius: 15px;
+  padding: 2%;
+  margin: 2%;
+  transition: 800ms ease all;
+  animation: fadeInText 3s 3s ease-out forwards;
+  opacity: 0;
+}
+.Home-button3:hover {
+  border: 2px solid #91ba9f;
+  background-color: white;
+  color: #91ba9f;
+  box-shadow: 0 80px 0 0 white inset, 0 -80px 0 0 #91ba9f inset;
+}
+.Home-button3 > span {
+  color: #626262;
+}
+.Home-guide {
+  font-size: 200%;
+  font-weight: bold;
   padding-bottom: 5%;
-  animation: fadeInText 3s 3.5s ease-out forwards;
+  animation: fadeInText 3s 3s ease-out forwards;
   opacity: 0;
 }
 
@@ -223,7 +245,7 @@
 @media (max-width: 1000px) {
   .Home-MemoryRoad {
     position: absolute;
-    top: 30%;
+    top: 25%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
@@ -256,7 +278,7 @@
   }
   .Home-MemoryRoad {
     position: absolute;
-    top: 33%;
+    top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
@@ -329,7 +351,7 @@
     margin-top: 10vh;
     margin-bottom: 10vh;
     width: 40%;
-    font-size: 13px;
+    font-size: 11px;
     border-radius: 20px;
   }
   .Home-guide2 {
@@ -342,6 +364,9 @@
   .Home-button {
     font-size: 10px;
     margin: 2%;
+  }
+  .Home-button3 {
+    font-size: 12px;
   }
   .Home-topdownButtonPosition {
     position: fixed;
@@ -364,7 +389,7 @@
 
   .Home-MemoryRoad {
     position: absolute;
-    top: 35%;
+    top: 30%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
@@ -403,6 +428,9 @@
   .Home-content2 {
     color: #a5a5a5;
     font-size: 7px;
+  }
+  .Home-button3 {
+    font-size: 12px;
   }
   .Home-button {
     background-color: #91ba9f;
