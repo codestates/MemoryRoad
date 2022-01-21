@@ -8,6 +8,7 @@ import { addPinImageFiles } from '../../redux/actions';
 function SaveRouteModal({
   handleSidebarSaveBtn,
   pins,
+  route,
   totalTime,
   routeId,
   setIsMoveToMypage,
@@ -19,14 +20,19 @@ function SaveRouteModal({
     (state: RootState) => state.createRouteReducer.colorName,
   );
 
+  const [initialYear, initialMonth, initialDate] = route.date
+    .slice(0, 10)
+    .split('-');
+  const initialColorIdx = colorNames.indexOf(route.color);
+
   const [clickedColorSelect, setClickedColorSelect] = useState(false);
   const [clickedDaySelect, setClickedDaySelect] = useState(false);
   const [clickedMonthSelect, setClickedMonthSelect] = useState(false);
   const [clickedYearSelect, setClickedYearSelect] = useState(false);
-  const [selectedColorId, setSelectedCorlorId] = useState('0');
-  const [selectedDay, setSelectedDay] = useState('0');
-  const [selectedMonth, setSelectedMonth] = useState('0');
-  const [selectedYear, setSelectedYear] = useState('0');
+  const [selectedColorId, setSelectedCorlorId] = useState(initialColorIdx);
+  const [selectedDay, setSelectedDay] = useState(initialDate);
+  const [selectedMonth, setSelectedMonth] = useState(initialMonth);
+  const [selectedYear, setSelectedYear] = useState(initialYear);
 
   const handleColorSelect = () => {
     setClickedColorSelect(!clickedColorSelect);
@@ -64,9 +70,9 @@ function SaveRouteModal({
   const selectYear = (event: any) => {
     setSelectedYear(event.target.id);
   };
-  const [routeTitle, setRouteTitle] = useState('');
-  const [routeDesc, setRouteDesc] = useState('');
-  const [isOpenRoute, setIsOpenRoute] = useState(false);
+  const [routeTitle, setRouteTitle] = useState(route.routeName);
+  const [routeDesc, setRouteDesc] = useState(route.description);
+  const [isOpenRoute, setIsOpenRoute] = useState(route.public);
 
   const handleRouteTitle = (event: any) => {
     setRouteTitle(event.target.value);
@@ -94,17 +100,22 @@ function SaveRouteModal({
         const data = {
           locationName: el.locationName,
           ranking: el.ranking,
+          latitude: el.latitude,
+          longitude: el.longitude,
+          lotAddress: el.lotAddress,
+          roadAddress: el.roadAddress,
           startTime: el.startTime,
           endTime: el.endTime,
+          ward: el.ward,
           keywords: el.kewords,
         };
         const newFiles = el.Pictures.filter(
           (el: any) => (el.name ? true : false), // 기존에 있던 사진 거르기.
         );
-        formData.append(`${el.id}`, JSON.stringify(data));
+        formData.append('pin', JSON.stringify(data));
         // formData.append(`${el.ranking}`, newFiles);
         newFiles.forEach((file: any) => {
-          formData.append(`${el.ranking}`, file);
+          formData.append('files', file);
         }); // 여러장 append 시키는 형식으로 변경.
 
         axios({
@@ -154,7 +165,9 @@ function SaveRouteModal({
       <div className="saveRouteModal-background">
         <div className="saveRouteModal-container">
           <div className="saveRouteModal-content">
-            <p className="saveRouteModal-text">루트를 저장하시겠습니까 ?</p>
+            <p className="saveRouteModal-text">
+              수정된 루트를 저장하시겠습니까 ?
+            </p>
             <div className="saveRouteModal-selectZone">
               {/* ------------------------------------------------------ */}
               <div
@@ -210,8 +223,8 @@ function SaveRouteModal({
                   {new Array(12).fill(0).map((el, idx) => (
                     <li
                       className="saveRouteModal-selectbox-month-option"
-                      id={String(idx)}
-                      key={idx}
+                      id={String(idx + 1)}
+                      key={idx + 1}
                       onClick={(event) => {
                         selectMonth(event);
                         handleMonthSelect();
@@ -243,8 +256,8 @@ function SaveRouteModal({
                   {new Array(31).fill(0).map((el, idx) => (
                     <li
                       className="saveRouteModal-selectbox-day-option"
-                      id={String(idx)}
-                      key={idx}
+                      id={String(idx + 1)}
+                      key={idx + 1}
                       onClick={(event) => {
                         selectDay(event);
                         handleDaySelect();
@@ -305,16 +318,22 @@ function SaveRouteModal({
               className="saveRouteModal-route-title-input"
               onChange={handleRouteTitle}
               placeholder="루트의 제목을 입력해주세요."
+              value={routeTitle}
             ></textarea>
             <textarea
               className="saveRouteModal-route-content-input"
               onChange={handleRouteDesc}
               placeholder="루트에 대한 간단함 감상을 적어보세요."
+              value={routeDesc}
             ></textarea>
             <div className="saveRouteModal-open-unopen">
               🔐
               <label className="saveRouteModal-switch">
-                <input onClick={handleRouteOpenOrUnopen} type="checkbox" />
+                <input
+                  checked={!isOpenRoute}
+                  onClick={handleRouteOpenOrUnopen}
+                  type="checkbox"
+                />
                 <span className="saveRouteModal-slider-circle"></span>
               </label>
             </div>
@@ -322,13 +341,13 @@ function SaveRouteModal({
               className="saveRouteModal-save-btn"
               onClick={() => saveAllPinAndRouteInfo()}
             >
-              루트 저장
+              루트 수정 완료
             </button>
             <button
               className="saveRouteModal-close-btn"
               onClick={() => handleSidebarSaveBtn(false)}
             >
-              조금 더 생각해볼게요
+              조금 더 수정해볼게요
             </button>
           </div>
           <p className="saveRouteModal-last-text">MeMoryRoad</p>
