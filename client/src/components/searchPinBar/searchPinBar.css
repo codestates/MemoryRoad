@@ -30,7 +30,7 @@
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
-  margin-top: 2.5%;
+  margin-top: 30px;
 }
 /*검색창 요소들을 담은 내부 컨테이너*/
 #searchPin-container-sy {

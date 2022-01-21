@@ -70,9 +70,9 @@ function SearchRoutes() {
   const mapContainer = useRef<HTMLDivElement | null>(null);
 
   //회색 핀 이미지 생성
-  const pinImgSrc = 'https://server.memory-road.net/upload/gray_marker.png';
-  const pinImgSize = new kakao.maps.Size(33, 54);
-  const pinImgOpt = { offset: new kakao.maps.Point(16, 55) };
+  const pinImgSrc = 'https://server.memory-road.net/upload/gray_dot.png';
+  const pinImgSize = new kakao.maps.Size(18, 18);
+  const pinImgOpt = { offset: new kakao.maps.Point(13, 10) };
   const pinImgObj = new kakao.maps.MarkerImage(
     pinImgSrc,
     pinImgSize,
@@ -80,14 +80,13 @@ function SearchRoutes() {
   );
 
   //파랑 핀 이미지 생성
-  const selectedPinImgSrc =
-    'https://server.memory-road.net/upload/blue_marker.png';
-  const selectedPinImgSize = new kakao.maps.Size(33, 54);
-  const selectedPinImgOpt = { offset: new kakao.maps.Point(16, 55) };
+  const selectedPinImgSrc = 'https://server.memory-road.net/upload/red_pin.png';
+  const selectedPinImgSize = new kakao.maps.Size(55, 55);
+  const selectedOpt = { offset: new kakao.maps.Point(28, 55) };
   const selectedPinImgObj = new kakao.maps.MarkerImage(
     selectedPinImgSrc,
     selectedPinImgSize,
-    selectedPinImgOpt,
+    selectedOpt,
   );
 
   // *infoWindow 기본 css 없애는 함수
@@ -372,9 +371,9 @@ function SearchRoutes() {
           const polyline = new kakao.maps.Polyline({
             path: linePath,
             strokeWeight: 5,
-            strokeColor: route.id === selectedRoute?.id ? '#4646CD' : '#eb3838',
-            strokeOpacity: 0.7,
-            strokeStyle: 'dashed',
+            strokeColor: route.id === selectedRoute?.id ? '#DC4B40' : '#636363',
+            strokeOpacity: 0.5,
+            strokeStyle: 'solid',
           });
           polyline.setMap(kakaoMap);
           newLines.push(polyline);
@@ -450,8 +449,7 @@ function SearchRoutes() {
               const polyline = new kakao.maps.Polyline({
                 path: linePath,
                 strokeWeight: 5,
-                strokeColor:
-                  route.id === selectedRoute?.id ? '#4646CD' : '#eb3838',
+                strokeColor: '#636363',
                 strokeOpacity: 0.7,
                 strokeStyle: 'dashed',
               });

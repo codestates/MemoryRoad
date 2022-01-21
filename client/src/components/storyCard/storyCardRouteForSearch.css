@@ -4,14 +4,12 @@
   }
   .myRouteStore-card-dot-title-search {
     width: 50px;
-    height: 59%;
+    height: 15px;
     /*글자 넘침 표현*/
     overflow: hidden;
     word-wrap: break-word;
     text-overflow: ellipsis;
-    display: -webkit-box; 
-    -webkit-line-clamp: 3; 
-    -webkit-box-orient: vertical;
+    white-space: nowrap;
     margin: 5px 0 8px 0px;
     color: rgb(0, 0, 0);
   }
