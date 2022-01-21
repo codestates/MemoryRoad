@@ -78,7 +78,7 @@
     grid-template-columns: 1fr 3fr 1fr 0.3fr;
   }
   .nav-mobile {
-    margin: 13px;
+    text-align: right;
     margin-top: 8px;
     font-size: 30px;
   }

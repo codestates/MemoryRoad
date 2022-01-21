@@ -142,10 +142,19 @@
   font-weight: bold;
   border: 2px solid white;
 }
+.edituserinfo-edituserinfoButton:hover {
+  border: 2px solid #91ba9f;
+  background-color: white;
+  color: #91ba9f;
+  transition: 800ms ease all;
+}
 #edituserinfo-previewImage {
   width: 70px;
   height: 70px;
   margin: 10px;
   margin-left: 0px;
   border-radius: 80px;
+}
+.edituserinfo-successMessage {
+  color: #216638;
 }

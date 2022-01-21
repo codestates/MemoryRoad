@@ -26,6 +26,20 @@ function Home() {
     e.stopPropagation();
   };
 
+  // 배경화면 랜덤
+  const url = 'http://localhost';
+  const HomeImage = () => {
+    const imageArr = [
+      `${url}/upload/Andong.jpg`,
+      `${url}/upload/streetImage.jpg`,
+      `${url}/upload/HomeImage.jpg`,
+    ];
+    const number = Math.floor(Math.random() * 3) + 1;
+    document.querySelector('.Home-notgrid');
+
+    // notgrid?.setAttribute('background-image', url(imageArr[number]);
+  };
+
   return (
     <div>
       <div className="Home-Contents">
