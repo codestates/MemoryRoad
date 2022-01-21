@@ -195,7 +195,6 @@ function AllRoutesInMap() {
     console.log(allRoutes);
     console.log(colorIdx);
     console.log(pickPinsPictures);
-    console.log(colorIdx); // 0 ~ 8까지
     // 지도 생성
     const mapContainer = document.getElementById('map');
 
