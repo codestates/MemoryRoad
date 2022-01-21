@@ -147,17 +147,17 @@ function SearchSideBar({
               </div>
               <div className="pinControllTower-content-search">
                 {renderCards(searchResult)}
-                {routeCount > 5 ? (
-                  <div className="pagination-button">
-                    <Pagination
-                      cardCount={routeCount}
-                      limit={5}
-                      searchQuery={searchQuery}
-                      setSearchQuery={setSearchQuery}
-                    />
-                  </div>
-                ) : null}
               </div>
+              {routeCount > 5 ? (
+                <div className="pagination-button">
+                  <Pagination
+                    cardCount={routeCount}
+                    limit={5}
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
