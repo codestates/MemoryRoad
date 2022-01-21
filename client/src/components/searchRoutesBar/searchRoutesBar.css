@@ -8,7 +8,7 @@
   #searchPin-background-dy {
     position: fixed;
     z-index: 995;
-    width: 430px;
+    width: 100vw;
     height: 40px;
     display: flex;
     flex-flow: row wrap;
@@ -18,10 +18,11 @@
   }
   /*검색창 요소들을 담은 내부 컨테이너*/
   #searchPin-container {
+    position: relative;
     width: inherit;
     display: flex;
-    flex-flow: row wrap;
-    justify-content: space-between;
+    flex-flow: row nowrap;
+    justify-content: center;
     align-items: center;
   }
   /*검색 input창 디자인*/
@@ -55,22 +56,114 @@
     cursor: pointer;
   }
 
-  .route-location-select {
-      border: 0;
-      border-radius: 5px;
-      height: 34px;
-      box-shadow: 0px 0px 5px rgba(70, 70, 70, 0.2);
+  /*-------------------------*/
+  .selectbox-search {
+    position: relative;
+    height: 35px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    background-color: rgb(210, 210, 210);
+    padding-left: 3px;
+  }
+  
+  .selectbox-search.map {
+    width: 70px;
+  }
+  
+  /*select-box 옆 삼각형 버튼 디자인*/
+  .selectbox-search-label {
+    display: flex;
+    align-items: center;
+    width: inherit;
+    height: inherit;
+    border: none;
+    outline: none;
+    padding-left: 5px;
+    background: url('https://server.memory-road.net/upload/black_triangle.png') calc(100% - 13px) center no-repeat;
+    background-size: 11px;
+    cursor: pointer;
+    font-size: 0.9em;
+    font-weight: 800;
+    color: rgb(26, 26, 26);
+  }
+  
+  .route-location-select-optionList {
+    position: absolute;
+    z-index: 2;
+    top: 36px;
+    left: 0;
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-radius: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    max-height: 0;
+    background: rgb(235, 235, 235);
+    transition: 0.2s ease-in;
+  }
+  
+  /*스크롤 디자인 - 사라짐 ...? 무슨일 */
+  .route-location-select-optionList::-webkit-scrollbar {
+    width: 2px;
+    display: none;
+  }
+  
+  .selectbox-search.btn-active .route-location-select-optionList {
+    max-height: 130px;
+  }
+  
+  .selectbox-route-keyword-option {
+    border-bottom: 0.2px dashed rgb(255, 255, 255);
+    padding: 8px;
+    font-size: 0.9em;
+    font-weight: 600;
+    color: rgb(53, 53, 53);
+    text-align: center;
+    /* color: transparent; */
+    transition: 0.1s;
+  }
+  
+  .selectbox-search-selected-option {
+    /* margin: 0px 7px; */
+    color: rgb(118, 118, 118);
+  }
+  
+  .selectbox-route-keyword-option:hover {
+    background: rgb(255, 255, 255);
+    cursor: pointer;
+  }
+  
+  .selectbox-route-keyword-option:last-child {
+    border-bottom: none;
+  }
+  
+  @media screen and (max-width: 320px) {
+    .selectbox-ward {
+      width: 140px;
+    }
+  }
+  /*-------------------------*/
+
+  #searchPin-search-box-container {
+    width: 350px;
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
   }
   
   .all-route-button {
-    width: 100px;
-    line-height: 30px;
-    border: none;
+    position: absolute;
+    left: 20px;
+    width: 110px;
+    line-height: 33px;
+    border: 2px solid white;
     border-radius: 8px;
     font-weight: 600;
     font-size: 0.9em;
-    color: rgba(26, 26, 26, 0.7);
+    color: white;
     background-color: #91BA9F;
-    box-shadow: 0px 0px 5px rgba(70, 70, 70, 0.2);
+    box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.953);
     cursor: pointer;
   }

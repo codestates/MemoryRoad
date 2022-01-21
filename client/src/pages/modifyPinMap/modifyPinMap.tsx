@@ -234,11 +234,23 @@ function ModifyPinMap() {
       keywords = keywords.concat(letters);
     }
     const newPin: any = {
-      id: String(newID), // -- 내가 만든 상태 키
+      id: String(newID), // -- 내가 만든 상태 키 (클라이언트 업데이트용)
       ranking: newCounter,
       locationName: pinTitle,
-      latitude: currMarkerInfo.latitude,
-      longitude: currMarkerInfo.longitude,
+      latitude: Number(currMarkerInfo.latitude),
+      longitude: Number(currMarkerInfo.longitude),
+      lotAddress: currMarkerInfo.lotAddress,
+      roadAddress: currMarkerInfo.roadAddress,
+      ward: currMarkerInfo.ward,
+      startTime: '00:00',
+      endTime: '01:00',
+      keywords: keywords,
+    };
+    const newData: any = {
+      ranking: newCounter,
+      locationName: pinTitle,
+      latitude: Number(currMarkerInfo.latitude),
+      longitude: Number(currMarkerInfo.longitude),
       lotAddress: currMarkerInfo.lotAddress,
       roadAddress: currMarkerInfo.roadAddress,
       ward: currMarkerInfo.ward,
@@ -252,7 +264,7 @@ function ModifyPinMap() {
     };
     // axios 생성 요청
     const formData = new FormData();
-    formData.append('pin', JSON.stringify(newPin));
+    formData.append('pin', JSON.stringify(newData));
     pinImages.forEach((el: any) => {
       formData.append('files', el); // 사진 한장 한장 이렇게 append시키는 게 맞아 ?
     });
@@ -450,7 +462,7 @@ function ModifyPinMap() {
             setRoute(route); // 루트 정보 받아오기.
             setPins((prev) => prev.concat(pins));
             setItemState(initialPins);
-            setNewCounter(initialPins.length - 1);
+            setNewCounter(initialPins.length);
           }
         })
         .catch((err) => {

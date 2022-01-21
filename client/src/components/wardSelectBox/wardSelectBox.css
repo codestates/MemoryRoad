@@ -1,6 +1,5 @@
 .selectbox-ward {
   position: relative;
-  width: 150px;
   height: 35px;
   border-radius: 8px;
   box-sizing: border-box;
@@ -9,7 +8,7 @@
 }
 
 .selectbox-ward.map {
-  width: 136px;
+  width: 90px;
 }
 
 /*select-box 옆 삼각형 버튼 디자인*/

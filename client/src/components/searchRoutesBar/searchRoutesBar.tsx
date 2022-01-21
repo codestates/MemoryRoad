@@ -39,6 +39,10 @@ function SearchRoutesBar({
   const [searchBarText, setSearchBarText] = useState('');
   //루트, 장소 선택 상태
   const [routeorLocation, setRouteorLocation] = useState('rq');
+  const [clickedSearchOption, setClickedSearchOption] = useState(false);
+  const handleSearchOptionSelect = () => {
+    setClickedSearchOption(!clickedSearchOption);
+  };
 
   //쿼리 객체를 쿼리 스트링으로 변환하는 메소드
   //두 번째, 세 번째 매개변수로 검색 키워드를 받는다
@@ -123,33 +127,69 @@ function SearchRoutesBar({
             >
               전체 루트 보기
             </button>
-            <select
-              className="route-location-select"
-              onChange={(e) => setRouteorLocation(e.target.value)}
-            >
-              <option value="rq">루트</option>
-              <option value="lq">장소</option>
-            </select>
-            <input
-              className="searchPin-input"
-              onChange={(event) => {
-                setSearchBarText(event.target.value);
-                // setSearchQuery((prevObj) => {
-                //   delete prevObj.lq;
-                //   delete prevObj.rq;
-                //   routeorLocation === 'rq'
-                //     ? (prevObj.rq = event.target.value)
-                //     : (prevObj.lq = event.target.value);
-                //   return { ...prevObj };
-                // });
-              }}
-              placeholder="원하는 장소를 검색해보세요 !"
-              type="text"
-              value={searchBarText}
-            />
-            <button className="searchPin-search-btn" onClick={postSearch}>
-              검색
-            </button>
+            <div id="searchPin-search-box-container">
+              <div
+                className={
+                  'selectbox-search map ' +
+                  (clickedSearchOption ? 'btn-active' : null)
+                }
+              >
+                <button
+                  className="selectbox-search-label"
+                  onClick={handleSearchOptionSelect}
+                >
+                  <p className="selectbox-search-selected-option">
+                    {routeorLocation === 'rq' ? '루트' : '장소'}
+                  </p>
+                </button>
+                <ul className="route-location-select-optionList">
+                  <li
+                    className="selectbox-route-keyword-option"
+                    id="rq"
+                    onClick={(event: any) => {
+                      setRouteorLocation(event.target.id);
+                      handleSearchOptionSelect();
+                    }}
+                    onKeyPress={() => null}
+                    role="tab"
+                  >
+                    루트
+                  </li>
+                  <li
+                    className="selectbox-route-keyword-option"
+                    id="lq"
+                    onClick={(event: any) => {
+                      setRouteorLocation(event.target.id);
+                      handleSearchOptionSelect();
+                    }}
+                    onKeyPress={() => null}
+                    role="tab"
+                  >
+                    장소
+                  </li>
+                </ul>
+              </div>
+              <input
+                className="searchPin-input"
+                onChange={(event) => {
+                  setSearchBarText(event.target.value);
+                  // setSearchQuery((prevObj) => {
+                  //   delete prevObj.lq;
+                  //   delete prevObj.rq;
+                  //   routeorLocation === 'rq'
+                  //     ? (prevObj.rq = event.target.value)
+                  //     : (prevObj.lq = event.target.value);
+                  //   return { ...prevObj };
+                  // });
+                }}
+                placeholder="원하는 장소를 검색해보세요 !"
+                type="text"
+                value={searchBarText}
+              />
+              <button className="searchPin-search-btn" onClick={postSearch}>
+                검색
+              </button>
+            </div>
           </div>
         </div>
       </div>
