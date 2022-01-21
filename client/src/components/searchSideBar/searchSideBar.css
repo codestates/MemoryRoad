@@ -67,7 +67,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     display: flex;
-    flex-flow: column wrap;
+    flex-flow: column nowrap;
   }
   /*-------------------------------------------------*/
   /*컨텐츠들 컨테이너 스크롤바 디자인*/
@@ -107,6 +107,7 @@
 
 /* 페이지 버튼 */
 .pagination-button {
+  margin-top: 19px;
   display: flex;
   justify-content: center;
 }
