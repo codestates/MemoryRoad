@@ -19,7 +19,7 @@ import ConfirmIsUserSaveRoute from '../../modals/confirmIsUserSaveRoute/confirmI
 import SaveRouteModal from '../../modals/saveRouteModal/saveRouteModal'; // 루트 저장 모달창
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
 import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBar';
-import Navigation from '../../components/Navigation';
+import Navigation from '../../components/navigation/Navigation';
 import _ from 'lodash';
 import '../../modals/createPinModal/createPinModal.css';
 import Element from '../../modals/createPinModal/element';
