@@ -183,11 +183,13 @@ function AllRoutesInMap() {
     //colorIdx가 빈 문자열일 경우모든 루트 배열을 받아온다.
     //colorIdx에 값이 있다면
     if (findAllRoute === null) {
-      axios.get('https://server.memory-road.net/routes').then((res) => {
-        const routeArray: Route[] = res.data['routes'];
-        setFindAllRoute(routeArray);
-        setAllRoutes(routeArray);
-      });
+      axios
+        .get('https://server.memory-road.net/routes', { withCredentials: true })
+        .then((res) => {
+          const routeArray: Route[] = res.data['routes'];
+          setFindAllRoute(routeArray);
+          setAllRoutes(routeArray);
+        });
     }
 
     console.log(allRoutes);
