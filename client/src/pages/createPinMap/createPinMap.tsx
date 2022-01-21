@@ -213,10 +213,18 @@ function CreatePinMap() {
       h: 2,
     });
     let keywords = pinTitle.split(' ');
-    if (currMarkerInfo.lotAddress.length)
-      keywords = keywords.concat(currMarkerInfo.lotAddress.split(' '));
-    if (currMarkerInfo.roadAddress.length)
-      keywords = keywords.concat(currMarkerInfo.roadAddress.split(' '));
+    if (currMarkerInfo.lotAddress.length) {
+      const letters = currMarkerInfo.lotAddress
+        .split(' ')
+        .filter((word: string) => word.slice(-1) !== '구');
+      keywords = keywords.concat(letters);
+    }
+    if (currMarkerInfo.roadAddress.length) {
+      const letters = currMarkerInfo.roadAddress
+        .split(' ')
+        .filter((word: string) => word.slice(-1) !== '구');
+      keywords = keywords.concat(letters);
+    }
     const newPin: any = {
       pinID: newID, // -- 내가 만든 상태 키
       ranking: newCounter,
