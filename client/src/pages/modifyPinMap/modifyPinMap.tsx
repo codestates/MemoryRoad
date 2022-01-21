@@ -101,14 +101,21 @@ function ModifyPinMap() {
     console.log(layout);
     setItemState(layout); // 수정된 핀 레이아웃 업데이트 -----------------------------------
 
-    const totalTime = pins
-      ?.slice(1)
-      .reduce((prev: any, curr: any, currIdx: number) => {
-        const currSH = parseInt(layout[currIdx].y) * 0.5;
-        const currEH = parseInt(layout[currIdx].y + layout[currIdx].h) * 0.5;
-        const currTimes = currEH - currSH;
-        return prev + currTimes;
-      }, 0);
+    // const totalTime = pins
+    //   ?.slice(1)
+    //   .reduce((prev: any, curr: any, currIdx: number) => {
+    //     // 오류 발생 지점
+    //     const currSH = parseInt(layout[currIdx].y) * 0.5;
+    //     const currEH = parseInt(layout[currIdx].y + layout[currIdx].h) * 0.5;
+    //     const currTimes = currEH - currSH;
+    //     return prev + currTimes;
+    //   }, 0);
+    const totalTime = layout.reduce((prev: any, curr: any) => {
+      const currSH = curr.y * 0.5;
+      const currEH = (curr.y + curr.h) * 0.5;
+      const currTimes = currEH - currSH;
+      return prev + currTimes;
+    }, 0);
     console.log(totalTime); // 굳굳
     setTotalTime(totalTime);
 
@@ -391,23 +398,25 @@ function ModifyPinMap() {
           if (res.status === 200) {
             console.log(res);
             const pins = res.data.route[0].Pins;
-            const initialPins = pins
-              ?.slice(1)
-              ?.map(function (pinInfo: any, idx: any, list: any) {
-                const sh = Number(pinInfo.startTime?.split(':')[0]);
-                const eh = Number(pinInfo.endTime?.split(':')[0]);
-                const sm = Number(pinInfo.startTime?.split(':')[1]);
-                const em = Number(pinInfo.endTime?.split(':')[1]);
-                const yStart = sh * 2 + (sm === 0 ? 0 : 1);
-                const yEnd = (eh - sh) * 2 + (em - sm < 0 ? -1 : 0);
-                return {
-                  i: String(pinInfo.id),
-                  x: 0,
-                  y: yStart,
-                  w: 1,
-                  h: yEnd,
-                };
-              });
+            const initialPins = pins?.map(function (
+              pinInfo: any,
+              idx: any,
+              list: any,
+            ) {
+              const sh = Number(pinInfo.startTime?.split(':')[0]);
+              const eh = Number(pinInfo.endTime?.split(':')[0]);
+              const sm = Number(pinInfo.startTime?.split(':')[1]);
+              const em = Number(pinInfo.endTime?.split(':')[1]);
+              const yStart = sh * 2 + (sm === 0 ? 0 : 1);
+              const yEnd = (eh - sh) * 2 + (em - sm < 0 ? -1 : 0);
+              return {
+                i: String(pinInfo.id),
+                x: 0,
+                y: yStart,
+                w: 1,
+                h: yEnd,
+              };
+            });
             setPins((prev) => prev.concat(pins));
             setItemState(initialPins);
             setNewCounter(initialPins.length);
