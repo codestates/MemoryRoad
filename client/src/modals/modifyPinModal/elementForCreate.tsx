@@ -6,7 +6,6 @@ const ElementForCreate = ({
   handleIsModalOpen,
   onAddItem,
   setIsEmptyInfo,
-  routeId,
 }: any) => {
   const [pinTitle, setPinTitle] = useState('');
   const [pinImages, setPinImages] = useState<any[]>([]);
@@ -42,27 +41,6 @@ const ElementForCreate = ({
     deleteTag.remove();
     handleIsModalOpen(false);
     onAddItem(pinTitle, pinImages, currMarkerInfo); // 이건 현재 상태 반영
-  };
-
-  const requestForCreate = () => {
-    const formData = new FormData();
-    formData.append('pin', JSON.stringify({ locationName: pinTitle }));
-    pinImages.forEach((el) => {
-      formData.append('files', el); // 사진 한장 한장 이렇게 append시키는 게 맞아 ?
-    });
-
-    axios({
-      url: `https://server.memory-road.net/routes/${routeId}/pins`,
-      method: 'post',
-      data: formData,
-      withCredentials: true,
-    })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   return (
@@ -135,7 +113,6 @@ const ElementForCreate = ({
         id="createPinModal-save-btn"
         onClick={() => {
           pinTitle.length === 0 ? setIsEmptyInfo(true) : handleSavePin();
-          requestForCreate();
         }}
       >
         장소 저장

@@ -22,7 +22,7 @@ import SearchPinBar from '../../components/searchPinBar/searchPinBarForModify';
 import ConfirmPinIsEmptyModal from '../../modals/confirmPinIsEmpty/confirmPinIsEmptyModal';
 import ConfirmMoveToMypage from '../../modals/confirmRouteSave/confirmMoveToMypage';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent';
-import Navigation from '../createPinMap/NavigationForMap';
+import Navigation from '../../components/Navigation';
 import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBarForModify';
 import SaveRouteModalForModify from '../../modals/saveRouteModal/saveRouteModalForModify';
 import { testData } from './testData';
@@ -218,6 +218,12 @@ function ModifyPinMap() {
       w: 1,
       h: 2,
     });
+    // 키워드 생성 과연.
+    let keywords = pinTitle.split(' ');
+    if (currMarkerInfo.lotAddress.length)
+      keywords = keywords.concat(currMarkerInfo.lotAddress.split(' '));
+    if (currMarkerInfo.roadAddress.length)
+      keywords = keywords.concat(currMarkerInfo.roadAddress.split(' '));
     const newPin: any = {
       id: String(newID), // -- 내가 만든 상태 키
       ranking: newCounter + 1,
@@ -229,16 +235,36 @@ function ModifyPinMap() {
       ward: currMarkerInfo.ward,
       startTime: '00:00',
       endTime: '01:00',
+      keywords: keywords,
     };
     const newFile: any = {
       ranking: newCounter,
       files: pinImages,
     };
-    setPins(pins.concat(newPin));
-    setItemState(newItems);
-    setPinImage(pinImage.concat(newFile));
-    setNewCounter(newCounter + 1);
-    setIsClickSaveBtn(true);
+    // axios 생성 요청
+    const formData = new FormData();
+    formData.append('pin', JSON.stringify(newPin));
+    pinImages.forEach((el: any) => {
+      formData.append('files', el); // 사진 한장 한장 이렇게 append시키는 게 맞아 ?
+    });
+
+    axios({
+      url: `https://server.memory-road.net/routes/${id}/pins`,
+      method: 'post',
+      data: formData,
+      withCredentials: true,
+    })
+      .then((res) => {
+        console.log(res);
+        setPins(pins.concat(newPin));
+        setItemState(newItems);
+        setPinImage(pinImage.concat(newFile));
+        setNewCounter(newCounter + 1);
+        setIsClickSaveBtn(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const onUpdateItem = (pinId: string, pinTitle: any, pinImages: any) => {
@@ -690,7 +716,6 @@ function ModifyPinMap() {
             handleSidebarSaveBtn={handleSidebarSaveBtn}
             pinImage={pinImage}
             pins={pins}
-            routeId={id}
             setIsMoveToMypage={setIsMoveToMypage}
             totalTime={totalTime}
           />

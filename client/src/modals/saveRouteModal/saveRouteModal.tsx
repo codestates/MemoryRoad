@@ -94,12 +94,6 @@ function SaveRouteModal({
       Number(selectedDay)
     ) {
       if (isLogin) {
-        const translatedPins = pins.slice(1);
-        translatedPins.forEach((el: any) => {
-          // delete el.pinID; 내가 지워서 자꾸 오류를 일으켰구나 ..
-          el.keywords = [];
-        });
-
         const data = {
           routeName: routeTitle,
           description: routeDesc,
@@ -107,7 +101,7 @@ function SaveRouteModal({
           time: totalTime,
           color: colorNames[Number(selectedColorId)],
           date: `${selectedYear}-${selectedMonth}-${selectedDay}`,
-          pins: translatedPins,
+          pins: pins.slice(1),
         };
 
         console.log(data);

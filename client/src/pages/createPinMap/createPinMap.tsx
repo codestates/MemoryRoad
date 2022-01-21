@@ -11,7 +11,6 @@ import type { RootState } from './../../redux/reducer/index';
 import { persistor } from '../../../src/index';
 // other Files
 import './createPinMap.css';
-import FakeHeader from '../../components/map-test/fakeHeader';
 import createPinModal from '../../modals/createPinModal/createPinModal'; // 핀 생성 모달창
 import SearchPinBar from '../../components/searchPinBar/searchPinBar'; // 핀 검색창
 import ConfirmPinIsEmptyModal from '../../modals/confirmPinIsEmpty/confirmPinIsEmptyModal'; // 핀 오류 모달창
@@ -19,8 +18,8 @@ import ConfirmMoveToMypage from '../../modals/confirmRouteSave/confirmMoveToMypa
 import ConfirmIsUserSaveRoute from '../../modals/confirmIsUserSaveRoute/confirmIsUserSaveRoute'; // 로그인 여부 확인 모달창
 import SaveRouteModal from '../../modals/saveRouteModal/saveRouteModal'; // 루트 저장 모달창
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
-import Navigation from './NavigationForMap';
 import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBar';
+import Navigation from '../../components/Navigation';
 import _ from 'lodash';
 import '../../modals/createPinModal/createPinModal.css';
 import Element from '../../modals/createPinModal/element';
@@ -213,6 +212,11 @@ function CreatePinMap() {
       w: 1,
       h: 2,
     });
+    let keywords = pinTitle.split(' ');
+    if (currMarkerInfo.lotAddress.length)
+      keywords = keywords.concat(currMarkerInfo.lotAddress.split(' '));
+    if (currMarkerInfo.roadAddress.length)
+      keywords = keywords.concat(currMarkerInfo.roadAddress.split(' '));
     const newPin: any = {
       pinID: newID, // -- 내가 만든 상태 키
       ranking: newCounter,
@@ -224,6 +228,7 @@ function CreatePinMap() {
       ward: currMarkerInfo.ward,
       startTime: '00:00',
       endTime: '01:00',
+      keywords: keywords,
     };
     const newFile: any = {
       ranking: newCounter,
