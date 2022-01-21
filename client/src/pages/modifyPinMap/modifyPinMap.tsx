@@ -110,8 +110,8 @@ function ModifyPinMap() {
     console.log(totalTime); // 굳굳
     setTotalTime(totalTime);
 
-    const newTimePins: any = pins?.map((pin: any, idx: any) => {
-      layout.forEach((el: any) => {
+    const newTimePins: any = pins?.map((pin: any) => {
+      layout.forEach((el: any, num: number) => {
         if (el.i === String(pin.id)) {
           const sh = parseInt(el.y) * 0.5;
           const eh = parseInt(el.y + el.h) * 0.5;
@@ -125,7 +125,7 @@ function ModifyPinMap() {
               : (hour * 60) % 60;
           pin.startTime = getHour(sh) + ':' + getMinute(sh);
           pin.endTime = getHour(eh) + ':' + getMinute(eh); // 핀 시간 업데이트
-          pin.ranking = idx; // 핀 랭킹 업데이트
+          pin.ranking = num; // 핀 랭킹 업데이트
         }
       });
       return pin;
@@ -234,7 +234,7 @@ function ModifyPinMap() {
     }
     const newPin: any = {
       id: String(newID), // -- 내가 만든 상태 키
-      ranking: newCounter + 1,
+      ranking: newCounter,
       locationName: pinTitle,
       latitude: currMarkerInfo.latitude,
       longitude: currMarkerInfo.longitude,
