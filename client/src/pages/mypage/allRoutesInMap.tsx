@@ -1,4 +1,4 @@
-import React, { useEffect, useState, MouseEvent } from 'react';
+import React, { useEffect, useState, MouseEvent, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/reducer';
 import ColorSelectBox from '../../components/colorSelectBox/colorSelectBoxForMap';
@@ -6,9 +6,7 @@ import './allRoutesInMap.css';
 import axios from 'axios';
 import { Picture, Route } from '../../types/searchRoutesTypes';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
-import fakeData from './fakeData.json';
-
-type CustomMouseEvent = MouseEvent<HTMLElement>;
+import ClickImage from '../../modals/clickImage/clickImage';
 
 // 루트를 받고, 루트의 핀 값을 받을 것 같음
 // 각 루트별로 핀 객체를 받고, 받은 핀 객체값을 For문, 혹은 ForEach를 통해 핀의 위치값을 받아서 핀을 그리고 선을 이어줘야 할 것 같음
@@ -37,7 +35,7 @@ function AllRoutesInMap() {
 
   //state
   //지도의 확대 정도
-  const [currLevel, setCurrLevel] = useState(6);
+  const [currLevel, setCurrLevel] = useState(7);
   //전체 루트의 정보
   const [findAllRoute, setFindAllRoute] = useState<Route[] | null>(null);
   const [allRoutes, setAllRoutes] = useState<Route[] | null>(null);
@@ -46,6 +44,43 @@ function AllRoutesInMap() {
   const [colorIdx, setColorIdx] = useState<number>(9);
   // 선택된 핀의 사진 정보
   const [pickPinsPictures, setPickPinsPictures] = useState<Picture[]>();
+
+  //사진 드래그
+  // onMouseMove는 왼쪽 버튼을 떼도 발생합니다. 드래그 효과를 주기 위해 isDrag변수가 true 일 때 발생하도록 설정했습니다
+  const [isDrag, setIsDrag] = useState(false);
+
+  const [startX, setStartX] = useState(0);
+
+  //사진 클릭시 모달창 on/off
+  const [bigImage, setBigImage] = useState(false);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // startX는 현재 클릭한 pageX와 움직인 스크롤의 길이 scrollLeft를 합친 값입니다.
+  // 스크롤이 이동하지 않았을 때는 문제가 없지만 스크롤이 이동된 상태에서 클릭을 한다면,
+  // 브라우저의 width의 pageX값이 설정이 돼 순간적으로 앞쪽으로 스크롤이 됩니다.
+  // 이를 막기 위해 scrollLeft를 더해 현재 x의 위치를 계산했습니다.
+  const onDragStart = (e: any) => {
+    const { current } = scrollRef;
+    if (current !== null) {
+      e.preventDefault();
+      setIsDrag(true);
+      setStartX(e.pageX + current.scrollLeft);
+    }
+  };
+  // onMouseUp, onMouseLeave 이벤트가 발생했을 때 isDrag를 false로 설정했습니다.
+  const onDragEnd = () => {
+    setIsDrag(false);
+  };
+  // 스크롤을 실질적으로 움직이게 하는 부분. 처음 클릭한 x의 좌표 startX와 움직이면서 변하는 e.pageX로 scrollLeft의 값을 설정했습니다.
+  const onDragMove = (e: any) => {
+    const { current } = scrollRef;
+    if (current !== null) {
+      if (isDrag) {
+        current.scrollLeft = startX - e.pageX;
+      }
+    }
+  };
 
   //핀 이미지 생성
   const pinImgSize = new kakao.maps.Size(25, 25);
@@ -134,54 +169,10 @@ function AllRoutesInMap() {
       (acc, cur) => Math.max(acc, Number(cur.longitude)),
       Number.MIN_SAFE_INTEGER,
     );
-    // 소수 계산 문제를 해결하기 위해 toFixed함수를 사용해 16자리에서 반올림 해 평균을 계산한다
-    // return new kakao.maps.LatLng(
-    //   Number(((minLat + maxLat) / 2).toFixed(15)),
-    //   Number(((minLng + maxLng) / 2).toFixed(15)),
-    // );
     return { minLat, maxLat, minLng, maxLng };
   }
 
-  // const slider = document.querySelector('.allRoutesInMap-images');
-  // let isMouseDown = false;
-  // let startX: any, scrollLeft: any;
-  // const mouseDownEvent = (e: CustomMouseEvent) => {
-  //   if (slider !== null) {
-  //     isMouseDown = true;
-  //     slider.classList.add('active');
-
-  //     startX = e.pageX - slider.offsetLeft;
-  //     scrollLeft = slider.scrollLeft;
-  //   }
-  // };
-  // const mouseMoveEvent = (e: CustomMouseEvent) => {
-  //   if (slider !== null) {
-  //     if (!isMouseDown) return;
-  //     e.preventDefault();
-  //     const x = e.pageX - slider.offsetLeft;
-  //     const walk = (x - startX) * 1;
-  //     slider.scrollLeft = scrollLeft - walk;
-  //   }
-  // };
-  // if (slider !== null) {
-  //   slider.addEventListener('mousedown', mouseMoveEvent);
-
-  //   slider.addEventListener('mouseleave', () => {
-  //     isMouseDown = false;
-  //     slider.classList.remove('active');
-  //   });
-
-  //   slider.addEventListener('mouseup', () => {
-  //     isMouseDown = false;
-  //     slider.classList.remove('active');
-  //   });
-
-  //   slider.addEventListener('mousemove', mouseMoveEvent);
-  // }
-
   useEffect(() => {
-    //colorIdx가 빈 문자열일 경우모든 루트 배열을 받아온다.
-    //colorIdx에 값이 있다면
     if (findAllRoute === null) {
       axios
         .get('https://server.memory-road.net/routes', { withCredentials: true })
@@ -270,30 +261,52 @@ function AllRoutesInMap() {
         polyline.setMap(map);
       }
     }
-  }, [findAllRoute, allRoutes, pickPinsPictures]);
+  }, [findAllRoute, allRoutes]);
+
+  // useEffect(() => {}, [pickPinsPictures]);
 
   return (
-    <div className="allRoutesInMap-whole">
-      <div className="jyang-allRoutesInMap">
-        <ColorSelectBox
-          findAllRoute={findAllRoute}
-          setAllRoutes={setAllRoutes}
-          setColorIdx={setColorIdx}
-        />
-      </div>
-      <div id="allRoutesInMap-images">
-        {pickPinsPictures ? (
-          pickPinsPictures.map((el, index) => (
-            <img
-              alt="loadFail"
-              id="el-img"
-              key={index}
-              src={`https://server.memory-road.net/${el.fileName}`}
-            ></img>
-          ))
-        ) : (
-          <div></div>
-        )}
+    <div>
+      {bigImage ? <ClickImage /> : null}
+      <div className="allRoutesInMap-whole">
+        <div className="jyang-allRoutesInMap">
+          <ColorSelectBox
+            findAllRoute={findAllRoute}
+            setAllRoutes={setAllRoutes}
+            setColorIdx={setColorIdx}
+          />
+        </div>
+        <div
+          id="allRoutesInMap-images"
+          onMouseDown={onDragStart}
+          onMouseLeave={onDragEnd}
+          onMouseMove={onDragMove}
+          onMouseUp={onDragEnd}
+          ref={scrollRef}
+          role="button"
+          tabIndex={0}
+        >
+          {pickPinsPictures ? (
+            pickPinsPictures.map((el, index) => (
+              <div
+                id="el-img-div"
+                key={index}
+                onClick={() => setBigImage(true)}
+                onKeyPress={() => setBigImage(true)}
+                role="button"
+                tabIndex={0}
+              >
+                <img
+                  alt="loadFail"
+                  id="el-img-img"
+                  src={`https://server.memory-road.net/${el.fileName}`}
+                ></img>
+              </div>
+            ))
+          ) : (
+            <div></div>
+          )}
+        </div>
       </div>
       <div id="map" style={{ width: '100%', height: '100vh' }}>
         <div className="allRoutesInMap-menu"></div>
