@@ -1,6 +1,6 @@
 #pinControllTower-fix-search {
     position: fixed;
-    z-index: 99; /*검색창때문에.*/
+    z-index: 998; /*검색창때문에.*/
   }
   /*사이드바 컨테이너*/
   #pinControllTower-container-search {
