@@ -1411,8 +1411,10 @@ export class RoutesService {
             userId: decode['id'],
           },
         )
-        .getMany()
+        .getOne()
         .then((Pins) => {
+          //없는 핀, 또는 다른 유저가 작성한 핀을 삭제 하려는 경우
+          if (!Pins) throw new UnauthorizedException();
           return this.pinsRepository.remove(Pins);
         });
 
