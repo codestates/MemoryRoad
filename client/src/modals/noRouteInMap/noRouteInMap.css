@@ -1,0 +1,43 @@
+.confirmPin-background {
+    position: fixed;
+    z-index: 1000;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(41, 41, 41, 0.413);
+  }
+  .confirmPin-container {
+    width: 300px;
+    height: 220px;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+    border-radius: 7px;
+    background-color:  rgb(255, 255, 255);
+  }
+  .confirmPin-content {
+    width: 260px;
+  }
+  .confirmPin-text-mypage {
+    margin-top: 35px;
+    height: 90px;
+    text-align: center;
+    line-height: 25px;
+    font-weight: 600;
+    font-size: 0.9em;
+    color: rgb(86, 86, 86);
+  }
+  .confirmPin-btn-mypage {
+    width: inherit;
+    line-height: 30px;
+    font-size: 0.9em;
+    font-weight: 600;
+    color: rgb(86, 86, 86);
+    border: none;
+    border-radius: 5px;
+    background-color: #91BA9F;
+  }
