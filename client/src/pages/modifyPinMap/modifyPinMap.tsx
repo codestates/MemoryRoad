@@ -212,6 +212,19 @@ function ModifyPinMap() {
   const newID = newCounter + 1; /* for ID */
 
   const onAddItem = (pinTitle: any, pinImages: any, currMarkerInfo: any) => {
+    let keywords: any = pinTitle.split(' ');
+    if (currMarkerInfo.lotAddress.length) {
+      const letters = currMarkerInfo.lotAddress
+        .split(' ')
+        .filter((word: string) => word.slice(-1) !== '구');
+      keywords = keywords.concat(letters);
+    }
+    if (currMarkerInfo.roadAddress.length) {
+      const letters = currMarkerInfo.roadAddress
+        .split(' ')
+        .filter((word: string) => word.slice(-1) !== '구');
+      keywords = keywords.concat(letters);
+    }
     const newItems = itemState.concat({
       i: String(newID),
       x: 0,
@@ -241,6 +254,7 @@ function ModifyPinMap() {
       ward: currMarkerInfo.ward,
       startTime: '00:00',
       endTime: '01:00',
+      keywords: keywords,
     };
     const newFile: any = {
       ranking: newCounter,

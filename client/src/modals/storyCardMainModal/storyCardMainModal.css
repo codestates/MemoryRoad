@@ -1,7 +1,7 @@
 /*전체 틀*/
 .storyCardMainModal-background {
   position: fixed;
-  z-index: 9999999999999; /*navigation bar 오작동 막음 5 -> 6*/
+  z-index: 9999999999999; /*omg*/
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -259,19 +259,15 @@
     bottom: 60%;
   }
 }
-@media screen and (max-width: 725px){
+
+@media screen and (max-width: 867px){
   .storyCardMainModal-pin-color-line {
-    bottom: 63%;
-  }
-}
-@media screen and (max-width: 610px){
-  .storyCardMainModal-pin-color-line {
-    bottom: 64%;
+    bottom: 59%;
   }
 }
 @media screen and (max-width: 470px){
   .storyCardMainModal-pin-color-line {
-    bottom: 65%;
+    bottom: 62%;
   }
 }
 @media screen and (max-width: 370px){
