@@ -1,13 +1,17 @@
 .mypage-gridMypage {
   display: grid;
   grid-template-columns: 2fr 2fr 5fr 2fr;
-  grid-template-rows: 20vh 25vh 40vh;
+  grid-template-rows: 5vh 20vh 30vh;
 }
 .mypage-userProfile {
-  max-width: 300px;
-  max-width: 300px;
-  width: 100%;
-  border-radius: 100%;
+  max-width: 100px;
+  max-height: 100px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+  border: 3px solid #91ba9f;
 }
 /* .mypage-checking {
   border: 2px solid black;
@@ -17,7 +21,7 @@
   grid-row: 3/4;
 }
 .mypage-scroll {
-  height: 65vh;
+  height: 50vh;
   overflow: auto;
   overflow-x: hidden;
 }
@@ -35,7 +39,7 @@
 }
 .mypage-contents {
   text-align: center;
-  height: 100vh;
+  height: 55vh;
 }
 .mypage-content {
   position: relative;
@@ -47,6 +51,8 @@
   border-radius: 20px;
   opacity: 0.5;
   vertical-align: middle;
+  object-fit: cover;
+  object-position: left;
 }
 .mypage-imageExplain {
   position: absolute;
@@ -64,8 +70,8 @@
 }
 .mypage-greeting {
   text-align: right;
-  margin-top: 2vh;
-  margin-right: 2vw;
+  /* margin-top: 2vh;
+  margin-right: 2vw; */
 }
 .mypage-greetingTouser {
   font-size: 2vw;
@@ -95,7 +101,13 @@
   .mypage-gridMypage {
     display: grid;
     grid-template-columns: 2fr 2fr 5fr 2fr;
-    grid-template-rows: 10vh 20vh 40vh;
+    grid-template-rows: 5vh 20vh 40vh;
+  }
+  .mypage-userProfile {
+    max-width: 200px;
+    max-height: 200px;
+    width: 200px;
+    border-radius: 50%;
   }
 }
 
@@ -104,7 +116,7 @@
   .mypage-gridMypage {
     display: grid;
     grid-template-columns: 1fr 5fr 10fr 1fr;
-    grid-template-rows: 10vh 20vh 40vh;
+    grid-template-rows: 5vh 20vh 40vh;
   }
   .mypage-userProfile {
     width: 100px;
@@ -125,7 +137,7 @@
   .mypage-image {
     width: 80%;
     height: 30vh;
-    height: 1fr;
+    height: 150px;
     /* border: 2px solid black; */
     border-radius: 20px;
     opacity: 0.5;
@@ -137,8 +149,8 @@
 @media (max-width: 500px) {
   .mypage-gridMypage {
     display: grid;
-    grid-template-columns: 1fr 5fr 10fr 1fr;
-    grid-template-rows: 15vh 15vh 40vh;
+    grid-template-columns: 1fr 4fr 10fr 1fr;
+    grid-template-rows: 5vh 15vh 40vh;
   }
   .mypage-Profile {
     font-size: 80px;
