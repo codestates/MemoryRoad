@@ -8,8 +8,14 @@ Logo
 About
 =============
 기억을 찾아 갤러리를 헤매는 당신을 위한 기록앱, Memory Road
+<br>
+<br>
+<br>
+
 
 https://memory-road.net/
+
+<br>
 
 Feature
 =============
