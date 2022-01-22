@@ -3,7 +3,7 @@ import './home.css';
 import Footer from '../../components/footer/footer';
 import { contextType } from 'react-grid-layout';
 import { useNavigate } from 'react-router-dom';
-function Home() {
+function Home({ url }: any) {
   const navigate = useNavigate();
   // 스크롤 이벤트 발생
   window.onscroll = function (e) {
@@ -28,7 +28,7 @@ function Home() {
 
   // 배경화면 랜덤
   // const url = 'http://localhost';
-  const url = 'https://server.memory-road.net';
+  // const url = 'https://server.memory-road.net';
   const HomeImage = () => {
     const imageArr = [
       `${url}/upload/Andong.jpg`,
@@ -103,6 +103,7 @@ function Home() {
               alt="introduce"
               className="Home-introduce"
               src="https://server.memory-road.net/upload/AllRouteMap.jpg"
+              // gif로 수정
             />
           </div>
           <hr className="Home-line" />
