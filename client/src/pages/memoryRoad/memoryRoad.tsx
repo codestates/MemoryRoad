@@ -109,8 +109,8 @@ const MemoryRoad = () => {
       }
     }
   }, [socialLogin]);
-  // const url = 'https://server.memory-road.net';
-  const url = 'http://localhost';
+  const url = 'https://server.memory-road.net';
+  // const url = 'http://localhost';
 
   return (
     <div className="memoryRoad-scroll">
