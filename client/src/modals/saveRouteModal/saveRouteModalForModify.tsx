@@ -231,9 +231,7 @@ function SaveRouteModalForModify({
                   onClick={handleMonthSelect}
                 >
                   <p className="saveRouteModal-selectbox-month-selected-option">
-                    {Number(selectedMonth) === 0
-                      ? '월'
-                      : Number(selectedMonth) + 1}
+                    {selectedMonth === null ? '월' : Number(selectedMonth) + 1}
                   </p>
                 </button>
                 <ul className="saveRouteModal-selectbox-month-optionList">
@@ -266,7 +264,7 @@ function SaveRouteModalForModify({
                   onClick={handleDaySelect}
                 >
                   <p className="saveRouteModal-selectbox-day-selected-option">
-                    {Number(selectedDay) === 0 ? '일' : Number(selectedDay) + 1}
+                    {selectedDay === null ? '일' : Number(selectedDay) + 1}
                   </p>
                 </button>
                 <ul className="saveRouteModal-selectbox-day-optionList">
