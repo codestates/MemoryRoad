@@ -245,11 +245,14 @@ export class UsersService {
       nickName: deleteFile['nickName'],
       profileImage: deleteFile['profileImage'],
     };
-    await this.usersRepository.save(user);
-    return file.path;
+    const userInfo = await this.usersRepository.save(user);
+    return { userInfo: userInfo, profile: file.path };
   }
   //회원 정보 업데이트 닉네임
-  async updateUserName(accessToken: string, userName: string) {
+  async updateUserName(
+    accessToken: string,
+    userName: string,
+  ): Promise<UserEntity> {
     const decoded = await this.verifyAccessToken(accessToken);
     decoded['nickName'] = userName;
     const user: UserEntity = {
@@ -257,7 +260,8 @@ export class UsersService {
       email: decoded['email'],
       nickName: decoded['nickName'],
     };
-    await this.usersRepository.save(user);
+    const userInfo = await this.usersRepository.save(user);
+    return userInfo;
   }
   //회원 정보 업데이트 비밀번호
   async updatePassword(accessToken: string, password: string) {
@@ -270,7 +274,8 @@ export class UsersService {
       nickName: decoded['nickName'],
       saltedPassword: decoded['saltedPassword'],
     };
-    await this.usersRepository.save(user);
+    const userInfo = await this.usersRepository.save(user);
+    return userInfo;
   }
 
   //회원 탈퇴

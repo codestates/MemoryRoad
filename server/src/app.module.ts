@@ -5,8 +5,6 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { RoutesModule } from './routes/routes.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { WardsController } from './wards/wards.controller';
-import { WardsService } from './wards/wards.service';
 import { WardsModule } from './wards/wards.module';
 
 @Module({
@@ -19,7 +17,7 @@ import { WardsModule } from './wards/wards.module';
     RoutesModule,
     WardsModule,
   ],
-  controllers: [AppController, WardsController],
-  providers: [AppService, WardsService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

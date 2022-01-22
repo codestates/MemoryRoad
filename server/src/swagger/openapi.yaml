@@ -6,7 +6,7 @@ info:
   license:
     name: MIT
 servers:
-  - url: http://localhost:80/
+  - url: https://server.memory-road.net
 paths:
   /users:
     $ref: './user.yaml#/~1users'
