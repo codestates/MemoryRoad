@@ -88,7 +88,6 @@ export class UsersService {
       },
     });
     const result = kakaoInfo.data;
-    const profile = result.properties.profile_image;
     let userInfo: UserEntity = await this.usersRepository.findOne({
       email: result.kakao_account.email,
       oauthLogin: 'kakao',
@@ -106,7 +105,7 @@ export class UsersService {
         oauthLogin: 'kakao',
         saltedPassword: null,
         oauthCI: result.id,
-        profileImage: profile,
+        profileImage: null,
       });
     }
     return userInfo;
@@ -140,7 +139,6 @@ export class UsersService {
       });
 
     const result = naverInfo.data.response;
-    const profile = result.profile_image; //프로필 사진은 전달 안 해주고 있음
     // 여기까지가 데이터 가져오는 코드
     let userInfo: UserEntity = await this.usersRepository.findOne({
       email: result.email,
@@ -159,7 +157,7 @@ export class UsersService {
         oauthLogin: 'naver',
         saltedPassword: null,
         oauthCI: result.id,
-        profileImage: profile,
+        profileImage: null,
       });
     }
     return userInfo;
@@ -181,7 +179,7 @@ export class UsersService {
       .catch((err) => {
         return err;
       });
-    const { email, name, picture } = decode; // picture 아직 전달 안 해줬음.
+    const { email, name } = decode; // picture 아직 전달 안 해줬음.
     let userInfo: UserEntity = await this.usersRepository.findOne({
       email: email,
       oauthLogin: 'google',
@@ -199,7 +197,7 @@ export class UsersService {
         oauthLogin: 'google',
         saltedPassword: null,
         oauthCI: null,
-        profileImage: picture,
+        profileImage: null,
       });
     }
     return userInfo;
