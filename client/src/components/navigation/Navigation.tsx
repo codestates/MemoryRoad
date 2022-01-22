@@ -8,6 +8,9 @@ import { RootState } from '../../redux/reducer';
 import { loginModal, setUserInfo } from '../../redux/actions/index';
 import LoginModal from '../../modals/login/Login';
 import SignUp from '../../modals/signup/Signup';
+import CheckingPassword from '../../modals/editUserInfo/checkingPassword';
+import EditUserInfo from '../../modals/editUserInfo/editUserInfo';
+import Withdrawal from '../../modals/editUserInfo/withdrawal';
 import axios from 'axios';
 import { persistor } from '../../index';
 
@@ -23,6 +26,10 @@ function Nav({ url, isvalid }: any) {
   const userinfo = useSelector(
     (state: RootState) => state.setUserInfoReducer.userInfo,
   ); // 유저의 정보
+  const state = useSelector((state: RootState) => state.modalReducer);
+  const modalCheckPassword = state.isCheckingPasswordModal; // 회원정보 수정하기 전 비밀번호 확인 모달창
+  const modalEditUserInfo = state.isEditUserInfoModal; // 회원정보 수정 모달창
+  const modalWithdrawal = state.iswithdrawalModal; // 회원탈퇴 모달창
   const dispatch = useDispatch();
 
   // 로그인,로그아웃 버튼 클릭시 작동하는 함수
@@ -34,10 +41,7 @@ function Nav({ url, isvalid }: any) {
           // window.localStorage.clear(); // 로컬 스토리지를 비우고
           persistor.purge();
           window.location.reload(); // 새로고침
-
-          // dispatch(setUserInfo(false, null, null, null, null, null)); // 유저의 정보를 모두 null 값으로 바꾸고 유저의 로그인 상태를 false로 바꿈
-          // window.location.assign(`${url}:3000/`); // home으로 이동
-          navigate('/');
+          window.location.assign(`${url}`); // home으로 이동
         }
       });
     } else {
@@ -79,6 +83,9 @@ function Nav({ url, isvalid }: any) {
     <div>
       {modalLogin ? <LoginModal url={url} /> : null}
       {modalSignup ? <SignUp isvalid={isvalid} url={url} /> : null}
+      {modalCheckPassword ? <CheckingPassword url={url} /> : null}
+      {modalEditUserInfo ? <EditUserInfo isvalid={isvalid} url={url} /> : null}
+      {modalWithdrawal ? <Withdrawal url={url} /> : null}
       <div className="nav-gridContainer-fix-fix">
         <div className="nav-gridContainer">
           <div
@@ -124,11 +131,13 @@ function Nav({ url, isvalid }: any) {
               } else {
                 dispatch(loginModal(true));
               }
-              // loginButtonHandler();
             }}
             onKeyDown={() => {
-              dispatch(loginModal(true));
-              console.log(modalLogin);
+              if (userinfo.isLogin) {
+                loginButtonHandler();
+              } else {
+                dispatch(loginModal(true));
+              }
             }}
             role="menu"
             tabIndex={0}

@@ -81,7 +81,7 @@
 }
 .Home-MemoryRoadcontent {
   padding-top: 10%;
-  font-size: 13px;
+  font-size: 1vw;
 }
 #Home-message1 {
   animation: fadeInText 3s 1.5s ease-out forwards;
@@ -188,7 +188,7 @@
   border-radius: 20px;
 }
 .Home-guide2 {
-  font-size: 25px;
+  font-size: 2vw;
   font-weight: bold;
   line-height: 25vh;
   opacity: 0;
@@ -198,7 +198,7 @@
   cursor: pointer;
   color: white;
   font-weight: bold;
-  font-size: 18px;
+  font-size: 1vw;
   border: 2px solid white;
   border-radius: 15px;
   padding: 2%;
@@ -374,8 +374,8 @@
     right: 50px;
   }
   .Home-topdownButton {
-    font-size: 25px;
-    color: silver;
+    font-size: 1vw;
+    color: #91ba9f;
   }
 }
 
@@ -385,6 +385,10 @@
     position: relative;
     display: grid;
     grid-template-columns: 1fr 25fr 1fr;
+  }
+  .Home-MemoryRoadcontent {
+    padding-top: 10%;
+    font-size: 10px;
   }
 
   .Home-MemoryRoad {
