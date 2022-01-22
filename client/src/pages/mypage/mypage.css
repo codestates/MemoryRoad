@@ -1,12 +1,13 @@
 .mypage-gridMypage {
   display: grid;
   grid-template-columns: 2fr 2fr 5fr 2fr;
-  grid-template-rows: 100px 170px 300px;
+  grid-template-rows: 20vh 25vh 40vh;
 }
 .mypage-userProfile {
-  width: 120px;
-  height: 120px;
-  border-radius: 80px;
+  max-width: 300px;
+  max-width: 300px;
+  width: 100%;
+  border-radius: 100%;
 }
 /* .mypage-checking {
   border: 2px solid black;
@@ -16,7 +17,7 @@
   grid-row: 3/4;
 }
 .mypage-scroll {
-  height: 400px;
+  height: 65vh;
   overflow: auto;
   overflow-x: hidden;
 }
@@ -33,18 +34,15 @@
   background-color: rgba(255, 255, 255, 0.3);
 }
 .mypage-contents {
-  /* border: 2px solid black; */
   text-align: center;
-  height: 200px;
+  height: 100vh;
 }
 .mypage-content {
   position: relative;
 }
 .mypage-image {
-  width: 80%;
-  height: 220px;
-  height: 1fr;
-  /* border: 2px solid black; */
+  width: 50vw;
+  height: 20vh;
   margin-top: 30px;
   border-radius: 20px;
   opacity: 0.5;
@@ -60,20 +58,21 @@
   z-index: 0;
 }
 .mypage-Profile {
-  font-size: 130px;
+  font-size: 8vw;
   color: gray;
   opacity: 0.8;
 }
 .mypage-greeting {
   text-align: right;
-  margin-top: 20px;
-  margin-right: 20px;
+  margin-top: 2vh;
+  margin-right: 2vw;
 }
 .mypage-greetingTouser {
-  font-size: 20px;
+  font-size: 2vw;
 }
 .mypage-changeuserinfo {
-  margin-top: 20px;
+  margin-top: 5%;
+  font-size: 1vw;
   padding: 8px;
   background-color: #e1e7e3;
   border: 2px solid white;
@@ -95,8 +94,8 @@
 @media (min-width: 2000px) {
   .mypage-gridMypage {
     display: grid;
-    grid-template-columns: 2fr 3fr 3fr 2fr;
-    grid-template-rows: 100px 300px 400px;
+    grid-template-columns: 2fr 2fr 5fr 2fr;
+    grid-template-rows: 10vh 20vh 40vh;
   }
 }
 
@@ -105,7 +104,7 @@
   .mypage-gridMypage {
     display: grid;
     grid-template-columns: 1fr 5fr 10fr 1fr;
-    grid-template-rows: 100px 120px 400px;
+    grid-template-rows: 10vh 20vh 40vh;
   }
   .mypage-userProfile {
     width: 100px;
@@ -118,17 +117,16 @@
   }
   .mypage-greeting {
     text-align: right;
-    margin-top: 10px;
+    margin-top: 2vh;
   }
   .mypage-greetingTouser {
     font-size: 13px;
   }
   .mypage-image {
     width: 80%;
-    height: 150px;
+    height: 30vh;
     height: 1fr;
     /* border: 2px solid black; */
-    margin-top: 30px;
     border-radius: 20px;
     opacity: 0.5;
     vertical-align: middle;
@@ -140,7 +138,7 @@
   .mypage-gridMypage {
     display: grid;
     grid-template-columns: 1fr 5fr 10fr 1fr;
-    grid-template-rows: 100px 120px 400px;
+    grid-template-rows: 15vh 15vh 40vh;
   }
   .mypage-Profile {
     font-size: 80px;

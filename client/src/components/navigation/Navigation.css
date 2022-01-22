@@ -53,6 +53,7 @@
 .nav-mobile {
   color: #b1bcb7;
   cursor: pointer;
+  text-align: right;
 }
 /* 노트북, 데스크탑*/
 @media (min-width: 800px) {
@@ -80,6 +81,7 @@
   .nav-mobile {
     text-align: right;
     margin-top: 8px;
+    margin-right: 10px;
     font-size: 30px;
   }
 }

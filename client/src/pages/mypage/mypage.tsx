@@ -8,9 +8,6 @@ import {
 } from '../../redux/actions/index';
 import '../../modals/userModalPointer.css';
 import { useNavigate } from 'react-router-dom';
-import CheckingPassword from '../../modals/editUserInfo/checkingPassword';
-import EditUserInfo from '../../modals/editUserInfo/editUserInfo';
-import Withdrawal from '../../modals/editUserInfo/withdrawal';
 import Nav from '../../components/navigation/Navigation';
 
 function Mypage() {
@@ -20,14 +17,10 @@ function Mypage() {
   const userinfo = useSelector(
     (state: RootState) => state.setUserInfoReducer.userInfo,
   ); // 유저의 정보
-  const state = useSelector((state: RootState) => state.modalReducer);
-  const modalCheckPassword = state.isCheckingPasswordModal; // 회원정보 수정하기 전 비밀번호 확인 모달창
-  const modalEditUserInfo = state.isEditUserInfoModal; // 회원정보 수정 모달창
-  const modalWithdrawal = state.iswithdrawalModal; // 회원탈퇴 모달창
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const url = 'https://server.memory-road.net';
-  // const url = 'http://localhost';
+  // const url = 'https://server.memory-road.net';
+  const url = 'http://localhost';
 
   // 유효성 검사
   const isvalid = (email: string, username: string, password: string) => {
@@ -53,10 +46,8 @@ function Mypage() {
 
   return (
     <div>
-      <Nav url={url} />
-      {modalCheckPassword ? <CheckingPassword url={url} /> : null}
-      {modalEditUserInfo ? <EditUserInfo isvalid={isvalid} url={url} /> : null}
-      {modalWithdrawal ? <Withdrawal url={url} /> : null}
+      <Nav isvalid={isvalid} url={url} />
+
       {userinfo.isLogin ? (
         <div className="mypage-gridMypage">
           <div></div>

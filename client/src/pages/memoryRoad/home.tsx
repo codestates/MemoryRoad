@@ -27,8 +27,8 @@ function Home() {
   };
 
   // 배경화면 랜덤
-  // const url = 'http://localhost';
-  const url = 'https://server.memory-road.net';
+  const url = 'http://localhost';
+  // const url = 'https://server.memory-road.net';
   const HomeImage = () => {
     const imageArr = [
       `${url}/upload/Andong.jpg`,

@@ -22,7 +22,7 @@ function Withdrawal({ url }: any) {
         window.localStorage.clear(); // 로컬 스토리지를 비우고
         window.location.reload(); // 새로고침
         // dispatch(setUserInfo(false, null, null, null, null, null)); // 회원탈퇴에 성공하면 유저상태를 로그아웃 상태로 만듬
-        navigate('/'); // 홈으로 이동
+        window.location.assign(`${url}:3000/`); // home으로 이동
       }
     });
   };

@@ -80,7 +80,6 @@ function LoginModal({ url }: any) {
         )
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
             dispatch(
               setUserInfo(
                 true,
