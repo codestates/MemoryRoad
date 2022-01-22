@@ -90,8 +90,8 @@ function SaveRouteModal({
       routeTitle.length &&
       routeDesc.length &&
       Number(selectedYear) &&
-      Number(selectedMonth) &&
-      Number(selectedDay)
+      selectedMonth !== null &&
+      selectedDay !== null
     ) {
       if (isLogin) {
         const data = {

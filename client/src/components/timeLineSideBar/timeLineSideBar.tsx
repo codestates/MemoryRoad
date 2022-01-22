@@ -14,7 +14,7 @@ function TimeLineSideBar({
   createElement,
 }: any) {
   // 사이드바 열고 닫기
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const handleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
