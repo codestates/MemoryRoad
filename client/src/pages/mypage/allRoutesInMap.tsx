@@ -7,6 +7,7 @@ import axios from 'axios';
 import { Picture, Route } from '../../types/searchRoutesTypes';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
 import ClickImage from '../../modals/clickImage/clickImage';
+import NoRouteInMap from '../../modals/noRouteInMap/noRouteInMap';
 
 // 루트를 받고, 루트의 핀 값을 받을 것 같음
 // 각 루트별로 핀 객체를 받고, 받은 핀 객체값을 For문, 혹은 ForEach를 통해 핀의 위치값을 받아서 핀을 그리고 선을 이어줘야 할 것 같음
@@ -35,7 +36,7 @@ function AllRoutesInMap() {
 
   //state
   //지도의 확대 정도
-  const [currLevel, setCurrLevel] = useState(7);
+  const [currLevel, setCurrLevel] = useState<number>(7);
   //전체 루트의 정보
   const [findAllRoute, setFindAllRoute] = useState<Route[] | null>(null);
   const [allRoutes, setAllRoutes] = useState<Route[] | null>(null);
@@ -45,16 +46,19 @@ function AllRoutesInMap() {
   // 선택된 핀의 사진 정보
   const [pickPinsPictures, setPickPinsPictures] = useState<Picture[]>();
 
+  // 루트가 없을 경우 on/off
+  const [noRoute, setNoRoute] = useState<boolean>(false);
+
   //사진 클릭시 사진 인덱스 정보
   const [pictureIdx, setPictureIdx] = useState<number>(0);
   //사진 드래그
   // onMouseMove는 왼쪽 버튼을 떼도 발생합니다. 드래그 효과를 주기 위해 isDrag변수가 true 일 때 발생하도록 설정했습니다
-  const [isDrag, setIsDrag] = useState(false);
+  const [isDrag, setIsDrag] = useState<boolean>(false);
 
-  const [startX, setStartX] = useState(0);
+  const [startX, setStartX] = useState<number>(0);
 
   //사진 클릭시 모달창 on/off
-  const [bigImage, setBigImage] = useState(false);
+  const [bigImage, setBigImage] = useState<boolean>(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -181,6 +185,9 @@ function AllRoutesInMap() {
           const routeArray: Route[] = res.data['routes'];
           setFindAllRoute(routeArray);
           setAllRoutes(routeArray);
+          if (res.data['count'] === 0) {
+            setNoRoute(true);
+          }
         });
     }
 
@@ -273,6 +280,7 @@ function AllRoutesInMap() {
           setPictureIdx={setPictureIdx}
         />
       ) : null}
+      {noRoute ? <NoRouteInMap /> : null}
       <div className="allRoutesInMap-whole">
         <div className="jyang-allRoutesInMap">
           <ColorSelectBox
