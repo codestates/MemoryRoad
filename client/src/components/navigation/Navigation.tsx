@@ -41,7 +41,7 @@ function Nav({ url, isvalid }: any) {
           // window.localStorage.clear(); // 로컬 스토리지를 비우고
           persistor.purge();
           window.location.reload(); // 새로고침
-          window.location.assign(`${url}:3000/`); // home으로 이동
+          window.location.assign(`${url}`); // home으로 이동
         }
       });
     } else {
