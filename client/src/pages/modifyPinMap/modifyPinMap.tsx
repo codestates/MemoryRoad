@@ -219,20 +219,6 @@ function ModifyPinMap() {
       w: 1,
       h: 2,
     });
-    // 키워드 생성 과연.
-    let keywords = pinTitle.split(' ');
-    if (currMarkerInfo.lotAddress.length) {
-      const letters = currMarkerInfo.lotAddress
-        .split(' ')
-        .filter((word: string) => word.slice(-1) !== '구');
-      keywords = keywords.concat(letters);
-    }
-    if (currMarkerInfo.roadAddress.length) {
-      const letters = currMarkerInfo.roadAddress
-        .split(' ')
-        .filter((word: string) => word.slice(-1) !== '구');
-      keywords = keywords.concat(letters);
-    }
     const newPin: any = {
       id: String(newID), // -- 내가 만든 상태 키 (클라이언트 업데이트용)
       ranking: newCounter,
@@ -244,7 +230,6 @@ function ModifyPinMap() {
       ward: currMarkerInfo.ward,
       startTime: '00:00',
       endTime: '01:00',
-      keywords: keywords,
     };
     const newData: any = {
       ranking: newCounter,
@@ -256,7 +241,6 @@ function ModifyPinMap() {
       ward: currMarkerInfo.ward,
       startTime: '00:00',
       endTime: '01:00',
-      keywords: keywords,
     };
     const newFile: any = {
       ranking: newCounter,
