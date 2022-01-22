@@ -95,6 +95,20 @@ function SaveRouteModalForModify({
     ) {
       // 핀 제목, 핀 사진 수정 endpoint
       pins.slice(1).forEach((el: any) => {
+        // 키워드 생성 과연.
+        let keywords: any = el.locationName.split(' ');
+        if (el.lotAddress.length) {
+          const letters = el.lotAddress
+            .split(' ')
+            .filter((word: string) => word.slice(-1) !== '구');
+          keywords = keywords.concat(letters);
+        }
+        if (el.roadAddress.length) {
+          const letters = el.roadAddress
+            .split(' ')
+            .filter((word: string) => word.slice(-1) !== '구');
+          keywords = keywords.concat(letters);
+        }
         const pinId = Number(el.id);
         const formData = new FormData();
         const data = {
@@ -107,12 +121,13 @@ function SaveRouteModalForModify({
           startTime: el.startTime,
           endTime: el.endTime,
           ward: el.ward,
-          keywords: el.kewords,
+          keywords: keywords,
         };
         // console.log('el.Pictures', el.Pictures);
         formData.append('pin', JSON.stringify(data));
         // formData.append(`${el.ranking}`, newFiles);
-        if (el.Pictures.length !== 0) {
+        // el에 Pictures 배열이 없을수도 있다는 사실을 간과했다.
+        if (el.Pictures) {
           el.Pictures.forEach((file: any) => {
             if (file.name) {
               formData.append('files', file);
