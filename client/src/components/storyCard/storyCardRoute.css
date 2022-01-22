@@ -3,15 +3,13 @@
     font-size: 0.75em;
   }
   .myRouteStore-card-dot-title {
-    width: 50px;
-    height: 14x;
+    width: 40px;
+    height: 29px;
     /*글자 넘침 표현*/
     overflow: hidden;
     word-wrap: break-word;
     text-overflow: ellipsis;
-    display: -webkit-box; 
-    -webkit-line-clamp: 3; 
-    -webkit-box-orient: vertical;
+    white-space: wrap;
     margin: 5px 0 8px 0px;
     color: rgb(0, 0, 0);
   }
