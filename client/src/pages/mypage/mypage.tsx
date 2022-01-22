@@ -8,10 +8,7 @@ import {
 } from '../../redux/actions/index';
 import '../../modals/userModalPointer.css';
 import { useNavigate } from 'react-router-dom';
-import CheckingPassword from '../../modals/editUserInfo/checkingPassword';
-import EditUserInfo from '../../modals/editUserInfo/editUserInfo';
-import Withdrawal from '../../modals/editUserInfo/withdrawal';
-import Nav from '../../components/Navigation';
+import Nav from '../../components/navigation/Navigation';
 
 function Mypage() {
   // const modalCheckPassword = useSelector(
@@ -20,10 +17,6 @@ function Mypage() {
   const userinfo = useSelector(
     (state: RootState) => state.setUserInfoReducer.userInfo,
   ); // 유저의 정보
-  const state = useSelector((state: RootState) => state.modalReducer);
-  const modalCheckPassword = state.isCheckingPasswordModal; // 회원정보 수정하기 전 비밀번호 확인 모달창
-  const modalEditUserInfo = state.isEditUserInfoModal; // 회원정보 수정 모달창
-  const modalWithdrawal = state.iswithdrawalModal; // 회원탈퇴 모달창
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const url = 'https://server.memory-road.net';
@@ -53,10 +46,8 @@ function Mypage() {
 
   return (
     <div>
-      <Nav url={url} />
-      {modalCheckPassword ? <CheckingPassword url={url} /> : null}
-      {modalEditUserInfo ? <EditUserInfo isvalid={isvalid} url={url} /> : null}
-      {modalWithdrawal ? <Withdrawal url={url} /> : null}
+      <Nav isvalid={isvalid} url={url} />
+
       {userinfo.isLogin ? (
         <div className="mypage-gridMypage">
           <div></div>
@@ -74,11 +65,6 @@ function Mypage() {
             ) : (
               <i className="fas fa-user-circle mypage-Profile"></i>
             )}
-            {/* <img
-              alt="profileimg"
-              className="mypage-userProfile"
-              src="http://127.0.0.1:5500/client/public/img/notice-board.jpg"
-            /> */}
           </div>
           <div className="mypage-checking">
             <div className="mypage-greeting">
@@ -122,6 +108,7 @@ function Mypage() {
                     alt="storeRoute"
                     className="mypage-image"
                     src="https://server.memory-road.net/upload/notice-board.jpg"
+                    // src={`${url}/upload/routeStore.jpg`}
                   />
                   <div className="mypage-imageExplain ">루트 보관함</div>
                 </div>

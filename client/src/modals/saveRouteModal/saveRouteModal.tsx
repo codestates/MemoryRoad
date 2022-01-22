@@ -30,8 +30,8 @@ function SaveRouteModal({
   const [clickedMonthSelect, setClickedMonthSelect] = useState(false);
   const [clickedYearSelect, setClickedYearSelect] = useState(false);
   const [selectedColorId, setSelectedCorlorId] = useState('0');
-  const [selectedDay, setSelectedDay] = useState('0');
-  const [selectedMonth, setSelectedMonth] = useState('0');
+  const [selectedDay, setSelectedDay] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedYear, setSelectedYear] = useState('0');
 
   const handleColorSelect = () => {
@@ -90,8 +90,8 @@ function SaveRouteModal({
       routeTitle.length &&
       routeDesc.length &&
       Number(selectedYear) &&
-      Number(selectedMonth) &&
-      Number(selectedDay)
+      selectedMonth !== null &&
+      selectedDay !== null
     ) {
       if (isLogin) {
         const data = {
@@ -189,9 +189,7 @@ function SaveRouteModal({
                   onClick={handleMonthSelect}
                 >
                   <p className="saveRouteModal-selectbox-month-selected-option">
-                    {Number(selectedMonth) === 0
-                      ? '월'
-                      : Number(selectedMonth) + 1}
+                    {selectedMonth === null ? '월' : Number(selectedMonth) + 1}
                   </p>
                 </button>
                 <ul className="saveRouteModal-selectbox-month-optionList">
@@ -224,7 +222,7 @@ function SaveRouteModal({
                   onClick={handleDaySelect}
                 >
                   <p className="saveRouteModal-selectbox-day-selected-option">
-                    {Number(selectedDay) === 0 ? '일' : Number(selectedDay) + 1}
+                    {selectedDay === null ? '일' : Number(selectedDay) + 1}
                   </p>
                 </button>
                 <ul className="saveRouteModal-selectbox-day-optionList">

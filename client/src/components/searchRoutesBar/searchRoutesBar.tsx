@@ -4,7 +4,7 @@ import { Route } from './../../types/searchRoutesTypes';
 import axios from 'axios';
 
 type Props = {
-  setSearchResult: React.Dispatch<React.SetStateAction<Route[]>>;
+  setSearchResult: React.Dispatch<React.SetStateAction<Route[] | null>>;
   setRouteCount: React.Dispatch<React.SetStateAction<number>>;
   setSearchQuery: React.Dispatch<
     React.SetStateAction<{
@@ -78,7 +78,6 @@ function SearchRoutesBar({
   const postSearch = () => {
     if (searchBarText === '') return alert('검색어를 입력해 주세요!');
 
-    const controller = new AbortController();
     axios
       .get(
         `https://server.memory-road.net/routes?search=true&${getQueryStr(
@@ -86,7 +85,6 @@ function SearchRoutesBar({
           routeorLocation,
           searchBarText,
         )}`,
-        { signal: controller.signal },
       )
       .then((result) => {
         setRouteCount(result.data.count);
@@ -99,17 +97,12 @@ function SearchRoutesBar({
         });
         setIsSidebarOpen(true);
         setSelectedRoute(null);
+
+        if (result.data.count === 0) return alert('검색결과가 없습니다.');
       })
       .catch((err) => {
-        //abort 에러는 경고창에 표시하지 않는다
-        if (err.name === 'AbortError') {
-          throw 'AbortError';
-        }
+        throw err;
       });
-
-    //응답을 받기 전에 요청이 가면 이전 요청을 취소한다
-    //https://axios-http.com/docs/cancellation
-    controller.abort();
   };
 
   useEffect(() => {

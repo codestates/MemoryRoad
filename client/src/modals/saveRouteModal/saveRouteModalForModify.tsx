@@ -90,33 +90,50 @@ function SaveRouteModalForModify({
       routeTitle.length &&
       routeDesc.length &&
       Number(selectedYear) &&
-      Number(selectedMonth) &&
-      Number(selectedDay)
+      selectedMonth !== null &&
+      selectedDay !== null
     ) {
       // 핀 제목, 핀 사진 수정 endpoint
       pins.slice(1).forEach((el: any) => {
+        // 키워드 생성 과연.
+        let keywords: any = el.locationName.split(' ');
+        if (el.lotAddress.length) {
+          const letters = el.lotAddress
+            .split(' ')
+            .filter((word: string) => word.slice(-1) !== '구');
+          keywords = keywords.concat(letters);
+        }
+        if (el.roadAddress.length) {
+          const letters = el.roadAddress
+            .split(' ')
+            .filter((word: string) => word.slice(-1) !== '구');
+          keywords = keywords.concat(letters);
+        }
         const pinId = Number(el.id);
         const formData = new FormData();
         const data = {
           locationName: el.locationName,
           ranking: el.ranking,
-          latitude: el.latitude,
-          longitude: el.longitude,
+          latitude: Number(el.latitude),
+          longitude: Number(el.longitude),
           lotAddress: el.lotAddress,
           roadAddress: el.roadAddress,
           startTime: el.startTime,
           endTime: el.endTime,
           ward: el.ward,
-          keywords: el.kewords,
+          keywords: keywords,
         };
-        const newFiles = el.Pictures.filter(
-          (el: any) => (el.name ? true : false), // 기존에 있던 사진 거르기.
-        );
+        // console.log('el.Pictures', el.Pictures);
         formData.append('pin', JSON.stringify(data));
         // formData.append(`${el.ranking}`, newFiles);
-        newFiles.forEach((file: any) => {
-          formData.append('files', file);
-        }); // 여러장 append 시키는 형식으로 변경.
+        // el에 Pictures 배열이 없을수도 있다는 사실을 간과했다.
+        if (el.Pictures) {
+          el.Pictures.forEach((file: any) => {
+            if (file.name) {
+              formData.append('files', file);
+            }
+          });
+        }
 
         axios({
           url: `https://server.memory-road.net/routes/${routeId}/pins/${pinId}`,
@@ -126,7 +143,7 @@ function SaveRouteModalForModify({
         })
           .then((res) => {
             if (res.status === 200) {
-              console.log(data);
+              console.log(res);
             }
           })
           .catch((err) => {
@@ -214,9 +231,7 @@ function SaveRouteModalForModify({
                   onClick={handleMonthSelect}
                 >
                   <p className="saveRouteModal-selectbox-month-selected-option">
-                    {Number(selectedMonth) === 0
-                      ? '월'
-                      : Number(selectedMonth) + 1}
+                    {selectedMonth === null ? '월' : Number(selectedMonth) + 1}
                   </p>
                 </button>
                 <ul className="saveRouteModal-selectbox-month-optionList">
@@ -249,7 +264,7 @@ function SaveRouteModalForModify({
                   onClick={handleDaySelect}
                 >
                   <p className="saveRouteModal-selectbox-day-selected-option">
-                    {Number(selectedDay) === 0 ? '일' : Number(selectedDay) + 1}
+                    {selectedDay === null ? '일' : Number(selectedDay) + 1}
                   </p>
                 </button>
                 <ul className="saveRouteModal-selectbox-day-optionList">
@@ -331,7 +346,7 @@ function SaveRouteModalForModify({
               <label className="saveRouteModal-switch">
                 <input
                   checked={!isOpenRoute}
-                  onClick={handleRouteOpenOrUnopen}
+                  onChange={handleRouteOpenOrUnopen}
                   type="checkbox"
                 />
                 <span className="saveRouteModal-slider-circle"></span>

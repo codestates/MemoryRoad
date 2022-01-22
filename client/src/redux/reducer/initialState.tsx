@@ -187,6 +187,7 @@ const initialState: State | any = {
     },
   ],
   colorDotUrl: [
+    'https://server.memory-road.net/upload/gray_dot.png',
     'https://server.memory-road.net/upload/red_dot.png',
     'https://server.memory-road.net/upload/orange_dot.png',
     'https://server.memory-road.net/upload/yellow_dot.png',
@@ -198,6 +199,7 @@ const initialState: State | any = {
     'https://server.memory-road.net/upload/pink_dot.png',
   ],
   whiteColorUrl: [
+    'https://server.memory-road.net/upload/white_gray.png',
     'https://server.memory-road.net/upload/white_red.png',
     'https://server.memory-road.net/upload/white_orange.png',
     'https://server.memory-road.net/upload/white_yellow.png',
@@ -209,6 +211,7 @@ const initialState: State | any = {
     'https://server.memory-road.net/upload/white_pink.png',
   ],
   colorChip: [
+    '#808080' /* gray */,
     '#DC4B40' /* red */,
     '#EE8343' /* orange */,
     '#F8F862' /* yellow */,
@@ -220,6 +223,7 @@ const initialState: State | any = {
     '#EE9FE5' /* pink */,
   ],
   colorName: [
+    'gray',
     'red',
     'orange',
     'yellow',

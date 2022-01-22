@@ -1,14 +1,11 @@
 import * as React from 'react';
-import Nav from '../components/Navigation';
-import Home from './home';
+import Nav from '../../components/navigation/Navigation';
+import Home from '../memoryRoad/home';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import SignUp from '../modals/signup/Signup';
 import './memoryRoad.css';
-import { RootState } from '../redux/reducer';
-import { setUserInfo } from '../redux/actions/index';
+import { setUserInfo } from '../../redux/actions/index';
 import axios from 'axios';
-import LoginModal from '../modals/login/Login';
 
 // Home 화면입니다
 const MemoryRoad = () => {
@@ -114,10 +111,11 @@ const MemoryRoad = () => {
   }, [socialLogin]);
   const url = 'https://server.memory-road.net';
   // const url = 'http://localhost';
+
   return (
     <div className="memoryRoad-scroll">
       <Nav isvalid={isvalid} url={url} />
-      <Home />
+      <Home url={url} />
     </div>
   );
 };

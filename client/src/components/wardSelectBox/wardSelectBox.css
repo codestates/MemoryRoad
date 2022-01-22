@@ -1,5 +1,6 @@
 .selectbox-ward {
   position: relative;
+  width: 150px;
   height: 35px;
   border-radius: 8px;
   box-sizing: border-box;

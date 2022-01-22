@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Navigation from '../../components/Navigation';
+import Navigation from '../../components/navigation/Navigation';
 import SearchRoutesBar from '../../components/searchRoutesBar/searchRoutesBar';
 import SearchSideBar from '../../components/searchSideBar/searchSideBar';
 import { RootState } from '../../redux/reducer';
@@ -33,8 +33,8 @@ function SearchRoutes() {
   //state들
   //지도의 확대 정도
   const [currLevel, setCurrLevel] = useState(9);
-  //검색 버튼을 눌러 가져온 루트의 정보들--->이게 없으면 범주화 기능
-  const [searchResult, setSearchResult] = useState<Route[]>([]);
+  //검색 버튼을 눌러 가져온 루트의 정보들. null인 경우, 현재 보고있는 화면을 기준으로 루트들을 검색한다.
+  const [searchResult, setSearchResult] = useState<Route[] | null>(null);
   //총 루트의 개수. 페이지네이션에 사용
   const [routeCount, setRouteCount] = useState<number>(0);
   //검색 요청을 보낼 때 사용하는 쿼리 객체
@@ -332,8 +332,8 @@ function SearchRoutes() {
   useEffect(() => {
     if (kakaoMap === null) return;
 
-    if (searchResult.length !== 0) {
-      //검색 결과가 있는 경우, 폴리곤을 없애고 검색 결과들을 보여준다.
+    if (searchResult !== null) {
+      //검색버튼을 누련 경우(검색 결과가 없어도 배열이 state가 된다.), 폴리곤을 없애고 검색 결과들을 보여준다.
 
       //폴리곤 삭제
       wardPolygons.forEach((promise) => {
@@ -397,7 +397,7 @@ function SearchRoutes() {
   // //검색 결과가 없으면서(검색 버튼을 누르지 않은 경우), 지도가 일정 레벨 이하이면, 꼭지점의 위도, 경도를 이용해 루트들을 조회한다.
   useEffect(() => {
     if (kakaoMap === null) return;
-    if (searchResult.length === 0 && currLevel <= 6) {
+    if (searchResult === null && currLevel <= 6) {
       //폴리곤 삭제
       wardPolygons.forEach((promise) => {
         promise.then((pol) => pol.setMap(null));
@@ -481,7 +481,7 @@ function SearchRoutes() {
       //응답을 받기 전에 요청이 가면 이전 요청을 취소한다
       //https://axios-http.com/docs/cancellation
       controller.abort();
-    } else if (searchResult.length === 0) {
+    } else if (searchResult === null) {
       //검색 결과가 없으면서 지도 레벨이 높아진 경우
 
       //기존 핀의 인포윈도우 제거

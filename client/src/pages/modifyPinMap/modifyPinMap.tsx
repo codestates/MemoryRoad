@@ -22,7 +22,7 @@ import SearchPinBar from '../../components/searchPinBar/searchPinBarForModify';
 import ConfirmPinIsEmptyModal from '../../modals/confirmPinIsEmpty/confirmPinIsEmptyModal';
 import ConfirmMoveToMypage from '../../modals/confirmRouteSave/confirmMoveToMypageForModify';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent';
-import Navigation from '../../components/Navigation';
+import Navigation from '../../components/navigation/Navigation';
 import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBarForModify';
 import SaveRouteModalForModify from '../../modals/saveRouteModal/saveRouteModalForModify';
 import { testData } from './testData';
@@ -91,15 +91,11 @@ function ModifyPinMap() {
     },
   ]);
   const [itemState, setItemState] = useState<any[]>([]); // 야매 해결
-  console.log('pins', pins);
-  console.log('itemState', itemState);
   const [newCounter, setNewCounter] = useState(0);
   const [isMouseOnCard, setIsMouseOnCard] = useState(false);
   const [currCardTitle, setCurrCardTitle] = useState(null);
   /* react-grid-layout */
   const onLayoutChange = (layout: any) => {
-    console.log('레이아웃이 변경되었습니다.');
-    console.log(layout);
     setItemState(layout); // 수정된 핀 레이아웃 업데이트 ----------------------------------
 
     const totalTime = layout.reduce((prev: any, curr: any) => {
@@ -108,7 +104,6 @@ function ModifyPinMap() {
       const currTimes = currEH - currSH;
       return prev + currTimes;
     }, 0);
-    console.log(totalTime); // 굳굳
     setTotalTime(totalTime);
 
     const newTimePins: any = pins?.map((pin: any) => {
@@ -212,15 +207,7 @@ function ModifyPinMap() {
   const newID = newCounter + 1; /* for ID */
 
   const onAddItem = (pinTitle: any, pinImages: any, currMarkerInfo: any) => {
-    const newItems = itemState.concat({
-      i: String(newID),
-      x: 0,
-      y: itemState.length * 2,
-      w: 1,
-      h: 2,
-    });
-    // 키워드 생성 과연.
-    let keywords = pinTitle.split(' ');
+    let keywords: any = pinTitle.split(' ');
     if (currMarkerInfo.lotAddress.length) {
       const letters = currMarkerInfo.lotAddress
         .split(' ')
@@ -233,6 +220,13 @@ function ModifyPinMap() {
         .filter((word: string) => word.slice(-1) !== '구');
       keywords = keywords.concat(letters);
     }
+    const newItems = itemState.concat({
+      i: String(newID),
+      x: 0,
+      y: itemState.length * 2,
+      w: 1,
+      h: 2,
+    });
     const newPin: any = {
       id: String(newID), // -- 내가 만든 상태 키 (클라이언트 업데이트용)
       ranking: newCounter,
@@ -244,7 +238,6 @@ function ModifyPinMap() {
       ward: currMarkerInfo.ward,
       startTime: '00:00',
       endTime: '01:00',
-      keywords: keywords,
     };
     const newData: any = {
       ranking: newCounter,
@@ -276,12 +269,13 @@ function ModifyPinMap() {
       withCredentials: true,
     })
       .then((res) => {
-        console.log(res);
-        setPins(pins.concat(newPin));
-        setItemState(newItems);
-        setPinImage(pinImage.concat(newFile));
-        setNewCounter(newCounter + 1);
-        setIsClickSaveBtn(true);
+        if (res.status === 201) {
+          setPins(pins.concat(newPin));
+          setItemState(newItems);
+          setPinImage(pinImage.concat(newFile));
+          setNewCounter(newCounter + 1);
+          setIsClickSaveBtn(true);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -308,7 +302,6 @@ function ModifyPinMap() {
     })
       .then((res) => {
         if (res.status === 200) {
-          console.log(res);
         }
       })
       .catch((err) => {
@@ -441,7 +434,6 @@ function ModifyPinMap() {
       })
         .then((res) => {
           if (res.status === 200) {
-            console.log(res);
             const route = res.data.route[0]; // 루트 정보.
             const pins = res.data.route[0].Pins;
             const initialPins = pins?.map(function (pinInfo: any) {
@@ -501,7 +493,6 @@ function ModifyPinMap() {
           }
         }
       });
-    console.log(arrangedArr);
     // 범위 설정하는 건 좀 있다가.
     const bounds = new kakao.maps.LatLngBounds();
     pins
@@ -547,8 +538,6 @@ function ModifyPinMap() {
           );
           removeInfoWindowMoalStyleAndAddStyle(infoWindowModalHTMLTag);
           const currInfoForModify = arrangedArr[i]; // 현재 pin의 개수와 layout 개수가 일치하지 않습니다.
-          console.log(currModifiedID);
-          console.log(currInfoForModify);
 
           ReactDOM.render(
             <ElementForModify

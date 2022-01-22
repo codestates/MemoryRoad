@@ -57,7 +57,7 @@ function EditUserInfo({ isvalid, url }: any) {
     }
   };
   // 프로필 사진을 수정하는 API요청
-  useEffect(() => {
+  const setProfile = () => {
     const getelement: any = document.getElementById('ProfileImg');
     const profileImg = getelement.files[0];
     // console.log(profileImg);
@@ -92,7 +92,7 @@ function EditUserInfo({ isvalid, url }: any) {
         })
         .catch((error) => console.log(error));
     }
-  }, [profile]);
+  };
 
   // 닉네임 수정버튼을 누를 때 API 요청
   const editUsername = () => {
@@ -131,10 +131,11 @@ function EditUserInfo({ isvalid, url }: any) {
     if (isvalid('', username, '') !== 'Username') {
       setnameErrorMessage('2자 이상 그리고 공백이 들어갈 수 없습니다.');
       setnameSuccessMessage('');
-    } else {
-      setnameErrorMessage('입력한 정보로 수정할 수 없습니다.');
-      setnameSuccessMessage('');
     }
+    // else {
+    //   setnameErrorMessage('입력한 정보로 수정할 수 없습니다.');
+    //   setnameSuccessMessage('');
+    // }
   };
   // 비밀번호 변경버튼을 누를 때 API 요청
   const editPassword = () => {
@@ -185,8 +186,12 @@ function EditUserInfo({ isvalid, url }: any) {
           <div className="edituserinfo-textOninput ">
             프로필
             <div className="edituserinfo-gridProfile">
-              {showProfile ? (
-                <img alt="previewimg" id="edituserinfo-previewImage" />
+              {userinfo.profile ? (
+                <img
+                  alt="previewimg"
+                  id="edituserinfo-previewImage"
+                  src={`${url}/${userinfo.profile}`}
+                />
               ) : (
                 <i className="fas fa-user-circle edituserinfo-EditProfile"></i>
               )}
@@ -205,11 +210,9 @@ function EditUserInfo({ isvalid, url }: any) {
                     name="ProfileImage"
                     onChange={(e) => {
                       readProfile(e.target);
-                      if (readProfile(e.target)) {
-                        setShowProfile(true);
-                      } else {
-                        setShowProfile(false);
-                      }
+
+                      // console.log(readProfile(e.target));
+                      setProfile();
                     }} // 프로필 이미지 수정
                     style={{ display: 'none' }}
                     type="file"
@@ -244,44 +247,48 @@ function EditUserInfo({ isvalid, url }: any) {
               </button>
             </div>
           </div>
-
-          <div className="edituserinfo-textOninput">비밀번호</div>
-          <input
-            className="edituserinfo-input2"
-            maxLength={16}
-            onChange={InputPassword}
-            placeholder="비밀번호를 입력해주세요."
-            type="password"
-          ></input>
-          <div className="edituserinfo-ErrorMessage2">
-            {/* {isvalid('', '', Password) === 'Password'
+          {userinfo.OAuthLogin ? null : (
+            <div>
+              <div className="edituserinfo-textOninput">비밀번호</div>
+              <input
+                className="edituserinfo-input2"
+                maxLength={16}
+                onChange={InputPassword}
+                placeholder="비밀번호를 입력해주세요."
+                type="password"
+              ></input>
+              <div className="edituserinfo-ErrorMessage2">
+                {/* {isvalid('', '', Password) === 'Password'
               ? null
               : '8~16자의 영문,숫자,특수문자를 사용하세요'} */}
-            {passwordErrorMessage}
-          </div>
-          <input
-            className="edituserinfo-input2"
-            maxLength={16}
-            onChange={InputCheckingPassword}
-            placeholder="비밀번호을 다시 한번 입력해주세요."
-            type="password"
-          ></input>
-          <div
-            className="edituserinfo-ErrorMessage2"
-            style={{ marginBottom: '15px' }}
-          >
-            <div className="edituserinfo-successMessage">
-              {passwordSuccessMessage}
+                {passwordErrorMessage}
+              </div>
+              <input
+                className="edituserinfo-input2"
+                maxLength={16}
+                onChange={InputCheckingPassword}
+                placeholder="비밀번호을 다시 한번 입력해주세요."
+                type="password"
+              ></input>
+              <div
+                className="edituserinfo-ErrorMessage2"
+                style={{ marginBottom: '15px' }}
+              >
+                <div className="edituserinfo-successMessage">
+                  {passwordSuccessMessage}
+                </div>
+              </div>
+              <div id="edituserinfo-EditProfileButtonRight">
+                <button
+                  className="edituserinfo-EditNickname edituserinfo-EditButtonColor"
+                  onClick={editPassword}
+                >
+                  비밀번호 수정
+                </button>
+              </div>
             </div>
-          </div>
-          <div id="edituserinfo-EditProfileButtonRight">
-            <button
-              className="edituserinfo-EditNickname edituserinfo-EditButtonColor"
-              onClick={editPassword}
-            >
-              비밀번호 수정
-            </button>
-          </div>
+          )}
+
           <div className="edituserinfo-textOninput">회원 탈퇴</div>
           <div id="edituserinfo-EditProfileButtonRight">
             <button
@@ -302,7 +309,9 @@ function EditUserInfo({ isvalid, url }: any) {
           >
             회원정보 수정완료
           </button>
-          <div className="Font_MemoryRoad">MeMoryRoad</div>
+          <div className="Font_MemoryRoad editUserInfo-MemoryRoad">
+            MeMoryRoad
+          </div>
         </div>
       </div>
     </div>

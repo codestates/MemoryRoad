@@ -9,14 +9,14 @@ import SeoulSelectBox from '../seoulSelectBox/seoulSelectBoxForMap';
 import TimeSelectBox from '../timeSelectBox/timeSelectBox';
 
 type Props = {
-  searchResult: Route[];
+  searchResult: Route[] | null;
   routeCount: number;
   isSidebarOpen: boolean;
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedRoute: React.Dispatch<React.SetStateAction<Route | null>>;
   selectedRoute: Route | null;
   setRouteCount: React.Dispatch<React.SetStateAction<number>>;
-  setSearchResult: React.Dispatch<React.SetStateAction<Route[]>>;
+  setSearchResult: React.Dispatch<React.SetStateAction<Route[] | null>>;
   setSearchQuery: React.Dispatch<
     React.SetStateAction<{
       rq?: string | undefined;
@@ -100,6 +100,19 @@ function SearchSideBar({
     }
   }, [searchQuery]);
 
+  //검색 결과에 따라 카드 랜더링
+  function renderCards(searchResult: Route[] | null) {
+    if (searchResult === null) return null;
+    return searchResult.map((routeInfo: Route) => (
+      <StoryCard
+        key={routeInfo.id}
+        routeInfo={routeInfo}
+        selectedRoute={selectedRoute}
+        setSelectedRoute={setSelectedRoute}
+      />
+    ));
+  }
+
   return (
     <>
       <div id="pinControllTower-fix-search">
@@ -133,25 +146,18 @@ function SearchSideBar({
                 </div>
               </div>
               <div className="pinControllTower-content-search">
-                {searchResult.map((routeInfo) => (
-                  <StoryCard
-                    key={routeInfo.id}
-                    routeInfo={routeInfo}
-                    selectedRoute={selectedRoute}
-                    setSelectedRoute={setSelectedRoute}
-                  />
-                ))}
-                {routeCount > 5 ? (
-                  <div className="pagination-button">
-                    <Pagination
-                      cardCount={routeCount}
-                      limit={5}
-                      searchQuery={searchQuery}
-                      setSearchQuery={setSearchQuery}
-                    />
-                  </div>
-                ) : null}
+                {renderCards(searchResult)}
               </div>
+              {routeCount > 5 ? (
+                <div className="pagination-button">
+                  <Pagination
+                    cardCount={routeCount}
+                    limit={5}
+                    searchQuery={searchQuery}
+                    setSearchQuery={setSearchQuery}
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
         </div>

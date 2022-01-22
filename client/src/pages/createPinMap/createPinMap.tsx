@@ -19,7 +19,7 @@ import ConfirmIsUserSaveRoute from '../../modals/confirmIsUserSaveRoute/confirmI
 import SaveRouteModal from '../../modals/saveRouteModal/saveRouteModal'; // 루트 저장 모달창
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
 import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBar';
-import Navigation from '../../components/Navigation';
+import Navigation from '../../components/navigation/Navigation';
 import _ from 'lodash';
 import '../../modals/createPinModal/createPinModal.css';
 import Element from '../../modals/createPinModal/element';
@@ -82,16 +82,11 @@ function CreatePinMap() {
     },
   ]);
   const [itemState, setItemState] = useState<any[]>([]);
-  console.log('pins', pins);
-  console.log('itemState', itemState);
-  console.log('pinImage', pinImage);
   const [newCounter, setNewCounter] = useState(itemState.length);
   const [isMouseOnCard, setIsMouseOnCard] = useState(false);
   const [currCardTitle, setCurrCardTitle] = useState(null);
   /* react-grid-layout */
   const onLayoutChange = (layout: any) => {
-    console.log('레이아웃이 변경되었습니다.');
-    console.log(layout);
     setItemState(layout);
 
     const totalTime = pins
@@ -190,7 +185,6 @@ function CreatePinMap() {
     );
   };
   const onRemoveItem = (i: string) => {
-    console.log(i);
     const updatedPins = pins.filter((el) => el.pinID !== i);
     const newState: any = _.reject(itemState, { i: i });
     const updatedRank = updatedPins.map((pin: any) => {
@@ -466,7 +460,6 @@ function CreatePinMap() {
           }
         }
       });
-    console.log(arrangedArr);
     // 범위 설정하는 건 좀 있다가.
     const bounds = new kakao.maps.LatLngBounds();
     pins
@@ -512,9 +505,6 @@ function CreatePinMap() {
           removeInfoWindowMoalStyleAndAddStyle(infoWindowModalHTMLTag);
           const currInfoForModify = arrangedArr[i]; // 현재 pin의 개수와 layout 개수가 일치하지 않습니다.
           const currFileForModify = pinImage[i];
-          console.log(currFileForModify);
-          console.log(currModifiedID);
-          console.log(currInfoForModify);
 
           ReactDOM.render(
             <ElementCallBack

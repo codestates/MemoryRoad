@@ -9,7 +9,6 @@ const { kakao }: any = window;
 
 function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
   const navigate = useNavigate();
-  console.log(routeInfo);
   const pins = routeInfo[0]?.Pins;
   const colorUrls: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorDotUrl,
@@ -35,7 +34,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
     clearTimeout(timer);
     timer = setTimeout(() => {
       setIsResizing(!isResizing);
-    }, 500);
+    }, 300);
   });
   // 지도에 표시할 점 이미지 생성
   const imageSrc = colorUrls[colorIdx];
@@ -85,7 +84,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
         if (res.status === 200) {
           console.log(res);
           handleCardModalClose();
-          navigate('/myRouteStore');
+          location.assign('https://memory-road.net/myRouteStore'); // 임시
         }
       })
       .catch((err) => {

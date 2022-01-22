@@ -22,7 +22,7 @@ function WardSelectBox({
       >
         <button className="selectbox-ward-label" onClick={handleWardSelect}>
           <p className="selectbox-ward-selected-option">
-            {selectedWard === 0 ? '구를 선택해주세요' : selectedWard}
+            {selectedWard === '' ? '구를 선택해주세요' : selectedWard}
           </p>
         </button>
         <ul className="selectbox-ward-optionList">

@@ -10,19 +10,23 @@ function SignUp({ isvalid, url }: any) {
   const dispatch = useDispatch();
   const [Emailchecking, setEmailChecking] = useState(false); // 이메일 중복확인을 눌러서 사용가능하면 true로 바뀜
   const [errorMessage, setErrorMessage] = useState(''); // 회원가입 버튼 아래에 나오는 에러메시지
+  const [successMessage, setsuccessMessage] = useState('');
   // 이메일 중복확인 API요청
   const emailChecking = () => {
     if (isvalid(Email, '', '') !== 'Email') {
-      alert('사용할 수 없는 이메일 입니다.');
+      setsuccessMessage('');
+      setErrorMessage('사용할 수 없는 이메일 입니다.');
     } else {
       axios
         .post(`${url}/users/auth/local/email`, { email: Email })
         .then((res) => {
           if (res.status === 200) {
-            alert('사용 가능한 이메일 입니다.');
+            setErrorMessage('');
+            setsuccessMessage('사용 가능한 이메일 입니다.');
             setEmailChecking(true);
           } else {
-            alert('이미 사용하고 있는 이메일 입니다.');
+            setErrorMessage('이미 사용하고 있는 이메일 입니다.');
+            setsuccessMessage('');
             setEmailChecking(false);
           }
         });
@@ -40,6 +44,7 @@ function SignUp({ isvalid, url }: any) {
     ) {
       if (!Emailchecking) {
         setErrorMessage('이메일 중복확인을 해주세요');
+        setsuccessMessage('');
       } else {
         axios
           .post(`${url}/users`, {
@@ -58,6 +63,7 @@ function SignUp({ isvalid, url }: any) {
       }
     } else {
       setErrorMessage('모든 항목을 작성해주세요');
+      setsuccessMessage('');
     }
   };
 
@@ -133,7 +139,7 @@ function SignUp({ isvalid, url }: any) {
             >
               {isvalid('', username, '') === 'Username'
                 ? null
-                : '공백이 들어갈 수 없고 2자이상이어야 합니다'}
+                : '2자 이상, 공백이 들어갈 수 없습니다'}
             </div>
             <div className="signup-textOninput">비밀번호</div>
             <input
@@ -165,6 +171,7 @@ function SignUp({ isvalid, url }: any) {
             </div>
             <div className="signup-ErrorMessage2 signup-center2">
               {errorMessage}
+              <div className="signup-successMessage">{successMessage}</div>
             </div>
             <div className="signup-center">
               <button
