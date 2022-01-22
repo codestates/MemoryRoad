@@ -32,6 +32,7 @@ const ElementForModify = ({
     // pinImage delete
     // 사진 삭제 이벤트
     if (event.target.id !== '0') {
+      console.log(pinImages);
       console.log(event.target.id.split('&'));
       const [pictureId, pinId] = event.target.id.split('&');
       axios({
@@ -43,7 +44,7 @@ const ElementForModify = ({
           console.log(res);
           if (res.status === 200) {
             const updatedFiles = pinImages.filter((el) => {
-              if (String(el.pictureId) === pictureId) return false;
+              if (String(el.id) === pictureId) return false;
               else return true;
             });
             setPinImages(updatedFiles);

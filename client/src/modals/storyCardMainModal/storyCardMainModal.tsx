@@ -84,7 +84,7 @@ function StoryCardMainModal({ handleCardModalClose, routeInfo }: any) {
         if (res.status === 200) {
           console.log(res);
           handleCardModalClose();
-          navigate('/myRouteStore');
+          location.assign('https://memory-road.net/myRouteStore'); // 임시
         }
       })
       .catch((err) => {

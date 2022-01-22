@@ -90,8 +90,8 @@ function SaveRouteModalForModify({
       routeTitle.length &&
       routeDesc.length &&
       Number(selectedYear) &&
-      Number(selectedMonth) &&
-      Number(selectedDay)
+      selectedMonth !== null &&
+      selectedDay !== null
     ) {
       // 핀 제목, 핀 사진 수정 endpoint
       pins.slice(1).forEach((el: any) => {
@@ -143,7 +143,7 @@ function SaveRouteModalForModify({
         })
           .then((res) => {
             if (res.status === 200) {
-              console.log(data);
+              console.log(res);
             }
           })
           .catch((err) => {

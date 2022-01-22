@@ -199,6 +199,7 @@ const initialState: State | any = {
     'https://server.memory-road.net/upload/pink_dot.png',
   ],
   whiteColorUrl: [
+    'https://server.memory-road.net/upload/white_gray.png',
     'https://server.memory-road.net/upload/white_red.png',
     'https://server.memory-road.net/upload/white_orange.png',
     'https://server.memory-road.net/upload/white_yellow.png',
