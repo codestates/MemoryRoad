@@ -40,6 +40,7 @@ function CreatePinMap() {
     (state: RootState) => state.createRouteReducer,
   );
   const dispatch = useDispatch();
+  const [markers, setMarkers] = useState([]);
 
   // *상태 관리
   const [currLevel, setCurrLevel] = useState(8); // 지도의 레벨
@@ -235,6 +236,10 @@ function CreatePinMap() {
     setPinImage(pinImage.concat(newFile));
     setNewCounter(newCounter + 1);
     setIsClickSaveBtn(true);
+    setMarkers((prev) => {
+      prev.forEach((item: any) => item.setMap(null)); // 마커 싹 지우기 ... 될까 ..?
+      return [];
+    });
   };
 
   const onUpdateItem = (pinId: any, pinTitle: any, pinImages: any) => {
@@ -548,6 +553,8 @@ function CreatePinMap() {
             marker.setMap(null);
             infoWindowModal.close();
             marker.setPosition(latlng); // 마커 위치를 클릭한 위치로 옮김 - setPosition
+            // 모든 마커 기록
+            setMarkers((prev) => prev.concat(marker));
 
             const latlngMarker: Array<number> = [
               sliceLatLng(latlng.Ma),
@@ -608,6 +615,8 @@ function CreatePinMap() {
         ),
         clickable: true, // 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정
       });
+      // 모든 마커 저장
+      setMarkers((prev) => prev.concat(markerForSearch));
       // 검색용 마커 클릭했을 때 발생되는 이벤트
       kakao.maps.event.addListener(markerForSearch, 'click', function () {
         handleIsModalOpen(true);
