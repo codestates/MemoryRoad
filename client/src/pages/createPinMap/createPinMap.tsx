@@ -213,12 +213,6 @@ function CreatePinMap() {
         .filter((word: string) => word.slice(-1) !== '구');
       keywords = keywords.concat(letters);
     }
-    if (currMarkerInfo.roadAddress.length) {
-      const letters = currMarkerInfo.roadAddress
-        .split(' ')
-        .filter((word: string) => word.slice(-1) !== '구');
-      keywords = keywords.concat(letters);
-    }
     const newPin: any = {
       pinID: newID, // -- 내가 만든 상태 키
       ranking: newCounter,

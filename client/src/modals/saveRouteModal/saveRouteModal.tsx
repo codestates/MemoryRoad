@@ -17,7 +17,6 @@ function SaveRouteModal({
   const parsedData = JSON.parse(rawData).setUserInfoReducer;
   const userInfo = JSON.parse(parsedData).userInfo;
   const { isLogin } = userInfo;
-  console.log(pinImage);
   const colorUrls: any = useSelector(
     (state: RootState) => state.createRouteReducer.colorDotUrl,
   );
@@ -103,8 +102,6 @@ function SaveRouteModal({
           date: `${selectedYear}-${selectedMonth}-${selectedDay}`,
           pins: pins.slice(1),
         };
-
-        console.log(data);
 
         const formData = new FormData();
         formData.append('route', JSON.stringify(data));

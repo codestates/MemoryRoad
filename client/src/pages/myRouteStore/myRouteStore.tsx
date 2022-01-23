@@ -29,7 +29,6 @@ function MyRouteStore() {
   const [selectedColorId, setSelectedCorlorId] = useState(0);
   const [selectedSeoul, setSelectedSeoul] = useState(0);
   const [selectedWard, setSelectedWard] = useState('');
-  const [searchWord, setSearchWord] = useState('');
 
   const [paginationNum, setPaginationNum] = useState(0); // <, > 버튼 컨트롤
   const [currPageNum, setCurrPageNum] = useState(1); // 페이지 넘버(1,2,3) 컨트롤
@@ -85,150 +84,24 @@ function MyRouteStore() {
     setClickedColorSelect(false);
     setClickedSeoulSelect(false);
   };
-  const selectSearchWord = (event: any) => {
-    setSearchWord(event.target.value);
-  };
   // 어설픈 기능.
-  const searchCard = () => {
-    setRouteCards((prev) => {
-      if (
-        selectedColorId === 0 &&
-        selectedWard === '전체 구' &&
-        searchWord === ''
-      ) {
-        // 모두 초기화
-        return originRouteCards;
-      } else if (
-        selectedColorId === 0 &&
-        (selectedWard !== '전체 구' || '') &&
-        searchWord !== ''
-      ) {
-        // 와드 값, 검색 값
-        const newData = originRouteCards
-          .filter((el: any) => {
-            const routeNameKeywords = el.routeName.split(' ');
-            if (routeNameKeywords.indexOf(searchWord) !== -1) {
-              return true;
-            }
-            return false;
-          })
-          .filter((el: any) => {
-            for (const pin of el.Pins) {
-              if (pin.ward === selectedWard) return true;
-            }
-            return false;
-          });
-        return newData;
-      } else if (
-        selectedColorId !== 0 &&
-        selectedWard === '전체 구' &&
-        searchWord !== ''
-      ) {
-        // 색상, 검색값
-        const newData = originRouteCards
-          .filter((el: any) => {
-            const routeNameKeywords = el.routeName.split(' ');
-            if (routeNameKeywords.indexOf(searchWord) !== -1) {
-              return true;
-            }
-            return false;
-          })
-          .filter((el: any) => {
-            for (const pin of el.Pins) {
-              if (pin.ward === selectedWard) return true;
-            }
-            return false;
-          });
-        return newData;
-      } else if ((selectedWard !== '전체 구' || '') && selectedColorId !== 0) {
-        // 색상, 와드 값
-        const newData = originRouteCards
-          .filter((el: any) =>
-            el.color === colorNames[selectedColorId] ? true : false,
-          )
-          .filter((el: any) => {
-            for (const pin of el.Pins) {
-              if (pin.ward === selectedWard) return true;
-            }
-            return false;
-          });
-        return newData;
-      } else if (
-        selectedColorId !== 0 &&
-        (selectedWard !== '전체 구' || '') &&
-        searchWord !== ''
-      ) {
-        // 와드, 색상, 검색
-        const newData = originRouteCards
-          .filter((el: any) => {
-            const routeNameKeywords = el.routeName.split(' ');
-            if (routeNameKeywords.indexOf(searchWord) !== -1) {
-              return true;
-            }
-            return false;
-          })
-          .filter((el: any) => {
-            for (const pin of el.Pins) {
-              if (pin.ward === selectedWard) return true;
-            }
-            return false;
-          })
-          .filter((el: any) =>
-            el.color === colorNames[selectedColorId] ? true : false,
-          );
-        return newData;
-      } else {
-        // 검색값만
-        const newData = originRouteCards.filter((el: any) => {
-          const routeNameKeywords = el.routeName.split(' ');
-          console.log(routeNameKeywords);
-          if (routeNameKeywords.indexOf(searchWord) !== -1) {
-            return true;
-          }
-          return false;
-        });
-        return newData;
-      }
-    });
-    // setSearchWord('');
-  };
   const selectColor = (event: any) => {
     const idx = Number(event.target.id);
     setSelectedCorlorId(idx);
     setRouteCards((prev) => {
-      if (idx === 0 && selectedWard === '전체 구' && searchWord === '') {
+      if (idx === 0 && (selectedWard === '전체 구' || '')) {
         // 모두 초기화
         return originRouteCards;
-      } else if (idx === 0 && selectedWard !== '전체 구' && searchWord !== '') {
-        // 와드 값, 검색 값
-        const newData = originRouteCards
-          .filter((el: any) => {
-            const routeNameKeywords = el.routeName.split(' ');
-            if (routeNameKeywords.indexOf(searchWord) !== -1) {
-              return true;
-            }
-            return false;
-          })
-          .filter((el: any) => {
-            for (const pin of el.Pins) {
-              if (pin.ward === selectedWard) return true;
-            }
-            return false;
-          });
+      } else if (idx === 0 && (selectedWard !== '전체 구' || '')) {
+        // 와드 값
+        const newData = originRouteCards.filter((el: any) => {
+          for (const pin of el.Pins) {
+            if (pin.ward === selectedWard) return true;
+          }
+          return false;
+        });
         return newData;
-      } else if (idx !== 0 && selectedWard === '전체 구' && searchWord !== '') {
-        // 색상, 검색값
-        const newData = originRouteCards
-          .filter((el: any) => {
-            const routeNameKeywords = el.routeName.split(' ');
-            if (routeNameKeywords.indexOf(searchWord) !== -1) {
-              return true;
-            }
-            return false;
-          })
-          .filter((el: any) => (el.color === colorNames[idx] ? true : false));
-        return newData;
-      } else if ((selectedWard !== '전체 구' || '') && idx !== 0) {
+      } else if (idx !== 0 && (selectedWard !== '전체 구' || '')) {
         // 색상, 와드 값
         const newData = originRouteCards
           .filter((el: any) => (el.color === colorNames[idx] ? true : false))
@@ -238,28 +111,6 @@ function MyRouteStore() {
             }
             return false;
           });
-        return newData;
-      } else if (
-        idx !== 0 &&
-        (selectedWard !== '전체 구' || '') &&
-        searchWord !== ''
-      ) {
-        // 와드, 색상, 검색
-        const newData = originRouteCards
-          .filter((el: any) => {
-            const routeNameKeywords = el.routeName.split(' ');
-            if (routeNameKeywords.indexOf(searchWord) !== -1) {
-              return true;
-            }
-            return false;
-          })
-          .filter((el: any) => {
-            for (const pin of el.Pins) {
-              if (pin.ward === selectedWard) return true;
-            }
-            return false;
-          })
-          .filter((el: any) => (el.color === colorNames[idx] ? true : false));
         return newData;
       } else {
         // 색상만
@@ -275,59 +126,18 @@ function MyRouteStore() {
   };
   const selectWard = (event: any) => {
     const wardName = event.target.id;
-    console.log(wardName);
     setSelectedWard(wardName);
     setRouteCards((prev) => {
-      if (
-        selectedColorId === 0 &&
-        wardName === '전체 구' &&
-        searchWord === ''
-      ) {
+      if (selectedColorId === 0 && (wardName === '전체 구' || '')) {
         // 모두 초기화
         return originRouteCards;
-      } else if (
-        selectedColorId === 0 &&
-        (selectedWard !== '전체 구' || '') &&
-        searchWord !== ''
-      ) {
-        // 와드 값, 검색 값
-        const newData = originRouteCards
-          .filter((el: any) => {
-            const routeNameKeywords = el.routeName.split('');
-            if (routeNameKeywords.indexOf(searchWord) !== -1) {
-              return true;
-            }
-            return false;
-          })
-          .filter((el: any) => {
-            for (const pin of el.Pins) {
-              if (pin.ward === wardName) return true;
-            }
-            return false;
-          });
+      } else if (selectedColorId === 0 && (wardName !== '전체 구' || '')) {
+        // 색상
+        const newData = originRouteCards.filter((el: any) =>
+          el.color === colorNames[selectedColorId] ? true : false,
+        );
         return newData;
-      } else if (
-        selectedColorId !== 0 &&
-        wardName === '전체 구' &&
-        searchWord !== ''
-      ) {
-        // 색상, 검색값
-        const newData = originRouteCards
-          .filter((el: any) => {
-            const routeNameKeywords = el.routeName.split('');
-            if (routeNameKeywords.indexOf(searchWord) !== -1) {
-              return true;
-            }
-            return false;
-          })
-          .filter((el: any) => {
-            for (const pin of el.Pins) {
-              if (pin.ward === wardName) return true;
-            }
-            return false;
-          });
-        return newData;
-      } else if ((selectedWard !== '전체 구' || '') && selectedColorId !== 0) {
+      } else if (selectedColorId !== 0 && (selectedWard !== '전체 구' || '')) {
         // 색상, 와드 값
         const newData = originRouteCards
           .filter((el: any) =>
@@ -339,30 +149,6 @@ function MyRouteStore() {
             }
             return false;
           });
-        return newData;
-      } else if (
-        selectedColorId !== 0 &&
-        (selectedWard !== '전체 구' || '') &&
-        searchWord !== ''
-      ) {
-        // 와드, 색상, 검색
-        const newData = originRouteCards
-          .filter((el: any) => {
-            const routeNameKeywords = el.routeName.split('');
-            if (routeNameKeywords.indexOf(searchWord) !== -1) {
-              return true;
-            }
-            return false;
-          })
-          .filter((el: any) => {
-            for (const pin of el.Pins) {
-              if (pin.ward === wardName) return true;
-            }
-            return false;
-          })
-          .filter((el: any) =>
-            el.color === colorNames[selectedColorId] ? true : false,
-          );
         return newData;
       } else {
         // 와드값만
@@ -469,7 +255,7 @@ function MyRouteStore() {
                   selectedWard={selectedWard}
                 />
               </div>
-              <div className="myRouteStore-searchBoxZone">
+              {/* <div className="myRouteStore-searchBoxZone">
                 <input
                   className="myRouteStore-search-input"
                   onChange={selectSearchWord}
@@ -481,7 +267,7 @@ function MyRouteStore() {
                 >
                   검색
                 </button>
-              </div>
+              </div> */}
             </div>
             <hr className="myRouteStore-divide-line"></hr>
             <div className="myRouteStore-createRouteBox-align">

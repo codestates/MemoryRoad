@@ -214,12 +214,6 @@ function ModifyPinMap() {
         .filter((word: string) => word.slice(-1) !== '구');
       keywords = keywords.concat(letters);
     }
-    if (currMarkerInfo.roadAddress.length) {
-      const letters = currMarkerInfo.roadAddress
-        .split(' ')
-        .filter((word: string) => word.slice(-1) !== '구');
-      keywords = keywords.concat(letters);
-    }
     const newItems = itemState.concat({
       i: String(newID),
       x: 0,
