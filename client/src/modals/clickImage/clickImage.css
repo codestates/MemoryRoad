@@ -28,15 +28,18 @@
 .clickImage-button {
     width: 5%;
     /* height: 5%; */
-    background-color: none;
+    background: none;
     min-width: 40px;
     min-height: 40px;
     width: 7%;
     height: 7%;
     max-width: 70px;
     max-height: 70px;
-    border-radius: 10px;
-    border: 5px solid #91BA9F;
+    margin-left: 10px;
+    margin-right: 10px;
+    border: none;
+    font-size: 40px;
+    color: white;
 }
 
 .clickImage-image {

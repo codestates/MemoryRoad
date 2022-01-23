@@ -16,8 +16,8 @@
   #allRoutesInMap-images {
     overflow-x: scroll;
     box-sizing: border-box;
-    border: 7px solid #91BA9F;
-    border-radius: 20px;
+    border: 2px solid rgb(177, 177, 177);
+    border-radius: 5px;
     background-color: white;
     width: 100%;
     display: flex;
@@ -26,23 +26,24 @@
     bottom: 0;
     z-index: 98;
     text-align: center;
+    align-items: center;
   }
   /* 구글 크롬에서 스크롤 안 보이게 하는 css */
   #allRoutesInMap-images::-webkit-scrollbar {
     display: none;
   }
    
-   #el-img-img {
+   #allRoutesInMap-el-img-img {
      margin: 10px;
      max-width: 170px;
      max-height: 170px;
-     width: 80%;
-     height: 80%;
+     width: 10vw;
+     height: 14vh;
      min-width: 90px;
      min-height: 90px;
-     border: 5px solid #91BA9F;
-     border-radius: 20px;
+     border-radius: 5px;
      max-height: 100%;
+     margin-top: 15px;
    }
 
   /* #el-img-div {

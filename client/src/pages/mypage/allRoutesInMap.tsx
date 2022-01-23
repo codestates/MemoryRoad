@@ -8,6 +8,7 @@ import { Picture, Route } from '../../types/searchRoutesTypes';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent'; // infoWindow 창 생성하는 함수
 import ClickImage from '../../modals/clickImage/clickImage';
 import NoRouteInMap from '../../modals/noRouteInMap/noRouteInMap';
+import Navigation from '../../components/navigation/Navigation';
 
 // 루트를 받고, 루트의 핀 값을 받을 것 같음
 // 각 루트별로 핀 객체를 받고, 받은 핀 객체값을 For문, 혹은 ForEach를 통해 핀의 위치값을 받아서 핀을 그리고 선을 이어줘야 할 것 같음
@@ -258,7 +259,7 @@ function AllRoutesInMap() {
 
         const polyline = new kakao.maps.Polyline({
           path: linePath,
-          strokeWeight: 10,
+          strokeWeight: 5,
           strokeColor: polyColor,
           strokeOpacity: 0.7,
           strokeStyle: 'solid',
@@ -283,6 +284,7 @@ function AllRoutesInMap() {
       {noRoute ? <NoRouteInMap /> : null}
       <div className="allRoutesInMap-whole">
         <div className="jyang-allRoutesInMap">
+          <Navigation />
           <ColorSelectBox
             findAllRoute={findAllRoute}
             setAllRoutes={setAllRoutes}
@@ -314,7 +316,7 @@ function AllRoutesInMap() {
               >
                 <img
                   alt="loadFail"
-                  id="el-img-img"
+                  id="allRoutesInMap-el-img-img"
                   src={`https://server.memory-road.net/${el.fileName}`}
                 ></img>
               </div>

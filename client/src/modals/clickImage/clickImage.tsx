@@ -43,11 +43,7 @@ function ClickImage({
               }}
               type="button"
             >
-              <img
-                alt="버튼이 고장남"
-                className="clickImage-image"
-                src="https://server.memory-road.net/upload/prev_button.png"
-              />
+              <i className="fas fa-chevron-left"></i>
             </button>
             {pickPinsPictures ? (
               <img
@@ -68,11 +64,7 @@ function ClickImage({
               }}
               type="button"
             >
-              <img
-                alt="버튼이 고장남"
-                className="clickImage-image"
-                src="https://server.memory-road.net/upload/next_button.png"
-              />
+              <i className="fas fa-chevron-right"></i>
             </button>
           </div>
         </div>
