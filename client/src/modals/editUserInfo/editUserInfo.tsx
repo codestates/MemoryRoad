@@ -30,7 +30,7 @@ function EditUserInfo({ isvalid, url }: any) {
   const InputCheckingPassword = (e: any) => {
     setCheckingPassword(e.target.value);
   };
-  const [showProfile, setShowProfile] = useState(false); // 프로필사진을 가져오면 true로 바뀐다
+
   const [profile, setprofile] = useState(userinfo.profile); // 바뀐 프로필 사진
   const [nameErrorMessage, setnameErrorMessage] = useState(''); // 닉네임 변경 에러메시지
   const [passwordErrorMessage, setpasswordErrorMessage] = useState(''); // 비밀번호 변경 에러메시지
@@ -46,10 +46,12 @@ function EditUserInfo({ isvalid, url }: any) {
         const previewImage: any = document.getElementById(
           'edituserinfo-previewImage',
         );
+
         previewImage.src = e.target.result;
       };
       setprofile(image.files[0]);
       reader.readAsDataURL(image.files[0]);
+
       return true;
     } else {
       setprofile(userinfo.profile); // 유저의 원래 프로필
@@ -60,38 +62,33 @@ function EditUserInfo({ isvalid, url }: any) {
   const setProfile = () => {
     const getelement: any = document.getElementById('ProfileImg');
     const profileImg = getelement.files[0];
-    // console.log(profileImg);
+    console.log(profileImg);
 
     const formData = new FormData(); // 폼데이터 형식으로 보냄
     formData.append('profile', profileImg);
-    // console.log(formData.get('profile'));
+    console.log(formData.get('profile'));
     // blob : 사진을 저장할 때 사용함
-    const blob = new Blob([JSON.stringify(profileImg)], {
-      type: 'application/json',
-    });
-    if (profile !== null) {
-      axios
-        .patch(`${url}/users/profile`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-          withCredentials: true,
-        })
-        .then((res) => {
-          console.log(res.data);
-          if (res.status === 200) {
-            dispatch(
-              setUserInfo(
-                true,
-                userinfo.id,
-                userinfo.email,
-                userinfo.username,
-                res.data.profile,
-                userinfo.OAuthLogin,
-              ),
-            );
-          }
-        })
-        .catch((error) => console.log(error));
-    }
+
+    axios
+      .patch(`${url}/users/profile`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          dispatch(
+            setUserInfo(
+              true,
+              userinfo.id,
+              userinfo.email,
+              userinfo.username,
+              res.data.profile,
+              userinfo.OAuthLogin,
+            ),
+          );
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
   // 닉네임 수정버튼을 누를 때 API 요청
@@ -195,7 +192,7 @@ function EditUserInfo({ isvalid, url }: any) {
               ) : (
                 <i className="fas fa-user-circle edituserinfo-EditProfile"></i>
               )}
-              {/* 프로필 사진 */}
+
               <form
                 // action="./url.js" //form데이터를 전송할 경로
                 className="edituserinfo-form"
@@ -210,8 +207,6 @@ function EditUserInfo({ isvalid, url }: any) {
                     name="ProfileImage"
                     onChange={(e) => {
                       readProfile(e.target);
-
-                      // console.log(readProfile(e.target));
                       setProfile();
                     }} // 프로필 이미지 수정
                     style={{ display: 'none' }}
@@ -258,9 +253,6 @@ function EditUserInfo({ isvalid, url }: any) {
                 type="password"
               ></input>
               <div className="edituserinfo-ErrorMessage2">
-                {/* {isvalid('', '', Password) === 'Password'
-              ? null
-              : '8~16자의 영문,숫자,특수문자를 사용하세요'} */}
                 {passwordErrorMessage}
               </div>
               <input
