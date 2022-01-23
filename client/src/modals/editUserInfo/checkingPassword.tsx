@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
 import Mist from '../../components/mist';
 import './checkingPassword.css';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import {
   checkingPasswordModal,
   editUserInfoModal,
 } from '../../redux/actions/index';
+import { RootState } from '../../redux/reducer';
+
 function CheckingPassword({ url }: any) {
   const dispatch = useDispatch();
   const [password, setpassword] = useState(''); // 회원이 입력한 비밀번호
   const [errorMessage, setErrorMessage] = useState(''); // 잘못 입력했을 때 나오는 에러메시지
-
+  const userinfo = useSelector(
+    (state: RootState) => state.setUserInfoReducer.userInfo,
+  ); // 유저의 정보
   const checkingPassword = () => {
     if (password.length === 0) {
       setErrorMessage('기존 비밀번호를 입력해주세요');
     } else {
+      console.log(userinfo);
       axios
         .post(
           `${url}/users/auth/local/password`,

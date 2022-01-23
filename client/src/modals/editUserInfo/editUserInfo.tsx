@@ -87,6 +87,7 @@ function EditUserInfo({ isvalid, url }: any) {
               userinfo.OAuthLogin,
             ),
           );
+          console.log(userinfo);
         }
       })
       .catch((error) => console.log(error));
@@ -116,6 +117,7 @@ function EditUserInfo({ isvalid, url }: any) {
                 userinfo.OAuthLogin,
               ),
             );
+            console.log(userinfo);
             setnameErrorMessage('');
             setnameSuccessMessage('닉네임이 수정되었습니다.');
           }
