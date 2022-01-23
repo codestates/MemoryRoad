@@ -236,7 +236,7 @@ export class UsersController {
     await this.usersService.remove(accessToken);
     res.cookie('accessToken', 'success', {
       httpOnly: true,
-      maxAge: 5 * 60 * 60 * 1000,
+      maxAge: 0,
       sameSite: 'none',
       secure: true,
     });
@@ -254,7 +254,7 @@ export class UsersController {
     //아무것도 없는 쿠키 전달
     res.cookie('accessToken', 'success', {
       httpOnly: true,
-      maxAge: 5 * 60 * 60 * 1000,
+      maxAge: 0,
       sameSite: 'none',
       secure: true,
     });
