@@ -160,7 +160,9 @@ function SaveRouteModalForModify({
           description: routeDesc,
           public: !isOpenRoute,
           color: colorNames[Number(selectedColorId)],
-          date: `${selectedYear}-${selectedMonth}-${selectedDay}`,
+          date: `${selectedYear}-${Number(selectedMonth) + 1}-${
+            Number(selectedDay) + 1
+          }`,
           time: totalTime,
         },
         withCredentials: true,

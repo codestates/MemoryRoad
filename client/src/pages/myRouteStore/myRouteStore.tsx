@@ -89,10 +89,12 @@ function MyRouteStore() {
     const idx = Number(event.target.id);
     setSelectedCorlorId(idx);
     setRouteCards((prev) => {
-      if (idx === 0 && (selectedWard === '전체 구' || '')) {
+      if (idx === 0 && selectedWard === '') {
         // 모두 초기화
         return originRouteCards;
-      } else if (idx === 0 && (selectedWard !== '전체 구' || '')) {
+      } else if (idx === 0 && selectedWard === '전체 구') {
+        return originRouteCards;
+      } else if (idx === 0 && selectedWard !== '전체 구') {
         // 와드 값
         const newData = originRouteCards.filter((el: any) => {
           for (const pin of el.Pins) {
@@ -101,7 +103,12 @@ function MyRouteStore() {
           return false;
         });
         return newData;
-      } else if (idx !== 0 && (selectedWard !== '전체 구' || '')) {
+      } else if (idx !== 0 && selectedWard === '') {
+        const newData = originRouteCards.filter((el: any) =>
+          el.color === colorNames[idx] ? true : false,
+        );
+        return newData;
+      } else if (idx !== 0 && selectedWard !== '전체 구') {
         // 색상, 와드 값
         const newData = originRouteCards
           .filter((el: any) => (el.color === colorNames[idx] ? true : false))
@@ -128,16 +135,18 @@ function MyRouteStore() {
     const wardName = event.target.id;
     setSelectedWard(wardName);
     setRouteCards((prev) => {
-      if (selectedColorId === 0 && (wardName === '전체 구' || '')) {
+      if (selectedColorId === 0 && wardName === '전체 구') {
         // 모두 초기화
         return originRouteCards;
-      } else if (selectedColorId === 0 && (wardName !== '전체 구' || '')) {
-        // 색상
+      } else if (selectedColorId === 0 && wardName === '') {
+        return originRouteCards;
+      } else if (selectedColorId !== 0 && selectedWard === '전체 구') {
+        // 와드 값
         const newData = originRouteCards.filter((el: any) =>
           el.color === colorNames[selectedColorId] ? true : false,
         );
         return newData;
-      } else if (selectedColorId !== 0 && (selectedWard !== '전체 구' || '')) {
+      } else if (selectedColorId !== 0 && selectedWard !== '전체 구') {
         // 색상, 와드 값
         const newData = originRouteCards
           .filter((el: any) =>
@@ -212,6 +221,7 @@ function MyRouteStore() {
             console.log(res);
             setRouteCards(res.data.routes); // 배열값
             setOriginRouteCards(res.data.routes);
+            setdataCount(res.data.count);
             setCurrPageNum(0);
           }
         })

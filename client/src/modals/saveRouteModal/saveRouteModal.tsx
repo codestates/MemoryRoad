@@ -29,8 +29,8 @@ function SaveRouteModal({
   const [clickedMonthSelect, setClickedMonthSelect] = useState(false);
   const [clickedYearSelect, setClickedYearSelect] = useState(false);
   const [selectedColorId, setSelectedCorlorId] = useState('0');
-  const [selectedDay, setSelectedDay] = useState(null);
-  const [selectedMonth, setSelectedMonth] = useState(null);
+  const [selectedDay, setSelectedDay] = useState<any>(null);
+  const [selectedMonth, setSelectedMonth] = useState<any>(null);
   const [selectedYear, setSelectedYear] = useState('0');
 
   const handleColorSelect = () => {
@@ -99,7 +99,9 @@ function SaveRouteModal({
           public: !isOpenRoute,
           time: totalTime,
           color: colorNames[Number(selectedColorId)],
-          date: `${selectedYear}-${selectedMonth}-${selectedDay}`,
+          date: `${selectedYear}-${Number(selectedMonth) + 1}-${
+            Number(selectedDay) + 1
+          }`,
           pins: pins.slice(1),
         };
 
