@@ -88,7 +88,6 @@ export class UsersService {
       },
     });
     const result = kakaoInfo.data;
-    const profile = result.properties.profile_image;
     let userInfo: UserEntity = await this.usersRepository.findOne({
       email: result.kakao_account.email,
       oauthLogin: 'kakao',
@@ -106,7 +105,7 @@ export class UsersService {
         oauthLogin: 'kakao',
         saltedPassword: null,
         oauthCI: result.id,
-        profileImage: profile,
+        profileImage: null,
       });
     }
     return userInfo;
@@ -140,7 +139,6 @@ export class UsersService {
       });
 
     const result = naverInfo.data.response;
-    const profile = result.profile_image; //프로필 사진은 전달 안 해주고 있음
     // 여기까지가 데이터 가져오는 코드
     let userInfo: UserEntity = await this.usersRepository.findOne({
       email: result.email,
@@ -159,7 +157,7 @@ export class UsersService {
         oauthLogin: 'naver',
         saltedPassword: null,
         oauthCI: result.id,
-        profileImage: profile,
+        profileImage: null,
       });
     }
     return userInfo;
@@ -181,7 +179,7 @@ export class UsersService {
       .catch((err) => {
         return err;
       });
-    const { email, name, picture } = decode; // picture 아직 전달 안 해줬음.
+    const { email, name } = decode; // picture 아직 전달 안 해줬음.
     let userInfo: UserEntity = await this.usersRepository.findOne({
       email: email,
       oauthLogin: 'google',
@@ -199,7 +197,7 @@ export class UsersService {
         oauthLogin: 'google',
         saltedPassword: null,
         oauthCI: null,
-        profileImage: picture,
+        profileImage: null,
       });
     }
     return userInfo;
@@ -242,40 +240,55 @@ export class UsersService {
       );
     }
     deleteFile['profileImage'] = file.path;
-    console.log(deleteFile);
     const user: UserEntity = {
       id: deleteFile['id'],
       email: deleteFile['email'],
       nickName: deleteFile['nickName'],
       profileImage: deleteFile['profileImage'],
+      saltedPassword: deleteFile['saltedPassword'],
+      oauthLogin: deleteFile['oauthLogin'],
     };
-    console.log(user);
-    await this.usersRepository.save(user);
-    return file.path;
+    const userInfo = await this.usersRepository.save(user);
+    return { userInfo: userInfo, profile: file.path };
   }
   //회원 정보 업데이트 닉네임
-  async updateUserName(accessToken: string, userName: string) {
+  async updateUserName(
+    accessToken: string,
+    userName: string,
+  ): Promise<UserEntity> {
     const decoded = await this.verifyAccessToken(accessToken);
-    decoded['nickName'] = userName;
-    const user: UserEntity = {
+    const userData: UserEntity = await this.usersRepository.findOne({
       id: decoded['id'],
-      email: decoded['email'],
-      nickName: decoded['nickName'],
+    });
+    const user: UserEntity = {
+      id: userData['id'],
+      email: userData['email'],
+      nickName: userName,
+      profileImage: userData['profileImage'],
+      saltedPassword: userData['saltedPassword'],
+      oauthLogin: userData['oauthLogin'],
     };
-    await this.usersRepository.save(user);
+    const userInfo = await this.usersRepository.save(user);
+    return userInfo;
   }
   //회원 정보 업데이트 비밀번호
   async updatePassword(accessToken: string, password: string) {
     const decoded = await this.verifyAccessToken(accessToken);
+    const userData: UserEntity = await this.usersRepository.findOne({
+      id: decoded['id'],
+    });
     const salt = await bcrypt.genSalt();
     decoded['saltedPassword'] = await bcrypt.hash(password, salt);
     const user: UserEntity = {
-      id: decoded['id'],
-      email: decoded['email'],
-      nickName: decoded['nickName'],
+      id: userData['id'],
+      email: userData['email'],
+      nickName: userData['nickName'],
+      profileImage: userData['profileImage'],
       saltedPassword: decoded['saltedPassword'],
+      oauthLogin: userData['oauthLogin'],
     };
-    await this.usersRepository.save(user);
+    const userInfo = await this.usersRepository.save(user);
+    return userInfo;
   }
 
   //회원 탈퇴

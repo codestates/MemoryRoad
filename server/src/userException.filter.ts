@@ -24,7 +24,7 @@ export class UserExceptionFilter implements ExceptionFilter {
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
-
+    console.log(exception);
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),

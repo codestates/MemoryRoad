@@ -18,7 +18,7 @@ import { LoginUserDto } from './dto/login-userDto';
 import { Request, Response } from 'express';
 import { multerOptions } from '../users/users.multerOpt';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UserExceptionFilter } from 'src/userException.filter';
+import { UserExceptionFilter } from '../userException.filter';
 import fs from 'fs';
 import { join } from 'path';
 
@@ -156,8 +156,20 @@ export class UsersController {
       fs.unlinkSync(`${join(__dirname, '..', '..', '..')}/${file.path}`);
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
-    const accessToken = req.cookies.accessToken;
-    const profile = await this.usersService.updateProfile(accessToken, file);
+    const getAccessToken = req.cookies.accessToken;
+    const { userInfo, profile } = await this.usersService.updateProfile(
+      getAccessToken,
+      file,
+    );
+    const accessToken: string = await this.usersService.getAccessToken(
+      userInfo,
+    );
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      maxAge: 5 * 60 * 60 * 1000,
+      sameSite: 'none',
+      secure: true,
+    });
     return res.status(200).json({ profile: profile });
   }
 
@@ -171,8 +183,20 @@ export class UsersController {
     if (!req.cookies || !req.cookies.accessToken) {
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
-    const accessToken = req.cookies.accessToken;
-    await this.usersService.updateUserName(accessToken, userName);
+    const getAccessToken = req.cookies.accessToken;
+    const userInfo = await this.usersService.updateUserName(
+      getAccessToken,
+      userName,
+    );
+    const accessToken: string = await this.usersService.getAccessToken(
+      userInfo,
+    );
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      maxAge: 5 * 60 * 60 * 1000,
+      sameSite: 'none',
+      secure: true,
+    });
     return res.status(200).json({ message: '닉네임이 변경되었습니다' });
   }
   // 비밀번호 정보 수정
@@ -185,8 +209,20 @@ export class UsersController {
     if (!req.cookies || !req.cookies.accessToken) {
       return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
     }
-    const accessToken = req.cookies.accessToken;
-    await this.usersService.updatePassword(accessToken, password);
+    const getAccessToken = req.cookies.accessToken;
+    const userInfo = await this.usersService.updatePassword(
+      getAccessToken,
+      password,
+    );
+    const accessToken: string = await this.usersService.getAccessToken(
+      userInfo,
+    );
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      maxAge: 5 * 60 * 60 * 1000,
+      sameSite: 'none',
+      secure: true,
+    });
     return res.status(200).json({ message: '비밀번호가 변경되었습니다' });
   }
 
@@ -200,7 +236,7 @@ export class UsersController {
     await this.usersService.remove(accessToken);
     res.cookie('accessToken', 'success', {
       httpOnly: true,
-      maxAge: 5 * 60 * 60 * 1000,
+      maxAge: 0,
       sameSite: 'none',
       secure: true,
     });
@@ -218,7 +254,7 @@ export class UsersController {
     //아무것도 없는 쿠키 전달
     res.cookie('accessToken', 'success', {
       httpOnly: true,
-      maxAge: 5 * 60 * 60 * 1000,
+      maxAge: 0,
       sameSite: 'none',
       secure: true,
     });

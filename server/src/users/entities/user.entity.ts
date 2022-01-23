@@ -1,4 +1,4 @@
-import { RouteEntity } from 'src/routes/entities/route.entity';
+import { RouteEntity } from '../../routes/entities/route.entity';
 import {
   Entity,
   Column,

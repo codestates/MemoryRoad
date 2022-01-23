@@ -22,7 +22,7 @@ import {
 import { Response, Express, Request } from 'express';
 import { PatchRouteDto } from './dto/patchRoute.dto';
 import { RoutesService } from './routes.service';
-import { ExceptionFilter } from 'src/routeException.filter';
+import { ExceptionFilter } from '../routeException.filter';
 import { multerOptions } from './routes.multerOpt';
 
 @UseFilters(ExceptionFilter)

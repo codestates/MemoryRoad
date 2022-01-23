@@ -65,11 +65,6 @@ function Mypage() {
             ) : (
               <i className="fas fa-user-circle mypage-Profile"></i>
             )}
-            {/* <img
-              alt="profileimg"
-              className="mypage-userProfile"
-              src="http://127.0.0.1:5500/client/public/img/notice-board.jpg"
-            /> */}
           </div>
           <div className="mypage-checking">
             <div className="mypage-greeting">
@@ -113,6 +108,7 @@ function Mypage() {
                     alt="storeRoute"
                     className="mypage-image"
                     src="https://server.memory-road.net/upload/notice-board.jpg"
+                    // src={`${url}/upload/routeStore.jpg`}
                   />
                   <div className="mypage-imageExplain ">루트 보관함</div>
                 </div>

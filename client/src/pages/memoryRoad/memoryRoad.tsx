@@ -115,7 +115,7 @@ const MemoryRoad = () => {
   return (
     <div className="memoryRoad-scroll">
       <Nav isvalid={isvalid} url={url} />
-      <Home />
+      <Home url={url} />
     </div>
   );
 };
