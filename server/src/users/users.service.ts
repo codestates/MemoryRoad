@@ -240,12 +240,13 @@ export class UsersService {
       );
     }
     deleteFile['profileImage'] = file.path;
-    console.log(deleteFile);
     const user: UserEntity = {
       id: deleteFile['id'],
       email: deleteFile['email'],
       nickName: deleteFile['nickName'],
       profileImage: deleteFile['profileImage'],
+      saltedPassword: deleteFile['saltedPassword'],
+      oauthLogin: deleteFile['oauthLogin'],
     };
     const userInfo = await this.usersRepository.save(user);
     return { userInfo: userInfo, profile: file.path };
@@ -256,11 +257,16 @@ export class UsersService {
     userName: string,
   ): Promise<UserEntity> {
     const decoded = await this.verifyAccessToken(accessToken);
-    decoded['nickName'] = userName;
-    const user: UserEntity = {
+    const userData: UserEntity = await this.usersRepository.findOne({
       id: decoded['id'],
-      email: decoded['email'],
-      nickName: decoded['nickName'],
+    });
+    const user: UserEntity = {
+      id: userData['id'],
+      email: userData['email'],
+      nickName: userName,
+      profileImage: userData['profileImage'],
+      saltedPassword: userData['saltedPassword'],
+      oauthLogin: userData['oauthLogin'],
     };
     const userInfo = await this.usersRepository.save(user);
     return userInfo;
@@ -268,13 +274,18 @@ export class UsersService {
   //회원 정보 업데이트 비밀번호
   async updatePassword(accessToken: string, password: string) {
     const decoded = await this.verifyAccessToken(accessToken);
+    const userData: UserEntity = await this.usersRepository.findOne({
+      id: decoded['id'],
+    });
     const salt = await bcrypt.genSalt();
     decoded['saltedPassword'] = await bcrypt.hash(password, salt);
     const user: UserEntity = {
-      id: decoded['id'],
-      email: decoded['email'],
-      nickName: decoded['nickName'],
+      id: userData['id'],
+      email: userData['email'],
+      nickName: userData['nickName'],
+      profileImage: userData['profileImage'],
       saltedPassword: decoded['saltedPassword'],
+      oauthLogin: userData['oauthLogin'],
     };
     const userInfo = await this.usersRepository.save(user);
     return userInfo;

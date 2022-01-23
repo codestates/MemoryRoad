@@ -18,7 +18,7 @@ import { LoginUserDto } from './dto/login-userDto';
 import { Request, Response } from 'express';
 import { multerOptions } from '../users/users.multerOpt';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UserExceptionFilter } from 'src/userException.filter';
+import { UserExceptionFilter } from '../userException.filter';
 import fs from 'fs';
 import { join } from 'path';
 
