@@ -102,7 +102,7 @@ function Home() {
             <img
               alt="introduce"
               className="Home-introduce"
-              src="http://localhost:5500/client/public/img/map_final.gif"
+              src="https://server.memory-road.net/upload/map_final.gif"
             />
           </div>
           <hr className="Home-line" />
@@ -144,7 +144,7 @@ function Home() {
             <img
               alt="introduce"
               className="Home-introduce"
-              src="http://localhost:5500/client/public/img/map_final.gif"
+              src="https://server.memory-road.net/upload/map_final.gif"
             />
           </div>
         </div>
