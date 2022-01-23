@@ -46,8 +46,9 @@ function EditUserInfo({ isvalid, url }: any) {
         const previewImage: any = document.getElementById(
           'edituserinfo-previewImage',
         );
-
-        previewImage.src = e.target.result;
+        if (previewImage) {
+          previewImage.src = e.target.result;
+        }
       };
       setprofile(image.files[0]);
       reader.readAsDataURL(image.files[0]);
