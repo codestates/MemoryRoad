@@ -164,6 +164,7 @@
   height: 60vh;
   margin-top: 25px;
   border-radius: 20px;
+  object-fit: cover;
 }
 .Home-line {
   margin-top: 10%;
@@ -379,6 +380,13 @@
     font-size: 1vw;
     color: #91ba9f;
   }
+  .Home-introduce {
+    /* width: 100%; */
+    width: 100%;
+    height: 45vh;
+    margin-top: 25px;
+    border-radius: 20px;
+  }
 }
 
 /* 모바일 */
@@ -391,6 +399,13 @@
   .Home-MemoryRoadcontent {
     padding-top: 10%;
     font-size: 10px;
+  }
+  .Home-introduce {
+    /* width: 100%; */
+    width: 100%;
+    height: 30vh;
+    margin-top: 25px;
+    border-radius: 20px;
   }
 
   .Home-MemoryRoad {

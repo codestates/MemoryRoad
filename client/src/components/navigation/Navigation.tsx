@@ -41,8 +41,8 @@ function Nav({ url, isvalid }: any) {
           // window.localStorage.clear(); // 로컬 스토리지를 비우고
           persistor.purge();
           window.location.reload(); // 새로고침
-          // const url2 = 'http://localhost:3000';
-          const url2 = 'https://memory-road.net';
+          const url2 = 'http://localhost:3000';
+          // const url2 = 'https://memory-road.net';
           window.location.assign(`${url2}`); // home으로 이동
         }
       });

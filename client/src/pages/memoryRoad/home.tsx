@@ -153,6 +153,7 @@ function Home({ url }: any) {
               alt="introduce"
               className="Home-introduce"
               src="https://server.memory-road.net/upload/AllRouteMap.jpg"
+              // src="http://localhost/upload/onscroll.gif"
               // gif로 수정
             />
           </div>
