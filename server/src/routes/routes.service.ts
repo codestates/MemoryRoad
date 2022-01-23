@@ -1014,17 +1014,11 @@ export class RoutesService {
       await this.pinsRepository.save(dbPinId);
 
       //키워드 테이블을 갱신하기 위한 객체
-      const keywordObj = {};
+      // const keywordObj = {};
 
       //pin각각에 routeId를 추가해 준다.
       pins.forEach((pin) => {
         pin['routesId'] = newRoute.id;
-        let keywords = [];
-        //기본값으로 구 정보 추가
-        keywords.push(pin.ward);
-        keywords = [...keywords, ...pin.keywords];
-
-        keywordObj[pin.ranking] = keywords;
       });
 
       //와드 변경 지점. 루트의 핀들에 담긴 구 정보를 토대로 와드 테이블의 구 별 루트 개수를 업데이트한다.
@@ -1049,9 +1043,17 @@ export class RoutesService {
         for (let i = 0; i < pin.keywords.length; i++) {
           keywords.push({ keyword: pin.keywords[i] });
         }
+        //키워드 배열에서 중복을 제거한다
+        const uniqKey = [];
+        keywords.forEach((keywordObj) => {
+          for (const e of uniqKey) {
+            if (e['keyword'] === keywordObj['keyword']) return;
+          }
+          uniqKey.push(keywordObj);
+        });
 
         //키위드 업데이트의 결과
-        const newKeywords = await this.placeKeywordsRepository.save(keywords);
+        const newKeywords = await this.placeKeywordsRepository.save(uniqKey);
         for (const obj of newKeywords) {
           obj['pinId'] = pin.id;
         }
@@ -1289,15 +1291,25 @@ export class RoutesService {
         this.configService.get<string>('ACCESS_SECRET'),
       );
 
-      //키워드를 업데이트 한다.(없는 경우 새로 생성한다.)
+      //키워드를 업데이트 한다.(없는 경우 새로 생성한다.) 기존 키워드들을 이 배열의 키워드로 대체한다.
       const keywords = [];
       //구의 정보를 기본 키워드로 넣는다
       keywords.push({ keyword: pin.ward });
       for (let i = 0; i < pin.keywords.length; i++) {
         keywords.push({ keyword: pin.keywords[i] });
       }
+
+      //키워드 배열에서 중복을 제거한다
+      const uniqKey = [];
+      keywords.forEach((keywordObj) => {
+        for (const e of uniqKey) {
+          if (e['keyword'] === keywordObj['keyword']) return;
+        }
+        uniqKey.push(keywordObj);
+      });
+
       //키워드 업데이트의 결과
-      const newKeywords = await this.placeKeywordsRepository.save(keywords);
+      const newKeywords = await this.placeKeywordsRepository.save(uniqKey);
       //pin객체 안에 관계명인 PlaceKeywords를 key로 넣는다.
       delete pin.keywords;
       // pin['PlaceKeywords'] = newKeywords;
@@ -1527,9 +1539,18 @@ export class RoutesService {
       for (let i = 0; i < pin.keywords.length; i++) {
         keywords.push({ keyword: pin.keywords[i] });
       }
+
+      //키워드 배열에서 중복을 제거한다
+      const uniqKey = [];
+      keywords.forEach((keywordObj) => {
+        for (const e of uniqKey) {
+          if (e['keyword'] === keywordObj['keyword']) return;
+        }
+        uniqKey.push(keywordObj);
+      });
       //placeKeyword 테이블에 키워드들 추가
       //키워드 업데이트의 결과
-      const newKeywords = await this.placeKeywordsRepository.save(keywords);
+      const newKeywords = await this.placeKeywordsRepository.save(uniqKey);
 
       //jointable을 갱신한다.
       newKeywords.forEach((obj) => {
