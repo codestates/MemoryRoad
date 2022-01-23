@@ -24,11 +24,12 @@ function SignUp({ isvalid, url }: any) {
             setErrorMessage('');
             setsuccessMessage('사용 가능한 이메일 입니다.');
             setEmailChecking(true);
-          } else {
-            setErrorMessage('이미 사용하고 있는 이메일 입니다.');
-            setsuccessMessage('');
-            setEmailChecking(false);
           }
+        })
+        .catch((error) => {
+          setErrorMessage('이미 사용하고 있는 이메일 입니다.');
+          setsuccessMessage('');
+          setEmailChecking(false);
         });
     }
   };
@@ -59,7 +60,14 @@ function SignUp({ isvalid, url }: any) {
               dispatch(loginModal(true)); // 로그인 모달창을 연다
             }
           })
-          .catch((error) => setErrorMessage('중복된 닉네임 입니다.'));
+          .catch((error) => {
+            if (Emailchecking) {
+              setErrorMessage('중복된 닉네임 입니다.');
+              setsuccessMessage('');
+            } else {
+              setsuccessMessage('');
+            }
+          });
       }
     } else {
       setErrorMessage('모든 항목을 작성해주세요');
@@ -110,7 +118,10 @@ function SignUp({ isvalid, url }: any) {
             <input
               className="signup-input2"
               maxLength={20}
-              onChange={InputEmail}
+              onChange={(e) => {
+                InputEmail(e);
+                setEmailChecking(false);
+              }}
               placeholder="이메일을 입력해주세요."
               type="text"
             ></input>

@@ -6,26 +6,76 @@ import { useNavigate } from 'react-router-dom';
 function Home({ url }: any) {
   const navigate = useNavigate();
   // 스크롤 이벤트 발생
-  window.onscroll = function (e) {
-    const scrollheight = document.documentElement.scrollTop;
-    const viewheight = window.innerHeight;
-    const allheight = document.documentElement.scrollHeight;
-    const scollbarLocation = ((scrollheight + viewheight) / allheight) * 100;
-    // console.log('스크롤 높이', scrollheight);
-    // console.log('보고있는 화면 높이', viewheight);
-    // console.log('전체문서 높이', allheight);
-    // console.log('% :', scollbarLocation);
-    const homeguide = document.querySelector('.Home-guide2');
-    const homeButton = document.querySelector('.Home-button');
-    const homeButton2 = document.querySelector('.Home-button2');
-    if (scollbarLocation > 80) {
-      homeguide?.classList.add('Home-guideEffect');
-      homeButton?.classList.add('Home-ButtonEffect');
-      homeButton2?.classList.add('Home-ButtonEffect');
-    }
-    e.stopPropagation();
-  };
+  // window.onscroll = function (e) {
+  //   const scrollheight = document.documentElement.scrollTop;
+  //   const viewheight = window.innerHeight;
+  //   const allheight = document.documentElement.scrollHeight;
+  //   const scollbarLocation = ((scrollheight + viewheight) / allheight) * 100;
+  //   console.log('스크롤 높이', scrollheight);
+  //   console.log('보고있는 화면 높이', viewheight);
+  //   console.log('전체문서 높이', allheight);
+  //   console.log('비율:', scollbarLocation + '%');
+  //   const homeguide = document.querySelector('.Home-guide2');
+  //   const homeButton = document.querySelector('.Home-button');
+  //   const homeButton2 = document.querySelector('.Home-button2');
+  //   if (scollbarLocation > 80) {
+  //     homeguide?.classList.add('Home-guideEffect');
+  //     homeButton?.classList.add('Home-ButtonEffect');
+  //     homeButton2?.classList.add('Home-ButtonEffect');
+  //   }
+  //   e.stopPropagation();
+  // };
 
+  useEffect(() => {
+    HomeImage();
+
+    //해당 타겟이 나오면 CSS 애니메이션 발생
+    const options: any = { thresholad: 1.0 };
+
+    const callback = (entries: any, observer: any) => {
+      entries.forEach((entry: any) => {
+        if (entry.isIntersecting) {
+          observer.unobserve(entry.target);
+          const homeguide = document.querySelector('.Home-guide2');
+          const homeButton = document.querySelector('.Home-button');
+          const homeButton2 = document.querySelector('.Home-button2');
+          homeguide?.classList.add('Home-guideEffect');
+          homeButton?.classList.add('Home-ButtonEffect');
+          homeButton2?.classList.add('Home-ButtonEffect');
+          // console.log('CSS 애니메이션 시작');
+        } else {
+          // console.log('화면에서 보이지 않음');
+        }
+      });
+    };
+    const observer = new IntersectionObserver(callback, options);
+    const target = document.querySelector('.Home-guide2');
+    if (target !== null) {
+      observer.observe(target);
+    }
+  }, []);
+  // const options: any = { thresholad: 1.0 };
+
+  // const callback = (entries: any, observer: any) => {
+  //   entries.forEach((entry: any) => {
+  //     if (entry.isIntersecting) {
+  //       observer.unobserve(entry.target);
+  //       const homeguide = document.querySelector('.Home-guide2');
+  //       const homeButton = document.querySelector('.Home-button');
+  //       const homeButton2 = document.querySelector('.Home-button2');
+  //       homeguide?.classList.add('Home-guideEffect');
+  //       homeButton?.classList.add('Home-ButtonEffect');
+  //       homeButton2?.classList.add('Home-ButtonEffect');
+  //     } else {
+  //       console.log('화면에서 제외됨');
+  //     }
+  //   });
+  // };
+  // const observer = new IntersectionObserver(callback, options);
+  // const target = document.querySelector('.Home-guide2');
+  // if (target !== null) {
+  //   observer.observe(target);
+  // }
   // 배경화면 랜덤
   // const url = 'http://localhost';
   // const url = 'https://server.memory-road.net';
@@ -46,7 +96,7 @@ function Home({ url }: any) {
     );
     // notgrid?.setAttribute('background-image', url(imageArr[number]);
   };
-  useEffect(HomeImage, []);
+  // useEffect(HomeImage, []);
 
   return (
     <div>

@@ -28,14 +28,12 @@ function CheckingPassword({ url }: any) {
           },
         )
         .then((res) => {
-          console.log(res);
           if (res.status === 200) {
             dispatch(checkingPasswordModal(false)); // 비밀번호 확인 모달창을 닫고
             dispatch(editUserInfoModal(true)); // 회원정보 수정창을 연다
           }
         })
         .catch((error) => {
-          console.log(error);
           setErrorMessage('비밀번호가 다릅니다.');
         });
     }
