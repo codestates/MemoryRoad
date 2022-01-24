@@ -20,7 +20,6 @@ function ColorSelectBox({ setColorIdx, setAllRoutes, findAllRoute }: Props) {
     setSelectedCorlorId(event.target.id);
   };
   const dispatch = useDispatch();
-  /* redux 전역 상태관리 */ // 왜 type 할당 : RootState는 되고 RootPersistState는 안되나요 ?
 
   const colorUrls: any = useSelector(
     (state: RootState) => state.createRouteReducer.whiteColorUrl,
@@ -31,7 +30,7 @@ function ColorSelectBox({ setColorIdx, setAllRoutes, findAllRoute }: Props) {
 
   //조건에 맞는 루트 배열을 state값에 저장한다.
   async function getAllRoute(colorIdx: number) {
-    if (colorIdx === 9) {
+    if (colorIdx === 0) {
       setAllRoutes(findAllRoute);
     } else {
       const routeColor = colorsName[colorIdx];
