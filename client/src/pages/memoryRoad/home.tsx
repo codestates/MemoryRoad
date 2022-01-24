@@ -174,7 +174,7 @@ function Home({ url }: any) {
             <img
               alt="introduce"
               className="Home-introduce"
-              src="https://server.memory-road.net/upload/AllRouteMap.jpg"
+              src="https://server.memory-road.net/upload/map_store.gif"
             />
           </div>
           <hr className="Home-line" />
