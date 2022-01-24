@@ -15,7 +15,7 @@
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
-  z-index: 999;
+  z-index: 999999;
 }
 .signup-center-fix-fix-fix {
   padding-top: 10px;
