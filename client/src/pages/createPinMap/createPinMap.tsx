@@ -490,8 +490,11 @@ function CreatePinMap() {
             strokeStyle: 'dashed',
           });
           polyline.setMap(map);
+          setMarkers((prev) => prev.concat(polyline));
         }
         savedMarker.setMap(map);
+        // 모든 마커 기록
+        setMarkers((prev) => prev.concat(savedMarker));
         /* pin 수정 모달창 띄우기 */
         if (currModifiedID.length && arrangedArr[i].pinID === currModifiedID) {
           map.setBounds(bounds); // 수정할 땐 bound 가까이에.

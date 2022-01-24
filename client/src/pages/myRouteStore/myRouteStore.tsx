@@ -103,7 +103,10 @@ function MyRouteStore() {
           return false;
         });
         return newData;
-      } else if (idx !== 0 && selectedWard === '') {
+      } else if (
+        (idx !== 0 && selectedWard === '') ||
+        (idx !== 0 && selectedWard === '전체 구')
+      ) {
         const newData = originRouteCards.filter((el: any) =>
           el.color === colorNames[idx] ? true : false,
         );
