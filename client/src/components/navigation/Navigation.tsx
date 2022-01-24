@@ -14,7 +14,7 @@ import Withdrawal from '../../modals/editUserInfo/withdrawal';
 import axios from 'axios';
 import { persistor } from '../../index';
 
-function Nav({ url, isvalid }: any) {
+function Nav() {
   const [isOpen, SetOpen] = useState(false);
   const navigate = useNavigate();
   const modalLogin = useSelector(
@@ -50,6 +50,26 @@ function Nav({ url, isvalid }: any) {
       dispatch(loginModal(true)); // 로그인 버튼을 누르면 로그인 모달창이 나옴
     }
   };
+  const isvalid = (email: string, username: string, password: string) => {
+    const character = /^[ A-Za-z0-9_@./#&+-]*$/; // 영문,숫자,특정 특수문자만 허용
+    const regexpassword = /[0-9a-zA-Z.;\-]/;
+    if (
+      character.test(email) &&
+      5 <= email.length &&
+      !email.includes(' ') &&
+      email.includes('@')
+    ) {
+      return 'Email'; // 이메일은 영문,숫자,특정 특수문자만 허용, 5글자 이상, 공백이 있으면 안되고, @를 포함해야함
+    }
+    if (!username.includes(' ') && username.length >= 2) {
+      return 'Username'; // 닉네임은 공백을 포함해서는 안되고 2글자 이상
+    }
+    if (8 <= password.length && regexpassword.test(password)) {
+      return 'Password'; // 비밀번호는 8자 이상이어야하고 영문,숫자,특수문자를 포함
+    } else {
+      return false;
+    }
+  };
 
   // 스크롤 이벤트
   let beforeScrollBar = document.documentElement.scrollTop;
@@ -80,7 +100,8 @@ function Nav({ url, isvalid }: any) {
       nav?.classList.remove('nav-RemoveGridContainer'); // nav바가 나옴
     }
   };
-
+  const url = 'https://server.memory-road.net';
+  // const url = 'http://localhost';
   return (
     <div>
       {modalLogin ? <LoginModal url={url} /> : null}
