@@ -347,7 +347,7 @@ function SaveRouteModalForModify({
               🔐
               <label className="saveRouteModal-switch">
                 <input
-                  checked={!isOpenRoute}
+                  checked={isOpenRoute}
                   onChange={handleRouteOpenOrUnopen}
                   type="checkbox"
                 />
