@@ -164,8 +164,10 @@
   height: 60vh;
   margin-top: 25px;
   border-radius: 20px;
-  object-fit: cover;
+
+  /* object-fit: fill; */
 }
+
 .Home-line {
   margin-top: 10%;
   margin-bottom: 10%;

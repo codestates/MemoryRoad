@@ -19,8 +19,8 @@ function Mypage() {
   ); // 유저의 정보
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const url = 'https://server.memory-road.net';
-  const url = 'http://localhost';
+  const url = 'https://server.memory-road.net';
+  // const url = 'http://localhost';
 
   // 유효성 검사
   const isvalid = (email: string, username: string, password: string) => {
