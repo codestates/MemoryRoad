@@ -117,7 +117,7 @@ function SignUp({ isvalid, url }: any) {
             <div className="signup-textOninput">이메일</div>
             <input
               className="signup-input2"
-              maxLength={20}
+              maxLength={24}
               onChange={(e) => {
                 InputEmail(e);
                 setEmailChecking(false);

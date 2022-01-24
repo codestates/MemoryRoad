@@ -169,7 +169,7 @@ function LoginModal({ url }: any) {
           <div className="login-center login-titleLogin">로그인</div>
           <input
             className="login-input"
-            maxLength={20}
+            maxLength={24}
             onChange={InputEmail}
             placeholder="이메일"
             type="text"
