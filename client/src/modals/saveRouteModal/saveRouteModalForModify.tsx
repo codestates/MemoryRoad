@@ -30,8 +30,8 @@ function SaveRouteModalForModify({
   const [clickedMonthSelect, setClickedMonthSelect] = useState(false);
   const [clickedYearSelect, setClickedYearSelect] = useState(false);
   const [selectedColorId, setSelectedCorlorId] = useState(initialColorIdx);
-  const [selectedDay, setSelectedDay] = useState(initialDate);
-  const [selectedMonth, setSelectedMonth] = useState(initialMonth);
+  const [selectedDay, setSelectedDay] = useState(Number(initialDate) - 1);
+  const [selectedMonth, setSelectedMonth] = useState(Number(initialMonth) - 1);
   const [selectedYear, setSelectedYear] = useState(initialYear);
 
   const handleColorSelect = () => {
@@ -347,7 +347,7 @@ function SaveRouteModalForModify({
               🔐
               <label className="saveRouteModal-switch">
                 <input
-                  checked={isOpenRoute}
+                  checked={!isOpenRoute}
                   onChange={handleRouteOpenOrUnopen}
                   type="checkbox"
                 />
