@@ -222,10 +222,10 @@ export class UsersService {
   }
 
   //로그아웃, 하는 건 없는데, 로그아웃 이후의 이벤트등을 추가할 경우에 사용할 수 있을 것 같아 남겨둠
-  async logOut(accessToken: string): Promise<string | jwt.JwtPayload> {
-    const decoded = await this.verifyAccessToken(accessToken);
-    return decoded;
-  }
+  // async logOut(accessToken: string): Promise<string | jwt.JwtPayload> {
+  //   const decoded = await this.verifyAccessToken(accessToken);
+  //   return decoded;
+  // }
 
   //회원 정보 업데이트 프로필이미지
   async updateProfile(accessToken: string, file: Express.Multer.File) {

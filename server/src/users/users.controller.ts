@@ -246,11 +246,17 @@ export class UsersController {
   // 로그 아웃
   @Get('/auth')
   async logOut(@Res() res: Response, @Req() req: Request) {
-    if (!req.cookies || !req.cookies.accessToken) {
-      return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
-    }
-    const accessToken = req.cookies.accessToken;
-    await this.usersService.logOut(accessToken);
+    // 쿠키 검증을 할 거였으면, 쿠키 만료 시간에 맞춰 로그아웃 시키는 로직을 만들던가 했어야했다
+    // 클라이언트와 상의해서 저런 로직을 만들었다면 쿠키에 정보가 살아 있으니 상관 없었을텐데
+    // 지금은 쿠키 만료 시간 이후에 로그 아웃을 보내면 단순히 로그아웃이 안 되는 이상한 사이트가
+    // 되어버림
+    // 나중에 조금 더 추가적으로 로직 생각을 해봐야 할 것 같다
+
+    // if (!req.cookies || !req.cookies.accessToken) {
+    //   return res.status(401).json({ error: '쿠키 재요청이 필요합니다' });
+    // }
+    // const accessToken = req.cookies.accessToken;
+    // await this.usersService.logOut(accessToken);
     //아무것도 없는 쿠키 전달
     res.cookie('accessToken', 'success', {
       httpOnly: true,
