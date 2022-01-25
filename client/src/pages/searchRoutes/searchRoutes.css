@@ -1,0 +1,30 @@
+#map-whole-container {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+  }
+  #map-navigator-top {
+    position: fixed;
+    z-index: 999;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-flow: column wrap;
+  }
+  #mapContainer {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+  }
+
+#overlay-area {
+  width: 70px;
+  height: 20px;
+  text-align: center;
+  border-radius: 6px;
+  font-weight: 550;
+  font-size: 1em;
+  background-color: #91BA9F;
+  border: none;
+  box-shadow: 0px 0px 5px rgba(70, 70, 70, 0.2);
+}

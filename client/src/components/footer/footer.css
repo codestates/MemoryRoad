@@ -1,0 +1,73 @@
+.footer-footer {
+  text-align: center;
+  vertical-align: center;
+}
+.footer-backgroundcolor {
+  background-color: rgb(128, 128, 128);
+  padding: 20px;
+}
+
+.footer-MemoryRoad {
+  font-family: 'Allan', cursive;
+  font-size: 26px;
+  color: black;
+}
+.footer-ryRoad {
+  color: white;
+  background-color: #91ba9f;
+  padding-right: 30px;
+}
+.footer-footerText {
+  position: relative;
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  margin-left: 30%;
+}
+.footer-name {
+  margin: 10px;
+}
+
+@media (max-width: 840px) {
+  .footer-footerText {
+    margin-left: 140px;
+    text-align: right;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+  }
+  .footer-name {
+    margin: 0px;
+  }
+
+  .footer-MemoryRoad {
+    font-family: 'Allan', cursive;
+    font-size: 20px;
+    color: black;
+  }
+  .footer-ryRoad {
+    color: white;
+    background-color: #91ba9f;
+    padding-right: 30px;
+  }
+}
+
+@media (max-width: 500px) {
+  .footer-footerText {
+    margin-left: 40px;
+    text-align: right;
+    color: white;
+    font-weight: bold;
+    font-size: 10px;
+  }
+  .footer-MemoryRoad {
+    font-family: 'Allan', cursive;
+    font-size: 15px;
+    color: black;
+  }
+  .footer-ryRoad {
+    color: white;
+    background-color: #91ba9f;
+    padding-right: 30px;
+  }
+}

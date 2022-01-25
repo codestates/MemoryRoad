@@ -1,0 +1,71 @@
+/*검색창 위치 고정*/
+#searchPin-static-location-sy {
+  position: relative; /*relative 와 fixed 최강 조합이다*/
+  display: flex;
+  justify-content: center;
+}
+/*블루 마커 추가 버튼*/
+#searchPin-my-blue-marker-btn {
+  position: fixed;
+  left: 3%;
+  border: none;
+  outline: 0;
+  border-radius: 6px;
+  background-color: rgb(245, 245, 245);
+  box-shadow: 0px 0px 5px rgba(70, 70, 70, 0.2);
+}
+/*블루 마커 추가 버튼 이미지*/
+#searchPin-my-blue-marker-img {
+  width: auto;
+  height: 25px;
+  padding: 4px 5px 2px 5px;
+}
+/*검색창 전체 컨테이너*/
+#searchPin-background {
+  position: fixed;
+  /* z-index: 1; */
+  width: 275px;
+  height: 40px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+/*검색창 요소들을 담은 내부 컨테이너*/
+#searchPin-container-sy {
+  width: 275px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+/*검색 input창 디자인*/
+.searchPin-input {
+  width: 200px;
+  border: none;
+  border-radius: 5px;
+  padding: 0 0 2px 10px;
+  outline: none; /*버튼 클릭시 나타나는 검은선 제거*/
+  height: 34px;
+  box-shadow: 0px 0px 5px rgba(70, 70, 70, 0.2);
+}
+/*검색 input창 placeholder 디자인*/
+.searchPin-input::placeholder {
+  padding-left: 5px;
+  font-size: 0.95em;
+}
+/*검색 btn 디자인*/
+.searchPin-search-btn {
+  width: 55px;
+  padding: 3px  0;
+  line-height: 30px;
+  border: none;
+  border-radius: 8px;
+  outline: none;
+  font-weight: 600;
+  font-size: 0.9em;
+  color: rgba(26, 26, 26, 0.7);
+  background-color: #91BA9F;
+  box-shadow: 0px 0px 5px rgba(70, 70, 70, 0.2);
+}

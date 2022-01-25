@@ -1,0 +1,57 @@
+/*일단 킵*/
+.react-grid-layout {
+	position: relative;
+	transition: height 200ms ease;
+	height: 10rem;
+	width: 270px;
+	pointer-events: none;
+}
+.react-grid-item {
+	transition-property: top;
+	cursor: pointer;
+	width: 270px;
+	pointer-events: auto;
+}
+/*변화ing*/
+.react-grid-item.cssTransforms {
+	transition-property: transform;
+}
+.react-grid-item.resizing {
+	will-change: height;
+	z-index: 7;
+}
+.react-grid-item.react-draggable-dragging {
+	transition: none;
+	will-change: transform;
+	z-index: 3;
+}
+
+.react-grid-item.react-grid-placeholder {
+	z-index: 2;
+    border-radius: 3px;
+	opacity: 0.5;
+	transition-duration: 100ms;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+.react-grid-item > .react-resizable-handle {
+	position: absolute;
+	width: 190px;
+	height: 7px;
+}
+.react-resizable-hide > .react-resizable-handle {
+	display: none;
+}
+
+.react-resizable {
+	position: relative;
+}
+.react-resizable-handle-se {
+	bottom: 0;
+	right: 0;
+	cursor: se-resize;
+}

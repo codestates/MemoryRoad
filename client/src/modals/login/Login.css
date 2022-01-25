@@ -1,0 +1,97 @@
+.login-modal-align-center-fix {
+  position: fixed;
+  /* top: 50%; */
+  background-color: rgba(128, 128, 128, 0.568);
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999999;
+}
+.login-LoginBorder {
+  position: fixed;
+  background-color: white;
+  border: 2px solid white;
+  border-radius: 10px;
+  width: 300px;
+  height: 550px;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  z-index: 9999999999;
+}
+.login-titleLogin {
+  margin-top: 5%;
+  font-size: 18px;
+  text-align: center;
+}
+.login-center {
+  padding-top: 5%;
+  padding-bottom: 2%;
+  text-align: center;
+}
+.login-input {
+  border: none;
+  border-bottom: 1px solid black;
+  width: 237px;
+  margin-left: 10%;
+  margin-top: 12%;
+  font-size: 12px;
+}
+.login-input:focus {
+  outline: none;
+}
+
+.login-ErrorMessage {
+  margin-top: 8px;
+  padding-left: 30px;
+  font-size: 12px;
+  color: red;
+}
+.login-Button {
+  width: 80%;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #91ba9f;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  border: 2px solid white;
+}
+.login-Button:hover {
+  border: 2px solid #91ba9f;
+  background-color: white;
+  color: #91ba9f;
+  transition: 800ms ease all;
+}
+.login-linebottom {
+  width: 220px;
+}
+.login-OauthButton {
+  text-align: center;
+}
+.login-GoogleButton {
+  width: 80%;
+  height: 45px;
+}
+
+.login-NaverButton {
+  width: 78%;
+  height: 41px;
+}
+.login-kakaoButton {
+  width: 78%;
+  height: 42px;
+}
+.login-pointer {
+  cursor: pointer;
+}
+.login-TotheSignup {
+  margin-top: 30px;
+  font-size: 11px;
+}
+.login-pointer :hover {
+  color: silver;
+}

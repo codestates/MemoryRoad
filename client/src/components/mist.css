@@ -1,0 +1,26 @@
+.mist-mist {
+  position: fixed;
+  background-color: gray;
+  margin: 0px;
+  padding: 0px;
+  width: 100vw;
+  height: 100vh;
+  opacity: 0.7;
+  z-index: 999999;
+  overflow-x: hidden;
+}
+.mist2-mist {
+  width: 100%;
+  height: 100vh;
+}
+
+@media (max-width: 500px) {
+  .mist-mist {
+    position: fixed;
+    background-color: gray;
+    width: 100%;
+    height: 320vh;
+    opacity: 0.7;
+    z-index: 99999;
+  }
+}

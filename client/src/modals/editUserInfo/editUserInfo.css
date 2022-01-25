@@ -1,0 +1,166 @@
+.edituserinfo-mist {
+  position: fixed;
+  /* top: 50%; */
+  background-color: rgba(128, 128, 128, 0.568);
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.edituserinfo-gridProfile {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.edituserinfo-form {
+  /* width: 100px; */
+  margin-top: 30px;
+  text-align: right;
+}
+.edituserinfo-titleEdituserinfo {
+  margin-top: 5%;
+  font-size: 18px;
+  text-align: center;
+}
+.edituserinfo-textOninput {
+  font-size: 12px;
+  margin-top: 10px;
+  margin-left: 32px;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.edituserinfo-center {
+  padding-top: 10%;
+  padding-bottom: 2%;
+  text-align: center;
+}
+.edituserinfo-input2 {
+  border: none;
+  border-bottom: 1px solid black;
+  width: 230px;
+  padding-bottom: 8px;
+  margin-left: 10%;
+  margin-top: 0%;
+  font-size: 12px;
+}
+.edituserinfo-input2:focus {
+  outline: none;
+}
+
+.edituserinfo-ErrorMessage2 {
+  margin-left: 30px;
+  margin-top: 8px;
+  margin-bottom: 15px;
+  font-size: 12px;
+  color: red;
+}
+
+.edituserinfo-EditBorder {
+  position: fixed;
+  background-color: white;
+  /* border: 2px solid white; */
+  border-radius: 10px;
+  width: 300px;
+  height: 550px;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  z-index: 999;
+}
+.edituserinfo-EditBorder2 {
+  height: 320px;
+}
+
+.edituserinfo-CreateScrollBar {
+  overflow: auto;
+  overflow-x: hidden;
+  margin-right: 20px;
+}
+.edituserinfo-CreateScrollBar::-webkit-scrollbar {
+  width: 5px;
+  background-color: white;
+}
+.edituserinfo-CreateScrollBar::-webkit-scrollbar-thumb {
+  background-color: silver;
+  border-radius: 10px;
+}
+
+.edituserinfo-EditButtonColor {
+  background-color: gray;
+  color: black;
+  opacity: 0.6;
+  font-weight: bold;
+}
+.edituserinfo-EditProfileButton {
+  margin: 10px;
+  padding: 6px;
+  padding-left: 14px;
+  padding-right: 14px;
+  font-size: 11px;
+  cursor: pointer;
+  border: 2px solid white;
+  border-radius: 5px;
+}
+.edituserinfo-EditNickname {
+  margin: 5px;
+  padding: 5px;
+  font-size: 11px;
+  cursor: pointer;
+  width: 90px;
+  border: 2px solid white;
+  border-radius: 5px;
+}
+#edituserinfo-EditProfileButtonRight {
+  text-align: right;
+  margin-right: 5px;
+}
+.edituserinfo-withdrawalButton {
+  color: white;
+  background-color: #da4747;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.edituserinfo-edituserinfoButton {
+  margin-top: 40px;
+  width: 80%;
+  padding: 5px;
+  border-radius: 8px;
+  background-color: #91ba9f;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  border: 2px solid white;
+}
+.edituserinfo-edituserinfoButton:hover {
+  border: 2px solid #91ba9f;
+  background-color: white;
+  color: #91ba9f;
+  transition: 800ms ease all;
+}
+.edituserinfo-EditProfile {
+  font-size: 100px;
+  margin: 10%;
+  margin-left: 0px;
+  color: gray;
+  opacity: 0.7;
+}
+#edituserinfo-previewImage {
+  width: 100px;
+  height: 100px;
+  margin: 10%;
+  margin-left: 0px;
+  border-radius: 80px;
+  object-fit: cover;
+  /* object-position: center; */
+}
+.editUserInfo-MemoryRoad {
+  margin-bottom: 20px;
+}
+
+.edituserinfo-successMessage {
+  color: #216638;
+}

@@ -1,0 +1,87 @@
+.selectbox-seoul {
+  position: relative;
+  width: 110px;
+  height: 35px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  background-color: rgb(210, 210, 210);
+  padding-left: 3px;
+}
+
+.selectbox-seoul.map {
+  width: 110px;
+}
+
+/*select-box 옆 삼각형 버튼 디자인*/
+.selectbox-seoul-label {
+  display: flex;
+  align-items: center;
+  width: inherit;
+  height: inherit;
+  border: none;
+  outline: none;
+  padding-left: 5px;
+  background: url('https://server.memory-road.net/upload/black_triangle.png') calc(100% - 13px) center no-repeat;
+  background-size: 11px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 800;
+  color: rgb(26, 26, 26);
+}
+
+.selectbox-seoul-optionList {
+  position: absolute;
+  z-index: 2;
+  top: 36px;
+  left: 0;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 5px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 0;
+  background: rgb(235, 235, 235);
+  transition: 0.2s ease-in;
+}
+
+/*스크롤 디자인 - 사라짐 ...? 무슨일 */
+.selectbox-seoul-optionList::-webkit-scrollbar {
+  width: 2px;
+  display: none;
+}
+
+.selectbox-seoul.btn-active .selectbox-seoul-optionList {
+  max-height: 130px;
+}
+
+.selectbox-seoul-option {
+  border-bottom: 0.2px dashed rgb(255, 255, 255);
+  padding: 8px;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: rgb(53, 53, 53);
+  /* color: transparent; */
+  transition: 0.1s;
+}
+
+.selectbox-seoul-selected-option {
+  /* margin: 0px 7px; */
+  color: rgb(118, 118, 118);
+}
+
+.selectbox-seoul-option:hover {
+  background: rgb(255, 255, 255);
+  cursor: pointer;
+}
+
+.selectbox-seoul-option:last-child {
+  border-bottom: none;
+}
+
+@media screen and (max-width: 320px) {
+  .selectbox-seoul {
+    width: 98px;
+  }
+}

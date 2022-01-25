@@ -1,0 +1,289 @@
+/*전체틀*/
+.saveRouteModal-background {
+  position: fixed;
+  z-index: 9999;
+  width: 100vw;
+  height: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(41, 41, 41, 0.413);
+}
+.saveRouteModal-container {
+  width: 300px;
+  height: 550px;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: center;
+  align-items: center;
+  border-radius: 7px;
+  background-color: rgb(255, 255, 255);
+}
+.saveRouteModal-content {
+  width: 260px;
+  display: flex;
+  flex-flow: column wrap;
+}
+
+.saveRouteModal-text {
+  text-align: center;
+  font-weight: 700;
+  color:rgb(43, 43, 43);
+  margin-bottom: 20px;
+}
+
+.saveRouteModal-selectZone {
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 20px;
+}
+
+/*selectbox-css-setting*/
+.saveRouteModal-selectbox-color, 
+.saveRouteModal-selectbox-day,
+.saveRouteModal-selectbox-month,
+.saveRouteModal-selectbox-year {
+  position: relative;
+  width: 58px;
+  height: 35px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  background-color: rgb(210, 210, 210);
+}
+.saveRouteModal-selectbox-day,
+.saveRouteModal-selectbox-month {
+  width: 55px;
+}
+.saveRouteModal-selectbox-year {
+  width: 70px;
+}
+
+/*select-box 옆 삼각형 버튼 디자인*/
+.saveRouteModal-selectbox-color-label, 
+.saveRouteModal-selectbox-day-label,
+.saveRouteModal-selectbox-month-label,
+.saveRouteModal-selectbox-year-label {
+  display: flex;
+  align-items: center;
+  width: inherit;
+  height: inherit;
+  border: none;
+  outline: none;
+  padding-left: 5px;
+  background: url('https://server.memory-road.net/upload/black_triangle.png') calc(100% - 7px) center no-repeat;
+  background-size: 11px;
+  cursor: pointer;
+  font-size: 0.9em;
+  font-weight: 800;
+  color: rgb(26, 26, 26);
+}
+
+.saveRouteModal-selectbox-color-optionList, 
+.saveRouteModal-selectbox-day-optionList,
+.saveRouteModal-selectbox-month-optionList,
+.saveRouteModal-selectbox-year-optionList {
+  position: absolute;
+  z-index: 2;
+  top: 36px;
+  left: 0;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 5px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 0;
+  background: rgb(235, 235, 235);
+  transition: 0.2s ease-in;
+}
+
+/*스크롤 디자인 - 사라짐 ...? 무슨일 */
+.saveRouteModal-selectbox-color-optionList::-webkit-scrollbar, 
+.saveRouteModal-selectbox-day-optionList::-webkit-scrollbar,
+.saveRouteModal-selectbox-month-optionList::-webkit-scrollbar,
+.saveRouteModal-selectbox-year-optionList::-webkit-scrollbar {
+  width: 2px;
+  display: none;
+}
+.saveRouteModal-selectbox-color.btn-active .saveRouteModal-selectbox-color-optionList,
+.saveRouteModal-selectbox-day.btn-active .saveRouteModal-selectbox-day-optionList,
+.saveRouteModal-selectbox-month.btn-active .saveRouteModal-selectbox-month-optionList,
+.saveRouteModal-selectbox-year.btn-active .saveRouteModal-selectbox-year-optionList {
+  max-height: 130px;
+}
+
+.saveRouteModal-selectbox-color-option, 
+.saveRouteModal-selectbox-day-option,
+.saveRouteModal-selectbox-month-option,
+.saveRouteModal-selectbox-year-option {
+  border-bottom: 0.2px dashed rgb(255, 255, 255);
+  padding: 5px;
+  /* color: transparent; */
+  transition: 0.1s;
+}
+
+/*숫자니까 업데이트.*/
+.saveRouteModal-selectbox-day-selected-option,
+.saveRouteModal-selectbox-month-selected-option,
+.saveRouteModal-selectbox-year-selected-option {
+  /* margin: 0px 7px; */
+  color: rgb(118, 118, 118);
+}
+/* .saveRouteModal-selectbox-day-option,
+.saveRouteModal-selectbox-month-option,
+.saveRouteModal-selectbox-year-option {
+  margin: 0px 7px;
+} */
+
+.saveRouteModal-selectbox-color-option:hover,
+.saveRouteModal-selectbox-day-option:hover,
+.saveRouteModal-selectbox-month-option:hover,
+.saveRouteModal-selectbox-year-option:hover {
+  background: rgb(255, 255, 255);
+  cursor: pointer;
+}
+
+.saveRouteModal-selectbox-color-option:last-child,
+.saveRouteModal-selectbox-day-option:last-child,
+.saveRouteModal-selectbox-month-option:last-child,
+.saveRouteModal-selectbox-year-option:last-child {
+  border-bottom: none;
+}
+
+/* 선택된 이미지 표현 */
+.saveRouteModal-selectbox-color-selected-option {
+  width: 20px;
+  height: 20px;
+  margin-left: 8px;
+}
+
+.saveRouteModal-selectbox-color-img {
+  margin-top: 3px;
+  margin-left: 8px;
+  width: 20px;
+}
+
+/* 토글 버튼 */
+.saveRouteModal-open-unopen {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 10px;
+}
+.saveRouteModal-switch {
+  position: relative;
+  display: inline-block;
+  width: 39px;
+  height: 21px;
+  margin-left: 5px;
+}
+.saveRouteModal-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.saveRouteModal-slider-circle {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgb(210, 210, 210);
+  transition: 0.4s;
+  -webkit-transition: 0.4s;
+  border-radius: 15px;
+}
+.saveRouteModal-slider-circle:before {
+  position: absolute;
+  content: "";
+  height: 15px;
+  width: 15px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  -webkit-transition: 0.4s;
+  border-radius: 50%;;
+}
+input:checked + .saveRouteModal-slider-circle { /*+ 연산자는 또 처음*/
+  background-color: #91BA9F; 
+}
+input:focus + .saveRouteModal-slider-circle {
+  box-shadow: 0 0 1px #91BA9F; 
+}
+input:checked + .saveRouteModal-slider-circle:before {
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
+}
+
+/*input창들*/
+.saveRouteModal-route-title-input {
+  border: 2px solid rgb(158, 158, 158, 0.7);
+  border-radius: 10px;
+  padding-left: 7px;
+  margin-bottom: 7px;
+  outline: none;
+  height: 50px;
+  transition: .3s;
+  resize: none;
+  margin-bottom: 8px;
+}
+.saveRouteModal-route-title-input::placeholder {
+  position: relative;
+  top: 4px;
+  font-weight: 600;
+  color: rgb(183, 183, 183);
+}
+.saveRouteModal-route-content-input {
+  border: 2px solid rgb(158, 158, 158, 0.7);
+  border-radius: 10px;
+  padding-left: 7px;
+  margin-bottom: 7px;
+  outline: none;
+  height: 180px;
+  transition: .3s;
+  resize: none;
+  margin-bottom: 20px;
+}
+.saveRouteModal-route-content-input::placeholder {
+  position: relative;
+  top: 4px;
+  font-weight: 600;
+  color: rgb(183, 183, 183);
+}
+
+/*버튼들*/
+.saveRouteModal-save-btn {
+  line-height: 28px;
+  width: 100%;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  background-color: #91BA9F;
+  margin-bottom: 6px;
+}
+.saveRouteModal-close-btn {
+  line-height: 28px;
+  width: 100%;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(222, 222, 222);
+}
+
+/*마지막 타이틀*/
+.saveRouteModal-last-text {
+  position: relative;
+  top: 15px;
+  text-align: center;
+  font-size: 0.6em;
+  color:  rgb(118, 118, 118);
+}
