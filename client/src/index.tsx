@@ -25,7 +25,7 @@ export const persistor = persistStore(store); // { manualPersist: true } -> redu
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <BrowserRouter>
+      {/* <BrowserRouter>
         <Routes>
           <Route element={<MemoryRoad />} path="/"></Route>
           <Route element={<Mypage />} path="/Mypage" />
@@ -39,7 +39,8 @@ ReactDOM.render(
           <Route element={<AllRoutesInMap />} path="allRoutesInMap"></Route>
           <Route element={<SearchRoutes />} path="searchRoutes"></Route>
         </Routes>
-      </BrowserRouter>
+      </BrowserRouter> */}
+      <CreatePinMap />
     </PersistGate>
   </Provider>,
   document.getElementById('root'),

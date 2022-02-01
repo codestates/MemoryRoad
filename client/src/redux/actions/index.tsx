@@ -1,20 +1,3 @@
-/* [ action 예시 ]
- *
- * // 액션 타입을 선언합니다
- * const GET_USER_INFO = 'get/user/userInfo' as const;
- *
- * // 액션 생성함수를 선언합니다
- * export const getUserInfo = (id: number) => ({
- *   type: GET_USER_INFO,
- *   payload: id
- * });
-
- * // 모든 액션 객체에 대한 타입을 내보냅니다
- * // reducer의 인자(초기상태, 액션) 중 액션 인자의 타입을 정의할 때 쓰입니다 :)
- * export type Action = 
- *   | ReturnType<typeof getUserInfo>;
- */
-
 // 학민
 export const LOGIN_MODAL = 'LOGIN_MODAL' as const;
 export const SIGNUP_MODAL = 'SIGNUP_MODAL' as const;
@@ -63,15 +46,6 @@ export const setUserInfo = (
 });
 
 // 승연
-export const SAVE_PIN_INFO = 'SAVE_PIN_INFO' as const;
-export const SAVE_PIN_IMAGE_FILES = 'SAVE_PIN_IMAGE_FILES' as const;
-export const SAVE_PIN_POSITION = 'SAVE_PIN_POSITION' as const;
-export const UPDATE_PIN_TIME = 'UPDATE_PIN_TIME' as const;
-export const UPDATE_PIN_RANK = 'UPDATE_PIN_RANK' as const;
-export const UPDATE_FILE_RANK = 'UPDATE_FILE_RANK' as const;
-export const UPDATE_PIN_POSITION = 'UPDATE_PIN_POSITION' as const;
-export const DELETE_PIN = 'DELETE_PIN' as const;
-export const UPDATE_ALL_PINS_TIME = 'UPDATE_ALL_PINS_TIME' as const;
 /* pin 수정창 */
 export const SET_PINS_INFO_FOR_MODIFY = 'SET_PINS_INFO_FOR_MODIFY' as const;
 export const SET_PINS_IMAGE_FILES_FOR_MODIFY =
@@ -88,81 +62,14 @@ export const ADD_PIN_INFO = 'ADD_PIN_INFO' as const;
 export const ADD_PIN_IMAGE_FILES = 'ADD_PIN_IMAGE_FILES' as const;
 export const ADD_PIN_POSITION = 'ADD_PIN_POSITION' as const;
 
-// 핀 정보 저장 (First)
-// 핀 사진 저장 (First)
-// 핀 순서 저장 (First)
-export const savePinInfo = (
-  pinID: string,
-  ranking: number,
-  locationName: string,
-  addresses: any,
-) => {
-  const { latitude, longitude, lotAddress, roadAddress, ward } = addresses;
-  return {
-    type: SAVE_PIN_INFO,
-    payload: {
-      pinID,
-      ranking,
-      locationName,
-      latitude,
-      longitude,
-      lotAddress,
-      roadAddress,
-      ward,
-      startTime: `0${pinID.slice(3)}:00`,
-      endTime: `0${Number(pinID.slice(3)) + 1}:00`, // 첫 생성때만 시간 고정.
-    },
-  };
-};
-export const savePinImageFiles = (
-  pinID: string,
-  ranking: number,
-  images: any,
-) => ({
-  type: SAVE_PIN_IMAGE_FILES,
-  payload: {
-    pinID,
-    ranking,
-    images: images,
-  },
-});
-export const savePinPosition = (
-  pinID: string,
-  locationName: string,
-  latlng: Array<number>,
-) => ({
-  type: SAVE_PIN_POSITION,
-  payload: {
-    pinID,
-    locationName,
-    latlng,
-  },
+// 핀 id count..
+export const UPDATE_PIN_ID_NUM = 'UPDATE_PIN_ID_NUM' as const;
+
+export const updatePinIdNum = (num: number) => ({
+  type: UPDATE_PIN_ID_NUM,
+  payload: num,
 });
 
-export const updatePinTime = (arr: any) => ({
-  type: UPDATE_PIN_TIME,
-  payload: arr,
-});
-export const updatePinRank = (arr: any) => ({
-  type: UPDATE_PIN_RANK,
-  payload: arr,
-});
-export const updateFileRank = (arr: any) => ({
-  type: UPDATE_FILE_RANK,
-  payload: arr,
-});
-export const updatePinPosition = (arr: any) => ({
-  type: UPDATE_PIN_POSITION,
-  payload: arr,
-});
-export const deletePin = (pinID: string) => ({
-  type: DELETE_PIN,
-  payload: pinID,
-});
-export const updateAllpinsTime = (time: number) => ({
-  type: UPDATE_ALL_PINS_TIME,
-  payload: time,
-});
 /* pin 수정창 */
 export const setPinsInfoForModify = (arr: any) => {
   const copiedData = arr.slice();
@@ -274,21 +181,12 @@ export const addPinPosition = (
 
 //Action type 꼭 명시 부탁드립니다.
 export type Action =
-  | ReturnType<typeof savePinInfo>
-  | ReturnType<typeof savePinImageFiles>
-  | ReturnType<typeof savePinPosition>
   | ReturnType<typeof loginModal>
   | ReturnType<typeof signupModal>
   | ReturnType<typeof checkingPasswordModal>
   | ReturnType<typeof editUserInfoModal>
   | ReturnType<typeof withdrawalModal>
   | ReturnType<typeof setUserInfo>
-  | ReturnType<typeof updatePinTime>
-  | ReturnType<typeof updatePinRank>
-  | ReturnType<typeof updateFileRank>
-  | ReturnType<typeof updatePinPosition>
-  | ReturnType<typeof deletePin>
-  | ReturnType<typeof updateAllpinsTime>
   | ReturnType<typeof setPinsInfoForModify>
   | ReturnType<typeof setPinsImageFilesForModify>
   | ReturnType<typeof setPinsPositionForModify>
@@ -300,4 +198,5 @@ export type Action =
   | ReturnType<typeof modifyAllPinsTime>
   | ReturnType<typeof addPinInfo>
   | ReturnType<typeof addPinImageFiles>
-  | ReturnType<typeof addPinPosition>;
+  | ReturnType<typeof addPinPosition>
+  | ReturnType<typeof updatePinIdNum>;

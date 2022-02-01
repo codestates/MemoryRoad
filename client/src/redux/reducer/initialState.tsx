@@ -73,6 +73,7 @@ export type State = {
   iswithdrawalModal: boolean | null | undefined;
   userInfo: UserInfo;
   // 승연
+  pinCount: number;
   route: Route;
   pins: Array<Pin> | null | undefined;
   files: Array<File> | null | undefined;
@@ -106,6 +107,7 @@ const initialState: State | any = {
     OAuthLogin: null,
   },
   // 승연
+  pinCount: 0,
   route: {
     routeName: null, // 루트 제목
     description: null, // 루트 설명

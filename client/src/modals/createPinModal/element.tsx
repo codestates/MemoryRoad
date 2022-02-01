@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../redux/reducer/index';
+import { updatePinIdNum } from '../../redux/actions/index';
 
 const Element = ({
   currMarkerInfo,
@@ -6,10 +10,12 @@ const Element = ({
   onAddItem,
   setIsEmptyInfo,
 }: any) => {
+  const dispatch = useDispatch();
+  const pinCountState = useSelector(
+    (state: RootState) => state.createRouteReducer.pinCount,
+  );
   const [pinTitle, setPinTitle] = useState('');
   const [pinImages, setPinImages] = useState<any[]>([]);
-  // console.log(pinTitle);
-  // console.log(pinImages);
   const handleText = (event: any) => {
     // pin Title
     setPinTitle(event.target.value);
@@ -25,7 +31,6 @@ const Element = ({
   };
   const deletePinImgFile = (event: any) => {
     // pinImage delete
-    // 사진 삭제 이벤트
     const fileName = event.target.title;
     const updatedFiles = pinImages.filter((el) => {
       if (el.name === fileName) return false;
@@ -39,7 +44,8 @@ const Element = ({
     const deleteTag: any = document.getElementById('createPinModal-background');
     deleteTag.remove();
     handleIsModalOpen(false);
-    onAddItem(pinTitle, pinImages, currMarkerInfo);
+    onAddItem(pinCountState, pinTitle, pinImages, currMarkerInfo);
+    dispatch(updatePinIdNum(pinCountState + 1)); // 이렇게 전역관리로 count 세야하나 어유
   };
   return (
     <div id="createPinModal-container">
