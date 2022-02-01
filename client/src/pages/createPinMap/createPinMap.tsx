@@ -641,7 +641,7 @@ function CreatePinMap() {
           />
         ) : null}
         <div id="map-navigator-top">
-          {/* <Navigation /> */}
+          <Navigation />
           <TimeLineSideBar
             createElement={createElement}
             handleSidebarSaveBtn={handleSidebarSaveBtn}
