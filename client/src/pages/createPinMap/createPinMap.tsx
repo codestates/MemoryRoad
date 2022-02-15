@@ -65,8 +65,8 @@ function CreatePinMap() {
   const handleBlueMarker = (boolean: boolean): void => {
     setBlueMarker(boolean);
   };
-  const handleGrayMarker = (bool: boolean): void => {
-    setGrayMarker(bool);
+  const handleGrayMarker = (boolean: boolean): void => {
+    setGrayMarker(boolean);
   };
 
   const onMouseEnter = (locationName: any) => {
@@ -75,6 +75,10 @@ function CreatePinMap() {
   };
   const onMouseLeave = () => {
     setIsMouseOnCard(false); // 이벤트 버블링 X
+  };
+
+  const setBounds = (bounds: any) => {
+    kakaoMap.setBounds(bounds);
   };
 
   /* -------------- react-grid-layout ---------------- */
@@ -185,7 +189,6 @@ function CreatePinMap() {
     pinImages: any,
     currMarkerInfo: any,
   ) => {
-    console.log(itemState);
     let keywords = pinTitle.split(' ');
     if (currMarkerInfo?.lotAddress.length) {
       const letters = currMarkerInfo.lotAddress
@@ -335,6 +338,13 @@ function CreatePinMap() {
     if (kakaoMap === null) {
       return;
     }
+    setGrayMarkers((grayMarker: any) => {
+      // 회색 마커 상태 관리
+      if (grayMarker.length !== 0) {
+        grayMarker.forEach((marker: any) => marker.setMap(null));
+      }
+      return [];
+    });
     if (blueMarker) {
       setBlueMarkers((blueMarker: any) => {
         if (blueMarker !== null) {
@@ -427,10 +437,9 @@ function CreatePinMap() {
     const ps = new kakao.maps.services.Places();
     ps.keywordSearch(searchText, placesSearchCB);
 
+    const bounds = new kakao.maps.LatLngBounds(); // bounds
     function placesSearchCB(data: any, status: any, _: any) {
       if (status === kakao.maps.services.Status.OK) {
-        // const bounds = new kakao.maps.LatLngBounds();
-
         setGrayMarkers((grayMarker: any) => {
           if (grayMarker.length !== 0) {
             grayMarker.forEach((marker: any) => marker.setMap(null));
@@ -445,11 +454,10 @@ function CreatePinMap() {
         });
         for (let i = 0; i < data.length; i++) {
           displayMarker(data[i]);
-          // bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+          bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
         }
 
-        // 검색된 장소 위치를 기준으로 지도 범위를 재설정 과연 필수인가
-        // map.setBounds(bounds);
+        setBounds(bounds);
       } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
         alert('검색 결과가 존재하지 않습니다.');
         return;
@@ -531,7 +539,23 @@ function CreatePinMap() {
       setCurrLevel(level);
     });
 
-    const bounds = new kakao.maps.LatLngBounds();
+    // setBlueMarkers((blueMarker: any) => {
+    //   // 블루 마커 상태 관리
+    //   if (blueMarker !== null) {
+    //     blueMarker.setMap(null);
+    //   }
+    //   return [];
+    // });
+
+    setGrayMarkers((grayMarker: any) => {
+      // 회색 마커 상태 관리
+      if (grayMarker.length !== 0) {
+        grayMarker.forEach((marker: any) => marker.setMap(null));
+      }
+      return [];
+    });
+
+    const bounds = new kakao.maps.LatLngBounds(); // bounds
     pins.map((el) =>
       bounds.extend(new kakao.maps.LatLng(el.latitude, el.longitude)),
     );

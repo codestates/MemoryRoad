@@ -29,7 +29,7 @@ function SearchPinBar({
             id="searchPin-my-blue-marker-btn"
             onClick={() => {
               handleBlueMarker(true);
-              handleGrayMarker(false);
+              // handleGrayMarker(false);
             }}
           >
             <img
@@ -50,7 +50,7 @@ function SearchPinBar({
               onClick={() => {
                 getSearchText(searchText);
                 handleIsModalOpen(false);
-                handleBlueMarker(false);
+                // handleBlueMarker(false);
                 handleGrayMarker(true);
               }}
             >
