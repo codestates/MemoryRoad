@@ -42,6 +42,14 @@ function SearchPinBar({
             <input
               className="searchPin-input"
               onChange={handleSearchBar}
+              onKeyPress={(event) => {
+                if (event.key === 'Enter') {
+                  getSearchText(searchText);
+                  handleIsModalOpen(false);
+                  handleGrayMarker(true);
+                  // handleBlueMarker(false);
+                }
+              }}
               placeholder="원하는 장소를 검색해보세요 !"
               type="text"
             />
@@ -50,8 +58,8 @@ function SearchPinBar({
               onClick={() => {
                 getSearchText(searchText);
                 handleIsModalOpen(false);
-                // handleBlueMarker(false);
                 handleGrayMarker(true);
+                // handleBlueMarker(false);
               }}
             >
               검색

@@ -1,5 +1,8 @@
-import axios from 'axios';
 import React, { useState } from 'react';
+// redux
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../redux/reducer/index';
+import { updatePinIdNum } from '../../redux/actions/index';
 
 const ElementForCreate = ({
   currMarkerInfo,
@@ -7,10 +10,12 @@ const ElementForCreate = ({
   onAddItem,
   setIsEmptyInfo,
 }: any) => {
+  const dispatch = useDispatch();
+  const pinCountState = useSelector(
+    (state: RootState) => state.createRouteReducer.pinCount,
+  );
   const [pinTitle, setPinTitle] = useState('');
   const [pinImages, setPinImages] = useState<any[]>([]);
-  // console.log(pinTitle);
-  // console.log(pinImages);
   const handleText = (event: any) => {
     // pin Title
     setPinTitle(event.target.value);
@@ -26,7 +31,6 @@ const ElementForCreate = ({
   };
   const deletePinImgFile = (event: any) => {
     // pinImage delete
-    // 사진 삭제 이벤트
     const fileName = event.target.title;
     const updatedFiles = pinImages.filter((el) => {
       if (el.name === fileName) return false;
@@ -40,7 +44,8 @@ const ElementForCreate = ({
     const deleteTag: any = document.getElementById('createPinModal-background');
     deleteTag.remove();
     handleIsModalOpen(false);
-    onAddItem(pinTitle, pinImages, currMarkerInfo); // 이건 현재 상태 반영
+    onAddItem(pinCountState, pinTitle, pinImages, currMarkerInfo);
+    dispatch(updatePinIdNum(pinCountState + 1));
   };
 
   return (
