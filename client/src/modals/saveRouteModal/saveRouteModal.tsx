@@ -102,7 +102,7 @@ function SaveRouteModal({
           date: `${selectedYear}-${Number(selectedMonth) + 1}-${
             Number(selectedDay) + 1
           }`,
-          pins: pins.slice(1),
+          pins,
         };
 
         const formData = new FormData();

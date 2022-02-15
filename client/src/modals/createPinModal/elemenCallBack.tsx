@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
 
 const ElementForModify = ({
   handleIsModifyModalOpen,
@@ -9,14 +7,11 @@ const ElementForModify = ({
   currFileForModify,
   selectCurrModifedID,
   onUpdateItem,
-  pins,
-  pinImage,
 }: any) => {
   const { pinID, locationName } = currInfoForModify;
-  const { ranking, files } = currFileForModify;
+  const files = !currFileForModify ? [] : currFileForModify.files;
   const [pinTitle, setPinTitle] = useState(locationName);
   const [pinImages, setPinImages] = useState<any[]>(files);
-  // console.log(pinTitle);
   console.log(pinImages);
   const handleText = (event: any) => {
     // pin Title
@@ -32,7 +27,7 @@ const ElementForModify = ({
     setPinImages(pinImages.concat(...imgArr));
   };
   const deletePinImgFile = (event: any) => {
-    // 사진 삭제 이벤트
+    // 사진 삭제
     const fileName = event.target.title;
     console.log(fileName);
     const updatedFiles = pinImages.filter((el) => {
@@ -46,7 +41,7 @@ const ElementForModify = ({
     console.log('저장 버튼을 눌렀습니다. 창을 닫습니다');
     const deleteTag: any = document.getElementById('modifyPinModal-background');
     deleteTag.remove();
-    handleIsModifyModalOpen(false);
+    handleIsModifyModalOpen();
     onUpdateItem(pinID, pinTitle, pinImages);
   };
   return (
