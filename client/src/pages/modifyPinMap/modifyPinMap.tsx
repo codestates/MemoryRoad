@@ -48,21 +48,7 @@ function ModifyPinMap() {
 
   // marker state
   const [route, setRoute] = useState(null);
-  const [pins, setPins] = useState([
-    {
-      id: null, // -------------> DB filed에는 없는, 내가 편하게 사용하려고 쓰는 상태 키
-      ranking: null,
-      locationName: null,
-      latitude: null,
-      longitude: null,
-      lotAddress: null,
-      roadAddress: null,
-      ward: null,
-      startTime: '00:00',
-      endTime: '01:00',
-      Pictures: [],
-    },
-  ]);
+  const [pins, setPins] = useState<any[]>([]);
   const [pinImage, setPinImage] = useState<any[]>([]);
   const [totalTime, setTotalTime] = useState(0);
   const [itemState, setItemState] = useState<any[]>([]);
@@ -129,9 +115,9 @@ function ModifyPinMap() {
 
   const createElement = (el: any) => {
     const i = el.add ? '+' : el.i;
-    const { id, locationName, startTime, endTime } = pins
-      ?.slice(1)
-      ?.filter((pin: any) => String(pin.id) === el.i)[0];
+    const { id, locationName, startTime, endTime } = pins?.filter(
+      (pin: any) => String(pin.id) === el.i,
+    )[0];
     const sh = Number(startTime?.split(':')[0]);
     const eh = Number(endTime?.split(':')[0]);
     const sm = Number(startTime?.split(':')[1]);
@@ -184,7 +170,7 @@ function ModifyPinMap() {
       </div>
     );
   };
-  const onRemoveItem = (i: string) => {
+  const onRemoveItem = (i: any) => {
     const updatedPins = pins.filter((el) => String(el.id) !== i);
     const newState: any = _.reject(itemState, { i: i });
     const updatedRank = updatedPins.map((pin: any) => {
@@ -284,7 +270,7 @@ function ModifyPinMap() {
     setPins(updatedPins);
   };
 
-  // 서버와 통신 ----------------------------------------------------------------------------
+  // 핀 삭제
   const requestForDelete = (pinId: number | null) => {
     axios({
       url: `https://server.memory-road.net/routes/${id}/pins/${pinId}`,
@@ -622,7 +608,6 @@ function ModifyPinMap() {
     if (kakaoMap === null) {
       return;
     }
-    console.log(pins);
     // 시시각각 변하는 지도의 센터를 추적할 수 있음.
     kakao.maps.event.addListener(kakaoMap, 'idle', function () {
       const level = kakaoMap.getLevel();
@@ -689,7 +674,7 @@ function ModifyPinMap() {
           setPolylines((lines) => lines.concat(polyline));
         }
         // 수정 모달창
-        if (currModifiedID.length && arrangedArr[i].id === currModifiedID) {
+        if (currModifiedID && String(arrangedArr[i].id) === currModifiedID) {
           kakaoMap.setBounds(bounds); // bound 설정
           handleIsModifyModalOpen();
           infoWindowModal.setContent(modifyPinModal);
