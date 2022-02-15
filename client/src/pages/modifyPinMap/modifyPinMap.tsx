@@ -72,8 +72,8 @@ function ModifyPinMap() {
   const handleSidebarSaveBtn = (bool: boolean) => {
     setIsSidebarSaveBtnClicked(bool);
   };
-  const selectCurrModifedID = (index: string) => {
-    setCurrModifiedID(index);
+  const selectCurrModifedID = (idNum: string) => {
+    setCurrModifiedID(idNum);
   };
 
   const handleBlueMarker = (boolean: boolean): void => {
@@ -531,8 +531,6 @@ function ModifyPinMap() {
 
     function placesSearchCB(data: any, status: any, _: any) {
       if (status === kakao.maps.services.Status.OK) {
-        // const bounds = new kakao.maps.LatLngBounds();
-
         setGrayMarkers((grayMarker: any) => {
           if (grayMarker.length !== 0) {
             grayMarker.forEach((marker: any) => marker.setMap(null));
@@ -547,10 +545,8 @@ function ModifyPinMap() {
         });
         for (let i = 0; i < data.length; i++) {
           displayMarker(data[i]);
-          // bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
         }
 
-        // 검색된 장소 위치를 기준으로 지도 범위를 재설정 과연 필수인가
         // map.setBounds(bounds);
       } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
         alert('검색 결과가 존재하지 않습니다.');
@@ -693,7 +689,7 @@ function ModifyPinMap() {
           setPolylines((lines) => lines.concat(polyline));
         }
         // 수정 모달창
-        if (currModifiedID.length && arrangedArr[i].pinID === currModifiedID) {
+        if (currModifiedID.length && arrangedArr[i].id === currModifiedID) {
           kakaoMap.setBounds(bounds); // bound 설정
           handleIsModifyModalOpen();
           infoWindowModal.setContent(modifyPinModal);

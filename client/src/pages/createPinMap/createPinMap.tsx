@@ -77,10 +77,6 @@ function CreatePinMap() {
     setIsMouseOnCard(false); // 이벤트 버블링 X
   };
 
-  const setBounds = (bounds: any) => {
-    kakaoMap.setBounds(bounds);
-  };
-
   /* -------------- react-grid-layout ---------------- */
   const onLayoutChange = (layout: any) => {
     setItemState(layout);
@@ -457,7 +453,7 @@ function CreatePinMap() {
           bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
         }
 
-        setBounds(bounds);
+        kakaoMap.setBounds(bounds);
       } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
         alert('검색 결과가 존재하지 않습니다.');
         return;
