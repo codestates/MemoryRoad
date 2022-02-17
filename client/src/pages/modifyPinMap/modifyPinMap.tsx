@@ -529,6 +529,7 @@ function ModifyPinMap() {
     const ps = new kakao.maps.services.Places();
     ps.keywordSearch(searchText, placesSearchCB);
 
+    const bounds = new kakao.maps.LatLngBounds(); // bounds
     function placesSearchCB(data: any, status: any, _: any) {
       if (status === kakao.maps.services.Status.OK) {
         setGrayMarkers((grayMarker: any) => {
@@ -545,9 +546,10 @@ function ModifyPinMap() {
         });
         for (let i = 0; i < data.length; i++) {
           displayMarker(data[i]);
+          bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
         }
 
-        // map.setBounds(bounds);
+        kakaoMap.setBounds(bounds);
       } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
         alert('검색 결과가 존재하지 않습니다.');
         return;
@@ -622,11 +624,18 @@ function ModifyPinMap() {
     if (kakaoMap === null) {
       return;
     }
-    console.log(pins);
     // 시시각각 변하는 지도의 센터를 추적할 수 있음.
     kakao.maps.event.addListener(kakaoMap, 'idle', function () {
       const level = kakaoMap.getLevel();
       setCurrLevel(level);
+    });
+
+    setGrayMarkers((grayMarker: any) => {
+      // 회색 마커 상태 관리
+      if (grayMarker.length !== 0) {
+        grayMarker.forEach((marker: any) => marker.setMap(null));
+      }
+      return [];
     });
 
     const bounds = new kakao.maps.LatLngBounds();
@@ -689,8 +698,8 @@ function ModifyPinMap() {
           setPolylines((lines) => lines.concat(polyline));
         }
         // 수정 모달창
-        if (currModifiedID.length && arrangedArr[i].id === currModifiedID) {
-          kakaoMap.setBounds(bounds); // bound 설정
+        if (currModifiedID && String(arrangedArr[i].id) === currModifiedID) {
+          // kakaoMap.setBounds(bounds); // bound 설정
           handleIsModifyModalOpen();
           infoWindowModal.setContent(modifyPinModal);
           infoWindowModal.open(kakaoMap, savedMarker);

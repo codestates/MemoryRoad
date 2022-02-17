@@ -12,10 +12,9 @@ const ElementForModify = ({
   const files = !currFileForModify ? [] : currFileForModify.files;
   const [pinTitle, setPinTitle] = useState(locationName);
   const [pinImages, setPinImages] = useState<any[]>(files);
-  console.log(pinImages);
-  const handleText = (event: any) => {
+  const handleText = (event: any, maxLength: number) => {
     // pin Title
-    setPinTitle(event.target.value);
+    setPinTitle(event.target.value.substr(0, maxLength));
   };
   const handlePinImgFiles = (event: any) => {
     // pinImage
@@ -52,8 +51,7 @@ const ElementForModify = ({
       <input
         className="modifyPinModal-input"
         id="modifyPinModal-place-title"
-        max-length="13"
-        onChange={handleText}
+        onChange={(event) => handleText(event, 13)}
         type="text"
         value={pinTitle}
       />

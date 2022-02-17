@@ -6,18 +6,16 @@ const ElementForModify = ({
   handleIsModifyModalOpen,
   setIsEmptyInfo,
   currInfoForModify,
-  selectCurrModifedIndex,
+  selectCurrModifedID,
   onUpdateItem,
   routeId,
 }: any) => {
   const { id, locationName, Pictures } = currInfoForModify;
   const [pinTitle, setPinTitle] = useState(locationName);
   const [pinImages, setPinImages] = useState<any[]>([...Pictures]);
-  // console.log(pinTitle);
-  console.log(pinImages);
-  const handleText = (event: any) => {
+  const handleText = (event: any, maxLength: number) => {
     // pin Title
-    setPinTitle(event.target.value);
+    setPinTitle(event.target.value.substr(0, maxLength));
   };
   const handlePinImgFiles = (event: any) => {
     // pinImage
@@ -30,10 +28,7 @@ const ElementForModify = ({
   };
   const deletePinImgFile = (event: any) => {
     // pinImage delete
-    // 사진 삭제 이벤트
     if (event.target.id !== '0') {
-      console.log(pinImages);
-      console.log(event.target.id.split('&'));
       const [pictureId, pinId] = event.target.id.split('&');
       axios({
         url: `https://server.memory-road.net/routes/${routeId}/pins/${pinId}/pictures/${pictureId}`,
@@ -41,7 +36,6 @@ const ElementForModify = ({
         withCredentials: true,
       })
         .then((res) => {
-          console.log(res);
           if (res.status === 200) {
             const updatedFiles = pinImages.filter((el) => {
               if (String(el.id) === pictureId) return false;
@@ -55,7 +49,6 @@ const ElementForModify = ({
         });
     }
     const fileName = event.target.title;
-    console.log(fileName);
     const updatedFiles = pinImages.filter((el) => {
       if (el.name === fileName) return false;
       else return true;
@@ -64,12 +57,10 @@ const ElementForModify = ({
   };
   const handleModifyPin = () => {
     // pinSave
-    console.log('저장 버튼을 눌렀습니다. 창을 닫습니다');
     const deleteTag: any = document.getElementById('modifyPinModal-background');
     deleteTag.remove();
     handleIsModifyModalOpen(false);
     onUpdateItem(String(id), pinTitle, pinImages);
-    // onAddItem(pinTitle, pinImages, currMarkerInfo);
   };
   return (
     <div id="modifyPinModal-container">
@@ -79,8 +70,7 @@ const ElementForModify = ({
       <input
         className="modifyPinModal-input"
         id="modifyPinModal-place-title"
-        max-length="13"
-        onChange={handleText}
+        onChange={(event) => handleText(event, 13)}
         type="text"
         value={pinTitle}
       />
@@ -146,7 +136,7 @@ const ElementForModify = ({
         id="modifyPinModal-save-btn"
         onClick={() => {
           pinTitle.length === 0 ? setIsEmptyInfo(true) : handleModifyPin();
-          selectCurrModifedIndex(-1);
+          selectCurrModifedID(-1);
         }}
       >
         수정 완료

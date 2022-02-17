@@ -16,9 +16,9 @@ const Element = ({
   );
   const [pinTitle, setPinTitle] = useState('');
   const [pinImages, setPinImages] = useState<any[]>([]);
-  const handleText = (event: any) => {
+  const handleText = (event: any, maxLength: number) => {
     // pin Title
-    setPinTitle(event.target.value);
+    setPinTitle(event.target.value.substr(0, maxLength));
   };
   const handlePinImgFiles = (event: any) => {
     // pinImage
@@ -55,10 +55,10 @@ const Element = ({
       <input
         className="createPinModal-input"
         id="createPinModal-place-title"
-        max-length="13"
-        onChange={handleText}
+        onChange={(event) => handleText(event, 13)}
         placeholder="장소의 제목을 입력해주세요"
         type="text"
+        value={pinTitle}
       />
       <div className="createPinModal-title">
         사진 첨부
