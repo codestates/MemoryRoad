@@ -154,8 +154,9 @@
   }
   
   .all-route-button {
-    position: absolute;
-    left: 20px;
+    position: fixed;
+    bottom: 30px;
+    left: 15px;
     width: 110px;
     line-height: 33px;
     border: 2px solid white;

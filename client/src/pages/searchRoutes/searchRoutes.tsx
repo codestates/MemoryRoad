@@ -70,13 +70,12 @@ function SearchRoutes() {
   const mapContainer = useRef<HTMLDivElement | null>(null);
 
   //회색 핀 이미지 생성
-  const pinImgSrc = 'https://server.memory-road.net/upload/gray_dot.png';
-  const pinImgSize = new kakao.maps.Size(18, 18);
-  const pinImgOpt = { offset: new kakao.maps.Point(13, 10) };
   const pinImgObj = new kakao.maps.MarkerImage(
-    pinImgSrc,
-    pinImgSize,
-    pinImgOpt,
+    'https://server.memory-road.net/upload/gray_dot.png',
+    new kakao.maps.Size(13, 13),
+    {
+      offset: new kakao.maps.Point(7, 6),
+    },
   );
 
   //파랑 핀 이미지 생성
@@ -213,20 +212,20 @@ function SearchRoutes() {
         }
         // 루트의 개수가 0~10인 경우, 11~30, 30~100인 경우 설정
         if (routeCount >= 0 && routeCount <= 30) {
-          PoligonColor = '#FFFFFF';
+          PoligonColor = '#D5EDE0';
         } else if (routeCount >= 31 && routeCount <= 80) {
-          PoligonColor = '#FEFBDA';
+          PoligonColor = '#9FC9B3';
         } else if (routeCount >= 81 && routeCount <= 100) {
-          PoligonColor = '#FFF47C';
+          PoligonColor = '#6E9C82';
         } else if (routeCount >= 101) {
-          PoligonColor = '#FFED27';
+          PoligonColor = '#3A7855';
         }
 
         const polygon = new kakao.maps.Polygon({
           map: kakaoMap,
           path: path, // 그려질 다각형의 좌표 배열입니다
           strokeWeight: 1, // 선의 두께입니다
-          strokeColor: '#004c80', // 선의 색깔입니다
+          strokeColor: '#FFFFFF', // 선의 색깔입니다
           strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
           strokeStyle: 'solid', // 선의 스타일입니다
           fillColor: PoligonColor, // 채우기 색깔입니다
@@ -448,10 +447,10 @@ function SearchRoutes() {
               ];
               const polyline = new kakao.maps.Polyline({
                 path: linePath,
-                strokeWeight: 5,
+                strokeWeight: 3,
                 strokeColor: '#636363',
-                strokeOpacity: 0.7,
-                strokeStyle: 'dashed',
+                strokeOpacity: 0.5,
+                strokeStyle: 'solid',
               });
               polyline.setMap(kakaoMap);
               newLines.push(polyline);
