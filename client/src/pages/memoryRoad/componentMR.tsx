@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/reducer';
-import '../../modals/createPinModal/createPinModal.css';
 import './main.css';
 
 interface TextProps {
@@ -25,6 +24,7 @@ interface SidebarProps {
   isScrollDown: boolean;
 }
 
+// common
 export function TextSection({
   title,
   content,
@@ -57,7 +57,7 @@ export function TextSection({
     </>
   );
 }
-
+// first
 export function SavePinSkeleton({
   isCurrSection,
   isScrollDown,
@@ -140,7 +140,7 @@ export function SavePinSkeleton({
   );
 }
 
-export function MapSkeleton({ isCurrSection, isScrollDown }: ComponentProps) {
+export function MapSkeleton1({ isCurrSection, isScrollDown }: ComponentProps) {
   return (
     <>
       <div
@@ -154,7 +154,7 @@ export function MapSkeleton({ isCurrSection, isScrollDown }: ComponentProps) {
     </>
   );
 }
-
+// second
 export function SidebarSkeleton({
   isCurrSection,
   isScrollDown,
@@ -208,7 +208,7 @@ export function SidebarBoxSkeleton({
     </>
   );
 }
-
+// third
 export function StorycardSkeleton({
   isCurrSection,
   isScrollDown,
@@ -228,7 +228,7 @@ export function StorycardSkeleton({
   return (
     <>
       <div
-        className={`myRouteStore-card-container background-shadow ${
+        className={`myRouteStore-card-container background-shadow mainpage-storycard-align ${
           isCurrSection && isScrollDown ? 'line-up-component-right' : ''
         } ${
           isCurrSection ? 'mainpage-opacity-true' : 'mainpage-opacity-false'
@@ -279,7 +279,7 @@ export function ColorSelectBox({
   isScrollDown,
 }: ComponentProps) {
   const colorUrls: any = useSelector((state: RootState) =>
-    state.createRouteReducer.colorDotUrl.slice(5, 8),
+    state.createRouteReducer.colorDotUrl.slice(7, 10),
   );
   return (
     <>
@@ -341,6 +341,184 @@ export function WardSelectBox({ isCurrSection, isScrollDown }: ComponentProps) {
           ))}
         </ul>
       </div>
+    </>
+  );
+}
+// forth
+export function MapPolyLineSkeleton({
+  isCurrSection,
+  isScrollDown,
+}: ComponentProps) {
+  return (
+    <>
+      <div
+        className={`background-shadow ${
+          isCurrSection && isScrollDown ? 'line-up-component-right' : ''
+        } ${
+          isCurrSection ? 'mainpage-opacity-true' : 'mainpage-opacity-false'
+        }`}
+        id="savePinSkeleton-map-image"
+      />
+    </>
+  );
+}
+// fifth
+export function SearchBarSkeleton({
+  isCurrSection,
+  isScrollDown,
+}: ComponentProps) {
+  return (
+    <>
+      <div
+        className={`mainpage-searchBar-container ${
+          isCurrSection && isScrollDown ? 'line-up-component-right' : ''
+        } ${
+          isCurrSection ? 'mainpage-opacity-true' : 'mainpage-opacity-false'
+        }`}
+      >
+        <div className="searchPin-background">
+          <div id="searchPin-container-sy">
+            <input
+              className="searchPin-input"
+              placeholder="원하는 장소를 검색해보세요 !"
+            />
+            <button className="searchPin-search-btn">검색</button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export function ColorChips({ isCurrSection, isScrollDown }: ComponentProps) {
+  return (
+    <>
+      <div
+        className={`mainpage-map-colorchip-background ${
+          isCurrSection && isScrollDown ? 'line-up-component-bottom' : ''
+        } ${
+          isCurrSection ? 'mainpage-opacity-true' : 'mainpage-opacity-false'
+        }`}
+      >
+        <div className="mainpage-map-colorchip color-first"></div>
+        <div className="mainpage-map-colorchip color-second"></div>
+        <div className="mainpage-map-colorchip color-third"></div>
+        <div className="mainpage-map-colorchip color-fourth"></div>
+      </div>
+    </>
+  );
+}
+
+export function PinContentSkeleton({
+  isCurrSection,
+  isScrollDown,
+}: ComponentProps) {
+  return (
+    <>
+      <div
+        className={`mainpage-pinContent-container ${
+          isCurrSection && isScrollDown ? 'line-up-component-left' : ''
+        } ${
+          isCurrSection ? 'mainpage-opacity-true' : 'mainpage-opacity-false'
+        }`}
+      >
+        <div className="createPinModal-background">
+          <div className="windowInfo-content-container">
+            <div className="windowInfo-content-section">
+              <div className="windowInfo-content-title">장소 이름</div>
+              <div className="windowInfo-content-property">
+                내가 좋아하는 원두가 있는 곳
+              </div>
+            </div>
+            <div className="windowInfo-content-section">
+              <div className="windowInfo-content-title">지번 주소</div>
+              <div className="windowInfo-content-property">
+                서울 종로구 계동 222-22
+              </div>
+            </div>
+            <div className="windowInfo-content-section">
+              <div className="windowInfo-content-title">도로명 주소</div>
+              <div className="windowInfo-content-property">
+                서울 종로구 북촌로 5길 22
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export function SelectBoxCustom1({
+  isCurrSection,
+  isScrollDown,
+}: ComponentProps) {
+  return (
+    <>
+      <div
+        className={`mainpage-selectbox-custom-1 ${
+          isCurrSection && isScrollDown ? 'line-up-component-right' : ''
+        } ${
+          isCurrSection ? 'mainpage-opacity-true' : 'mainpage-opacity-false'
+        }`}
+      >
+        루트
+      </div>
+    </>
+  );
+}
+
+export function SelectBoxCustom2({
+  isCurrSection,
+  isScrollDown,
+}: ComponentProps) {
+  return (
+    <>
+      <div
+        className={`mainpage-selectbox-custom-2 ${
+          isCurrSection && isScrollDown ? 'line-up-component-right' : ''
+        } ${
+          isCurrSection ? 'mainpage-opacity-true' : 'mainpage-opacity-false'
+        }`}
+      >
+        장소
+      </div>
+    </>
+  );
+}
+
+export function AllRouteButton({
+  isCurrSection,
+  isScrollDown,
+}: ComponentProps) {
+  return (
+    <>
+      <div
+        className={`mainpage-all-route-button ${
+          isCurrSection && isScrollDown ? 'line-up-component-bottom' : ''
+        } ${
+          isCurrSection ? 'mainpage-opacity-true' : 'mainpage-opacity-false'
+        }`}
+      >
+        전체
+        <br />
+        루트
+        <br /> 보기
+      </div>
+    </>
+  );
+}
+export function MapSkeleton2({ isCurrSection, isScrollDown }: ComponentProps) {
+  return (
+    <>
+      <div
+        className={`background-shadow ${
+          isCurrSection && isScrollDown ? 'line-up-component-bottom' : ''
+        } ${
+          isCurrSection ? 'mainpage-opacity-true' : 'mainpage-opacity-false'
+        }`}
+        id="savePinSkeleton-map-image-fifth"
+      />
     </>
   );
 }

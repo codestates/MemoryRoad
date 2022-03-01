@@ -21,6 +21,7 @@
   height: calc(100vh - 350px);
   display: flex;
   flex-flow: row nowrap;
+  margin-left: 12%;
   justify-content: center;
 }
 .mainpage-opacity-true {
@@ -30,17 +31,8 @@
   opacity: 0%;
 }
 
-#mainpage-fourth {
-  background-color: greenyellow;
-}
-#mainpage-fifth {
-  background-color: green;
-}
 #mainpage-sixth {
   background-color: blue;
-}
-#mainpage-seventh {
-  background-color: violet;
 }
 
 /*-------mainpage-first--------*/
@@ -166,6 +158,7 @@
 /*-------mainpage-second--------*/
 #savePinSkeleton-sidebar-image {
   z-index: 1;
+  left: 5%;
   top: 10%;
   width: 300px;
   height: 480px;
@@ -176,8 +169,8 @@
 }
 .mainpage-pinCard {
   position: relative;
-  left: 3%;
   top: 17.3%;
+  right: 12%;
   margin: 5px 0;
   z-index: 5;
   width: 170px;
@@ -185,7 +178,7 @@
 }
 .mainpage-pinCard-green {
   background-color: #b2d4be;
-  left: 18%;
+  left: 3%;
   top: 24.3%;
   height: 118px;
 }
@@ -224,6 +217,10 @@
   background-color: transparent;
 }
 /*-------mainpage-third--------*/
+.mainpage-storycard-align {
+  left: 5%;
+  top: 17%; 
+}
 .mainpage-colorSelectbox-position {
   left: 30%;
   top: 63%;
@@ -231,4 +228,119 @@
 .mainpage-wardSelectbox-position {
   left: 35%;
   top: 63%;
+}
+/*-------mainpage-fifth--------*/
+.mainpage-map-colorchip-background {
+  position: relative;
+  top: 15%;
+  left: 70%;
+  width: 200px;
+  height: 80px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  align-items: center;
+}
+.mainpage-map-colorchip {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: black;
+}
+.color-first {
+  background-color: rgb(240, 240, 240);
+}
+.color-second {
+  background-color: #9FC9B3;
+}
+.color-third {
+  background-color: #6E9C82;
+}
+.color-fourth {
+  background-color: #3A7855;
+}
+.createPinModal-background {
+  position: relative;
+  width: 210px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  background-color: rgb(255, 255, 255);
+}
+.mainpage-searchBar-container {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+}
+.searchPin-background {
+  width: 275px;
+  height: 40px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+.mainpage-pinContent-container {
+  position: absolute;
+  z-index: 10;
+  top: 32.5%;
+}
+.mainpage-selectbox-custom-1 {
+  position: absolute;
+  z-index: 10;
+  left: 47.5%;
+  top: 66%;
+  width: 70px;
+  height: 28px;
+  padding-top: 8px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 700;
+  color: rgba(41, 41, 41, 0.898);
+  background-color: #E8E8E8;
+}
+.mainpage-selectbox-custom-2 {
+  position: absolute;
+  z-index: 10;
+  left: 47.5%;
+  top: 77%;
+  width: 70px;
+  height: 28px;
+  padding-top: 8px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 700;
+  color: rgba(41, 41, 41, 0.898);
+  background-color: #E8E8E8;
+}
+.mainpage-all-route-button {
+  position: absolute;
+  z-index: 10;
+  left: 32%;
+  top: 66%;
+  padding: 14px 18px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 700;
+  color: #fff;
+  background-color: #96B9A0;
+}
+/* .mainpage-rotate-section {
+  transform: rotate(-10deg);
+} */
+.mainpage-align-fifth {
+  margin-top: 5%;
+  justify-content: flex-start;
+}
+#savePinSkeleton-map-image-fifth {
+  z-index: 1;
+  left: 55%;
+  top: 58.5%;
+  width: 150px;
+  height: 150px;
+  border-radius: 20px;
+  background: url('http://localhost:5500/server/upload/Screenshot from 2022-02-27 14-21-17.png') center no-repeat;
+  background-size: 300px;
 }

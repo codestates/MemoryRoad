@@ -3,13 +3,21 @@ import './main.css';
 import Navigation from '../../components/navigation/Navigation'; // 일단 보류 디자인 바뀔 수 있음
 import {
   SavePinSkeleton,
-  MapSkeleton,
+  MapSkeleton1,
+  MapSkeleton2,
   TextSection,
   SidebarSkeleton,
   SidebarBoxSkeleton,
   StorycardSkeleton,
   ColorSelectBox,
   WardSelectBox,
+  MapPolyLineSkeleton,
+  SearchBarSkeleton,
+  ColorChips,
+  PinContentSkeleton,
+  SelectBoxCustom1,
+  SelectBoxCustom2,
+  AllRouteButton,
 } from './componentMR';
 
 import { useHeight } from './customHook';
@@ -93,7 +101,7 @@ function Main() {
       ],
     },
     second: {
-      title: '시간과 순서, 자유롭게 조절하세요 !',
+      title: '시간과 순서, 자유롭게 조절해보세요.',
       content: [
         '생성된 박스의 크기를 늘이거나 줄여보세요. 시간 조절이 가능합니다.',
         '생성된 박스의 위치를 위 아래로 옮겨보세요. 순서 조절이 가능합니다.',
@@ -101,11 +109,27 @@ function Main() {
       ],
     },
     third: {
-      title: '스토리카드로 관리하세요 !',
+      title: '스토리카드로 관리하세요.',
       content: [
         '저장된 사진은 장소와 함께 기록됩니다.',
         '원하는 색상으로 사진 카테고리를 분류해보세요.',
         '흩어진 사진들을 지역구 기준으로 모아보세요.',
+      ],
+    },
+    fourth: {
+      title: '지도 중심으로 사진을 모아보세요.',
+      content: [
+        '스토리카드에 기록된 장소와 사진이 지도에 함께 표시됩니다.',
+        '전체 루트를 한 눈에 볼 수 있습니다.',
+        '마이페이지에서 확인해보세요 !',
+      ],
+    },
+    fifth: {
+      title: '타인의 스토리카드를 검색해보세요 !',
+      content: [
+        '공유된 스토리카드를 보며 타인의 시선을 따라가보세요.',
+        '표시된 장소의 개수에 따라 색으로 분포도를 알려드립니다. (준비중)',
+        '필터링 기능을 통해 가장 매력적인 루트를 찾아보세요 :)',
       ],
     },
   };
@@ -157,7 +181,7 @@ function Main() {
               isCurrSection={currSectIdx === 0 ? true : false}
               isScrollDown={isScrollDown}
             />
-            <MapSkeleton
+            <MapSkeleton1
               isCurrSection={currSectIdx === 0 ? true : false}
               isScrollDown={isScrollDown}
             />
@@ -217,13 +241,62 @@ function Main() {
           </div>
         </section>
         <section className="mainpage-section" id="mainpage-fourth">
-          Front-end
+          <div className="mainpage-image-section">
+            <MapPolyLineSkeleton
+              isCurrSection={currSectIdx === 3 ? true : false}
+              isScrollDown={isScrollDown}
+            />
+          </div>
+          <div className="mainpage-text-section">
+            <TextSection
+              content={titleAndContent.fourth.content}
+              isCurrSection={currSectIdx === 3 ? true : false}
+              isScrollDown={isScrollDown}
+              title={titleAndContent.fourth.title}
+            />
+          </div>
         </section>
         <section className="mainpage-section" id="mainpage-fifth">
-          Developer
-        </section>
-        <section className="mainpage-section" id="mainpage-sixth">
-          Seung yeon
+          <div className="mainpage-text-section">
+            <TextSection
+              content={titleAndContent.fifth.content}
+              isCurrSection={currSectIdx === 4 ? true : false}
+              isScrollDown={isScrollDown}
+              title={titleAndContent.fifth.title}
+            />
+          </div>
+          <div className="mainpage-image-section mainpage-align-fifth">
+            <div className="mainpage-rotate-section">
+              <SearchBarSkeleton
+                isCurrSection={currSectIdx === 4 ? true : false}
+                isScrollDown={isScrollDown}
+              />
+              <ColorChips
+                isCurrSection={currSectIdx === 4 ? true : false}
+                isScrollDown={isScrollDown}
+              />
+              <PinContentSkeleton
+                isCurrSection={currSectIdx === 4 ? true : false}
+                isScrollDown={isScrollDown}
+              />
+              <SelectBoxCustom1
+                isCurrSection={currSectIdx === 4 ? true : false}
+                isScrollDown={isScrollDown}
+              />
+              <SelectBoxCustom2
+                isCurrSection={currSectIdx === 4 ? true : false}
+                isScrollDown={isScrollDown}
+              />
+              <AllRouteButton
+                isCurrSection={currSectIdx === 4 ? true : false}
+                isScrollDown={isScrollDown}
+              />
+              <MapSkeleton2
+                isCurrSection={currSectIdx === 4 ? true : false}
+                isScrollDown={isScrollDown}
+              />
+            </div>
+          </div>
         </section>
         <section className="mainpage-section" id="mainpage-seventh">
           Footer
