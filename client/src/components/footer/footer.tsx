@@ -1,5 +1,5 @@
 import React from 'react';
-import Mist from '../mist';
+import Mist from '../mist/mist';
 import './footer.css';
 function Footer() {
   return (

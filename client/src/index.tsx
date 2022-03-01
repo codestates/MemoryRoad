@@ -4,13 +4,12 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './index.css';
 import MyRouteStore from './pages/myRouteStore/myRouteStore';
 import Mypage from './pages/mypage/mypage';
-
 import ModifyPinMap from './pages/modifyPinMap/modifyPinMap';
 import MemoryRoad from './pages/memoryRoad/memoryRoad';
-
 import AllRoutesInMap from './pages/mypage/allRoutesInMap';
 import CreatePinMap from './pages/createPinMap/createPinMap';
 import SearchRoutes from './pages/searchRoutes/searchRoutes';
+import Main from './pages/memoryRoad/main';
 
 // redux
 import { Provider } from 'react-redux';
@@ -27,7 +26,7 @@ ReactDOM.render(
     <PersistGate loading={null} persistor={persistor}>
       <BrowserRouter>
         <Routes>
-          <Route element={<MemoryRoad />} path="/"></Route>
+          <Route element={<Main />} path="/"></Route>
           <Route element={<Mypage />} path="/Mypage" />
           <Route element={<AllRoutesInMap />} path="/AllRoutesInMap" />
           <Route element={<CreatePinMap />} path="createRoute"></Route>

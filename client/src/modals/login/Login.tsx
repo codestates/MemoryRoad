@@ -3,7 +3,7 @@ import './Login.css';
 import { useState } from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch, batch } from 'react-redux';
-import Mist from '../../components/mist';
+import Mist from '../../components/mist/mist';
 import { RootState } from '../../redux/reducer';
 import { useNavigate } from 'react-router-dom';
 import {

@@ -1,0 +1,234 @@
+.mainpage-container {
+  
+}
+.mainpage-section {
+  position: relative;
+  height: 100vh;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  align-items: center;
+}
+.mainpage-text-section {
+  position: relative;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+}
+.mainpage-image-section {
+  position: relative;
+  width: 500px; /*이래야 flex 먹힘*/
+  height: calc(100vh - 350px);
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+}
+.mainpage-opacity-true {
+  opacity: 100%;
+}
+.mainpage-opacity-false {
+  opacity: 0%;
+}
+
+#mainpage-fourth {
+  background-color: greenyellow;
+}
+#mainpage-fifth {
+  background-color: green;
+}
+#mainpage-sixth {
+  background-color: blue;
+}
+#mainpage-seventh {
+  background-color: violet;
+}
+
+/*-------mainpage-first--------*/
+.background-shadow {
+  position: absolute;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.savePinSkeleton-container-box {
+  position: absolute;
+  z-index: 10;
+  left: 45%;
+  top: 5%;
+}
+#savePinSkeleton-map-image {
+  z-index: 1;
+  left: 10%;
+  top: 35%;
+  width: 350px;
+  height: 300px;
+  border-radius: 20px;
+  background: url('http://localhost:5500/server/upload/Screenshot from 2022-02-27 14-21-17.png') center no-repeat;
+}
+#savePinSkeleton-marker-image {
+  z-index: 5;
+  left: 39%;
+  top: 105%;
+  width: 55px;
+  height: 55px;
+  background: url('https://server.memory-road.net/upload/blue_marker.png') center no-repeat;
+  background-size: 35px;
+  box-shadow: none;
+}
+.textSection-text-title {
+  font-size: 2em;
+  font-weight: 800;
+}
+.line-up {
+  animation: lineUp 2s ease-out 1;
+}
+@keyframes lineUp {
+  0% {
+    opacity: 0;
+    transform: translateY(80%);
+  }
+  20% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}
+.textSection-text-content {
+  margin: 3px 0;
+  font-size: 0.9em;
+  font-weight: 300;
+}
+
+.line-up-component-right {
+  animation: lineUpComponentRight 2s ease-out 1;
+}
+@keyframes lineUpComponentRight {
+  0% {
+    opacity: 0;
+    transform: translateX(50%);
+  }
+  20% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}
+.line-up-component-left {
+  animation: lineUpComponentLeft 2s ease-out 1;
+}
+@keyframes lineUpComponentLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%);
+  }
+  20% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0%);
+  }
+}
+.line-up-component-bottom {
+  animation: lineUpComponentBottom 2s ease-out 1;
+}
+@keyframes lineUpComponentBottom {
+  0% {
+    opacity: 0;
+    transform: translateY(80%);
+  }
+  20% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+}
+/*-------mainpage-second--------*/
+#savePinSkeleton-sidebar-image {
+  z-index: 1;
+  top: 10%;
+  width: 300px;
+  height: 480px;
+  border-radius: 20px;
+  background: url('http://localhost:5500/server/upload/Screenshot from 2022-02-28 02-46-59.png') center no-repeat;
+  background-size: 100%;
+  background-color: #fff;
+}
+.mainpage-pinCard {
+  position: relative;
+  left: 3%;
+  top: 17.3%;
+  margin: 5px 0;
+  z-index: 5;
+  width: 170px;
+  height: 74px;
+}
+.mainpage-pinCard-green {
+  background-color: #b2d4be;
+  left: 18%;
+  top: 24.3%;
+  height: 118px;
+}
+.change-style1 {
+  top: 30.7%;
+  height: 35px;
+}
+.change-style2 {
+  top: 30%;
+  height: 35px;
+}
+.mainpage-sidebar-box-container {
+  width: inherit;
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+}
+.mainpage-pinCard-delete-btn {
+  position: absolute; 
+  top: 6px;
+  left: 100px;
+  border: none;
+  font-size: 0.8em;
+  font-weight: 600;
+  color: white;
+  background-color: transparent;
+}
+.mainpage-pinCard-modify-btn {
+  position: absolute;
+  top: 6px;
+  left: 130px;
+  border: none;
+  font-size: 0.8em;
+  font-weight: 600;
+  color: white;
+  background-color: transparent;
+}
+/*-------mainpage-third--------*/
+.mainpage-colorSelectbox-position {
+  left: 30%;
+  top: 63%;
+}
+.mainpage-wardSelectbox-position {
+  left: 35%;
+  top: 63%;
+}

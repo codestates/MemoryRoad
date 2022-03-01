@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Mist from '../../components/mist';
+import Mist from '../../components/mist/mist';
 import './editUserInfo.css';
 import { useSelector, useDispatch } from 'react-redux';
 import {

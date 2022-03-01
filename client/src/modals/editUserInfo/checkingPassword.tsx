@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Mist from '../../components/mist';
+import Mist from '../../components/mist/mist';
 import './checkingPassword.css';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';

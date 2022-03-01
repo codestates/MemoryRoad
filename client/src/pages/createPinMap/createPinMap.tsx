@@ -6,13 +6,13 @@ import store from '../../redux/store/index';
 // components
 import './createPinMap.css';
 import createPinModal from '../../modals/createPinModal/createPinModal';
-import SearchPinBar from '../../components/searchPinBar/searchPinBar';
+import SearchPinBar from '../../components/searchBar/searchBar_pin/searchBar_pin_create';
 import ConfirmPinIsEmptyModal from '../../modals/confirmPinIsEmpty/confirmPinIsEmptyModal';
 import ConfirmMoveToMypage from '../../modals/confirmRouteSave/confirmMoveToMypage';
 import ConfirmIsUserSaveRoute from '../../modals/confirmIsUserSaveRoute/confirmIsUserSaveRoute';
 import SaveRouteModal from '../../modals/saveRouteModal/saveRouteModal';
 import { InfoWindowContent } from '../../modals/pinContent/pinContent';
-import TimeLineSideBar from '../../components/timeLineSideBar/timeLineSideBar';
+import TimeLineSideBar from '../../components/sidebar/sidebar_timeline/sidebar_timeline_create';
 import Navigation from '../../components/navigation/Navigation';
 import _ from 'lodash';
 import '../../modals/createPinModal/createPinModal.css';

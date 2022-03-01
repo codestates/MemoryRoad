@@ -1,7 +1,7 @@
 import React, { useEffect, useState, MouseEvent, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../redux/reducer';
-import ColorSelectBox from '../../components/colorSelectBox/colorSelectBoxForMap';
+import ColorSelectBox from '../../components/selectBox/selectBox_color/selectBox_color_map';
 import './allRoutesInMap.css';
 import axios from 'axios';
 import { Picture, Route } from '../../types/searchRoutesTypes';
