@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useSelector, useDispatch, batch } from 'react-redux';
 import Mist from '../../components/mist/mist';
 import { RootState } from '../../redux/reducer';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   loginModal,
   signupModal,
@@ -23,6 +23,7 @@ function LoginModal({ url }: any) {
   ); // 유저 정보
 
   const navigate = useNavigate();
+  const location = useLocation();
   const [Email, setEmail] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const InputEmail = (e: any) => {
@@ -91,7 +92,7 @@ function LoginModal({ url }: any) {
               ),
             ); // 로그인 성공시 유저상태 바꿈
             dispatch(loginModal(false)); // 로그인 성공시 로그인 모달창 닫음
-            navigate('/Mypage'); // 로그인 성공시 마이페이지로 이동
+            navigate(`${location.pathname}`); // 로그인 성공시 머물렀던 페이지 유지
           }
         })
         .catch((error) =>

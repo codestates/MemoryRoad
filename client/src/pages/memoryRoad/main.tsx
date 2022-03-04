@@ -167,6 +167,7 @@ function Main() {
         className="mainpage-container"
         onScroll={() => console.log('scroll')}
       >
+        <Navigation />
         <section className="mainpage-section" id="mainpage-first">
           <div className="mainpage-text-section">
             <TextSection

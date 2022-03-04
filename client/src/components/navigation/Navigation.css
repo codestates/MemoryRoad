@@ -5,12 +5,15 @@
   height: 50px;
   overflow-x: hidden;
 }
+.mainpage-navigation-fix {
+  position: absolute;
+}
 .nav-gridContainer {
   position: fixed;
   width: 100%;
   z-index: 9;
   background-color: white;
-  box-shadow: 2px 3px 5px #d6e0e5;
+  box-shadow: 1px 0.5px 0.5px #d6e0e5;
   text-align: center;
   display: grid;
   grid-template-columns: 2fr 1fr 0.5fr 1fr;

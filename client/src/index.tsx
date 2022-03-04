@@ -27,8 +27,8 @@ ReactDOM.render(
       <BrowserRouter>
         <Routes>
           <Route element={<Main />} path="/"></Route>
-          <Route element={<Mypage />} path="/Mypage" />
-          <Route element={<AllRoutesInMap />} path="/AllRoutesInMap" />
+          <Route element={<Mypage />} path="Mypage" />
+          <Route element={<AllRoutesInMap />} path="AllRoutesInMap" />
           <Route element={<CreatePinMap />} path="createRoute"></Route>
           <Route element={<MyRouteStore />} path="myRouteStore"></Route>
           <Route
