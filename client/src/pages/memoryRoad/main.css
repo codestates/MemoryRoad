@@ -17,11 +17,11 @@
 }
 .mainpage-image-section {
   position: relative;
-  width: 500px; /*이래야 flex 먹힘*/
-  height: calc(100vh - 350px);
+  width: 400px; /*이래야 flex 먹힘*/
+  height: calc(100vh - 490px);
   display: flex;
   flex-flow: row nowrap;
-  margin-left: 12%;
+  /* margin-left: 12%; */
   justify-content: center;
 }
 .mainpage-opacity-true {
@@ -31,8 +31,67 @@
   opacity: 0%;
 }
 
-#mainpage-sixth {
-  background-color: blue;
+.mainpage-dots-container {
+  margin-top: 20px;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+}
+.mainpage-dots-box {
+  width: 75px;
+  height: 40px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mainpage-dots-circle-zero {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #b2d4be;
+}
+.mainpage-dots-circle-first {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #96B9A0;
+}
+.mainpage-dots-circle-second {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #96B9A0;
+}
+.mainpage-dots-next-circle {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #96B9A0;
+  cursor: pointer;
+}
+.mainpage-dots-next-button {
+  width: 15px;
+  height: 15px;
+  margin-left: 2px;
+  filter: brightness(0) invert(1);
+  cursor: pointer;
+}
+.mainpage-dots-next-circle:hover {
+  background-color: #b2d4be;
+}
+.mainpage-dots-text {
+  width: 200px;
+  margin-left: 20px;
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #80a089;
+  /* cursor: pointer; */
 }
 
 /*-------mainpage-first--------*/
@@ -159,7 +218,7 @@
 #savePinSkeleton-sidebar-image {
   z-index: 1;
   left: 5%;
-  top: 10%;
+  top: 4%;
   width: 300px;
   height: 480px;
   border-radius: 20px;
@@ -169,7 +228,7 @@
 }
 .mainpage-pinCard {
   position: relative;
-  top: 17.3%;
+  top: 10.9%;
   right: 12%;
   margin: 5px 0;
   z-index: 5;
@@ -178,16 +237,16 @@
 }
 .mainpage-pinCard-green {
   background-color: #b2d4be;
-  left: 3%;
-  top: 24.3%;
+  left: 10%;
+  top: 20.5%;
   height: 118px;
 }
 .change-style1 {
-  top: 30.7%;
+  top: 29.4%;
   height: 35px;
 }
 .change-style2 {
-  top: 30%;
+  top: 28%;
   height: 35px;
 }
 .mainpage-sidebar-box-container {
@@ -195,6 +254,8 @@
   display: flex;
   flex-flow: column wrap;
   align-items: center;
+  margin-top: 3.4%;
+  margin-left: 13%;
 }
 .mainpage-pinCard-delete-btn {
   position: absolute; 
@@ -219,15 +280,15 @@
 /*-------mainpage-third--------*/
 .mainpage-storycard-align {
   left: 5%;
-  top: 17%; 
+  top: 7%; 
 }
 .mainpage-colorSelectbox-position {
   left: 30%;
-  top: 63%;
+  top: 70%;
 }
 .mainpage-wardSelectbox-position {
   left: 35%;
-  top: 63%;
+  top: 70%;
 }
 /*-------mainpage-fifth--------*/
 .mainpage-map-colorchip-background {
@@ -290,7 +351,7 @@
 .mainpage-selectbox-custom-1 {
   position: absolute;
   z-index: 10;
-  left: 47.5%;
+  left: 51%;
   top: 66%;
   width: 70px;
   height: 28px;
@@ -304,7 +365,7 @@
 .mainpage-selectbox-custom-2 {
   position: absolute;
   z-index: 10;
-  left: 47.5%;
+  left: 51%;
   top: 77%;
   width: 70px;
   height: 28px;
@@ -336,11 +397,51 @@
 }
 #savePinSkeleton-map-image-fifth {
   z-index: 1;
-  left: 55%;
+  left: 62%;
   top: 58.5%;
   width: 150px;
   height: 150px;
   border-radius: 20px;
   background: url('http://localhost:5500/server/upload/Screenshot from 2022-02-27 14-21-17.png') center no-repeat;
   background-size: 300px;
+}
+/*footer*/
+.mainpage-footer-background {
+  position: absolute;
+  z-index: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 55vh;
+  border-radius: 100% 0 0 0;
+  background-color: #96B9A0;
+}
+.mainpage-githubLinks-label {
+  position: absolute;
+  z-index: 5;
+  bottom: 5%;
+  right: 7%;
+}
+.mainpage-githubLinks-link-tag {
+  text-decoration: none;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.mainpage-githubLinks-image {
+  width: 25px;
+  height: 25px;
+  filter: brightness(0) invert(1);
+}
+.mainpage-githubLinks-text {
+  margin: 10px 0 10px 10px;
+  font-size: 0.9em;  
+  color: #fff;
+}
+
+
+@media screen and (max-width: 1125px) {
+  .mainpage-section {
+    flex-flow: column wrap;
+  }
 }

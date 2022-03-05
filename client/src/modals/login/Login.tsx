@@ -197,6 +197,7 @@ function LoginModal({ url }: any) {
           </div>
           <div className="login-OauthButton">
             <div
+              className="login-image-container"
               onClick={GoogleLoginHandler}
               onKeyDown={GoogleLoginHandler}
               role="button"
@@ -209,6 +210,7 @@ function LoginModal({ url }: any) {
               />
             </div>
             <div
+              className="login-image-container"
               onClick={NaverLoginHandler}
               onKeyDown={NaverLoginHandler}
               role="button"
@@ -221,6 +223,7 @@ function LoginModal({ url }: any) {
               />
             </div>
             <div
+              className="login-image-container"
               onClick={KakaoLoginHandler}
               onKeyDown={KakaoLoginHandler}
               role="button"

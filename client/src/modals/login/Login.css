@@ -25,10 +25,12 @@
 .login-titleLogin {
   margin-top: 5%;
   font-size: 18px;
+  font-weight: 700;
   text-align: center;
 }
 .login-center {
-  padding-top: 5%;
+  margin: 20px 0px;
+  margin-top: 30px;
   padding-bottom: 2%;
   text-align: center;
 }
@@ -52,7 +54,7 @@
 }
 .login-Button {
   width: 80%;
-  padding: 10px;
+  padding: 6px;
   border-radius: 8px;
   background-color: #91ba9f;
   color: white;
@@ -69,22 +71,28 @@
 .login-linebottom {
   width: 220px;
 }
+.login-image-container {
+  width: 300px;
+  height: 50px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+}
 .login-OauthButton {
   text-align: center;
 }
-.login-GoogleButton {
+/* .login-GoogleButton {
   width: 80%;
   height: 45px;
-}
-
+} */
 .login-NaverButton {
-  width: 78%;
-  height: 41px;
+  width: 61%;
 }
-.login-kakaoButton {
+/* .login-kakaoButton {
   width: 78%;
   height: 42px;
-}
+} */
 .login-pointer {
   cursor: pointer;
 }
