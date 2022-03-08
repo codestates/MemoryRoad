@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Navigation from '../../components/navigation/Navigation';
-import SearchRoutesBar from '../../components/searchRoutesBar/searchRoutesBar';
-import SearchSideBar from '../../components/searchSideBar/searchSideBar';
+import SearchRoutesBar from '../../components/searchBar/searchBar_route/searchBar_route';
+import SearchSideBar from '../../components/sidebar/sidebar_search/sidebar_search';
 import { RootState } from '../../redux/reducer';
 import './searchRoutes.css';
 import { Route } from './../../types/searchRoutesTypes';

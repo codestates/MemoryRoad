@@ -1,8 +1,14 @@
 import React, { useEffect } from 'react';
 import './home.css';
 import Footer from '../../components/footer/footer';
-import { contextType } from 'react-grid-layout';
 import { useNavigate } from 'react-router-dom';
+// 1. 루트와 사진 : 원하는 장소에 사진을 담아 하나의 루트를 만들어보세요.
+// https://server.memory-road.net/upload/map_final.gif
+// 2. 스토리 카드 : 저장된 루트는 하나의 카드로 보관할 수 있습니다.
+// https://server.memory-road.net/upload/map_store.gif
+// 3. 루트 검색 : 다양한 키워드로 공유된 루트를 검색해보세요.
+// https://server.memory-road.net/upload/map_search.gif
+
 function Home({ url }: any) {
   const navigate = useNavigate();
   // 스크롤 이벤트 발생

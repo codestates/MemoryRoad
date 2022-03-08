@@ -3,7 +3,7 @@ import './Signup.css';
 import { useState } from 'react';
 import { useDispatch, batch } from 'react-redux';
 import axios from 'axios';
-import Mist from '../../components/mist';
+import Mist from '../../components/mist/mist';
 import { loginModal, signupModal } from '../../redux/actions/index';
 
 function SignUp({ isvalid, url }: any) {

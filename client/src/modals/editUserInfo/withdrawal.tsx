@@ -1,5 +1,5 @@
 import React from 'react';
-import Mist from '../../components/mist';
+import Mist from '../../components/mist/mist';
 import './withdrawal.css';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
