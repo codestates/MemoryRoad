@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { RootState } from '../../redux/reducer';
 import './main.css';
 
@@ -8,6 +9,12 @@ interface TextProps {
   content: string[];
   isCurrSection: boolean;
   isScrollDown: boolean;
+}
+
+interface DotsProps {
+  isCurrSection: boolean;
+  isScrollDown: boolean;
+  num: number;
 }
 
 interface ComponentProps {
@@ -57,6 +64,52 @@ export function TextSection({
     </>
   );
 }
+
+export function DotsToMove({ isCurrSection, isScrollDown, num }: DotsProps) {
+  const navigate = useNavigate();
+  const data = [
+    {
+      title: '사진 기록하러 가기',
+      endPoint: '/createRoute',
+    },
+    {
+      title: '루트 검색하러 가기',
+      endPoint: '/searchRoutes',
+    },
+  ];
+  return (
+    <>
+      <div
+        className={`mainpage-dots-container ${
+          isCurrSection && isScrollDown ? 'line-up' : ''
+        } ${
+          isCurrSection ? 'mainpage-opacity-true' : 'mainpage-opacity-false'
+        }`}
+      >
+        <div className="mainpage-dots-box">
+          <div className="mainpage-dots-circle-zero"></div>
+          <div className="mainpage-dots-circle-first"></div>
+          <div className="mainpage-dots-circle-second"></div>
+          <div
+            className="mainpage-dots-next-circle"
+            onClick={() => navigate(`${data[num].endPoint}`)}
+            onKeyPress={() => navigate(`${data[num].endPoint}`)}
+            role="button"
+            tabIndex={0}
+          >
+            <img
+              alt="next-button"
+              className="mainpage-dots-next-button"
+              src="https://server.memory-road.net/upload/next_button.png"
+            />
+          </div>
+        </div>
+        <p className="mainpage-dots-text">{data[num].title}</p>
+      </div>
+    </>
+  );
+}
+
 // first
 export function SavePinSkeleton({
   isCurrSection,
@@ -519,6 +572,55 @@ export function MapSkeleton2({ isCurrSection, isScrollDown }: ComponentProps) {
         }`}
         id="savePinSkeleton-map-image-fifth"
       />
+    </>
+  );
+}
+// footer
+export function FooterBackground({
+  isCurrSection,
+  isScrollDown,
+}: ComponentProps) {
+  return (
+    <div
+      className={`mainpage-footer-background ${
+        isCurrSection && isScrollDown ? 'line-up-component-bottom' : ''
+      } ${isCurrSection ? 'mainpage-opacity-true' : 'mainpage-opacity-false'}`}
+    ></div>
+  );
+}
+
+export function FooterGitHubLinks({
+  isCurrSection,
+  isScrollDown,
+}: ComponentProps) {
+  const teamLinks = [
+    { name: '김동운 : Back-End', link: 'https://github.com/PippasSong' },
+    { name: '노학민 : Front-End', link: 'https://github.com/haagmin5382' },
+    { name: '양재영 : Back-End', link: 'https://github.com/jyang510' },
+    { name: '이승연 : Front-End', link: 'https://github.com/ciocio97' },
+  ];
+  return (
+    <>
+      <label
+        className={`mainpage-githubLinks-label ${
+          isCurrSection && isScrollDown ? 'line-up-component-bottom' : ''
+        } ${
+          isCurrSection ? 'mainpage-opacity-true' : 'mainpage-opacity-false'
+        }`}
+      >
+        {teamLinks.map((el, idx) => (
+          <>
+            <a className="mainpage-githubLinks-link-tag" href={el.link}>
+              <img
+                alt="github-icon"
+                className="mainpage-githubLinks-image"
+                src="http://localhost:5500/server/upload/GitHubIcon.png"
+              ></img>
+              <p className="mainpage-githubLinks-text">{el.name}</p>
+            </a>
+          </>
+        ))}
+      </label>
     </>
   );
 }
