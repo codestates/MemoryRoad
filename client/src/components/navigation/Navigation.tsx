@@ -3,7 +3,7 @@ import './Navigation.css';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import OpenedMenu from '../openedmenu/openedmenu';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { RootState } from '../../redux/reducer';
 import { loginModal, setUserInfo } from '../../redux/actions/index';
 import LoginModal from '../../modals/login/Login';
@@ -31,6 +31,7 @@ function Nav() {
   const modalEditUserInfo = state.isEditUserInfoModal; // 회원정보 수정 모달창
   const modalWithdrawal = state.iswithdrawalModal; // 회원탈퇴 모달창
   const dispatch = useDispatch();
+  const location = useLocation();
 
   // 로그인,로그아웃 버튼 클릭시 작동하는 함수
   const loginButtonHandler = () => {
@@ -72,34 +73,34 @@ function Nav() {
   };
 
   // 스크롤 이벤트
-  let beforeScrollBar = document.documentElement.scrollTop;
-  let isScrollDown = true;
-  window.onwheel = function (e) {
-    const currentScrollBar = document.documentElement.scrollTop;
-    const nav = document.querySelector('.nav-gridContainer');
-    // console.log(nav);
-    if (currentScrollBar > 70) {
-      if (beforeScrollBar < currentScrollBar) {
-        // 스크롤 아래로
-        isScrollDown = true;
-      } else {
-        // 스크롤 위로
-        isScrollDown = false;
-      }
-    } else {
-    }
-    beforeScrollBar = currentScrollBar;
+  // let beforeScrollBar = document.documentElement.scrollTop;
+  // let isScrollDown = true;
+  // window.onwheel = function (e) {
+  //   const currentScrollBar = document.documentElement.scrollTop;
+  //   const nav = document.querySelector('.nav-gridContainer');
+  //   // console.log(nav);
+  //   if (currentScrollBar > 70) {
+  //     if (beforeScrollBar < currentScrollBar) {
+  //       // 스크롤 아래로
+  //       isScrollDown = true;
+  //     } else {
+  //       // 스크롤 위로
+  //       isScrollDown = false;
+  //     }
+  //   } else {
+  //   }
+  //   beforeScrollBar = currentScrollBar;
 
-    if (isScrollDown && currentScrollBar > 50) {
-      nav?.classList.add('nav-RemoveGridContainer'); // nav바 지움
-    }
-    if (currentScrollBar <= 50) {
-      nav?.classList.remove('nav-RemoveGridContainer'); // nav바가 나옴
-    }
-    if (!isScrollDown) {
-      nav?.classList.remove('nav-RemoveGridContainer'); // nav바가 나옴
-    }
-  };
+  //   if (isScrollDown && currentScrollBar > 50) {
+  //     nav?.classList.add('nav-RemoveGridContainer'); // nav바 지움
+  //   }
+  //   if (currentScrollBar <= 50) {
+  //     nav?.classList.remove('nav-RemoveGridContainer'); // nav바가 나옴
+  //   }
+  //   if (!isScrollDown) {
+  //     nav?.classList.remove('nav-RemoveGridContainer'); // nav바가 나옴
+  //   }
+  // };
   const url = 'https://server.memory-road.net';
   // const url = 'http://localhost';
   return (
@@ -109,7 +110,11 @@ function Nav() {
       {modalCheckPassword ? <CheckingPassword url={url} /> : null}
       {modalEditUserInfo ? <EditUserInfo isvalid={isvalid} url={url} /> : null}
       {modalWithdrawal ? <Withdrawal url={url} /> : null}
-      <div className="nav-gridContainer-fix-fix">
+      <div
+        className={`nav-gridContainer-fix-fix ${
+          location.pathname === '/' ? 'mainpage-navigation-fix' : ''
+        }`}
+      >
         <div className="nav-gridContainer">
           <div
             className="nav-item"
