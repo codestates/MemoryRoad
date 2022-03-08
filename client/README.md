@@ -1,46 +1,48 @@
-# Getting Started with Create React App
+<br/>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<p align="center">
+ <img src="https://user-images.githubusercontent.com/80025242/154692209-401083a5-c832-4b5d-8945-e5abb380e6a7.png" alt="memory-road-logo" />
+</p>
 
-## Available Scripts
 
-In the project directory, you can run:
+📍 MemoReroad - record web app
+=============================
+<br/>
+기억을 찾아 갤러리를 헤매는 당신을 위한 기록앱, memory-road
+<br/>
+당신의 특별한 순간을 장소와 함께 기록해보세요.
+<br/>
+<br/>
 
-### `npm start`
+[📎 프로젝트 배포 링크](https://memory-road.net/)
+<br>
+[📎 프로젝트 노션 링크](https://codestates.notion.site/11-MOCO-Memory-Road-7344cf346f26456bac0ac6f93b0cbc41)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+<br>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+✍🏻 Feature
+=============
+<br/>
 
-### `npm test`
+ - 지도에서 원하는 장소를 사진, 글과 함께 저장할 수 있습니다.
+ 
+ - 저장된 장소를 모아 하나의 스토리 카드로 관리할 수 있습니다.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+ - 스토리 카드를 제목, 장소별로 검색할 수 있고, 시간별 필터링 기능을 지원합니다.
+ 
+ - 스토리 카드의 지역별 분포를 볼 수 있습니다.
 
-### `npm run build`
+<br>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+💡 Final Render
+===============
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+<br/>
+<p align="center"><b>Main</b></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/80025242/154796476-9a80167b-932c-4122-83f3-b0cf63d7990b.gif" alt="memory-road-gif-1"/></p>
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+<br/>
+<p align="center"><b>Create Story Card</b></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/80025242/154796991-f11f0825-7041-4cb8-923d-3226d1bebc08.gif" alt="memory-road-gif-2"/></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/80025242/154797241-47bd2ae2-3c1e-4417-9e7c-ffd1d1132e41.gif" alt="memory-road-gif-3"/></p>
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
