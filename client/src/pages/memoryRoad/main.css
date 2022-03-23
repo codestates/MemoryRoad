@@ -438,7 +438,27 @@
   font-size: 0.9em;  
   color: #fff;
 }
-
+.Home-button {
+  background-color: #91ba9f;
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  border: 2px solid white;
+  border-radius:30px;
+  padding: 15px;
+  margin: 15px;
+  cursor: pointer;
+}
+.Home-button1 {
+  position: absolute;
+  top: 12%;
+  left: 5%;
+}
+.Home-button2 {
+  position: absolute;
+  top: 22%;
+  left: 5%;
+}
 
 @media screen and (max-width: 1125px) {
   .mainpage-section {
