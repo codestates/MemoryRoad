@@ -21,6 +21,7 @@ import {
   DotsToMove,
   FooterBackground,
   FooterGitHubLinks,
+  FooterButton,
 } from './main_sections';
 import { titleAndContent, sidebarBoxContent } from './dummyData';
 
@@ -244,6 +245,16 @@ function Main() {
           </div>
         </section>
         <section className="mainpage-section" id="mainpage-seventh">
+          <FooterButton
+            isCurrSection={currSectIdx === 5 ? true : false}
+            isScrollDown={isScrollDown}
+            num={0}
+          />
+          <FooterButton
+            isCurrSection={currSectIdx === 5 ? true : false}
+            isScrollDown={isScrollDown}
+            num={1}
+          />
           <FooterGitHubLinks
             isCurrSection={currSectIdx === 5 ? true : false}
             isScrollDown={isScrollDown}
