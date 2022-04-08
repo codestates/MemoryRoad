@@ -48,3 +48,12 @@
 <p align="center"><img src="https://user-images.githubusercontent.com/80025242/154796991-f11f0825-7041-4cb8-923d-3226d1bebc08.gif" alt="memory-road-gif-2"/></p>
 <p align="center"><img src="https://user-images.githubusercontent.com/80025242/154797241-47bd2ae2-3c1e-4417-9e7c-ffd1d1132e41.gif" alt="memory-road-gif-3"/></p>
 
+
+<br/>
+
+🔧 System Architecture
+======================
+<br/>
+<p align="center"><img width="800" src="https://images.velog.io/images/haribo/post/6098d639-f78f-4baf-819a-0ff4adbc6787/memory%20road%20(2).png" alt="system-architecture-img"></p>
+
+
