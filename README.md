@@ -18,7 +18,7 @@
 <br>
 [📎 프로젝트 노션 링크](https://codestates.notion.site/11-MOCO-Memory-Road-7344cf346f26456bac0ac6f93b0cbc41)
 <br>
-[📎 ](https://github.com/codestates/MemoryRoad/wiki)
+[📎 프로젝트 Wiki](https://github.com/codestates/MemoryRoad/wiki)
 
 <br>
 
