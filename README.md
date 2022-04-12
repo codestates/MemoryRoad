@@ -53,8 +53,13 @@
 <br/>
 <br/>
 <p align="center"><b>My Story Card Page</b></p>
-<p align="center"><img src="https://user-images.githubusercontent.com/80025242/162577535-c36a9108-3c41-45a3-9c8c-d33d6e0c2006.gif" alt="memory-raod-gif-4"></p>
-<p align="center"><img src="https://user-images.githubusercontent.com/80025242/162577489-ecb842e3-f155-44a7-963d-dfb6b6ca44a3.gif" alt="memory-raod-gif-5"></p>
+<p align="center"><img width="790" src="https://user-images.githubusercontent.com/80025242/162577535-c36a9108-3c41-45a3-9c8c-d33d6e0c2006.gif" alt="memory-raod-gif-4"></p>
+<p align="center"><img width="790" src="https://user-images.githubusercontent.com/80025242/162577489-ecb842e3-f155-44a7-963d-dfb6b6ca44a3.gif" alt="memory-raod-gif-5"></p>
+
+<br/>
+<br/>
+<p align="center"><b>Gathering Story Card Page</b></p>
+<p align="center"><img width="790" src="https://user-images.githubusercontent.com/80025242/162990209-9d4df285-74c1-478b-8a01-697b326906df.gif" alt="memory-raod-gif-6"></p>
 
 <br/>
 <br/>
