@@ -17,6 +17,8 @@
 [📎 프로젝트 배포 링크](https://memory-road.net/)
 <br>
 [📎 프로젝트 노션 링크](https://codestates.notion.site/11-MOCO-Memory-Road-7344cf346f26456bac0ac6f93b0cbc41)
+<br>
+[📎 프로젝트 Wiki](https://github.com/codestates/MemoryRoad/wiki)
 
 <br>
 
@@ -38,12 +40,33 @@
 ===============
 
 <br/>
+<br/>
 <p align="center"><b>Main</b></p>
 <p align="center"><img src="https://user-images.githubusercontent.com/80025242/154796476-9a80167b-932c-4122-83f3-b0cf63d7990b.gif" alt="memory-road-gif-1"/></p>
 
 <br/>
+<br/>
 <p align="center"><b>Create Story Card</b></p>
 <p align="center"><img src="https://user-images.githubusercontent.com/80025242/154796991-f11f0825-7041-4cb8-923d-3226d1bebc08.gif" alt="memory-road-gif-2"/></p>
 <p align="center"><img src="https://user-images.githubusercontent.com/80025242/154797241-47bd2ae2-3c1e-4417-9e7c-ffd1d1132e41.gif" alt="memory-road-gif-3"/></p>
+
+<br/>
+<br/>
+<p align="center"><b>My Story Card Page</b></p>
+<p align="center"><img width="790" src="https://user-images.githubusercontent.com/80025242/162577535-c36a9108-3c41-45a3-9c8c-d33d6e0c2006.gif" alt="memory-raod-gif-4"></p>
+<p align="center"><img width="790" src="https://user-images.githubusercontent.com/80025242/162577489-ecb842e3-f155-44a7-963d-dfb6b6ca44a3.gif" alt="memory-raod-gif-5"></p>
+
+<br/>
+<br/>
+<p align="center"><b>Gathering Story Card Page</b></p>
+<p align="center"><img width="790" src="https://user-images.githubusercontent.com/80025242/162990209-9d4df285-74c1-478b-8a01-697b326906df.gif" alt="memory-raod-gif-6"></p>
+
+<br/>
+<br/>
+
+🔧 System Architecture
+======================
+<br/>
+<p align="center"><img width="800" src="https://images.velog.io/images/haribo/post/6098d639-f78f-4baf-819a-0ff4adbc6787/memory%20road%20(2).png" alt="system-architecture-img"></p>
 
 
