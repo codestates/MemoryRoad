@@ -17,6 +17,12 @@ interface DotsProps {
   num: number;
 }
 
+interface ButtonProps {
+  isCurrSection: boolean;
+  isScrollDown: boolean;
+  num: number;
+}
+
 interface ComponentProps {
   isCurrSection: boolean;
   isScrollDown: boolean;
@@ -624,3 +630,80 @@ export function FooterGitHubLinks({
     </>
   );
 }
+
+export function FooterButton({
+  isCurrSection,
+  isScrollDown,
+  num,
+}: ButtonProps) {
+  const navigate = useNavigate();
+  const data = [
+    {
+      title: '사진 기록하러 가기',
+      endPoint: '/createRoute',
+      style: 'Home-button1',
+    },
+    {
+      title: '루트 검색하러 가기',
+      endPoint: '/searchRoutes',
+      style: 'Home-button2',
+    },
+  ];
+  return (
+    <>
+      <button
+        className={`Home-button ${data[num].style}`}
+        onClick={() => {
+          navigate(`${data[num].endPoint}`);
+        }}
+      >
+        {data[num].title}
+      </button>
+    </>
+  );
+}
+
+// export function DotsToMove({ isCurrSection, isScrollDown, num }: DotsProps) {
+//   const navigate = useNavigate();
+//   const data = [
+//     {
+//       title: '사진 기록하러 가기',
+//       endPoint: '/createRoute',
+//     },
+//     {
+//       title: '루트 검색하러 가기',
+//       endPoint: '/searchRoutes',
+//     },
+//   ];
+//   return (
+//     <>
+//       <div
+//         className={`mainpage-dots-container ${
+//           isCurrSection && isScrollDown ? 'line-up' : ''
+//         } ${
+//           isCurrSection ? 'mainpage-opacity-true' : 'mainpage-opacity-false'
+//         }`}
+//       >
+//         <div className="mainpage-dots-box">
+//           <div className="mainpage-dots-circle-zero"></div>
+//           <div className="mainpage-dots-circle-first"></div>
+//           <div className="mainpage-dots-circle-second"></div>
+//           <div
+//             className="mainpage-dots-next-circle"
+//             onClick={() => navigate(`${data[num].endPoint}`)}
+//             onKeyPress={() => navigate(`${data[num].endPoint}`)}
+//             role="button"
+//             tabIndex={0}
+//           >
+//             <img
+//               alt="next-button"
+//               className="mainpage-dots-next-button"
+//               src="https://server.memory-road.net/upload/next_button.png"
+//             />
+//           </div>
+//         </div>
+//         <p className="mainpage-dots-text">{data[num].title}</p>
+//       </div>
+//     </>
+//   );
+// }
